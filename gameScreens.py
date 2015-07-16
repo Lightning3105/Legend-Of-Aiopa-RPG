@@ -1,5 +1,7 @@
 import pygame as py
 from MenuItems import Button, Text, fill_gradient, fadeIn
+from entityClasses import Player
+import entityClasses
 import MenuItems
 from pygame.color import Color as colour
 import sys
@@ -7,9 +9,9 @@ def mainMenu():
     py.init()
     screen = py.display.set_mode((640, 480))
     MenuItems.screen = screen
-    buttons = [Button("New Game", (160, 380), 80, colour("Light Green"), colour("Dark Green"), "Rescources\Fonts\MorrisRoman.ttf")]
-    titletext1 = Text("The Legend", (90, 60), 80, colour("red"), "Rescources\Fonts\Runic.ttf")
-    titletext2 = Text("Of Aiopa", (160, 140), 80, colour("red"), "Rescources\Fonts\Runic.ttf")
+    buttons = [Button("New Game", (160, 380), 80, colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf")]
+    titletext1 = Text("The Legend", (90, 60), 80, colour("red"), "Resources\Fonts\Runic.ttf")
+    titletext2 = Text("Of Aiopa", (160, 140), 80, colour("red"), "Resources\Fonts\Runic.ttf")
     fade = fadeIn()
     fade.fadeIn = True
     while True:
@@ -39,5 +41,19 @@ def game():
     py.init()
     screen = py.display.set_mode((640, 480))
     screen.fill(colour("Green"))
+    entityClasses.screen = screen
+    screen.fill(colour("Red"))
+    print(screen)
+    print(entityClasses.screen)
+    player = Player()
+    player.sheetImage = "Resources/Images/Male_Basic.png"
+    player.initSheet()
+    clock = py.time.Clock()
+    py.time.set_timer(py.USEREVENT, 200)
     while True:
+        screen.fill(colour("Green"))
+        py.event.pump()
+        clock.tick(60)
+        player.move()
+        player.draw()
         py.display.flip()

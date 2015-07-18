@@ -1,6 +1,6 @@
 import pygame as py
 from MenuItems import Button, Text, fill_gradient, fadeIn
-from entityClasses import Player
+from entityClasses import Player, Tile
 import entityClasses
 import MenuItems
 from pygame.color import Color as colour
@@ -50,10 +50,21 @@ def game():
     player.initSheet()
     clock = py.time.Clock()
     py.time.set_timer(py.USEREVENT, 200)
+    tiles = py.sprite.Group()
+    temp = entityClasses.SpriteSheet("Resources/Images/Tile_Land2.png", 12, 16)
+    temp.getGrid()
+    for i in range(10):
+        tile = Tile((0, i), temp.images[0])
+        tiles.add(tile)
     while True:
-        screen.fill(colour("Green"))
+        screen.fill(colour("Dark Green"))
         py.event.pump()
         clock.tick(60)
+        tiles.update()
+        tiles.draw(screen)
         player.move()
         player.draw()
         py.display.flip()
+        for event in py.event.get():
+            if event.type == py.QUIT:
+                sys.exit()

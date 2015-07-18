@@ -1,4 +1,5 @@
 import pygame as py
+import Variables as v
 
 screen = None
 
@@ -46,11 +47,12 @@ class SpriteSheet(object):
         self.images = all
 
 
-class Player:
+class Player(py.sprite.Sprite): #TODO: Inherit from sprite
 
     def __init__(self):
-        self.posx = 20
-        self.posy = 20
+        super().__init__()
+        self.posx = screen.get_rect()[2] / 2
+        self.posy = screen.get_rect()[3] / 2
         self.direction = "Down"
         self.moving = False
         self.view = "DownC"
@@ -78,7 +80,6 @@ class Player:
         screen.blit(self.views[self.view], self.rect)
 
     def get_view(self):
-        print(self.view)
         for event in py.event.get():
             if event.type == py.USEREVENT:
                 if self.view == self.direction + "C":
@@ -103,13 +104,13 @@ class Player:
         py.event.pump()
         keys_pressed = py.key.get_pressed()
         if keys_pressed[py.K_a]:
-            self.posx += -2
+            v.playerPosX += 2
         if keys_pressed[py.K_d]:
-            self.posx += 2
+            v.playerPosX += -2
         if keys_pressed[py.K_s]:
-            self.posy += 2
+            v.playerPosY += -2
         if keys_pressed[py.K_w]:
-            self.posy += -2
+            v.playerPosY += 2
 
         if keys_pressed[py.K_s]:
             self.direction = "Down"
@@ -125,3 +126,23 @@ class Player:
             self.moving = True
         else:
             self.moving = False
+
+class Tile(py.sprite.Sprite):
+
+    def __init__(self, tilePosition, skin):
+        super().__init__()
+        self.tilePosX = tilePosition[0]
+        self.tilePosY = tilePosition[1]
+        self.posX = 0
+        self.posY = 0
+        self.image = skin
+
+    def draw(self):
+        self.set_rect()
+        screen.blit(self.rend, self.rect)
+
+    def update(self):
+        self.rend = self.image
+        self.rect = self.rend.get_rect()
+        self.rect.centerx = screen.get_rect()[2] / 2 + (v.playerPosX + (30 * self.tilePosX))
+        self.rect.centery = screen.get_rect()[3] / 2 + (v.playerPosY + (30 * self.tilePosY))

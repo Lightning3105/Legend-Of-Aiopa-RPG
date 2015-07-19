@@ -1,13 +1,15 @@
 import pygame as py
 from MenuItems import Button, Text, fill_gradient, fadeIn
-from entityClasses import Player, Tile
+from entityClasses import Player, Tile, Sword, HitBox
+import Variables as v
+import Map
 import entityClasses
 import MenuItems
 from pygame.color import Color as colour
 import sys
 def mainMenu():
     py.init()
-    screen = py.display.set_mode((640, 480))
+    screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
     MenuItems.screen = screen
     buttons = [Button("New Game", (160, 380), 80, colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf")]
     titletext1 = Text("The Legend", (90, 60), 80, colour("red"), "Resources\Fonts\Runic.ttf")
@@ -29,6 +31,8 @@ def mainMenu():
         for event in py.event.get():
             if event.type == py.QUIT:
                 sys.exit()
+            elif event.type==py.VIDEORESIZE:
+                screen=py.display.set_mode(event.dict['size'],py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
             elif event.type == py.MOUSEBUTTONDOWN:
                 for button in buttons:
                     if button.pressed(py.mouse.get_pos()):
@@ -39,7 +43,7 @@ def mainMenu():
 
 def game():
     py.init()
-    screen = py.display.set_mode((640, 480))
+    screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
     screen.fill(colour("Green"))
     entityClasses.screen = screen
     screen.fill(colour("Red"))
@@ -48,14 +52,30 @@ def game():
     player = Player()
     player.sheetImage = "Resources/Images/Male_Basic.png"
     player.initSheet()
+    player.draw()
     clock = py.time.Clock()
     py.time.set_timer(py.USEREVENT, 200)
-    tiles = py.sprite.Group()
-    temp = entityClasses.SpriteSheet("Resources/Images/Tile_Land2.png", 12, 16)
-    temp.getGrid()
-    for i in range(10):
-        tile = Tile((0, i), temp.images[0])
-        tiles.add(tile)
+
+    tileset = entityClasses.SpriteSheet("Resources/Images/Tile_Land2.png", 12, 16)
+    v.hitList = py.sprite.Group()
+    map1 = [["0","0","0","0","0","0","0","0","0","0"],
+            ["0","0","0","0","#","#","0","0","0","0"],
+            ["0","0","0","0","#","#","0","0","0","0"],
+            ["0","0","0","0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0","0","0","0"],]
+    tiles = Map.generateMap(map1, tileset)
+    sword = Sword()
+    sword.image = "Resources/Images/Sword_1.png"
+    sword.get_rend()
+    hits = py.sprite.Group()
+    hits.add(HitBox(centre(screen)[0] + 5, centre(screen)[1] - 5, 2, 20, "Right"))
+    hits.add(HitBox(centre(screen)[0] - 5, centre(screen)[1] - 5, 2, 20, "Left"))
+    hits.add(HitBox(centre(screen)[0] - 3, centre(screen)[1] - 8, 8, 2, "Top"))
+    hits.add(HitBox(centre(screen)[0] - 3, centre(screen)[1] + 16, 8, 2, "Bottom"))
     while True:
         screen.fill(colour("Dark Green"))
         py.event.pump()
@@ -63,8 +83,21 @@ def game():
         tiles.update()
         tiles.draw(screen)
         player.move()
+        hits.update()
         player.draw()
+        sword.draw()
+        hits.draw(screen)
         py.display.flip()
         for event in py.event.get():
             if event.type == py.QUIT:
                 sys.exit()
+            elif event.type==py.VIDEORESIZE:
+                screen=py.display.set_mode(event.dict['size'],py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
+
+        keys_pressed = py.key.get_pressed()
+        if keys_pressed[py.K_SPACE]:
+            sword.attacking = True
+
+
+def centre(screen):
+    return screen.get_rect()[2] / 2, screen.get_rect()[3] / 2

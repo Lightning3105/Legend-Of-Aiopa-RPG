@@ -189,7 +189,7 @@ class HitBox(py.sprite.Sprite):
 
 class Tile(py.sprite.Sprite):
 
-    def __init__(self, tilePosition, skin, wall=False):
+    def __init__(self, tilePosition, skin, terrain, wall=False):
         super().__init__()
         self.tilePosX = tilePosition[0]
         self.tilePosY = tilePosition[1]
@@ -199,6 +199,7 @@ class Tile(py.sprite.Sprite):
         self.wall = wall
         if wall:
             v.hitList.add(self)
+        v.allTiles.add(self)
 
     def draw(self):
         self.set_rect()
@@ -274,3 +275,101 @@ def arc(point, radius, degrees):
 
 def centre():
     return screen.get_rect()[2] / 2, screen.get_rect()[3] / 2
+
+class NPC(py.sprite.Sprite):
+
+    def __init__(self, posx, posy):
+        super().__init__()
+        self.posx = posx
+        self.posy = posy
+
+    def update(self):
+        self.image = py.Surface((20, 40))
+        self.image.fill((0, 255, 255))
+        self.rect = py.Rect(self.posx, self.posy, 20, 40)
+
+    def pathFind(self, target, tiles):
+        print("Finding Path")
+        neighbours = [(1,0), (0,1), (-1, 0), ( 0, -1), (1, -1), (-1, 1), (-1, -1), (1, 1)]
+        curPos = (self.posx, self.posy)
+        bestPlace = self.node(curPos, None, target)
+        openList = [bestPlace]
+        closedList = []
+        limit = 0
+        while True:
+            if limit > 100:
+                return bestPlace
+            limit += 1
+            for direction in neighbours:
+                print(direction)
+                newPos = tuple(map(sum,zip(bestPlace.pos, direction)))
+                oexists = False
+                for p in openList:
+                    if p.pos == newPos:
+                        oexists = True
+                cexists = False
+                print("done O")
+                for p in closedList:
+                    if p.pos == newPos:
+                        cexists = True
+                if not oexists:
+                    print("Not O")
+                    if not cexists:
+                        print("Not C")
+                        newNode = self.node(newPos, bestPlace, target)
+                        print("made node")
+                        openList.append(newNode)
+                        print(openList)
+            openList.remove(bestPlace)
+            closedList.append(bestPlace)
+
+            bestPlace = self.node((0, 0), None, (0,0))
+            bestPlace.score = 9999999999999
+            print([place.score for place in openList])
+            print(openList)
+            for place in openList:
+                if place.pos == target:
+                    return place
+                if place.score < bestPlace.score:
+                    bestPlace = place
+                print(place.score)
+                print(bestPlace.score)
+            print("BEST PLACE")
+            print(bestPlace)
+            print(bestPlace.pos)
+            print(bestPlace.score)
+            print(open)
+
+
+
+
+    class node:
+
+        def __init__(self, position, previous, destination):
+            self.prev = previous
+            self.pos = position
+            self.terrain = 0
+            self.G = 0
+            self.H = 0
+            self.score = 0
+            self.dest = destination
+
+            self.Score()
+
+        def Score(self):
+            self.G = 10 #TODO: replace with heuristic?
+            p = self.prev
+            while p != None:
+                self.G += p.G
+                p = p.prev
+            self.H = self.heuristic(self.pos, self.dest)
+            self.score = self.G + self.H
+            #TODO terrain
+
+        def draw(self):
+            py.draw.rect(screen, (0, 0, 255), (self.pos, (10,10)))
+
+        def heuristic(self, a, b):
+            (x1, y1) = a
+            (x2, y2) = b
+            return abs(x1 - x2) + abs(y1 - y2)

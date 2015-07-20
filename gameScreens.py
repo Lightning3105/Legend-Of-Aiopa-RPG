@@ -1,6 +1,6 @@
 import pygame as py
 from MenuItems import Button, Text, fill_gradient, fadeIn
-from entityClasses import Player, Tile, Sword, HitBox
+from entityClasses import Player, Tile, Sword, HitBox, NPC
 import Variables as v
 import Map
 import entityClasses
@@ -67,6 +67,7 @@ def game():
             ["0","0","0","0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0","0","0","0"],]
+    v.allTiles = py.sprite.Group()
     tiles = Map.generateMap(map1, tileset)
     sword = Sword()
     sword.image = "Resources/Images/Sword_1.png"
@@ -76,6 +77,10 @@ def game():
     hits.add(HitBox(centre(screen)[0] - 5, centre(screen)[1] - 5, 2, 20, "Left"))
     hits.add(HitBox(centre(screen)[0] - 3, centre(screen)[1] - 8, 8, 2, "Top"))
     hits.add(HitBox(centre(screen)[0] - 3, centre(screen)[1] + 16, 8, 2, "Bottom"))
+
+    npc = NPC(50, 100)
+    path = npc.pathFind((0, 0), tiles)
+    print(path)
     while True:
         screen.fill(colour("Dark Green"))
         py.event.pump()
@@ -87,6 +92,12 @@ def game():
         player.draw()
         sword.draw()
         hits.draw(screen)
+        p = path.prev
+        while p != None:
+            print(path.pos)
+            path.draw()
+            path = p
+            p = path.prev
         py.display.flip()
         for event in py.event.get():
             if event.type == py.QUIT:

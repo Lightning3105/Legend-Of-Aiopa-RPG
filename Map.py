@@ -11,8 +11,10 @@ def generateMap(map, sheet):
             if map[row][tile] == "0":
                 image = sheet.images[0]
                 wall = False
+                terrain = 1
             if map[row][tile] == "#":
                 image = sheet.images[2]
                 wall = True
-            outmap.add(entityClasses.Tile((tile - modx, row - mody), image, wall))
+                terrain = 0
+            outmap.add(entityClasses.Tile((tile - modx, row - mody), image, terrain, wall))
     return outmap

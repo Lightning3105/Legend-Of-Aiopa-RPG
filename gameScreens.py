@@ -1,7 +1,8 @@
 import pygame as py
+import Variables as v
 from MenuItems import Button, Text, fill_gradient, fadeIn
 from entityClasses import Player, Tile, Sword, HitBox, NPC
-import Variables as v
+
 import Map
 import entityClasses
 import MenuItems
@@ -43,12 +44,10 @@ def mainMenu():
 
 def game():
     py.init()
-    screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
-    screen.fill(colour("Green"))
-    entityClasses.screen = screen
-    screen.fill(colour("Red"))
-    print(screen)
-    print(entityClasses.screen)
+    v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
+    v.screen.fill(colour("Green"))
+    v.screen.fill(colour("Red"))
+    print(v.screen)
     player = Player()
     player.sheetImage = "Resources/Images/Male_Basic.png"
     player.initSheet()
@@ -73,37 +72,32 @@ def game():
     sword.image = "Resources/Images/Sword_1.png"
     sword.get_rend()
     hits = py.sprite.Group()
-    hits.add(HitBox(centre(screen)[0] + 5, centre(screen)[1] - 5, 2, 20, "Right"))
-    hits.add(HitBox(centre(screen)[0] - 5, centre(screen)[1] - 5, 2, 20, "Left"))
-    hits.add(HitBox(centre(screen)[0] - 3, centre(screen)[1] - 8, 8, 2, "Top"))
-    hits.add(HitBox(centre(screen)[0] - 3, centre(screen)[1] + 16, 8, 2, "Bottom"))
+    hits.add(HitBox(centre(v.screen)[0] + (5 * v.scale), centre(v.screen)[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale), "Right"))
+    hits.add(HitBox(centre(v.screen)[0] - (5 * v.scale), centre(v.screen)[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale), "Left"))
+    hits.add(HitBox(centre(v.screen)[0] - (3 * v.scale), centre(v.screen)[1] - (8 * v.scale), (8 * v.scale), (2 * v.scale), "Top"))
+    hits.add(HitBox(centre(v.screen)[0] - (3 * v.scale), centre(v.screen)[1] + (16 * v.scale), (8 * v.scale), (2 * v.scale), "Bottom"))
+    v.allNpc = py.sprite.Group()
 
     npc = NPC(50, 100)
-    path = npc.pathFind((0, 0), tiles)
-    print(path)
     while True:
-        screen.fill(colour("Dark Green"))
+        v.screen.fill(colour("Dark Green"))
         py.event.pump()
         clock.tick(60)
         tiles.update()
-        tiles.draw(screen)
+        tiles.draw(v.screen)
         player.move()
         hits.update()
         player.draw()
         sword.draw()
-        hits.draw(screen)
-        p = path.prev
-        while p != None:
-            print(path.pos)
-            path.draw()
-            path = p
-            p = path.prev
+        hits.draw(v.screen)
+        v.allNpc.update()
+        v.allNpc.draw(v.screen)
         py.display.flip()
         for event in py.event.get():
             if event.type == py.QUIT:
                 sys.exit()
             elif event.type==py.VIDEORESIZE:
-                screen=py.display.set_mode(event.dict['size'],py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
+                v.screen = py.display.set_mode(event.dict['size'],py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
 
         keys_pressed = py.key.get_pressed()
         if keys_pressed[py.K_SPACE]:

@@ -1,8 +1,6 @@
 import pygame as py
 import Variables as v
 
-screen = None
-
 class SpriteSheet(object):
     """ Class used to grab images out of a sprite sheet. """
     # This points to our sprite sheet image
@@ -50,8 +48,8 @@ class Player(py.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        self.posx = screen.get_rect()[2] / 2
-        self.posy = screen.get_rect()[3] / 2
+        self.posx = v.screen.get_rect()[2] / 2
+        self.posy = v.screen.get_rect()[3] / 2
         self.direction = "Down"
         v.playerDirection = self.direction
         self.moving = False
@@ -77,7 +75,12 @@ class Player(py.sprite.Sprite):
     def draw(self):
         self.set_rect()
         self.get_view()
-        screen.blit(self.views[self.view], self.rect)
+        skin = self.views[self.view]
+        size = skin.get_rect()
+        image = py.transform.scale(skin, (size.width * v.scale, size.height * v.scale))
+        self.rect.centerx = self.posx
+        self.rect.centery = self.posy
+        v.screen.blit(image, self.rect)
 
     def get_view(self):
         for event in py.event.get():
@@ -99,6 +102,8 @@ class Player(py.sprite.Sprite):
         self.rect = self.rend.get_rect()
         self.rect.centerx = self.posx
         self.rect.centery = self.posy
+        self.rect.width = self.rend.get_rect().width * v.scale
+        self.rect.height = self.rend.get_rect().height * v.scale
 
     def move(self):
         py.event.pump()
@@ -172,7 +177,7 @@ class HitBox(py.sprite.Sprite):
         self.image.fill((255, 0, 0))
 
     def draw(self):
-        py.draw.rect(screen, (255, 0, 0), self.rect)
+        py.draw.rect(v.screen, (255, 0, 0), self.rect)
 
     def update(self):
         for thing in v.hitList:
@@ -195,21 +200,24 @@ class Tile(py.sprite.Sprite):
         self.tilePosY = tilePosition[1]
         self.posX = 0
         self.posY = 0
-        self.image = skin
+        self.skin = skin
         self.wall = wall
         if wall:
             v.hitList.add(self)
+        print(v.allTiles)
         v.allTiles.add(self)
 
     def draw(self):
         self.set_rect()
-        screen.blit(self.rend, self.rect)
+        v.screen.blit(self.rend, self.rect)
 
     def update(self):
-        self.rend = self.image
-        self.rect = self.rend.get_rect()
-        self.rect.centerx = screen.get_rect()[2] / 2 + (v.playerPosX + (30 * self.tilePosX))
-        self.rect.centery = screen.get_rect()[3] / 2 + (v.playerPosY + (30 * self.tilePosY))
+        self.image = py.transform.scale(self.skin, (30 * v.scale, 30 * v.scale))
+        self.rect = self.image.get_rect()
+        self.rect.centerx = v.screen.get_rect()[2] / 2 + ((v.playerPosX + (30 * self.tilePosX)) * v.scale)
+        self.rect.centery = v.screen.get_rect()[3] / 2 + ((v.playerPosY + (30 * self.tilePosY)) * v.scale)
+        #self.rect.width = self.rect.width * v.scale
+        #self.rect.height = self.rect.height * v.scale
 
 
 class Sword:
@@ -219,12 +227,12 @@ class Sword:
         self.attacking = False
         self.attCyclePos = 0
         self.attSpeed = 8
-        self.posX = screen.get_rect()[2] / 2
-        self.posY = screen.get_rect()[3] / 2
+        self.posX = v.screen.get_rect()[2] / 2
+        self.posY = v.screen.get_rect()[3] / 2
 
     def get_rend(self):
         self.rend = py.image.load(self.image)
-        self.rend = py.transform.scale(self.rend, (20, 20))
+        self.rend = py.transform.scale(self.rend, (20 * v.scale, 20 * v.scale))
 
     def update(self):
         self.get_rend()
@@ -241,11 +249,11 @@ class Sword:
                 self.rect = self.rend.get_rect()
                 self.rect.center = (self.posX, self.posY)
                 self.rend = rot_center(self.rend, angleMod + 180)
-                self.rect.center = arc((centre()[0], centre()[1]), 20, angleMod)
+                self.rect.center = arc((centre()[0], centre()[1]), 20 * v.scale, angleMod)
                 self.attCyclePos += self.attSpeed
             else:
                 self.rend = rot_center(self.rend, angleMod + 180 - self.attCyclePos)
-                self.rect.center = arc((centre()[0], centre()[1]), 20, angleMod - self.attCyclePos)
+                self.rect.center = arc((centre()[0], centre()[1]), 20 * v.scale, angleMod - self.attCyclePos)
                 self.attCyclePos += self.attSpeed
                 if self.attCyclePos > 180:
                     self.attacking = False
@@ -257,7 +265,7 @@ class Sword:
     def draw(self):
         self.update()
         if self.attacking:
-            screen.blit(self.rend, self.rect)
+            v.screen.blit(self.rend, self.rect)
 
 def rot_center(image, angle):
     """rotate an image while keeping its center and size"""
@@ -274,7 +282,7 @@ def arc(point, radius, degrees):
     return out
 
 def centre():
-    return screen.get_rect()[2] / 2, screen.get_rect()[3] / 2
+    return v.screen.get_rect()[2] / 2, v.screen.get_rect()[3] / 2
 
 class NPC(py.sprite.Sprite):
 
@@ -282,94 +290,13 @@ class NPC(py.sprite.Sprite):
         super().__init__()
         self.posx = posx
         self.posy = posy
+        v.allNpc.add(self)
 
     def update(self):
-        self.image = py.Surface((20, 40))
+        self.image = py.Surface((1, 1))
         self.image.fill((0, 255, 255))
-        self.rect = py.Rect(self.posx, self.posy, 20, 40)
+        self.rect = py.Rect(get_coords((self.posx, self.posy)), (1, 1))
 
-    def pathFind(self, target, tiles):
-        print("Finding Path")
-        neighbours = [(1,0), (0,1), (-1, 0), ( 0, -1), (1, -1), (-1, 1), (-1, -1), (1, 1)]
-        curPos = (self.posx, self.posy)
-        bestPlace = self.node(curPos, None, target)
-        openList = [bestPlace]
-        closedList = []
-        limit = 0
-        while True:
-            if limit > 100:
-                return bestPlace
-            limit += 1
-            for direction in neighbours:
-                print(direction)
-                newPos = tuple(map(sum,zip(bestPlace.pos, direction)))
-                oexists = False
-                for p in openList:
-                    if p.pos == newPos:
-                        oexists = True
-                cexists = False
-                print("done O")
-                for p in closedList:
-                    if p.pos == newPos:
-                        cexists = True
-                if not oexists:
-                    print("Not O")
-                    if not cexists:
-                        print("Not C")
-                        newNode = self.node(newPos, bestPlace, target)
-                        print("made node")
-                        openList.append(newNode)
-                        print(openList)
-            openList.remove(bestPlace)
-            closedList.append(bestPlace)
-
-            bestPlace = self.node((0, 0), None, (0,0))
-            bestPlace.score = 9999999999999
-            print([place.score for place in openList])
-            print(openList)
-            for place in openList:
-                if place.pos == target:
-                    return place
-                if place.score < bestPlace.score:
-                    bestPlace = place
-                print(place.score)
-                print(bestPlace.score)
-            print("BEST PLACE")
-            print(bestPlace)
-            print(bestPlace.pos)
-            print(bestPlace.score)
-            print(open)
-
-
-
-
-    class node:
-
-        def __init__(self, position, previous, destination):
-            self.prev = previous
-            self.pos = position
-            self.terrain = 0
-            self.G = 0
-            self.H = 0
-            self.score = 0
-            self.dest = destination
-
-            self.Score()
-
-        def Score(self):
-            self.G = 10 #TODO: replace with heuristic?
-            p = self.prev
-            while p != None:
-                self.G += p.G
-                p = p.prev
-            self.H = self.heuristic(self.pos, self.dest)
-            self.score = self.G + self.H
-            #TODO terrain
-
-        def draw(self):
-            py.draw.rect(screen, (0, 0, 255), (self.pos, (10,10)))
-
-        def heuristic(self, a, b):
-            (x1, y1) = a
-            (x2, y2) = b
-            return abs(x1 - x2) + abs(y1 - y2)
+def get_coords(pos):
+    (x, y) = pos
+    return (v.screen.get_rect()[2] / 2 + (v.playerPosX + x), v.screen.get_rect()[3] / 2 + (v.playerPosY + y))

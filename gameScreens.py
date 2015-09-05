@@ -78,19 +78,22 @@ def game():
     hits.add(HitBox(centre(v.screen)[0] - (3 * v.scale), centre(v.screen)[1] + (16 * v.scale), (8 * v.scale), (2 * v.scale), "Bottom"))
     v.allNpc = py.sprite.Group()
 
-    npc = NPC(50, 100)
+    npc = NPC(0, 50)
     while True:
+        print("PX: " + str(v.playerPosX))
+        print("PY: " + str(v.playerPosY))
         v.screen.fill(colour("Dark Green"))
         py.event.pump()
         clock.tick(60)
         tiles.update()
         tiles.draw(v.screen)
         player.move()
+        v.allNpc.update()
         hits.update()
         player.draw()
         sword.draw()
-        hits.draw(v.screen)
-        v.allNpc.update()
+        #hits.draw(v.screen)
+
         v.allNpc.draw(v.screen)
         py.display.flip()
         for event in py.event.get():

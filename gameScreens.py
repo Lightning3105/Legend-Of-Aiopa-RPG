@@ -78,8 +78,9 @@ def game():
     hits.add(HitBox(centre(v.screen)[0] - (3 * v.scale), centre(v.screen)[1] + (16 * v.scale), (8 * v.scale), (2 * v.scale), "Bottom"))
     v.allNpc = py.sprite.Group()
 
-    npc = NPC(0, 50)
+    npc = NPC(100, 100)
     while True:
+        v.ticks += 1
         print("PX: " + str(v.playerPosX))
         print("PY: " + str(v.playerPosY))
         v.screen.fill(colour("Dark Green"))

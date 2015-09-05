@@ -1,5 +1,7 @@
 import pygame as py
 import Variables as v
+import math
+from time import sleep
 
 class SpriteSheet(object):
     """ Class used to grab images out of a sprite sheet. """
@@ -299,18 +301,75 @@ class NPC(py.sprite.Sprite):
         self.image = py.Surface((30 * v.scale, 30 * v.scale))
         self.image.fill((0, 255, 255))
         self.rect = self.image.get_rect()
-        self.rect.centerx = v.screen.get_rect()[2] / 2 + ((v.playerPosX + (1 * self.posx)) * v.scale)
-        self.rect.centery = v.screen.get_rect()[3] / 2 + ((v.playerPosY + (1 * self.posy)) * v.scale)
+        self.rect.centerx = v.screen.get_rect()[2] / 2 + ((v.playerPosX - (1 * self.posx)) * v.scale)
+        self.rect.centery = v.screen.get_rect()[3] / 2 + ((v.playerPosY - (1 * self.posy)) * v.scale)
+        self.pathfind()
 
     def pathfind(self):
-        if v.playerPosX > self.posx:
-            self.direction = 270
-        if v.playerPosX < self.posx:
-            self.direction = 90
-        if v.playerPosY < self.posy:
-            self.direction = 0
-        if v.playerPosY > self.posy:
-            self.direction = 180
+        open = []
+        closed = []
+        start = (self.posx, self.posy)
+        end = (v.playerPosX, v.playerPosY)
+
+        curpos = (self.posx, self.posy)
+
+        while True:
+            open.append((curpos[0] + 1, curpos[1] + -1))
+            open.append((curpos[0] + 1, curpos[1] + 0))
+            open.append((curpos[0] + 1, curpos[1] + 1))
+            open.append((curpos[0] + 0, curpos[1] + -1))
+            open.append((curpos[0] + 1, curpos[1] + 1))
+            open.append((curpos[0] + -1, curpos[1] + -1))
+            open.append((curpos[0] + -1, curpos[1] + 0))
+            open.append((curpos[0] + -1, curpos[1] + 1))
+            open = set(open)
+            open = list(open)
+
+            for pos in open:
+                if pos in closed:
+                    open.remove(pos)
+
+            best = None
+            bestScore = float("inf")
+
+            for pos in open:
+                n = self.node(start, end, pos)
+                if n.F() < bestScore:
+                    best = pos
+                    bestScore = n.F()
+            open.remove(best)
+            closed.append(best)
+            curpos = best
+
+            if abs(curpos[0] - v.playerPosX) > 10:
+                if abs(curpos[1] - v.playerPosY) > 10:
+                    self.posx = curpos[0]
+                    self.posy = curpos[1]
+                    break
+                else:
+                    break
+            else:
+                break
+
+
+
+    class node():
+        #TODO: Add terrain and hitboxes
+
+        def __init__(self, start, end, pos):
+            self.start = start
+            self.end = end
+            self.pos = pos
+
+        def G(self):
+            #distance from start to position
+            return math.sqrt((self.start[0] - self.pos[0])**2 + (self.start[1] - self.pos[1])**2)
+        def H(self):
+            #distance from position to end
+            return math.sqrt((self.pos[0] - self.end[0])**2 + (self.pos[1] - self.end[1])**2)
+        def F(self):
+            #total score - the lower the better
+            return self.G() + self.H()
 
 
 def get_coords(pos):

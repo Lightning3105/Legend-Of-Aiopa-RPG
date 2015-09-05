@@ -4,5 +4,6 @@ playerDirection = ""
 hitList = None
 allTiles = None
 allNpc = None
-scale = 3
+scale = 1.5
 screen = None
+ticks = 0

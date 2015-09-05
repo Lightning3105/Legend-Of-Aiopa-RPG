@@ -77,7 +77,7 @@ class Player(py.sprite.Sprite):
         self.get_view()
         skin = self.views[self.view]
         size = skin.get_rect()
-        image = py.transform.scale(skin, (size.width * v.scale, size.height * v.scale))
+        image = py.transform.scale(skin, (int(size.width * v.scale), int(size.height * v.scale)))
         self.rect.centerx = self.posx
         self.rect.centery = self.posy
         v.screen.blit(image, self.rect)
@@ -204,7 +204,6 @@ class Tile(py.sprite.Sprite):
         self.wall = wall
         if wall:
             v.hitList.add(self)
-        print(v.allTiles)
         v.allTiles.add(self)
 
     def draw(self):
@@ -212,7 +211,7 @@ class Tile(py.sprite.Sprite):
         v.screen.blit(self.rend, self.rect)
 
     def update(self):
-        self.image = py.transform.scale(self.skin, (30 * v.scale, 30 * v.scale))
+        self.image = py.transform.scale(self.skin, (int(30 * v.scale), int(30 * v.scale)))
         self.rect = self.image.get_rect()
         self.rect.centerx = v.screen.get_rect()[2] / 2 + ((v.playerPosX + (30 * self.tilePosX)) * v.scale)
         self.rect.centery = v.screen.get_rect()[3] / 2 + ((v.playerPosY + (30 * self.tilePosY)) * v.scale)
@@ -232,7 +231,7 @@ class Sword:
 
     def get_rend(self):
         self.rend = py.image.load(self.image)
-        self.rend = py.transform.scale(self.rend, (20 * v.scale, 20 * v.scale))
+        self.rend = py.transform.scale(self.rend, (int(20 * v.scale), int(20 * v.scale)))
 
     def update(self):
         self.get_rend()
@@ -290,12 +289,29 @@ class NPC(py.sprite.Sprite):
         super().__init__()
         self.posx = posx
         self.posy = posy
+        self.direction = None
         v.allNpc.add(self)
+        v.hitList.add(self)
 
     def update(self):
-        self.image = py.Surface((1, 1))
+        print("NX: " + str(self.posx))
+        print("NY: " + str(self.posy))
+        self.image = py.Surface((30 * v.scale, 30 * v.scale))
         self.image.fill((0, 255, 255))
-        self.rect = py.Rect(get_coords((self.posx, self.posy)), (1, 1))
+        self.rect = self.image.get_rect()
+        self.rect.centerx = v.screen.get_rect()[2] / 2 + ((v.playerPosX + (1 * self.posx)) * v.scale)
+        self.rect.centery = v.screen.get_rect()[3] / 2 + ((v.playerPosY + (1 * self.posy)) * v.scale)
+
+    def pathfind(self):
+        if v.playerPosX > self.posx:
+            self.direction = 270
+        if v.playerPosX < self.posx:
+            self.direction = 90
+        if v.playerPosY < self.posy:
+            self.direction = 0
+        if v.playerPosY > self.posy:
+            self.direction = 180
+
 
 def get_coords(pos):
     (x, y) = pos

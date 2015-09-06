@@ -81,8 +81,8 @@ def game():
     npc = NPC(100, 100)
     while True:
         v.ticks += 1
-        print("PX: " + str(v.playerPosX))
-        print("PY: " + str(v.playerPosY))
+        #print("PX: " + str(v.playerPosX))
+        #print("PY: " + str(v.playerPosY))
         v.screen.fill(colour("Dark Green"))
         py.event.pump()
         clock.tick(60)

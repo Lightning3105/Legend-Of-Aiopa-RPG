@@ -296,8 +296,8 @@ class NPC(py.sprite.Sprite):
         v.hitList.add(self)
 
     def update(self):
-        print("NX: " + str(self.posx))
-        print("NY: " + str(self.posy))
+        #print("NX: " + str(self.posx))
+        #print("NY: " + str(self.posy))
         self.image = py.Surface((30 * v.scale, 30 * v.scale))
         self.image.fill((0, 255, 255))
         self.rect = self.image.get_rect()
@@ -308,6 +308,7 @@ class NPC(py.sprite.Sprite):
     def pathfind(self):
         open = []
         closed = []
+        route = []
         start = (self.posx, self.posy)
         end = (v.playerPosX, v.playerPosY)
 
@@ -329,6 +330,26 @@ class NPC(py.sprite.Sprite):
                 if pos in closed:
                     open.remove(pos)
 
+            for pos in open:
+                rect = py.Rect(0, 0, 30, 30)
+                rect.center = pos
+                rect.width = 30
+                rect.height = 30
+                #print()
+                for thing in v.hitList:
+                    #print("Thing: " + str(thing.rect))
+                    if rect.colliderect(thing.rect):
+                        open.remove(pos)
+                        print("Hit")
+
+            for pos in open:
+                s = py.Surface((1, 1))
+                s.fill((255, 255, 255))
+                rect = s.get_rect()
+                rect.centerx = v.screen.get_rect()[2] / 2 + ((v.playerPosX - (1 * pos[0])) * v.scale)
+                rect.centery = v.screen.get_rect()[3] / 2 + ((v.playerPosY - (1 * pos[1])) * v.scale)
+                v.screen.blit(s, get_coords(pos))
+
             best = None
             bestScore = float("inf")
 
@@ -337,20 +358,17 @@ class NPC(py.sprite.Sprite):
                 if n.F() < bestScore:
                     best = pos
                     bestScore = n.F()
+            if best == float("inf"):
+                break
             open.remove(best)
             closed.append(best)
             curpos = best
+            route.append(best)
 
-            if abs(curpos[0] - v.playerPosX) > 10:
-                if abs(curpos[1] - v.playerPosY) > 10:
-                    self.posx = curpos[0]
-                    self.posy = curpos[1]
+            if abs(curpos[0] - v.playerPosX) < 30: #TODO Adjust For Scale
+                if abs(curpos[1] - v.playerPosY) < 30:
+                    self.posx, self.posy = route[0]
                     break
-                else:
-                    break
-            else:
-                break
-
 
 
     class node():
@@ -360,6 +378,9 @@ class NPC(py.sprite.Sprite):
             self.start = start
             self.end = end
             self.pos = pos
+        def terrain(self):
+
+            return 0
 
         def G(self):
             #distance from start to position
@@ -369,7 +390,8 @@ class NPC(py.sprite.Sprite):
             return math.sqrt((self.pos[0] - self.end[0])**2 + (self.pos[1] - self.end[1])**2)
         def F(self):
             #total score - the lower the better
-            return self.G() + self.H()
+            return self.G() + self.H() + self.terrain()
+
 
 
 def get_coords(pos):

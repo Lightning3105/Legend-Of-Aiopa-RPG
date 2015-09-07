@@ -30,10 +30,20 @@ class health:
         self.getPercent()
         rect = self.image.get_rect()
         image = py.transform.scale(self.image, (30, 30))
-        pos = (10 + (31 * self.number), 450)
+        pos = (65 + (31 * self.number), 410)
         rect.center = pos
         v.screen.blit(image, rect)
 
 def update_health():
     for n in range(1, 6):
         health(n).draw()
+
+class weaponSlot:
+
+    def draw(self):
+        image = "Resources/Images/Empty_Weapon_Slot.png"
+        image = py.image.load(image)
+        image = py.transform.scale(image, (80, 80))
+        rect = image.get_rect()
+        rect.center = (44, 435)
+        v.screen.blit(image, rect)

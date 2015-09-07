@@ -79,6 +79,7 @@ def game():
     hits.add(HitBox(centre(v.screen)[0] - (3 * v.scale), centre(v.screen)[1] - (8 * v.scale), (8 * v.scale), (2 * v.scale), "Top"))
     hits.add(HitBox(centre(v.screen)[0] - (3 * v.scale), centre(v.screen)[1] + (16 * v.scale), (8 * v.scale), (2 * v.scale), "Bottom"))
     v.allNpc = py.sprite.Group()
+    weaponSlot = guiClasses.weaponSlot()
 
     npc = NPC(0, 100)
     while True:
@@ -98,6 +99,7 @@ def game():
         sword.draw()
         #hits.draw(v.screen)
         update_health()
+        weaponSlot.draw()
 
         v.allNpc.draw(v.screen)
         py.display.flip()

@@ -57,7 +57,7 @@ def game():
 
     tileset = entityClasses.SpriteSheet("Resources/Images/Tile_Land2.png", 12, 16)
     v.hitList = py.sprite.Group()
-    map1 = [["0","0","0","0","0","0","0","0","0","0"],
+    v.map1 = [["0","0","0","0","0","0","0","0","0","0"],
             ["0","0","0","0","#","#","0","0","0","0"],
             ["0","0","0","0","#","#","0","0","0","0"],
             ["0","0","0","0","0","0","0","0","0","0"],
@@ -67,7 +67,7 @@ def game():
             ["0","0","0","0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0","0","0","0"],]
     v.allTiles = py.sprite.Group()
-    tiles = Map.generateMap(map1, tileset)
+    tiles = Map.generateMap(v.map1, tileset)
     sword = Sword()
     sword.image = "Resources/Images/Sword_1.png"
     sword.get_rend()
@@ -78,7 +78,7 @@ def game():
     hits.add(HitBox(centre(v.screen)[0] - (3 * v.scale), centre(v.screen)[1] + (16 * v.scale), (8 * v.scale), (2 * v.scale), "Bottom"))
     v.allNpc = py.sprite.Group()
 
-    npc = NPC(100, 100)
+    npc = NPC(0, 100)
     while True:
         v.ticks += 1
         #print("PX: " + str(v.playerPosX))
@@ -89,6 +89,7 @@ def game():
         tiles.update()
         tiles.draw(v.screen)
         player.move()
+        entityClasses.create_nodes()
         v.allNpc.update()
         hits.update()
         player.draw()

@@ -189,9 +189,9 @@ class HitBox(py.sprite.Sprite):
                 if self.side == "Bottom":
                     v.playerPosY += 2
                 if self.side == "Left":
-                    v.playerPosX += -2
-                if self.side == "Right":
                     v.playerPosX += 2
+                if self.side == "Right":
+                    v.playerPosX += -2
 
 
 class Tile(py.sprite.Sprite):

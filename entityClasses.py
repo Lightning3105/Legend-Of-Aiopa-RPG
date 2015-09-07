@@ -16,7 +16,7 @@ class SpriteSheet(object):
         self.columns = columns
 
         # Load the sprite sheet.
-        self.sprite_sheet = py.image.load(file_name).convert()
+        self.sprite_sheet = py.image.load(file_name).convert_alpha()
 
 
     def get_image(self, x, y, width, height):

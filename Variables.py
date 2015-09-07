@@ -1,5 +1,7 @@
 playerPosX = 0
 playerPosY = 0
+playerHealth = 20
+playerMaxHealth = 20
 playerDirection = ""
 hitList = None
 allTiles = None

@@ -2,10 +2,12 @@ import pygame as py
 import Variables as v
 from MenuItems import Button, Text, fill_gradient, fadeIn
 from entityClasses import Player, Tile, Sword, HitBox, NPC
+from guiClasses import update_health
 
 import Map
 import entityClasses
 import MenuItems
+import guiClasses
 from pygame.color import Color as colour
 import sys
 def mainMenu():
@@ -44,7 +46,7 @@ def mainMenu():
 
 def game():
     py.init()
-    v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
+    v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
     v.screen.fill(colour("Green"))
     v.screen.fill(colour("Red"))
     print(v.screen)
@@ -95,6 +97,7 @@ def game():
         player.draw()
         sword.draw()
         #hits.draw(v.screen)
+        update_health()
 
         v.allNpc.draw(v.screen)
         py.display.flip()
@@ -102,7 +105,7 @@ def game():
             if event.type == py.QUIT:
                 sys.exit()
             elif event.type==py.VIDEORESIZE:
-                v.screen = py.display.set_mode(event.dict['size'],py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
+                v.screen = py.display.set_mode(event.dict['size'],py.HWSURFACE|py.DOUBLEBUF)
 
         keys_pressed = py.key.get_pressed()
         if keys_pressed[py.K_SPACE]:

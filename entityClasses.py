@@ -129,9 +129,9 @@ class Player(py.sprite.Sprite):
                     moveDown = False"""
         keys_pressed = py.key.get_pressed()
         if keys_pressed[py.K_a]:
-            self.velX = 2
-        if keys_pressed[py.K_d]:
             self.velX = -2
+        if keys_pressed[py.K_d]:
+            self.velX = 2
         if keys_pressed[py.K_s]:
             self.velY = -2
         if keys_pressed[py.K_w]:
@@ -215,7 +215,7 @@ class Tile(py.sprite.Sprite):
     def update(self):
         self.image = py.transform.scale(self.skin, (int(30 * v.scale), int(30 * v.scale)))
         self.rect = self.image.get_rect()
-        self.rect.centerx = v.screen.get_rect()[2] / 2 + ((v.playerPosX + (30 * self.tilePosX)) * v.scale)
+        self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (30 * self.tilePosX)) * v.scale)
         self.rect.centery = v.screen.get_rect()[3] / 2 + ((v.playerPosY + (30 * self.tilePosY)) * v.scale)
         #self.rect.width = self.rect.width * v.scale
         #self.rect.height = self.rect.height * v.scale
@@ -292,8 +292,10 @@ class NPC(py.sprite.Sprite):
         self.posx = posx
         self.posy = posy
         self.direction = None
+        self.pf_been = []
+        self.pf_route = []
         v.allNpc.add(self)
-        v.hitList.add(self)
+        #v.hitList.add(self)
 
     def update(self):
         #print("NX: " + str(self.posx))
@@ -301,74 +303,77 @@ class NPC(py.sprite.Sprite):
         self.image = py.Surface((30 * v.scale, 30 * v.scale))
         self.image.fill((0, 255, 255))
         self.rect = self.image.get_rect()
-        self.rect.centerx = v.screen.get_rect()[2] / 2 + ((v.playerPosX - (1 * self.posx)) * v.scale)
-        self.rect.centery = v.screen.get_rect()[3] / 2 + ((v.playerPosY - (1 * self.posy)) * v.scale)
-        self.pathfind()
+        self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
+        self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
+
+        #self.move()
 
     def pathfind(self):
         open = []
         closed = []
         route = []
-        start = (self.posx, self.posy)
         end = (v.playerPosX, v.playerPosY)
-
         curpos = (self.posx, self.posy)
-
+        runs = 0
+        self.pf_been = []
         while True:
-            open.append((curpos[0] + 1, curpos[1] + -1))
-            open.append((curpos[0] + 1, curpos[1] + 0))
-            open.append((curpos[0] + 1, curpos[1] + 1))
-            open.append((curpos[0] + 0, curpos[1] + -1))
-            open.append((curpos[0] + 1, curpos[1] + 1))
-            open.append((curpos[0] + -1, curpos[1] + -1))
-            open.append((curpos[0] + -1, curpos[1] + 0))
-            open.append((curpos[0] + -1, curpos[1] + 1))
-            open = set(open)
-            open = list(open)
-
-            for pos in open:
-                if pos in closed:
-                    open.remove(pos)
-
-            for pos in open:
-                rect = py.Rect(0, 0, 30, 30)
-                rect.center = pos
-                rect.width = 30
-                rect.height = 30
-                #print()
-                for thing in v.hitList:
-                    #print("Thing: " + str(thing.rect))
-                    if rect.colliderect(thing.rect):
-                        open.remove(pos)
-                        print("Hit")
-
-            for pos in open:
-                s = py.Surface((1, 1))
-                s.fill((255, 255, 255))
-                rect = s.get_rect()
-                rect.centerx = v.screen.get_rect()[2] / 2 + ((v.playerPosX - (1 * pos[0])) * v.scale)
-                rect.centery = v.screen.get_rect()[3] / 2 + ((v.playerPosY - (1 * pos[1])) * v.scale)
-                v.screen.blit(s, get_coords(pos))
+            print(runs)
+            runs += 1
+            surrounding = []
+            surrounding = [node for node in v.pf_nodes if 15 > math.sqrt(((curpos[0] - node[0])**2) + ((curpos[1] - node[1])**2)) and not node == curpos and not node in self.pf_been]
+            #for node in v.pf_nodes:
+             #   if 15 > math.sqrt(((curpos[0] - node[0])**2) + ((curpos[1] - node[1])**2)):
+             #       if not node == curpos:
+             #           if not node in self.pf_been:
+             #               surrounding.append(node)
 
             best = None
-            bestScore = float("inf")
-
-            for pos in open:
-                n = self.node(start, end, pos)
-                if n.F() < bestScore:
-                    best = pos
-                    bestScore = n.F()
-            if best == float("inf"):
-                break
-            open.remove(best)
-            closed.append(best)
+            bestDist = float("inf")
+            for node in surrounding:
+                dist = math.sqrt((node[0] - end[0])**2 + (node[1] - end[1])**2)
+                if dist < bestDist:
+                    best = node
+                    bestDist= dist
+            self.pf_route.append(best)
+            self.pf_been.append(best)
             curpos = best
-            route.append(best)
 
             if abs(curpos[0] - v.playerPosX) < 30: #TODO Adjust For Scale
                 if abs(curpos[1] - v.playerPosY) < 30:
-                    self.posx, self.posy = route[0]
+                    print("Got To Player")
+                    print(self.pf_route)
+                    self.pf_been = []
                     break
+            if runs > 10:
+                print("Force Exit Pathfind")
+                break
+    def move(self):
+        try:
+            end = (v.playerPosX, v.playerPosY)
+            surrounding = []
+            surrounding.append((self.posx + 1, self.posy + -1))
+            surrounding.append((self.posx + 1, self.posy + 0))
+            surrounding.append((self.posx + 1, self.posy + 1))
+            surrounding.append((self.posx + 0, self.posy + -1))
+            surrounding.append((self.posx + 1, self.posy + 1))
+            surrounding.append((self.posx + -1, self.posy + -1))
+            surrounding.append((self.posx + -1, self.posy + 0))
+            surrounding.append((self.posx + -1, self.posy + 1))
+            best = None
+            bestDist = float("inf")
+            for pos in surrounding:
+                dist = math.sqrt((pos[0] - self.pf_route[0][0])**2 + (pos[1] - self.pf_route[0][1])**2)
+                if dist < bestDist:
+                    best = pos
+                    bestDist = dist
+
+            self.posx = best[0]
+            self.posy = best[1]
+            if math.sqrt((self.posx - self.pf_route[0][0])**2 + (self.posy - self.pf_route[0][1])**2) < 2:
+                self.pf_route.pop(0)
+        except:
+            self.pathfind()
+
 
 
     class node():
@@ -394,6 +399,14 @@ class NPC(py.sprite.Sprite):
 
 
 
-def get_coords(pos):
-    (x, y) = pos
-    return (v.screen.get_rect()[2] / 2 + (v.playerPosX + x), v.screen.get_rect()[3] / 2 + (v.playerPosY + y))
+def create_nodes():
+    mapWidth = len(v.map1[0]) * (30 * v.scale)
+    mapHeight = len(v.map1) * (30 * v.scale)
+    accuracy = 10
+    for x in range(int(mapWidth / accuracy)):
+        for y in range(int(mapHeight / accuracy)):
+            nodex = -(mapWidth / 2) + (x * accuracy)
+            nodey = -(mapHeight / 2) + (y * accuracy)
+            for spr in v.hitList:
+                if spr.rect.colliderect(py.Rect(nodex, nodey, 5, 5)) == False:
+                    v.pf_nodes.append((nodex, nodey))

@@ -1,7 +1,7 @@
 import pygame as py
 import Variables as v
 import math
-from time import sleep
+import time
 
 class SpriteSheet(object):
     """ Class used to grab images out of a sprite sheet. """
@@ -129,13 +129,13 @@ class Player(py.sprite.Sprite):
                     moveDown = False"""
         keys_pressed = py.key.get_pressed()
         if keys_pressed[py.K_a]:
-            self.velX = -2
+            self.velX = -v.playerSpeed
         if keys_pressed[py.K_d]:
-            self.velX = 2
+            self.velX = v.playerSpeed
         if keys_pressed[py.K_s]:
-            self.velY = -2
+            self.velY = -v.playerSpeed
         if keys_pressed[py.K_w]:
-            self.velY = 2
+            self.velY = v.playerSpeed
 
         if keys_pressed[py.K_s]:
             self.direction = "Down"
@@ -152,9 +152,17 @@ class Player(py.sprite.Sprite):
         else:
             self.moving = False
 
+        print("\n", self.velX, self.velY)
+
+        for hit in v.hits:
+            self.velX, self.velY = hit.update((self.velX, self.velY))
+
+        print(self.velX, self.velY)
+
         v.playerPosX += self.velX
         v.playerPosY += self.velY
         v.playerDirection = self.direction
+
 
 
         """for wall in v.hitList:
@@ -181,17 +189,20 @@ class HitBox(py.sprite.Sprite):
     def draw(self):
         py.draw.rect(v.screen, (255, 0, 0), self.rect)
 
-    def update(self):
+    def update(self, velocity): # use new positition
+        velX, velY = velocity
+        newrect = self.rect
         for thing in v.hitList:
-            if self.rect.colliderect(thing.rect):
+            if newrect.colliderect(thing.rect):
                 if self.side == "Top":
-                    v.playerPosY += -2
+                    velY += -v.playerSpeed
                 if self.side == "Bottom":
-                    v.playerPosY += 2
+                    velY += v.playerSpeed
                 if self.side == "Left":
-                    v.playerPosX += 2
+                    velX += v.playerSpeed
                 if self.side == "Right":
-                    v.playerPosX += -2
+                    velX += -v.playerSpeed
+        return velX, velY
 
 
 class Tile(py.sprite.Sprite):

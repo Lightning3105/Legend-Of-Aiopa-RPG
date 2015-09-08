@@ -3,6 +3,7 @@ import Variables as v
 from MenuItems import Button, Text, fill_gradient, fadeIn
 from entityClasses import Player, Tile, Sword, HitBox, NPC
 from guiClasses import update_health
+from functools import reduce
 
 import Map
 import entityClasses
@@ -60,12 +61,12 @@ def game():
     tileset = entityClasses.SpriteSheet("Resources/Images/Tile_Land2.png", 12, 16)
     v.hitList = py.sprite.Group()
     v.map1 = [["0","0","0","0","0","0","0","0","0","0"],
-            ["0","0","0","0","#","#","0","0","0","0"],
-            ["0","0","0","0","#","#","0","0","0","0"],
-            ["0","0","0","0","0","0","0","0","0","0"],
-            ["0","0","0","0","0","0","0","0","0","0"],
-            ["0","0","0","0","0","0","0","0","0","0"],
-            ["0","0","0","0","0","0","0","0","0","0"],
+            ["#","0","0","0","#","#","0","0","0","0"],
+            ["#","#","0","#","#","#","#","#","0","0"],
+            ["#","#","#","#","0","0","0","#","0","0"],
+            ["#","#","#","#","0","0","0","0","0","0"],
+            ["#","#","#","#","0","0","0","0","0","0"],
+            ["#","#","#","#","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0","0","0","0"],]
     v.allTiles = py.sprite.Group()
@@ -73,31 +74,33 @@ def game():
     sword = Sword()
     sword.image = "Resources/Images/Sword_1.png"
     sword.get_rend()
-    hits = py.sprite.Group()
-    hits.add(HitBox(centre(v.screen)[0] + (5 * v.scale), centre(v.screen)[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale), "Right"))
-    hits.add(HitBox(centre(v.screen)[0] - (5 * v.scale), centre(v.screen)[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale), "Left"))
-    hits.add(HitBox(centre(v.screen)[0] - (3 * v.scale), centre(v.screen)[1] - (8 * v.scale), (8 * v.scale), (2 * v.scale), "Top"))
-    hits.add(HitBox(centre(v.screen)[0] - (3 * v.scale), centre(v.screen)[1] + (16 * v.scale), (8 * v.scale), (2 * v.scale), "Bottom"))
+    v.hits = py.sprite.Group()
+    v.hits.add(HitBox(centre(v.screen)[0] + (5 * v.scale), centre(v.screen)[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale), "Right"))
+    v.hits.add(HitBox(centre(v.screen)[0] - (5 * v.scale), centre(v.screen)[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale), "Left"))
+    v.hits.add(HitBox(centre(v.screen)[0] - (3 * v.scale), centre(v.screen)[1] - (8 * v.scale), (8 * v.scale), (2 * v.scale), "Top"))
+    v.hits.add(HitBox(centre(v.screen)[0] - (3 * v.scale), centre(v.screen)[1] + (16 * v.scale), (8 * v.scale), (2 * v.scale), "Bottom"))
     v.allNpc = py.sprite.Group()
     weaponSlot = guiClasses.weaponSlot()
 
     npc = NPC(0, 100)
+    fps = []
     while True:
         v.ticks += 1
+        fps.append(clock.get_fps())
+        #print(int(reduce(lambda x, y: x + y, fps) / len(fps)))
         #print("PX: " + str(v.playerPosX))
         #print("PY: " + str(v.playerPosY))
         v.screen.fill(colour("Dark Green"))
         py.event.pump()
         clock.tick(60)
         tiles.update()
-        tiles.draw(v.screen)
         player.move()
-        entityClasses.create_nodes()
-        v.allNpc.update()
-        hits.update()
+        tiles.draw(v.screen)
         player.draw()
+        v.allNpc.update()
+
         sword.draw()
-        #hits.draw(v.screen)
+        #v.hits.draw(v.screen)
         update_health()
         weaponSlot.draw()
 

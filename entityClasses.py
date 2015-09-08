@@ -152,12 +152,12 @@ class Player(py.sprite.Sprite):
         else:
             self.moving = False
 
-        print("\n", self.velX, self.velY)
+        #print("\n", self.velX, self.velY)
 
         for hit in v.hits:
             self.velX, self.velY = hit.update((self.velX, self.velY))
 
-        print(self.velX, self.velY)
+        #print(self.velX, self.velY)
 
         v.playerPosX += self.velX
         v.playerPosY += self.velY
@@ -192,16 +192,22 @@ class HitBox(py.sprite.Sprite):
     def update(self, velocity): # use new positition
         velX, velY = velocity
         newrect = self.rect
+        hit = False
         for thing in v.hitList:
             if newrect.colliderect(thing.rect):
-                if self.side == "Top":
-                    velY += -v.playerSpeed
-                if self.side == "Bottom":
-                    velY += v.playerSpeed
-                if self.side == "Left":
-                    velX += v.playerSpeed
-                if self.side == "Right":
-                    velX += -v.playerSpeed
+                hit = True
+        for thing in v.allNpc:
+            if newrect.colliderect(thing.rect):
+                hit = True
+        if hit:
+            if self.side == "Top":
+                velY += -v.playerSpeed
+            if self.side == "Bottom":
+                velY += v.playerSpeed
+            if self.side == "Left":
+                velX += v.playerSpeed
+            if self.side == "Right":
+                velX += -v.playerSpeed
         return velX, velY
 
 
@@ -303,61 +309,71 @@ class NPC(py.sprite.Sprite):
         self.posx = posx
         self.posy = posy
         self.direction = None
-        self.pf_been = []
-        self.pf_route = []
+        self.pf_tried = []
         v.allNpc.add(self)
         #v.hitList.add(self)
 
     def update(self):
         #print("NX: " + str(self.posx))
         #print("NY: " + str(self.posy))
+        self.pathfind()
         self.image = py.Surface((30 * v.scale, 30 * v.scale))
         self.image.fill((0, 255, 255))
         self.rect = self.image.get_rect()
         self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
         self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
+        for thing in v.hitList:
+            if self.rect.colliderect(thing.rect) == True or self.rect.colliderect(v.p_class.rect) == True:
+                self.posx = self.prevX
+                self.posy = self.prevY
+                self.pf_tried.append((self.posx, self.posy))
+
 
         #self.move()
 
     def pathfind(self):
-        open = []
-        closed = []
-        route = []
-        end = (v.playerPosX, v.playerPosY)
-        curpos = (self.posx, self.posy)
-        runs = 0
-        self.pf_been = []
-        while True:
-            print(runs)
-            runs += 1
-            surrounding = []
-            surrounding = [node for node in v.pf_nodes if 15 > math.sqrt(((curpos[0] - node[0])**2) + ((curpos[1] - node[1])**2)) and not node == curpos and not node in self.pf_been]
-            #for node in v.pf_nodes:
-             #   if 15 > math.sqrt(((curpos[0] - node[0])**2) + ((curpos[1] - node[1])**2)):
-             #       if not node == curpos:
-             #           if not node in self.pf_been:
-             #               surrounding.append(node)
 
-            best = None
-            bestDist = float("inf")
-            for node in surrounding:
-                dist = math.sqrt((node[0] - end[0])**2 + (node[1] - end[1])**2)
-                if dist < bestDist:
-                    best = node
-                    bestDist= dist
-            self.pf_route.append(best)
-            self.pf_been.append(best)
-            curpos = best
+        surrounding = []
+        surrounding.append((self.posx + 1, self.posy + -1))
+        surrounding.append((self.posx + 1, self.posy + 0))
+        surrounding.append((self.posx + 1, self.posy + 1))
+        surrounding.append((self.posx + 0, self.posy + -1))
+        surrounding.append((self.posx + 1, self.posy + 1))
+        surrounding.append((self.posx + -1, self.posy + -1))
+        surrounding.append((self.posx + -1, self.posy + 0))
+        surrounding.append((self.posx + -1, self.posy + 1))
 
-            if abs(curpos[0] - v.playerPosX) < 30: #TODO Adjust For Scale
-                if abs(curpos[1] - v.playerPosY) < 30:
-                    print("Got To Player")
-                    print(self.pf_route)
-                    self.pf_been = []
-                    break
-            if runs > 10:
-                print("Force Exit Pathfind")
+        if len(self.pf_tried) == len(surrounding):
+            self.pf_tried = []
+
+        best = None
+        bestDist = float("inf")
+
+        for pos in surrounding:
+            dist = math.sqrt((pos[0] - v.playerPosX)**2 + (pos[1] - v.playerPosY)**2)
+            if dist < bestDist:
+                if not pos in self.pf_tried:
+                    best = pos
+                    bestDist = dist
+
+        self.prevX = self.posx
+        self.prevY = self.posy
+        self.posx, self.posy = best
+
+        if abs(self.posx - v.playerPosX) < 30:
+            if abs(self.posy - v.playerPosY) < 40:
+                self.posx = self.prevX
+                self.posy = self.prevY
+
+        """if abs(curpos[0] - v.playerPosX) < 30: #TODO Adjust For Scale
+            if abs(curpos[1] - v.playerPosY) < 30:
+                print("Got To Player")
+                print(self.pf_route)
+                self.pf_been = []
                 break
+        if runs > 10:
+            print("Force Exit Pathfind")
+            break"""
     def move(self):
         try:
             end = (v.playerPosX, v.playerPosY)
@@ -407,17 +423,3 @@ class NPC(py.sprite.Sprite):
         def F(self):
             #total score - the lower the better
             return self.G() + self.H() + self.terrain()
-
-
-
-def create_nodes():
-    mapWidth = len(v.map1[0]) * (30 * v.scale)
-    mapHeight = len(v.map1) * (30 * v.scale)
-    accuracy = 10
-    for x in range(int(mapWidth / accuracy)):
-        for y in range(int(mapHeight / accuracy)):
-            nodex = -(mapWidth / 2) + (x * accuracy)
-            nodey = -(mapHeight / 2) + (y * accuracy)
-            for spr in v.hitList:
-                if spr.rect.colliderect(py.Rect(nodex, nodey, 5, 5)) == False:
-                    v.pf_nodes.append((nodex, nodey))

@@ -11,5 +11,5 @@ scale = 2
 screen = None
 ticks = 0
 map1 = []
-pf_nodes = []
 hits = None
+p_class = None

@@ -51,10 +51,10 @@ def game():
     v.screen.fill(colour("Green"))
     v.screen.fill(colour("Red"))
     print(v.screen)
-    player = Player()
-    player.sheetImage = "Resources/Images/Male_Basic.png"
-    player.initSheet()
-    player.draw()
+    v.p_class = Player()
+    v.p_class.sheetImage = "Resources/Images/Male_Basic.png"
+    v.p_class.initSheet()
+    v.p_class.draw()
     clock = py.time.Clock()
     py.time.set_timer(py.USEREVENT, 200)
 
@@ -82,7 +82,7 @@ def game():
     v.allNpc = py.sprite.Group()
     weaponSlot = guiClasses.weaponSlot()
 
-    npc = NPC(0, 100)
+    npc = NPC(100, 100)
     fps = []
     while True:
         v.ticks += 1
@@ -94,10 +94,10 @@ def game():
         py.event.pump()
         clock.tick(60)
         tiles.update()
-        player.move()
         tiles.draw(v.screen)
-        player.draw()
+        v.p_class.draw()
         v.allNpc.update()
+        v.p_class.move()
 
         sword.draw()
         #v.hits.draw(v.screen)

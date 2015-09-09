@@ -255,6 +255,7 @@ class Sword:
     def update(self):
         self.get_rend()
         if self.attacking:
+            v.playerAttacking = True
             if v.playerDirection == "Up":
                 angleMod = -90
             elif v.playerDirection == "Down":
@@ -279,9 +280,10 @@ class Sword:
         else:
             self.rend = None
             self.rect = None
+            v.playerAttacking = False
 
     def draw(self):
-        self.update()
+        #self.update()
         if self.attacking:
             v.screen.blit(self.rend, self.rect)
 
@@ -304,21 +306,58 @@ def centre():
 
 class NPC(py.sprite.Sprite):
 
-    def __init__(self, posx, posy):
+    def __init__(self, posx, posy, health):
         super().__init__()
         self.posx = posx
         self.posy = posy
-        self.direction = None
+        self.direction = "Down"
+        self.view = "DownC"
+        self.moving = False
         self.pf_tried = []
+        self.sheetImage = "Resources/Images/Generic Goblin.png"
+        self.health = health
         v.allNpc.add(self)
+        self.initSheet()
         #v.hitList.add(self)
+
+    def initSheet(self):
+        self.sheet = SpriteSheet(self.sheetImage, 4, 3)
+        self.sheet.getGrid()
+        print(self.sheet.images)
+        self.views = {"UpL": self.sheet.images[9],
+                      "UpC": self.sheet.images[10],
+                      "UpR": self.sheet.images[11],
+                      "RightL": self.sheet.images[6],
+                      "RightC": self.sheet.images[7],
+                      "RightR": self.sheet.images[8],
+                      "DownL": self.sheet.images[0],
+                      "DownC": self.sheet.images[1],
+                      "DownR": self.sheet.images[2],
+                      "LeftL": self.sheet.images[3],
+                      "LeftC": self.sheet.images[4],
+                      "LeftR": self.sheet.images[5]}
+    def get_view(self):
+        if self.moving:
+            if self.view == self.direction + "C":
+                self.view = self.direction + "R"
+            elif self.view == self.direction + "R":
+                self.view = self.direction + "L"
+            elif self.view == self.direction + "L":
+                self.view = self.direction + "R"
+            else:
+                self.view = self.direction + "C"
+        else:
+            self.view = "DownC"
+
 
     def update(self):
         #print("NX: " + str(self.posx))
         #print("NY: " + str(self.posy))
         self.pathfind()
-        self.image = py.Surface((30 * v.scale, 30 * v.scale))
-        self.image.fill((0, 255, 255))
+        self.get_direction()
+        self.get_view()
+        self.image = self.views[self.view]
+        self.image = py.transform.scale(self.image, (int(24 * v.scale), int(32 * v.scale)))
         self.rect = self.image.get_rect()
         self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
         self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
@@ -327,9 +366,27 @@ class NPC(py.sprite.Sprite):
                 self.posx = self.prevX
                 self.posy = self.prevY
                 self.pf_tried.append((self.posx, self.posy))
+                self.moving = False
+                self.view = self.direction + "C"
+                self.image = self.views[self.view]
+                self.image = py.transform.scale(self.image, (int(24 * v.scale), int(32 * v.scale)))
+        if v.playerAttacking:
+            if self.rect.colliderect(v.cur_weapon.rect): # TODO: Add cooldown for damage
+                self.health -= 2
+        print(self.health)
+
 
 
         #self.move()
+    def get_direction(self):
+        if self.posy - v.playerPosY < -25:
+            self.direction = "Up"
+        elif self.posy - v.playerPosY > 25:
+            self.direction = "Down"
+        elif self.posx - v.playerPosX < -25:
+            self.direction = "Right"
+        elif self.posx - v.playerPosX > 25:
+            self.direction = "Left"
 
     def pathfind(self):
 
@@ -360,10 +417,15 @@ class NPC(py.sprite.Sprite):
         self.prevY = self.posy
         self.posx, self.posy = best
 
+        self.moving = True
+
+
+
         if abs(self.posx - v.playerPosX) < 30:
             if abs(self.posy - v.playerPosY) < 40:
                 self.posx = self.prevX
                 self.posy = self.prevY
+                self.moving = False
 
         """if abs(curpos[0] - v.playerPosX) < 30: #TODO Adjust For Scale
             if abs(curpos[1] - v.playerPosY) < 30:

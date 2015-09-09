@@ -71,9 +71,9 @@ def game():
             ["0","0","0","0","0","0","0","0","0","0"],]
     v.allTiles = py.sprite.Group()
     tiles = Map.generateMap(v.map1, tileset)
-    sword = Sword()
-    sword.image = "Resources/Images/Sword_1.png"
-    sword.get_rend()
+    v.cur_weapon = Sword()
+    v.cur_weapon.image = "Resources/Images/Sword_1.png"
+    v.cur_weapon.get_rend()
     v.hits = py.sprite.Group()
     v.hits.add(HitBox(centre(v.screen)[0] + (5 * v.scale), centre(v.screen)[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale), "Right"))
     v.hits.add(HitBox(centre(v.screen)[0] - (5 * v.scale), centre(v.screen)[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale), "Left"))
@@ -82,7 +82,7 @@ def game():
     v.allNpc = py.sprite.Group()
     weaponSlot = guiClasses.weaponSlot()
 
-    npc = NPC(100, 100)
+    npc = NPC(100, 100, 20)
     fps = []
     while True:
         v.ticks += 1
@@ -96,15 +96,17 @@ def game():
         tiles.update()
         tiles.draw(v.screen)
         v.p_class.draw()
+        v.cur_weapon.update()
         v.allNpc.update()
         v.p_class.move()
+        v.allNpc.draw(v.screen)
 
-        sword.draw()
+        v.cur_weapon.draw()
         #v.hits.draw(v.screen)
         update_health()
         weaponSlot.draw()
 
-        v.allNpc.draw(v.screen)
+
         py.display.flip()
         for event in py.event.get():
             if event.type == py.QUIT:
@@ -114,7 +116,7 @@ def game():
 
         keys_pressed = py.key.get_pressed()
         if keys_pressed[py.K_SPACE]:
-            sword.attacking = True
+            v.cur_weapon.attacking = True
 
 
 def centre(screen):

@@ -13,3 +13,5 @@ ticks = 0
 map1 = []
 hits = None
 p_class = None
+cur_weapon = None
+playerAttacking = False

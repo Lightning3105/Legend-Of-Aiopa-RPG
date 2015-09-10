@@ -80,7 +80,9 @@ def game():
     v.allNpc = py.sprite.Group()
     weaponSlot = guiClasses.weaponSlot()
 
-    npc = NPC(100, 100, 20)
+    v.particles = py.sprite.Group()
+
+    npc = NPC(100, 100, 5)
     while True:
         v.ticks += 1
         #print(v.clock.get_fps())
@@ -99,6 +101,7 @@ def game():
 
 
         v.cur_weapon.draw()
+        v.particles.update()
         #v.hits.draw(v.screen)
         update_health()
         weaponSlot.draw()

@@ -15,3 +15,6 @@ hits = None
 p_class = None
 cur_weapon = None
 playerAttacking = False
+playerStopped = False
+clock = None
+events = []

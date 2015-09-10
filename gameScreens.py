@@ -50,12 +50,10 @@ def game():
     v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
     v.screen.fill(colour("Green"))
     v.screen.fill(colour("Red"))
-    print(v.screen)
     v.p_class = Player()
     v.p_class.sheetImage = "Resources/Images/Male_Basic.png"
     v.p_class.initSheet()
-    v.p_class.draw()
-    clock = py.time.Clock()
+    v.clock = py.time.Clock()
     py.time.set_timer(py.USEREVENT, 200)
 
     tileset = entityClasses.SpriteSheet("Resources/Images/Tile_Land2.png", 12, 16)
@@ -83,23 +81,22 @@ def game():
     weaponSlot = guiClasses.weaponSlot()
 
     npc = NPC(100, 100, 20)
-    fps = []
     while True:
         v.ticks += 1
-        fps.append(clock.get_fps())
-        #print(int(reduce(lambda x, y: x + y, fps) / len(fps)))
-        #print("PX: " + str(v.playerPosX))
-        #print("PY: " + str(v.playerPosY))
+        #print(v.clock.get_fps())
         v.screen.fill(colour("Dark Green"))
         py.event.pump()
-        clock.tick(60)
+        v.events = []
+        v.events = py.event.get()
+        v.clock.tick(30)
         tiles.update()
         tiles.draw(v.screen)
         v.p_class.draw()
         v.cur_weapon.update()
         v.allNpc.update()
-        v.p_class.move()
         v.allNpc.draw(v.screen)
+        v.p_class.move()
+
 
         v.cur_weapon.draw()
         #v.hits.draw(v.screen)
@@ -108,7 +105,7 @@ def game():
 
 
         py.display.flip()
-        for event in py.event.get():
+        for event in v.events:
             if event.type == py.QUIT:
                 sys.exit()
             elif event.type==py.VIDEORESIZE:

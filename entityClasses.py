@@ -85,7 +85,7 @@ class Player(py.sprite.Sprite):
         v.screen.blit(image, self.rect)
 
     def get_view(self):
-        for event in py.event.get():
+        for event in v.events:
             if event.type == py.USEREVENT:
                 if self.view == self.direction + "C":
                     self.view = self.direction + "R"
@@ -108,69 +108,70 @@ class Player(py.sprite.Sprite):
         self.rect.height = self.rend.get_rect().height * v.scale
 
     def move(self):
-        py.event.pump()
-        moveRight = True
-        moveLeft = True
-        moveUp = True
-        moveDown = True
-        preX = v.playerPosX
-        preY = v.playerPosY
-        self.velX = 0
-        self.velY = 0
-        """for wall in v.wallHitList:
-            if self.rect.colliderect(wall.rect):
-                if self.rect.right > wall.rect.left:
-                    moveRight = False
-                if self.rect.left < wall.rect.right:
-                    moveLeft = False
-                if self.rect.top < wall.rect.bottom:
-                    moveUp = False
-                if self.rect.bottom > wall.rect.top:
-                    moveDown = False"""
-        keys_pressed = py.key.get_pressed()
-        if keys_pressed[py.K_a]:
-            self.velX = -v.playerSpeed
-        if keys_pressed[py.K_d]:
-            self.velX = v.playerSpeed
-        if keys_pressed[py.K_s]:
-            self.velY = -v.playerSpeed
-        if keys_pressed[py.K_w]:
-            self.velY = v.playerSpeed
+        if not v.playerStopped:
+            py.event.pump()
+            moveRight = True
+            moveLeft = True
+            moveUp = True
+            moveDown = True
+            preX = v.playerPosX
+            preY = v.playerPosY
+            self.velX = 0
+            self.velY = 0
+            """for wall in v.wallHitList:
+                if self.rect.colliderect(wall.rect):
+                    if self.rect.right > wall.rect.left:
+                        moveRight = False
+                    if self.rect.left < wall.rect.right:
+                        moveLeft = False
+                    if self.rect.top < wall.rect.bottom:
+                        moveUp = False
+                    if self.rect.bottom > wall.rect.top:
+                        moveDown = False"""
+            keys_pressed = py.key.get_pressed()
+            if keys_pressed[py.K_a]:
+                self.velX = -v.playerSpeed
+            if keys_pressed[py.K_d]:
+                self.velX = v.playerSpeed
+            if keys_pressed[py.K_s]:
+                self.velY = -v.playerSpeed
+            if keys_pressed[py.K_w]:
+                self.velY = v.playerSpeed
 
-        if keys_pressed[py.K_s]:
-            self.direction = "Down"
-            self.moving = True
-        elif keys_pressed[py.K_w]:
-            self.direction = "Up"
-            self.moving = True
-        elif keys_pressed[py.K_a]:
-            self.direction = "Left"
-            self.moving = True
-        elif keys_pressed[py.K_d]:
-            self.direction = "Right"
-            self.moving = True
-        else:
-            self.moving = False
+            if keys_pressed[py.K_s]:
+                self.direction = "Down"
+                self.moving = True
+            elif keys_pressed[py.K_w]:
+                self.direction = "Up"
+                self.moving = True
+            elif keys_pressed[py.K_a]:
+                self.direction = "Left"
+                self.moving = True
+            elif keys_pressed[py.K_d]:
+                self.direction = "Right"
+                self.moving = True
+            else:
+                self.moving = False
 
-        #print("\n", self.velX, self.velY)
+            #print("\n", self.velX, self.velY)
 
-        for hit in v.hits:
-            self.velX, self.velY = hit.update((self.velX, self.velY))
+            for hit in v.hits:
+                self.velX, self.velY = hit.update((self.velX, self.velY))
 
-        #print(self.velX, self.velY)
+            #print(self.velX, self.velY)
 
-        v.playerPosX += self.velX
-        v.playerPosY += self.velY
-        v.playerDirection = self.direction
+            v.playerPosX += self.velX
+            v.playerPosY += self.velY
+            v.playerDirection = self.direction
 
 
 
-        """for wall in v.hitList:
-            if self.rect.colliderect(wall.rect):
-                print("COLLIDE")
-                if self.rect.right > wall.rect.left:
-                    v.playerPosX = preX
-                    self.draw()"""
+            """for wall in v.hitList:
+                if self.rect.colliderect(wall.rect):
+                    print("COLLIDE")
+                    if self.rect.right > wall.rect.left:
+                        v.playerPosX = preX
+                        self.draw()"""
 
 
 class HitBox(py.sprite.Sprite):
@@ -244,7 +245,7 @@ class Sword:
         self.image = None
         self.attacking = False
         self.attCyclePos = 0
-        self.attSpeed = 8
+        self.attSpeed = 16
         self.posX = v.screen.get_rect()[2] / 2
         self.posY = v.screen.get_rect()[3] / 2
 
@@ -256,6 +257,7 @@ class Sword:
         self.get_rend()
         if self.attacking:
             v.playerAttacking = True
+            v.playerStopped = True
             if v.playerDirection == "Up":
                 angleMod = -90
             elif v.playerDirection == "Down":
@@ -281,6 +283,7 @@ class Sword:
             self.rend = None
             self.rect = None
             v.playerAttacking = False
+            v.playerStopped = False
 
     def draw(self):
         #self.update()
@@ -316,6 +319,7 @@ class NPC(py.sprite.Sprite):
         self.pf_tried = []
         self.sheetImage = "Resources/Images/Generic Goblin.png"
         self.health = health
+        self.invulnCooldown = 0
         v.allNpc.add(self)
         self.initSheet()
         #v.hitList.add(self)
@@ -323,7 +327,6 @@ class NPC(py.sprite.Sprite):
     def initSheet(self):
         self.sheet = SpriteSheet(self.sheetImage, 4, 3)
         self.sheet.getGrid()
-        print(self.sheet.images)
         self.views = {"UpL": self.sheet.images[9],
                       "UpC": self.sheet.images[10],
                       "UpR": self.sheet.images[11],
@@ -337,22 +340,26 @@ class NPC(py.sprite.Sprite):
                       "LeftC": self.sheet.images[4],
                       "LeftR": self.sheet.images[5]}
     def get_view(self):
-        if self.moving:
-            if self.view == self.direction + "C":
-                self.view = self.direction + "R"
-            elif self.view == self.direction + "R":
-                self.view = self.direction + "L"
-            elif self.view == self.direction + "L":
-                self.view = self.direction + "R"
-            else:
-                self.view = self.direction + "C"
-        else:
-            self.view = "DownC"
+        #print(self.direction)
+        #print(self.view)
+        for event in v.events:
+            if event.type == py.USEREVENT:
+                if self.view == self.direction + "C":
+                    self.view = self.direction + "R"
+                elif self.view == self.direction + "R":
+                    self.view = self.direction + "L"
+                elif self.view == self.direction + "L":
+                    self.view = self.direction + "R"
+                else:
+                    self.view = self.direction + "C"
+        if self.moving == False:
+            self.view = self.direction + "C"
 
 
     def update(self):
         #print("NX: " + str(self.posx))
         #print("NY: " + str(self.posy))
+        py.event.pump()
         self.pathfind()
         self.get_direction()
         self.get_view()
@@ -370,10 +377,15 @@ class NPC(py.sprite.Sprite):
                 self.view = self.direction + "C"
                 self.image = self.views[self.view]
                 self.image = py.transform.scale(self.image, (int(24 * v.scale), int(32 * v.scale)))
-        if v.playerAttacking:
-            if self.rect.colliderect(v.cur_weapon.rect): # TODO: Add cooldown for damage
-                self.health -= 2
-        print(self.health)
+        if self.invulnCooldown > 0:
+            self.invulnCooldown -= 1
+        elif self.invulnCooldown == 0:
+            if v.playerAttacking:
+                if self.rect.colliderect(v.cur_weapon.rect): # TODO: Add cooldown for damage
+                    self.health -= 2
+                    self.invulnCooldown = 30
+        else:
+            self.invulnCooldown = 0
 
 
 

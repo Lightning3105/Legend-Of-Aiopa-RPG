@@ -18,3 +18,4 @@ playerAttacking = False
 playerStopped = False
 clock = None
 events = []
+particles = None

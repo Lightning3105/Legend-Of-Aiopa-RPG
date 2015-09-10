@@ -310,8 +310,9 @@ def centre():
 
 class NPC(py.sprite.Sprite):
 
-    def __init__(self, posx, posy, health):
+    def __init__(self, name, posx, posy, health):
         super().__init__()
+        self.name = name
         self.posx = posx
         self.posy = posy
         self.direction = "Down"
@@ -404,6 +405,7 @@ class NPC(py.sprite.Sprite):
             self.dead = True
         else:
             self.healthbar()
+            self.title()
 
         self.death()
 
@@ -415,6 +417,11 @@ class NPC(py.sprite.Sprite):
     def healthbar(self):
         py.draw.rect(v.screen, (0,0,0), (self.rect.left, self.rect.top - 10, self.rect.width, 3))
         py.draw.rect(v.screen, (255,0,0), (self.rect.left, self.rect.top - 10, (self.health/self.maxHealth * self.rect.width), 3))
+    def title(self):
+        font = py.font.SysFont("Resources/Fonts/RPGSystem.ttf", 10 * v.scale) #TODO: Scale
+        label = font.render(self.name, 1, (255,255,255))
+        v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.top - 25))
+
     def death(self):
         if self.dead:
             self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
@@ -424,15 +431,12 @@ class NPC(py.sprite.Sprite):
                 self.firstDeath = False
                 self.oldimage = self.views["DownC"]
                 self.oldimage = py.transform.scale(self.oldimage, (int(24 * v.scale), int(32 * v.scale)))
-            v.particles.add(Particle((self.posx + randint(-5, 5), self.posy + randint(-5, 5)), (25, 25, 0), 2, randint(10, 20)))
+            v.particles.add(Particle((self.posx + randint(-5, 5), self.posy + randint(-5, 5)), (25, 25, 0), 2, randint(10, 20))) #TODO: scale
             self.image = self.oldimage.convert_alpha()
             self.image.fill((255, 0, 0, self.damage_alpha), special_flags=py.BLEND_RGBA_MULT)
-            #self.image.blit(damage_image, (0,0))
             self.damage_alpha -= 10
-            print(self.damage_alpha)
             if self.damage_alpha <= 0:
                 v.allNpc.remove(self)
-                print("Killed")
 
     def get_direction(self):
         if self.posy - v.playerPosY < -25:

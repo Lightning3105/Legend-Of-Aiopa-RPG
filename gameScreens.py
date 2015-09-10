@@ -82,7 +82,7 @@ def game():
 
     v.particles = py.sprite.Group()
 
-    npc = NPC(100, 100, 5)
+    npc = NPC("Groblin Lvl. 1", 100, 100, 5)
     while True:
         v.ticks += 1
         #print(v.clock.get_fps())

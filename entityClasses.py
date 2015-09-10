@@ -2,6 +2,7 @@ import pygame as py
 import Variables as v
 import math
 import time
+from random import randint
 
 class SpriteSheet(object):
     """ Class used to grab images out of a sprite sheet. """
@@ -318,8 +319,16 @@ class NPC(py.sprite.Sprite):
         self.moving = False
         self.pf_tried = []
         self.sheetImage = "Resources/Images/Generic Goblin.png"
+        self.maxHealth = health
         self.health = health
         self.invulnCooldown = 0
+        self.invulnLength = 30
+        self.damaged = False
+        self.damage_alpha = 0
+        self.damage_fade = False
+        self.dead = False
+        self.firstDeath = True
+        self.particles = py.sprite.Group()
         v.allNpc.add(self)
         self.initSheet()
         #v.hitList.add(self)
@@ -360,36 +369,71 @@ class NPC(py.sprite.Sprite):
         #print("NX: " + str(self.posx))
         #print("NY: " + str(self.posy))
         py.event.pump()
-        self.pathfind()
-        self.get_direction()
-        self.get_view()
-        self.image = self.views[self.view]
-        self.image = py.transform.scale(self.image, (int(24 * v.scale), int(32 * v.scale)))
-        self.rect = self.image.get_rect()
-        self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
-        self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
-        for thing in v.hitList:
-            if self.rect.colliderect(thing.rect) == True or self.rect.colliderect(v.p_class.rect) == True:
-                self.posx = self.prevX
-                self.posy = self.prevY
-                self.pf_tried.append((self.posx, self.posy))
-                self.moving = False
-                self.view = self.direction + "C"
-                self.image = self.views[self.view]
-                self.image = py.transform.scale(self.image, (int(24 * v.scale), int(32 * v.scale)))
-        if self.invulnCooldown > 0:
-            self.invulnCooldown -= 1
-        elif self.invulnCooldown == 0:
-            if v.playerAttacking:
-                if self.rect.colliderect(v.cur_weapon.rect): # TODO: Add cooldown for damage
-                    self.health -= 2
-                    self.invulnCooldown = 30
+        if not self.dead:
+            self.pathfind()
+            self.get_direction()
+            self.get_view()
+            self.image = self.views[self.view]
+            self.image = py.transform.scale(self.image, (int(24 * v.scale), int(32 * v.scale)))
+            self.rect = self.image.get_rect()
+            self.damage_knockback()
+            self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
+            self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
+            for thing in v.hitList:
+                if self.rect.colliderect(thing.rect) == True or self.rect.colliderect(v.p_class.rect) == True:
+                    self.posx = self.prevX
+                    self.posy = self.prevY
+                    self.pf_tried.append((self.posx, self.posy))
+                    self.moving = False
+                    self.view = self.direction + "C"
+                    self.image = self.views[self.view]
+                    self.image = py.transform.scale(self.image, (int(24 * v.scale), int(32 * v.scale)))
+            if self.invulnCooldown > 0:
+                self.invulnCooldown -= 1
+            elif self.invulnCooldown == 0:
+                if v.playerAttacking:
+                    if self.rect.colliderect(v.cur_weapon.rect): # TODO: Add cooldown for damage
+                        self.health -= 2
+                        self.invulnCooldown = self.invulnLength
+                        self.damaged = True
+            else:
+                self.invulnCooldown = 0
+
+        self.damage_animation()
+        if self.health <= 0:
+            self.dead = True
         else:
-            self.invulnCooldown = 0
+            self.healthbar()
+
+        self.death()
+
 
 
 
         #self.move()
+
+    def healthbar(self):
+        py.draw.rect(v.screen, (0,0,0), (self.rect.left, self.rect.top - 10, self.rect.width, 3))
+        py.draw.rect(v.screen, (255,0,0), (self.rect.left, self.rect.top - 10, (self.health/self.maxHealth * self.rect.width), 3))
+    def death(self):
+        if self.dead:
+            self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
+            self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
+            if self.firstDeath:
+                self.damage_alpha = 255
+                self.firstDeath = False
+                self.oldimage = self.views["DownC"]
+                self.oldimage = py.transform.scale(self.oldimage, (int(24 * v.scale), int(32 * v.scale)))
+            v.particles.add(Particle((self.posx + randint(-5, 5), self.posy + randint(-5, 5)), (25, 25, 0), 2, randint(10, 20)))
+            self.image = self.oldimage.convert_alpha()
+            self.image.fill((255, 0, 0, self.damage_alpha), special_flags=py.BLEND_RGBA_MULT)
+            #self.image.blit(damage_image, (0,0))
+            self.damage_alpha -= 10
+            print(self.damage_alpha)
+            if self.damage_alpha <= 0:
+                v.allNpc.remove(self)
+                print("Killed")
+
     def get_direction(self):
         if self.posy - v.playerPosY < -25:
             self.direction = "Up"
@@ -399,6 +443,43 @@ class NPC(py.sprite.Sprite):
             self.direction = "Right"
         elif self.posx - v.playerPosX > 25:
             self.direction = "Left"
+
+    def damage_knockback(self):
+        if self.damage_fade and self.damaged and not self.dead:
+            self.moving = False
+            if self.direction == "Up":
+                self.prevX = self.posx
+                self.prevY = self.posy
+                self.posx, self.posy = (self.prevX, self.prevY - 4)
+            if self.direction == "Down":
+                self.prevX = self.posx
+                self.prevY = self.posy
+                self.posx, self.posy = (self.prevX, self.prevY + 4)
+            if self.direction == "Right":
+                self.prevX = self.posx
+                self.prevY = self.posy
+                self.posx, self.posy = (self.prevX - 4, self.prevY)
+            if self.direction == "Left":
+                self.prevX = self.posx
+                self.prevY = self.posy
+                self.posx, self.posy = (self.prevX + 4, self.prevY)
+
+    def damage_animation(self):
+        if self.damaged and not self.dead:
+            damage_image = self.image
+            damage_image.fill((255, 0, 0, self.damage_alpha), special_flags=py.BLEND_RGBA_MULT)
+            self.image.blit(damage_image, (0,0))
+            if self.damage_fade:
+                self.damage_alpha += 255 / (self.invulnLength / 2)
+                if self.damage_alpha >= 255:
+                    self.damage_fade = False
+                    self.damage_alpha = 255
+            elif not self.damage_fade:
+                self.damage_alpha -= 255 / (self.invulnLength / 2)
+                if self.damage_alpha <= 0:
+                    self.damage_alpha = 0
+                    self.damaged = False
+                    self.damage_fade = True
 
     def pathfind(self):
 
@@ -475,25 +556,23 @@ class NPC(py.sprite.Sprite):
         except:
             self.pathfind()
 
+class Particle(py.sprite.Sprite):
 
-
-    class node():
-        #TODO: Add terrain and hitboxes
-
-        def __init__(self, start, end, pos):
-            self.start = start
-            self.end = end
-            self.pos = pos
-        def terrain(self):
-
-            return 0
-
-        def G(self):
-            #distance from start to position
-            return math.sqrt((self.start[0] - self.pos[0])**2 + (self.start[1] - self.pos[1])**2)
-        def H(self):
-            #distance from position to end
-            return math.sqrt((self.pos[0] - self.end[0])**2 + (self.pos[1] - self.end[1])**2)
-        def F(self):
-            #total score - the lower the better
-            return self.G() + self.H() + self.terrain()
+        def __init__(self, pos, colour, jump, life):
+            super().__init__()
+            self.posx, self.posy = pos
+            self.colour = colour
+            self.alive = True
+            self.timer = life
+            self.jump = jump
+        def update(self):
+            if self.alive:
+                self.timer -= 1
+                self.posx += randint(-self.jump, self.jump)
+                self.posy += randint(-self.jump, self.jump)
+                self.rect = py.Rect(0, 0, 2 *v.scale, 2 *v.scale)
+                self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
+                self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
+                py.draw.rect(v.screen, self.colour, self.rect)
+                if self.timer <= 0:
+                    self.alive = False

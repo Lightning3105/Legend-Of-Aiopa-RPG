@@ -7,7 +7,9 @@ class health:
     def __init__(self, number):
         sheet = entityClasses.SpriteSheet("Resources/Images/Hearts.png", 1, 4)
         sheet.getGrid()
-        self.Q0 = py.Surface((0,0))
+        self.Q0 = py.Surface((1,1))
+        self.Q0.convert_alpha()
+        self.Q0.set_alpha(0)
         self.Q4 = sheet.images[0]
         self.Q3 = sheet.images[1]
         self.Q2 = sheet.images[2]

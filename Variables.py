@@ -19,3 +19,4 @@ playerStopped = False
 clock = None
 events = []
 particles = None
+attackerDirection = "Down"

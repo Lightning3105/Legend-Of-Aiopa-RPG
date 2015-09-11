@@ -97,8 +97,8 @@ def game():
         v.cur_weapon.update()
         v.allNpc.update()
         v.allNpc.draw(v.screen)
-        v.p_class.move()
-
+        v.p_class.update()
+        v.playerStopped = False
 
         v.cur_weapon.draw()
         v.particles.update()

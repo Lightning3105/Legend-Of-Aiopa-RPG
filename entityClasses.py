@@ -58,6 +58,12 @@ class Player(py.sprite.Sprite):
         self.moving = False
         self.view = "DownC"
         self.sheetImage = "Resources\Images"
+        self.damaged = False
+        self.damage_alpha = 0
+        self.damage_fade = False
+        self.prevHealth = v.playerHealth
+        self.dead = False
+        self.invulnLength = 30
 
 
     def initSheet(self):
@@ -80,10 +86,50 @@ class Player(py.sprite.Sprite):
         self.get_view()
         skin = self.views[self.view]
         size = skin.get_rect()
-        image = py.transform.scale(skin, (int(size.width * v.scale), int(size.height * v.scale)))
+        self.image = py.transform.scale(skin, (int(size.width * v.scale), int(size.height * v.scale)))
         self.rect.centerx = self.posx
         self.rect.centery = self.posy
-        v.screen.blit(image, self.rect)
+        self.damage_animation()
+        self.damage_knockback()
+        v.screen.blit(self.image, self.rect)
+
+    def damage_knockback(self):
+        if self.damage_fade and self.damaged and not self.dead:
+            self.moving = False
+            v.playerStopped = True
+            if self.direction == "Up":
+                self.prevX = self.posx
+                self.prevY = self.posy
+                v.playerPosX, v.playerPosY = (self.prevX, self.prevY - 4)
+            if self.direction == "Down":
+                self.prevX = self.posx
+                self.prevY = self.posy
+                v.playerPosX, v.playerPosY = (self.prevX, self.prevY + 4)
+            if self.direction == "Right":
+                self.prevX = self.posx
+                self.prevY = self.posy
+                v.playerPosX, v.playerPosY = (self.prevX - 4, self.prevY)
+            if self.direction == "Left":
+                self.prevX = self.posx
+                self.prevY = self.posy
+                v.playerPosX, v.playerPosY = (self.prevX + 4, self.prevY)
+
+    def damage_animation(self): #TODO: Finish
+        if self.damaged and not self.dead:
+            damage_image = self.image
+            damage_image.fill((255, 0, 0, self.damage_alpha), special_flags=py.BLEND_RGBA_MULT)
+            self.image.blit(damage_image, (0,0))
+            if self.damage_fade:
+                self.damage_alpha += 255 / (self.invulnLength / 2)
+                if self.damage_alpha >= 255:
+                    self.damage_fade = False
+                    self.damage_alpha = 255
+            elif not self.damage_fade:
+                self.damage_alpha -= 255 / (self.invulnLength / 2)
+                if self.damage_alpha <= 0:
+                    self.damage_alpha = 0
+                    self.damaged = False
+                    self.damage_fade = True
 
     def get_view(self):
         for event in v.events:
@@ -108,15 +154,17 @@ class Player(py.sprite.Sprite):
         self.rect.width = self.rend.get_rect().width * v.scale
         self.rect.height = self.rend.get_rect().height * v.scale
 
-    def move(self):
+    def update(self):
+        if v.playerHealth < self.prevHealth:
+            self.damaged = True
         if not v.playerStopped:
             py.event.pump()
             moveRight = True
             moveLeft = True
             moveUp = True
             moveDown = True
-            preX = v.playerPosX
-            preY = v.playerPosY
+            self.prevX = v.playerPosX
+            self.prevY = v.playerPosY
             self.velX = 0
             self.velY = 0
             """for wall in v.wallHitList:
@@ -329,7 +377,8 @@ class NPC(py.sprite.Sprite):
         self.damage_fade = False
         self.dead = False
         self.firstDeath = True
-        self.particles = py.sprite.Group()
+        self.attCount = -20
+        self.damagedPlayer = False
         v.allNpc.add(self)
         self.initSheet()
         #v.hitList.add(self)
@@ -408,6 +457,7 @@ class NPC(py.sprite.Sprite):
             self.title()
 
         self.death()
+        self.attack()
 
 
 
@@ -422,6 +472,30 @@ class NPC(py.sprite.Sprite):
         label = font.render(self.name, 1, (255,255,255))
         v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.top - 25))
 
+    def attack(self):
+        attImage = py.image.load("Resources/Images/ClawSlash.png").convert_alpha()
+        attImage = py.transform.scale(attImage, (20 * v.scale, 20 * v.scale))
+        attImage.fill((255, 255, 255, 255), special_flags=py.BLEND_RGBA_MULT)
+
+        if abs(self.posx - v.playerPosX) < 25:
+            if abs(self.posy - v.playerPosY) < 40:
+                self.posx = self.prevX
+                self.posy = self.prevY
+                self.moving = False
+                if self.attCount <= -20:
+                    self.attCount = 30
+                    self.attPos = (v.playerPosX, v.playerPosY)
+                    self.damagedPlayer = False
+        if self.attCount > -20:
+            self.attCount -= 3
+        if self.attCount <= 30 and self.attCount > -20:
+            pos = (v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (self.attPos[0])) * v.scale) - self.attCount - 20, v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (self.attPos[1])) * v.scale) + self.attCount)
+            v.screen.blit(attImage, pos)
+        if abs(self.posx - v.playerPosX) < 35:
+            if abs(self.posy - v.playerPosY) < 40:
+                if self.attCount <= 15 and self.damagedPlayer == False:
+                    v.playerHealth -= 3
+                    self.damagedPlayer = True
     def death(self):
         if self.dead:
             self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
@@ -518,7 +592,7 @@ class NPC(py.sprite.Sprite):
 
 
 
-        if abs(self.posx - v.playerPosX) < 30:
+        if abs(self.posx - v.playerPosX) < 25:
             if abs(self.posy - v.playerPosY) < 40:
                 self.posx = self.prevX
                 self.posy = self.prevY

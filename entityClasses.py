@@ -326,7 +326,7 @@ class NPC(py.sprite.Sprite):
         self.invulnLength = 30
         self.damaged = False
         self.damage_alpha = 0
-        self.damage_fade = False
+        self.damage_fade = True
         self.dead = False
         self.firstDeath = True
         self.particles = py.sprite.Group()

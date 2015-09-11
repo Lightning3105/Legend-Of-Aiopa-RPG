@@ -423,10 +423,9 @@ class NPC(py.sprite.Sprite):
             self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
             self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
             self.rect.height = 27 * v.scale
-            self.rect.width = 20 * v.scale
+            self.rect.width = 21 * v.scale
             for thing in v.hitList:
                 if self.rect.colliderect(thing.rect) == True or self.rect.colliderect(v.p_class.rect) == True:
-                    #print("Hit")
                     self.posx = self.prevX
                     self.posy = self.prevY
                     self.pf_tried.append((self.posx, self.posy))
@@ -453,10 +452,7 @@ class NPC(py.sprite.Sprite):
             self.title()
 
         self.death()
-        #self.attack()
-        #print(abs(self.posx - v.playerPosX))
-        #print(abs(self.posy - v.playerPosY))
-        #print()
+        self.attack()
 
 
 
@@ -479,10 +475,10 @@ class NPC(py.sprite.Sprite):
         attImage = py.transform.scale(attImage, (20 * v.scale, 20 * v.scale))
         attImage.fill((255, 255, 255, 255), special_flags=py.BLEND_RGBA_MULT)
 
-        if abs(self.posx - v.playerPosX) < 35:
-            if abs(self.posy - v.playerPosY) < 35:
+        if abs(self.posx - v.playerPosX) < 30:
+            if abs(self.posy - v.playerPosY) < 30:
                 if self.attCount <= -20:
-                    self.attCount = 30
+                    self.attCount = 50
                     self.attPos = (v.playerPosX, v.playerPosY)
                     self.damagedPlayer = False
         if self.attCount > -20:
@@ -494,9 +490,9 @@ class NPC(py.sprite.Sprite):
         if self.attCount <= 30 and self.attCount > -20:
             pos = (v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (self.attPos[0])) * v.scale) - self.attCount - 20, v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (self.attPos[1])) * v.scale) + self.attCount)
             v.screen.blit(attImage, pos)
-        if abs(self.posx - v.playerPosX) < 40:
-            if abs(self.posy - v.playerPosY) < 40:
-                if self.attCount <= 15 and self.damagedPlayer == False:
+        if abs(self.posx - v.playerPosX) < 32:
+            if abs(self.posy - v.playerPosY) < 32:
+                if self.attCount <= 15 and self.damagedPlayer == False and self.attCount > -20:
                     v.playerHealth -= 3
                     self.damagedPlayer = True
     def death(self):

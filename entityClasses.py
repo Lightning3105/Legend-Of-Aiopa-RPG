@@ -478,21 +478,21 @@ class NPC(py.sprite.Sprite):
         if abs(self.posx - v.playerPosX) < 30:
             if abs(self.posy - v.playerPosY) < 30:
                 if self.attCount <= -20:
-                    self.attCount = 50
+                    self.attCount = 25 * v.scale
                     self.attPos = (v.playerPosX, v.playerPosY)
                     self.damagedPlayer = False
         if self.attCount > -20:
-            self.attCount -= 3
+            self.attCount -= 1.5 * v.scale
             self.posx = self.prevX
             self.posy = self.prevY
             self.moving = False
             v.attackerDirection = self.direction
-        if self.attCount <= 30 and self.attCount > -20:
-            pos = (v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (self.attPos[0])) * v.scale) - self.attCount - 20, v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (self.attPos[1])) * v.scale) + self.attCount)
+        if self.attCount <= 15 * v.scale and self.attCount > -10 * v.scale:
+            pos = (v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (self.attPos[0])) * v.scale) - self.attCount - 10 * v.scale, v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (self.attPos[1])) * v.scale) + self.attCount)
             v.screen.blit(attImage, pos)
         if abs(self.posx - v.playerPosX) < 32:
             if abs(self.posy - v.playerPosY) < 32:
-                if self.attCount <= 15 and self.damagedPlayer == False and self.attCount > -20:
+                if self.attCount <= 7.5 * v.scale and self.damagedPlayer == False and self.attCount > -10 * v.scale:
                     v.playerHealth -= 3
                     self.damagedPlayer = True
     def death(self):

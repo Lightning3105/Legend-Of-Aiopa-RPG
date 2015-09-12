@@ -13,7 +13,7 @@ from pygame.color import Color as colour
 import sys
 def mainMenu():
     py.init()
-    screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
+    screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
     MenuItems.screen = screen
     buttons = [Button("New Game", (160, 380), 80, colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf")]
     titletext1 = Text("The Legend", (90, 60), 80, colour("red"), "Resources\Fonts\Runic.ttf")
@@ -36,7 +36,7 @@ def mainMenu():
             if event.type == py.QUIT:
                 sys.exit()
             elif event.type==py.VIDEORESIZE:
-                screen=py.display.set_mode(event.dict['size'],py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
+                screen=py.display.set_mode(event.dict['size'],py.HWSURFACE|py.DOUBLEBUF)
             elif event.type == py.MOUSEBUTTONDOWN:
                 for button in buttons:
                     if button.pressed(py.mouse.get_pos()):
@@ -118,6 +118,39 @@ def game():
         if keys_pressed[py.K_SPACE]:
             v.cur_weapon.attacking = True
 
+def classSelection():
+    py.init()
+    screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
+    colourMod = 255
+    colour1 = colour(50, 0, 0)
+    colour2 = colour(205, 0, 0)
+    colourDirection = True
+    colourModIncreasing = False
+    colourForward = True
+
+
+    while True:
+        py.event.pump()
+        print(colourMod)
+        if colourModIncreasing == False:
+            colourMod -= 0.1
+        if colourModIncreasing == True:
+            colourMod += 0.1
+        colourMod = round(colourMod, 6)
+        if colourMod <= 50:
+            colourModIncreasing = True
+        if colourMod >= 205:
+            colourModIncreasing = False
+        if colourMod == 127:
+            colourDirection = not colourDirection
+            if colourModIncreasing == False:
+                colourForward = not colourForward
+
+        colour1 = (255 - colourMod, 0, 0)
+        colour2 = (0 + colourMod, 0, 0)
+
+        fill_gradient(screen, colour1, colour2, vertical=colourDirection, forward=colourForward)
+        py.display.flip()
 
 def centre(screen):
     return screen.get_rect()[2] / 2, screen.get_rect()[3] / 2

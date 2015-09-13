@@ -145,12 +145,8 @@ class characterSelector(py.sprite.Sprite):
                 if not self.animationPosition > len(self.sheet.images) - 1:
                     self.image = self.sheet.images[self.animationPosition]
                     self.animationPosition += 1
-                else:
-                    self.image = self.sheet.images[0]
-                    self.animationPosition += 1
-                    if self.animationPosition >= len(self.sheet.images) * 2:
-                        self.animationPosition = 0
+                if self.animationPosition >= len(self.sheet.images):
+                    self.animationPosition = 0
 
-        print(self.animationPosition)
         self.rect = self.image.get_rect()
         self.rect.bottomleft = self.pos

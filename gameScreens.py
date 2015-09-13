@@ -128,10 +128,14 @@ def classSelection():
     colourModIncreasing = False
     colourForward = True
 
+    classes = py.sprite.Group()
+    classes.add(MenuItems.characterSelector("Resources/Images/Swordsman.png", (100, 300), "Swordsman"))
+    py.time.set_timer(py.USEREVENT + 1, 200)
 
     while True:
         py.event.pump()
-        print(colourMod)
+        v.events = []
+        v.events = py.event.get()
         if colourModIncreasing == False:
             colourMod -= 0.1
         if colourModIncreasing == True:
@@ -145,11 +149,13 @@ def classSelection():
             colourDirection = not colourDirection
             if colourModIncreasing == False:
                 colourForward = not colourForward
-
         colour1 = (255 - colourMod, 0, 0)
         colour2 = (0 + colourMod, 0, 0)
-
         fill_gradient(screen, colour1, colour2, vertical=colourDirection, forward=colourForward)
+
+        classes.update()
+        classes.draw(screen)
+
         py.display.flip()
 
 def centre(screen):

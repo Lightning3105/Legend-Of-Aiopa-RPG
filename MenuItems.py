@@ -1,4 +1,6 @@
 import pygame as py
+import entityClasses
+import Variables as v
 
 screen = None
 
@@ -126,3 +128,29 @@ class fadeIn:
         black.fill((0, 0, 0))
         black.set_alpha(self.opacity)
         screen.blit(black, (0, 0))
+
+class characterSelector(py.sprite.Sprite):
+
+    def __init__(self, image, pos, name):
+        super().__init__()
+        self.pos = pos
+        self.sheet = entityClasses.SpriteSheet(image, 1, 5)
+        self.sheet.getGrid()
+        self.animationPosition = 0
+        self.image = self.sheet.images[self.animationPosition]
+
+    def update(self):
+        for event in v.events:
+            if event.type == py.USEREVENT + 1:
+                if not self.animationPosition > len(self.sheet.images) - 1:
+                    self.image = self.sheet.images[self.animationPosition]
+                    self.animationPosition += 1
+                else:
+                    self.image = self.sheet.images[0]
+                    self.animationPosition += 1
+                    if self.animationPosition >= len(self.sheet.images) * 2:
+                        self.animationPosition = 0
+
+        print(self.animationPosition)
+        self.rect = self.image.get_rect()
+        self.rect.bottomleft = self.pos

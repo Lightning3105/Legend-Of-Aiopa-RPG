@@ -134,19 +134,83 @@ class characterSelector(py.sprite.Sprite):
     def __init__(self, image, pos, name):
         super().__init__()
         self.pos = pos
-        self.sheet = entityClasses.SpriteSheet(image, 1, 5)
-        self.sheet.getGrid()
-        self.animationPosition = 0
-        self.image = self.sheet.images[self.animationPosition]
+        self.name = name
+        self.skin = py.image.load(image)
+        self.hovered = False
+        self.hoveredCycle = 0
+        self.greyedCycle = 0
+        self.movingCycle = 200
+        self.movDistance = (self.pos[0] - 100)
+        if pos[0] < v.screen.get_rect()[2]/2:
+            self.side = "Left"
+        else:
+            self.side = "Right"
+        
 
     def update(self):
-        for event in v.events:
-            if event.type == py.USEREVENT + 1:
-                if not self.animationPosition > len(self.sheet.images) - 1:
-                    self.image = self.sheet.images[self.animationPosition]
-                    self.animationPosition += 1
-                if self.animationPosition >= len(self.sheet.images):
-                    self.animationPosition = 0
-
-        self.rect = self.image.get_rect()
-        self.rect.bottomleft = self.pos
+        if v.custimizationStage == "Class Selection":
+            sMod = (self.hoveredCycle / 10) + 3
+            cMod = self.greyedCycle * 4
+            cMod = 255 - cMod
+            size = self.skin.get_rect()
+            self.image = py.transform.scale(self.skin, (int(size.width * sMod), int(size.height * sMod)))
+            
+            self.image.fill((cMod, cMod, cMod), special_flags=py.BLEND_RGBA_MULT)
+            self.rect = self.image.get_rect()
+            self.rect.center = self.pos
+            if self.rect.collidepoint(py.mouse.get_pos()):
+                self.hovered = True
+                v.characterHovered = True
+            else:
+                self.hovered = False
+            for event in v.events:
+                if event.type == py.MOUSEBUTTONDOWN and self.hovered:
+                    v.playerClass = self.name
+                    v.custimizationStage = "To Appearance"
+                if event.type == py.USEREVENT + 1: 
+                    if self.hovered and self.hoveredCycle < 30:
+                        self.hoveredCycle += 1
+                        self.greyedCycle -= 1
+                    if not self.hovered and self.hoveredCycle > 0:
+                        self.hoveredCycle -= 1
+                    
+                    if v.characterHovered == True:
+                        if self.hovered == False:
+                            self.greyedCycle += 1
+                        
+                    if v.characterHovered == False:
+                        self.greyedCycle -= 1
+            
+            if self.hoveredCycle >= 30:
+                self.hoveredCycle = 30
+            if self.hoveredCycle <= 0:
+                self.hoveredCycle = 0
+            
+            if self.greyedCycle >= 30:
+                self.greyedCycle = 30
+            if self.greyedCycle <= 0:
+                self.greyedCycle = 0
+            
+            
+                
+            font = py.font.SysFont("Resources/Fonts/RPGSystem.ttf", int(10 * sMod)) #TODO: Scale
+            label = font.render(self.name, 1, (cMod, cMod, cMod))
+            v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.bottom  + (2 * sMod)))
+        if v.custimizationStage == "To Appearance":
+            if self.name == v.playerClass:
+                for event in v.events:
+                    if event.type == py.USEREVENT + 1:
+                        sMod = 6 + ((200 -self.movingCycle) / 40)
+                        size = self.skin.get_rect()
+                        self.image = py.transform.scale(self.skin, (int(size.width * sMod), int(size.height * sMod)))
+                        self.rect = self.image.get_rect()
+                        newpos = list(self.pos)
+                        newpos[0] = self.pos[0] - ((200 - self.movingCycle) / self.movDistance) # TODO: Make this work
+                        if self.movingCycle > 0:
+                            self.movingCycle -= 1
+                        print(newpos[0])
+                        self.rect.center = newpos
+                        
+            else:
+                self.image = py.Surface((1, 1))
+                self.image.fill((1, 1, 1, 0))

@@ -20,3 +20,6 @@ clock = None
 events = []
 particles = None
 attackerDirection = "Down"
+characterHovered = False
+playerClass = None
+custimizationStage = None

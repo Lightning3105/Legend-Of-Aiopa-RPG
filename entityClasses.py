@@ -56,6 +56,7 @@ class Player(py.sprite.Sprite):
         self.direction = "Down"
         v.playerDirection = self.direction
         self.moving = False
+        self.movFlip = True
         self.view = "DownC"
         self.sheetImage = "Resources\Images"
         self.damaged = False
@@ -127,11 +128,16 @@ class Player(py.sprite.Sprite):
         for event in v.events:
             if event.type == py.USEREVENT:
                 if self.view == self.direction + "C":
-                    self.view = self.direction + "R"
+                    if self.movFlip:
+                        self.view = self.direction + "R"
+                        self.movFlip = not self.movFlip
+                    else:
+                        self.view = self.direction + "L"
+                        self.movFlip = not self.movFlip
                 elif self.view == self.direction + "R":
-                    self.view = self.direction + "L"
+                    self.view = self.direction + "C"
                 elif self.view == self.direction + "L":
-                    self.view = self.direction + "R"
+                    self.view = self.direction + "C"
                 else:
                     self.view = self.direction + "C"
         if self.moving == False:
@@ -359,6 +365,7 @@ class NPC(py.sprite.Sprite):
         self.direction = "Down"
         self.view = "DownC"
         self.moving = False
+        self.movFlip = True
         self.pf_tried = []
         self.sheetImage = "Resources/Images/Generic Goblin.png"
         self.maxHealth = health
@@ -397,11 +404,16 @@ class NPC(py.sprite.Sprite):
         for event in v.events:
             if event.type == py.USEREVENT:
                 if self.view == self.direction + "C":
-                    self.view = self.direction + "R"
+                    if self.movFlip:
+                        self.view = self.direction + "R"
+                        self.movFlip = not self.movFlip
+                    else:
+                        self.view = self.direction + "L"
+                        self.movFlip = not self.movFlip
                 elif self.view == self.direction + "R":
-                    self.view = self.direction + "L"
+                    self.view = self.direction + "C"
                 elif self.view == self.direction + "L":
-                    self.view = self.direction + "R"
+                    self.view = self.direction + "C"
                 else:
                     self.view = self.direction + "C"
         if self.moving == False:

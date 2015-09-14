@@ -120,7 +120,7 @@ def game():
 
 def classSelection():
     py.init()
-    screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
+    v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
     colourMod = 255
     colour1 = colour(50, 0, 0)
     colour2 = colour(205, 0, 0)
@@ -129,11 +129,15 @@ def classSelection():
     colourForward = True
 
     classes = py.sprite.Group()
-    classes.add(MenuItems.characterSelector("Resources/Images/Swordsman.png", (100, 300), "Swordsman"))
-    py.time.set_timer(py.USEREVENT + 1, 200)
+    classes.add(MenuItems.characterSelector("Resources/Images/PaladinClass.png", (v.screen.get_rect()[2]/2, v.screen.get_rect()[3]/2), "Paladin"))
+    classes.add(MenuItems.characterSelector("Resources/Images/MageClass.png", (v.screen.get_rect()[2]/4, v.screen.get_rect()[3]/2), "Mage"))
+    py.time.set_timer(py.USEREVENT + 1, 10)
+    
+    v.custimizationStage = "Class Selection"
 
     while True:
         py.event.pump()
+
         v.events = []
         v.events = py.event.get()
         if colourModIncreasing == False:
@@ -151,10 +155,11 @@ def classSelection():
                 colourForward = not colourForward
         colour1 = (255 - colourMod, 0, 0)
         colour2 = (0 + colourMod, 0, 0)
-        fill_gradient(screen, colour1, colour2, vertical=colourDirection, forward=colourForward)
+        fill_gradient(v.screen, colour1, colour2, vertical=colourDirection, forward=colourForward)
 
         classes.update()
-        classes.draw(screen)
+        classes.draw(v.screen)
+        #v.characterHovered = False
 
         py.display.flip()
 

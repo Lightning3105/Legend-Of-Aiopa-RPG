@@ -166,7 +166,7 @@ class characterSelector(py.sprite.Sprite):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN and self.hovered:
                     v.playerClass = self.name
-                    v.custimizationStage = "To Appearance"
+                    v.custimizationStage = "To Attributes"
                 if event.type == py.USEREVENT + 1: 
                     if self.hovered and self.hoveredCycle < 30:
                         self.hoveredCycle += 1
@@ -196,7 +196,7 @@ class characterSelector(py.sprite.Sprite):
             font = py.font.SysFont("Resources/Fonts/RPGSystem.ttf", int(10 * sMod)) #TODO: Scale
             label = font.render(self.name, 1, (cMod, cMod, cMod))
             v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.bottom  + (2 * sMod)))
-        if v.custimizationStage == "To Appearance":
+        if v.custimizationStage == "To Attributes":
             if self.name == v.playerClass:
                 for event in v.events:
                     if event.type == py.USEREVENT + 1:
@@ -224,7 +224,7 @@ class optionSlate():
         self.height = 400
     
     def update(self):
-        if v.custimizationStage == "To Appearance":
+        if v.custimizationStage == "To Attributes":
             self.innerRect = py.Rect(0, 0, self.width, self.height)
             self.innerRect.center = self.posx, self.posy
             self.outerRect = py.Rect(0, 0, self.width + 20, self.height + 20)
@@ -233,3 +233,46 @@ class optionSlate():
             py.draw.rect(v.screen, py.Color(255, 178, 102), self.innerRect)
             if self.posx != 440:
                 self.posx -= 1
+            else:
+                v.custimizationStage = "Attributes"
+        if v.custimizationStage == "Attributes":
+            self.posx = 440
+            self.posy = 240
+            self.innerRect = py.Rect(0, 0, self.width, self.height)
+            self.innerRect.center = self.posx, self.posy
+            self.outerRect = py.Rect(0, 0, self.width + 20, self.height + 20)
+            self.outerRect.center = self.posx, self.posy
+            py.draw.rect(v.screen, py.Color(153, 76, 0), self.outerRect)
+            py.draw.rect(v.screen, py.Color(255, 178, 102), self.innerRect)
+
+class optionAttribute(py.sprite.Sprite):
+    
+    def __init__(self, posy, attribute):
+        super().__init__()
+        self.posx = 430
+        self.posy = posy
+        self.attribute = attribute
+        self.baseValue = v.Attributes[attribute]
+        self.addedValue = 0
+    
+    def update(self):
+        if v.custimizationStage == "Attributes":
+            arrow = py.image.load("Resources/Images/AttributeArrow.png")
+            arrow = py.transform.scale(arrow, (arrow.get_rect().width * 2, arrow.get_rect().height * 2))
+            v.screen.blit(arrow, (self.posx + 150, self.posy))
+            
+            arrow = py.transform.rotate(arrow, 180)
+            v.screen.blit(arrow, (self.posx - 150, self.posy))
+            
+            font = py.font.SysFont("Resources/Fonts/RPGSystem.ttf", 40)
+            label = font.render(str(self.attribute) + ":", 1, (255,255,255))
+            lx = self.posx - (200 - (font.size(str(self.attribute) + ":")[0] / 2))
+            v.screen.blit(label, (lx, self.posy))
+            
+            label = font.render(str(self.baseValue), 1, (255,255,255))
+            lx = self.posx - (-40 - (font.size(str(self.baseValue))[0] / 2))
+            v.screen.blit(label, (lx, self.posy))
+            
+            label = font.render("+" + str(self.addedValue), 1, (0,255,0))
+            lx = self.posx - (-80 - font.size("+" + str(self.addedValue))[0] / 2)
+            v.screen.blit(label, (lx, self.posy))

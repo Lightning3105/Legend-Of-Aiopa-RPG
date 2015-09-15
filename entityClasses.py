@@ -178,13 +178,13 @@ class Player(py.sprite.Sprite):
                         moveDown = False"""
             keys_pressed = py.key.get_pressed()
             if keys_pressed[py.K_a]:
-                self.velX = -v.playerSpeed
+                self.velX = -v.Attributes["Speed"]
             if keys_pressed[py.K_d]:
-                self.velX = v.playerSpeed
+                self.velX = v.Attributes["Speed"]
             if keys_pressed[py.K_s]:
-                self.velY = -v.playerSpeed
+                self.velY = -v.Attributes["Speed"]
             if keys_pressed[py.K_w]:
-                self.velY = v.playerSpeed
+                self.velY = v.Attributes["Speed"]
 
             if keys_pressed[py.K_s]:
                 self.direction = "Down"
@@ -250,13 +250,13 @@ class HitBox(py.sprite.Sprite):
                 hit = True
         if hit:
             if self.side == "Top":
-                velY += -v.playerSpeed
+                velY += -v.Attributes["Speed"]
             if self.side == "Bottom":
-                velY += v.playerSpeed
+                velY += v.Attributes["Speed"]
             if self.side == "Left":
-                velX += v.playerSpeed
+                velX += v.Attributes["Speed"]
             if self.side == "Right":
-                velX += -v.playerSpeed
+                velX += -v.Attributes["Speed"]
         return velX, velY
 
 

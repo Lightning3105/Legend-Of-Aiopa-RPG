@@ -1,9 +1,7 @@
 playerPosX = 0
 playerPosY = 0
-playerHealth = 20
-playerMaxHealth = 20
 playerDirection = ""
-playerSpeed = 2
+playerHealth = 20
 hitList = None
 allTiles = None
 allNpc = None
@@ -23,3 +21,6 @@ attackerDirection = "Down"
 characterHovered = False
 playerClass = None
 custimizationStage = None
+Attributes = {"Speed": 2,
+              "Max Health": 20,
+              }

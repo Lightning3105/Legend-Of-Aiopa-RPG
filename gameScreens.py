@@ -136,6 +136,9 @@ def classSelection():
     v.custimizationStage = "Class Selection"
     
     os = MenuItems.optionSlate()
+    
+    attOptions = py.sprite.Group()
+    attOptions.add(MenuItems.optionAttribute(200, "Max Health"))
 
     while True:
         py.event.pump()
@@ -163,6 +166,7 @@ def classSelection():
         classes.draw(v.screen)
         
         os.update()
+        attOptions.update()
         #v.characterHovered = False
 
         py.display.flip()

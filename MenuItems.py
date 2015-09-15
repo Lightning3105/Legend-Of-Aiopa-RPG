@@ -140,7 +140,7 @@ class characterSelector(py.sprite.Sprite):
         self.hoveredCycle = 0
         self.greyedCycle = 0
         self.movingCycle = 200
-        self.movDistance = (self.pos[0] - 100)
+        self.movDistance = abs(self.pos[0] - 130)
         if pos[0] < v.screen.get_rect()[2]/2:
             self.side = "Left"
         else:
@@ -200,17 +200,36 @@ class characterSelector(py.sprite.Sprite):
             if self.name == v.playerClass:
                 for event in v.events:
                     if event.type == py.USEREVENT + 1:
-                        sMod = 6 + ((200 -self.movingCycle) / 40)
+                        sMod = 6 + ((200 - self.movingCycle) / 40)
                         size = self.skin.get_rect()
                         self.image = py.transform.scale(self.skin, (int(size.width * sMod), int(size.height * sMod)))
                         self.rect = self.image.get_rect()
                         newpos = list(self.pos)
-                        newpos[0] = self.pos[0] - ((200 - self.movingCycle) / self.movDistance) # TODO: Make this work
+                        newpos[0] = self.pos[0] - (self.movDistance - (self.movingCycle * (self.movDistance / 200)))  # TODO: Make this work
+                        newpos[1] = self.pos[1] - (40 - (self.movingCycle * (40 / 200)))
                         if self.movingCycle > 0:
                             self.movingCycle -= 1
-                        print(newpos[0])
                         self.rect.center = newpos
                         
             else:
                 self.image = py.Surface((1, 1))
                 self.image.fill((1, 1, 1, 0))
+                
+class optionSlate():
+    
+    def __init__(self):
+        self.posx = 960
+        self.posy = 240
+        self.width = 400
+        self.height = 400
+    
+    def update(self):
+        if v.custimizationStage == "To Appearance":
+            self.innerRect = py.Rect(0, 0, self.width, self.height)
+            self.innerRect.center = self.posx, self.posy
+            self.outerRect = py.Rect(0, 0, self.width + 20, self.height + 20)
+            self.outerRect.center = self.posx, self.posy
+            py.draw.rect(v.screen, py.Color(153, 76, 0), self.outerRect)
+            py.draw.rect(v.screen, py.Color(255, 178, 102), self.innerRect)
+            if self.posx != 440:
+                self.posx -= 1

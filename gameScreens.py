@@ -134,6 +134,8 @@ def classSelection():
     py.time.set_timer(py.USEREVENT + 1, 10)
     
     v.custimizationStage = "Class Selection"
+    
+    os = MenuItems.optionSlate()
 
     while True:
         py.event.pump()
@@ -159,6 +161,8 @@ def classSelection():
 
         classes.update()
         classes.draw(v.screen)
+        
+        os.update()
         #v.characterHovered = False
 
         py.display.flip()

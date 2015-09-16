@@ -140,6 +140,9 @@ def classSelection():
     attOptions = py.sprite.Group()
     attOptions.add(MenuItems.optionAttribute(200, "Max Health"))
     attOptions.add(MenuItems.optionAttribute(300, "Speed"))
+    
+    labels = py.sprite.Group()
+    labels.add(MenuItems.textLabel("Define Character Attributes", (250, 40), colour("Black"), "Resources/Fonts/RPGSystem.ttf", 35))
 
     while True:
         py.event.pump()
@@ -168,6 +171,10 @@ def classSelection():
         
         os.update()
         attOptions.update()
+        
+        if v.custimizationStage == "Attributes":
+            labels.update()
+        
         #v.characterHovered = False
 
         py.display.flip()

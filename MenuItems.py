@@ -1,6 +1,8 @@
 import pygame as py
 import entityClasses
 import Variables as v
+from _operator import pos
+from msilib.schema import Font
 
 screen = None
 
@@ -295,4 +297,19 @@ class optionAttribute(py.sprite.Sprite):
                             self.addedValue -= 1
                     if self.plusRect.collidepoint(py.mouse.get_pos()):
                         self.addedValue += 1
-                        
+
+class textLabel(py.sprite.Sprite):
+    
+    def __init__(self, text, pos, colour, font, size):
+        super().__init__()
+        self.text = text
+        self.pos = pos
+        self.colour = colour
+        self.font = font
+        self.size = size
+        
+    def update(self):
+        font = py.font.Font(self.font, self.size)
+        label = font.render(self.text, 1, self.colour)
+    
+        v.screen.blit(label, self.pos)

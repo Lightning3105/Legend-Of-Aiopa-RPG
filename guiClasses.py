@@ -18,15 +18,15 @@ class health:
         self.number = number
 
     def getPercent(self):
-        if ((v.playerMaxHealth / 5) * self.number) <= v.playerHealth:
+        if ((v.Attributes["Max Health"] / 5) * self.number) <= v.playerHealth:
             self.image = self.Q4
-        if (((v.playerMaxHealth / 5) * self.number) - ((v.playerMaxHealth / 20) * 1)) >= v.playerHealth:
+        if (((v.Attributes["Max Health"] / 5) * self.number) - ((v.Attributes["Max Health"] / 20) * 1)) >= v.playerHealth:
             self.image = self.Q3
-        if (((v.playerMaxHealth / 5) * self.number) - ((v.playerMaxHealth / 20) * 2)) >= v.playerHealth:
+        if (((v.Attributes["Max Health"] / 5) * self.number) - ((v.Attributes["Max Health"] / 20) * 2)) >= v.playerHealth:
             self.image = self.Q2
-        if (((v.playerMaxHealth / 5) * self.number) - ((v.playerMaxHealth / 20) * 3)) >= v.playerHealth:
+        if (((v.Attributes["Max Health"] / 5) * self.number) - ((v.Attributes["Max Health"] / 20) * 3)) >= v.playerHealth:
             self.image = self.Q1
-        if (((v.playerMaxHealth / 5) * self.number) - ((v.playerMaxHealth / 20) * 4)) >= v.playerHealth:
+        if (((v.Attributes["Max Health"] / 5) * self.number) - ((v.Attributes["Max Health"] / 20) * 4)) >= v.playerHealth:
             self.image = self.Q0
     def draw(self):
         self.getPercent()

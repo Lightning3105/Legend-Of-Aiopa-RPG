@@ -139,6 +139,7 @@ def classSelection():
     
     attOptions = py.sprite.Group()
     attOptions.add(MenuItems.optionAttribute(200, "Max Health"))
+    attOptions.add(MenuItems.optionAttribute(300, "Speed"))
 
     while True:
         py.event.pump()

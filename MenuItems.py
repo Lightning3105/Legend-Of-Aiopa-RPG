@@ -249,7 +249,7 @@ class optionAttribute(py.sprite.Sprite):
     
     def __init__(self, posy, attribute):
         super().__init__()
-        self.posx = 430
+        self.posx = 280
         self.posy = posy
         self.attribute = attribute
         self.baseValue = v.Attributes[attribute]
@@ -259,20 +259,40 @@ class optionAttribute(py.sprite.Sprite):
         if v.custimizationStage == "Attributes":
             arrow = py.image.load("Resources/Images/AttributeArrow.png")
             arrow = py.transform.scale(arrow, (arrow.get_rect().width * 2, arrow.get_rect().height * 2))
-            v.screen.blit(arrow, (self.posx + 150, self.posy))
             
-            arrow = py.transform.rotate(arrow, 180)
-            v.screen.blit(arrow, (self.posx - 150, self.posy))
+            arrowL = py.transform.rotate(arrow, 180)
+            v.screen.blit(arrowL, (self.posx, self.posy))
+            self.minusRect = py.Rect(self.posx, self.posy, arrow.get_rect().width, arrow.get_rect().height)
             
-            font = py.font.SysFont("Resources/Fonts/RPGSystem.ttf", 40)
+            font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 40)
             label = font.render(str(self.attribute) + ":", 1, (255,255,255))
-            lx = self.posx - (200 - (font.size(str(self.attribute) + ":")[0] / 2))
-            v.screen.blit(label, (lx, self.posy))
+            lx = 310
+            v.screen.blit(label, (lx, self.posy - 6))
+            
+            textLength = font.size(str(self.attribute) + ":")[0] + 5
             
             label = font.render(str(self.baseValue), 1, (255,255,255))
-            lx = self.posx - (-40 - (font.size(str(self.baseValue))[0] / 2))
-            v.screen.blit(label, (lx, self.posy))
+            lx = 310 + textLength
+            v.screen.blit(label, (lx, self.posy - 6))
+            
+            textLength += font.size(str(self.baseValue))[0] + 5
             
             label = font.render("+" + str(self.addedValue), 1, (0,255,0))
-            lx = self.posx - (-80 - font.size("+" + str(self.addedValue))[0] / 2)
-            v.screen.blit(label, (lx, self.posy))
+            lx = 310 + textLength
+            v.screen.blit(label, (lx, self.posy - 6))
+            
+            textLength += font.size("+" + str(self.addedValue))[0] + 35
+            
+            
+            v.screen.blit(arrow, (self.posx + textLength, self.posy))
+            self.plusRect = py.Rect(self.posx + textLength, self.posy, arrow.get_rect().width, arrow.get_rect().height)
+            
+
+            for event in v.events:
+                if event.type == py.MOUSEBUTTONDOWN:
+                    if self.minusRect.collidepoint(py.mouse.get_pos()):
+                        if self.addedValue > 0:
+                            self.addedValue -= 1
+                    if self.plusRect.collidepoint(py.mouse.get_pos()):
+                        self.addedValue += 1
+                        

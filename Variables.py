@@ -23,4 +23,9 @@ playerClass = None
 custimizationStage = None
 Attributes = {"Speed": 2,
               "Max Health": 20,
+              "Strength": 4,
+              "Max Mana": 20,
+              "Magical Strength": 4,
+              "Luck": 10,
+              "Charisma": 3
               }

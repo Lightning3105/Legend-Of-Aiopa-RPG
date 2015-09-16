@@ -475,9 +475,9 @@ class NPC(py.sprite.Sprite):
         py.draw.rect(v.screen, (0,0,0), (self.rect.left, self.rect.top - 10, self.rect.width, 3))
         py.draw.rect(v.screen, (255,0,0), (self.rect.left, self.rect.top - 10, (self.health/self.maxHealth * self.rect.width), 3))
     def title(self):
-        font = py.font.SysFont("Resources/Fonts/RPGSystem.ttf", 10 * v.scale) #TODO: Scale
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 10 * v.scale) #TODO: Scale
         label = font.render(self.name, 1, (255,255,255))
-        v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.top - 25))
+        v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.top - 30))
 
     def attack(self):
         print(abs(self.posx - v.playerPosX))

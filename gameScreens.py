@@ -143,6 +143,9 @@ def classSelection():
     
     labels = py.sprite.Group()
     labels.add(MenuItems.textLabel("Define Character Attributes", (250, 40), colour("Black"), "Resources/Fonts/RPGSystem.ttf", 35))
+    labels.add(MenuItems.textLabel("Skill Points Remaining:", (250, 65), colour("grey"), "Resources/Fonts/RPGSystem.ttf", 30))
+    labels.add(MenuItems.textLabel(v.skillPoints, (500, 65), colour("green"), "Resources/Fonts/RPGSystem.ttf", 30))
+    
 
     while True:
         py.event.pump()

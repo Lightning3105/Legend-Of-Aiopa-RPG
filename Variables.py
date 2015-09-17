@@ -21,6 +21,7 @@ attackerDirection = "Down"
 characterHovered = False
 playerClass = None
 custimizationStage = None
+skillPoints = 5
 Attributes = {"Speed": 2,
               "Max Health": 20,
               "Strength": 4,

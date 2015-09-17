@@ -295,8 +295,11 @@ class optionAttribute(py.sprite.Sprite):
                     if self.minusRect.collidepoint(py.mouse.get_pos()):
                         if self.addedValue > 0:
                             self.addedValue -= 1
+                            v.skillPoints += 1
                     if self.plusRect.collidepoint(py.mouse.get_pos()):
-                        self.addedValue += 1
+                        if v.skillPoints > 0:
+                            self.addedValue += 1
+                            v.skillPoints -= 1
 
 class textLabel(py.sprite.Sprite):
     

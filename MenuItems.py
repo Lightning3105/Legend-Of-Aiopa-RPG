@@ -4,13 +4,12 @@ import Variables as v
 from _operator import pos
 from msilib.schema import Font
 
-screen = None
+class Button(py.sprite.Sprite):
 
-class Button:
-
-    hovered = False
-
-    def __init__(self, text, pos, size, hovercolour, normalcolour, font):
+    def __init__(self, text, pos, size, hovercolour, normalcolour, font, ID):
+        super().__init__()
+        self.ID = ID
+        self.hovered = False
         self.text = text
         self.pos = pos
         self.size = size
@@ -19,12 +18,15 @@ class Button:
         self.font = font
         self.font = py.font.Font(font, size)
         self.set_rect()
-        self.draw()
-
-    def draw(self):
+    
+    def update(self):
         self.set_rend()
-        py.draw.rect(screen, self.get_color(), self.rect)
-        screen.blit(self.rend, self.rect)
+        py.draw.rect(v.screen, self.get_color(), self.rect)
+        v.screen.blit(self.rend, self.rect)
+        if self.rect.collidepoint(py.mouse.get_pos()):
+                self.hovered = True
+        else:
+            self.hovered = False
 
     def set_rend(self):
         self.rend = self.font.render(self.text, True, (0,0,0))
@@ -40,7 +42,8 @@ class Button:
         self.rect = self.rend.get_rect()
         self.rect.topleft = self.pos
 
-    def pressed(self, mouse):
+    def pressed(self):
+        mouse = py.mouse.get_pos()
         if mouse[0] > self.rect.topleft[0]:
             if mouse[1] > self.rect.topleft[1]:
                 if mouse[0] < self.rect.bottomright[0]:
@@ -66,7 +69,7 @@ class Text:
 
     def draw(self):
         self.set_rend()
-        screen.blit(self.rend, self.rect)
+        v.screen.blit(self.rend, self.rect)
 
     def set_rend(self):
         self.rend = self.font.render(self.text, True, self.colour)
@@ -77,7 +80,7 @@ class Text:
         self.rect.topleft = self.pos
 
 def centre():
-    return (screen.get_rect()[2] / 2, screen.get_rect()[3] / 2)
+    return (v.screen.get_rect()[2] / 2, v.screen.get_rect()[3] / 2)
 
 def fill_gradient(surface, color, gradient, rect=None, vertical=True, forward=True):
     """fill a surface with a gradient pattern
@@ -126,10 +129,10 @@ class fadeIn:
         self.speed = 3
 
     def draw(self):
-        black = py.Surface((screen.get_rect()[2], screen.get_rect()[3]))
+        black = py.Surface((v.screen.get_rect()[2], v.screen.get_rect()[3]))
         black.fill((0, 0, 0))
         black.set_alpha(self.opacity)
-        screen.blit(black, (0, 0))
+        v.screen.blit(black, (0, 0))
 
 class characterSelector(py.sprite.Sprite):
 
@@ -143,10 +146,7 @@ class characterSelector(py.sprite.Sprite):
         self.greyedCycle = 0
         self.movingCycle = 200
         self.movDistance = abs(self.pos[0] - 130)
-        if pos[0] < v.screen.get_rect()[2]/2:
-            self.side = "Left"
-        else:
-            self.side = "Right"
+        self.opacity = 255
         
 
     def update(self):
@@ -214,8 +214,12 @@ class characterSelector(py.sprite.Sprite):
                         self.rect.center = newpos
                         
             else:
-                self.image = py.Surface((1, 1))
-                self.image.fill((1, 1, 1, 0))
+                size = self.skin.get_rect()
+                self.image = py.transform.scale(self.skin, (int(size.width * 3), int(size.height * 3)))
+                self.image.fill((135, 135, 135, self.opacity), special_flags=py.BLEND_RGBA_MULT)
+                self.opacity -= 1
+                if self.opacity < 0:
+                    self.opacity = 0
                 
 class optionSlate():
     
@@ -251,7 +255,7 @@ class optionAttribute(py.sprite.Sprite):
     
     def __init__(self, posy, attribute):
         super().__init__()
-        self.posx = 280
+        self.posx = 240
         self.posy = posy
         self.attribute = attribute
         self.baseValue = v.Attributes[attribute]
@@ -260,30 +264,31 @@ class optionAttribute(py.sprite.Sprite):
     def update(self):
         if v.custimizationStage == "Attributes":
             arrow = py.image.load("Resources/Images/AttributeArrow.png")
-            arrow = py.transform.scale(arrow, (arrow.get_rect().width * 2, arrow.get_rect().height * 2))
+            arrow = py.transform.scale(arrow, (int(arrow.get_rect().width * 1.5), int(arrow.get_rect().height * 1.5)))
             
             arrowL = py.transform.rotate(arrow, 180)
             v.screen.blit(arrowL, (self.posx, self.posy))
             self.minusRect = py.Rect(self.posx, self.posy, arrow.get_rect().width, arrow.get_rect().height)
             
-            font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 40)
+            font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
+            
             label = font.render(str(self.attribute) + ":", 1, (255,255,255))
-            lx = 310
+            lx = 260
             v.screen.blit(label, (lx, self.posy - 6))
             
             textLength = font.size(str(self.attribute) + ":")[0] + 5
             
             label = font.render(str(self.baseValue), 1, (255,255,255))
-            lx = 310 + textLength
+            lx = 260 + textLength
             v.screen.blit(label, (lx, self.posy - 6))
             
             textLength += font.size(str(self.baseValue))[0] + 5
             
             label = font.render("+" + str(self.addedValue), 1, (0,255,0))
-            lx = 310 + textLength
+            lx = 260 + textLength
             v.screen.blit(label, (lx, self.posy - 6))
             
-            textLength += font.size("+" + str(self.addedValue))[0] + 35
+            textLength += font.size("+" + str(self.addedValue))[0] + 25
             
             
             v.screen.blit(arrow, (self.posx + textLength, self.posy))
@@ -303,16 +308,20 @@ class optionAttribute(py.sprite.Sprite):
 
 class textLabel(py.sprite.Sprite):
     
-    def __init__(self, text, pos, colour, font, size):
+    def __init__(self, text, pos, colour, font, size, variable = False):
         super().__init__()
         self.text = text
         self.pos = pos
         self.colour = colour
         self.font = font
         self.size = size
+        self.variable = variable
         
     def update(self):
         font = py.font.Font(self.font, self.size)
-        label = font.render(self.text, 1, self.colour)
+        if not self.variable:
+            label = font.render(self.text, 1, self.colour)
+        if self.variable:
+            label = font.render(str(getattr(v, self.text)), 1, self.colour)
     
         v.screen.blit(label, self.pos)

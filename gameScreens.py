@@ -1,8 +1,8 @@
 import pygame as py
 import Variables as v
-from MenuItems import Button, Text, fill_gradient, fadeIn
-from entityClasses import Player, Tile, Sword, HitBox, NPC
-from guiClasses import update_health
+import MenuItems 
+import entityClasses 
+import guiClasses 
 from functools import reduce
 
 import Map
@@ -13,34 +13,31 @@ from pygame.color import Color as colour
 import sys
 def mainMenu():
     py.init()
-    screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
-    MenuItems.screen = screen
-    buttons = [Button("New Game", (160, 380), 80, colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf")]
-    titletext1 = Text("The Legend", (90, 60), 80, colour("red"), "Resources\Fonts\Runic.ttf")
-    titletext2 = Text("Of Aiopa", (160, 140), 80, colour("red"), "Resources\Fonts\Runic.ttf")
-    fade = fadeIn()
+    v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
+    MenuItems.screen = v.screen
+    buttons = py.sprite.Group()
+    buttons.add(MenuItems.Button("New Game", (160, 380), 80, colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "play"))
+    titletext1 = MenuItems.Text("The Legend", (90, 60), 80, colour("red"), "Resources\Fonts\Runic.ttf")
+    titletext2 = MenuItems.Text("Of Aiopa", (160, 140), 80, colour("red"), "Resources\Fonts\Runic.ttf")
+    fade = MenuItems.fadeIn()
     fade.fadeIn = True
     while True:
         py.event.pump()
-        fill_gradient(screen, colour("cyan"), colour("dark blue"))
+        MenuItems.fill_gradient(v.screen, colour("cyan"), colour("dark blue"))
         titletext1.draw()
         titletext2.draw()
-
-        for button in buttons:
-            if button.rect.collidepoint(py.mouse.get_pos()):
-                button.hovered = True
-            else:
-                button.hovered = False
-            button.draw()
-        for event in py.event.get():
+        buttons.update()
+        v.events = []
+        v.events = py.event.get()
+        for event in v.events:
             if event.type == py.QUIT:
                 sys.exit()
-            elif event.type==py.VIDEORESIZE:
-                screen=py.display.set_mode(event.dict['size'],py.HWSURFACE|py.DOUBLEBUF)
             elif event.type == py.MOUSEBUTTONDOWN:
                 for button in buttons:
-                    if button.pressed(py.mouse.get_pos()):
-                        return True
+                    if button.pressed():
+                        id = button.ID
+                        if id == "play":
+                            classSelection()
         fade.draw()
         fade.opacity -= 1
         py.display.flip()
@@ -50,7 +47,7 @@ def game():
     v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
     v.screen.fill(colour("Green"))
     v.screen.fill(colour("Red"))
-    v.p_class = Player()
+    v.p_class = entityClasses.Player()
     v.p_class.sheetImage = "Resources/Images/Male_Basic.png"
     v.p_class.initSheet()
     v.clock = py.time.Clock()
@@ -69,20 +66,20 @@ def game():
             ["0","0","0","0","0","0","0","0","0","0"],]
     v.allTiles = py.sprite.Group()
     tiles = Map.generateMap(v.map1, tileset)
-    v.cur_weapon = Sword()
+    v.cur_weapon = entityClasses.Sword()
     v.cur_weapon.image = "Resources/Images/Sword_1.png"
     v.cur_weapon.get_rend()
     v.hits = py.sprite.Group()
-    v.hits.add(HitBox(centre(v.screen)[0] + (5 * v.scale), centre(v.screen)[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale), "Right"))
-    v.hits.add(HitBox(centre(v.screen)[0] - (5 * v.scale), centre(v.screen)[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale), "Left"))
-    v.hits.add(HitBox(centre(v.screen)[0] - (3 * v.scale), centre(v.screen)[1] - (8 * v.scale), (8 * v.scale), (2 * v.scale), "Top"))
-    v.hits.add(HitBox(centre(v.screen)[0] - (3 * v.scale), centre(v.screen)[1] + (16 * v.scale), (8 * v.scale), (2 * v.scale), "Bottom"))
+    v.hits.add(entityClasses.HitBox(centre(v.screen)[0] + (5 * v.scale), centre(v.screen)[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale), "Right"))
+    v.hits.add(entityClasses.HitBox(centre(v.screen)[0] - (5 * v.scale), centre(v.screen)[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale), "Left"))
+    v.hits.add(entityClasses.HitBox(centre(v.screen)[0] - (3 * v.scale), centre(v.screen)[1] - (8 * v.scale), (8 * v.scale), (2 * v.scale), "Top"))
+    v.hits.add(entityClasses.HitBox(centre(v.screen)[0] - (3 * v.scale), centre(v.screen)[1] + (16 * v.scale), (8 * v.scale), (2 * v.scale), "Bottom"))
     v.allNpc = py.sprite.Group()
     weaponSlot = guiClasses.weaponSlot()
 
     v.particles = py.sprite.Group()
 
-    npc = NPC("Groblin Lvl. 1", 100, 100, 5)
+    npc = entityClasses.NPC("Groblin Lvl. 1", 100, 100, 5)
     while True:
         v.ticks += 1
         #print(v.clock.get_fps())
@@ -103,7 +100,7 @@ def game():
         v.cur_weapon.draw()
         v.particles.update()
         #v.hits.draw(v.screen)
-        update_health()
+        guiClasses.update_health()
         weaponSlot.draw()
 
 
@@ -138,14 +135,16 @@ def classSelection():
     os = MenuItems.optionSlate()
     
     attOptions = py.sprite.Group()
-    attOptions.add(MenuItems.optionAttribute(200, "Max Health"))
-    attOptions.add(MenuItems.optionAttribute(300, "Speed"))
+    attOptions.add(MenuItems.optionAttribute(100, "Max Health"))
+    attOptions.add(MenuItems.optionAttribute(130, "Speed"))
     
     labels = py.sprite.Group()
     labels.add(MenuItems.textLabel("Define Character Attributes", (250, 40), colour("Black"), "Resources/Fonts/RPGSystem.ttf", 35))
     labels.add(MenuItems.textLabel("Skill Points Remaining:", (250, 65), colour("grey"), "Resources/Fonts/RPGSystem.ttf", 30))
-    labels.add(MenuItems.textLabel(v.skillPoints, (500, 65), colour("green"), "Resources/Fonts/RPGSystem.ttf", 30))
+    labels.add(MenuItems.textLabel("skillPoints", (500, 65), colour("green"), "Resources/Fonts/RPGSystem.ttf", 30, True))
     
+    buttons = py.sprite.Group()
+    buttons.add()
 
     while True:
         py.event.pump()
@@ -167,7 +166,7 @@ def classSelection():
                 colourForward = not colourForward
         colour1 = (255 - colourMod, 0, 0)
         colour2 = (0 + colourMod, 0, 0)
-        fill_gradient(v.screen, colour1, colour2, vertical=colourDirection, forward=colourForward)
+        MenuItems.fill_gradient(v.screen, colour1, colour2, vertical=colourDirection, forward=colourForward)
 
         classes.update()
         classes.draw(v.screen)

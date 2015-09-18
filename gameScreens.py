@@ -17,8 +17,8 @@ def mainMenu():
     MenuItems.screen = v.screen
     buttons = py.sprite.Group()
     buttons.add(MenuItems.Button("New Game", (160, 380), 80, colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "play"))
-    titletext1 = MenuItems.Text("The Legend", (90, 60), 80, colour("red"), "Resources\Fonts\Runic.ttf")
-    titletext2 = MenuItems.Text("Of Aiopa", (160, 140), 80, colour("red"), "Resources\Fonts\Runic.ttf")
+    titletext1 = MenuItems.Text("The Legend", (90, 60), 80, colour("red"), "Resources\Fonts\RunicClear.ttf")
+    titletext2 = MenuItems.Text("Of Aiopa", (160, 140), 80, colour("red"), "Resources\Fonts\RunicClear.ttf")
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
     while True:
@@ -38,6 +38,7 @@ def mainMenu():
                         id = button.ID
                         if id == "play":
                             classSelection()
+                            return
         fade.draw()
         fade.opacity -= 1
         py.display.flip()
@@ -144,7 +145,8 @@ def classSelection():
     labels.add(MenuItems.textLabel("skillPoints", (500, 65), colour("green"), "Resources/Fonts/RPGSystem.ttf", 30, True))
     
     buttons = py.sprite.Group()
-    buttons.add()
+    buttons.add(MenuItems.Button("Back", (10, 440), 30, colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
+    buttons.add(MenuItems.Button("Continue", (550, 417), 20, colour("brown"), (153, 76, 0), "Resources\Fonts\RunicSolid.ttf", "continue"))
 
     while True:
         py.event.pump()
@@ -174,8 +176,32 @@ def classSelection():
         os.update()
         attOptions.update()
         
+        for button in buttons:
+            if button.ID == "back":
+                button.update()
+            else:
+                if v.custimizationStage == "Attributes":
+                    button.update()
+        
         if v.custimizationStage == "Attributes":
             labels.update()
+            
+        for event in v.events:
+            if event.type == py.QUIT:
+                sys.exit()
+            elif event.type == py.MOUSEBUTTONDOWN:
+                for button in buttons:
+                    if button.pressed():
+                        id = button.ID
+                        if id == "back":
+                            mainMenu()
+                            return
+                        if id == "continue":
+                            if v.custimizationStage == "Attributes":
+                                v.custimizationStage = "Customisation"
+                                print(v.custimizationStage)
+                        
+            
         
         #v.characterHovered = False
 

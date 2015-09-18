@@ -241,7 +241,7 @@ class optionSlate():
                 self.posx -= 1
             else:
                 v.custimizationStage = "Attributes"
-        if v.custimizationStage == "Attributes":
+        if v.custimizationStage == "Attributes" or v.custimizationStage == "Customisation":
             self.posx = 440
             self.posy = 240
             self.innerRect = py.Rect(0, 0, self.width, self.height)

@@ -18,6 +18,7 @@ class SpriteSheet(object):
 
         # Load the sprite sheet.
         self.sprite_sheet = py.image.load(file_name).convert_alpha()
+        self.getGrid()
 
 
     def get_image(self, x, y, width, height):

@@ -22,11 +22,42 @@ characterHovered = False
 playerClass = None
 custimizationStage = None
 skillPoints = 5
-Attributes = {"Speed": 2,
-              "Max Health": 20,
-              "Strength": 4,
-              "Max Mana": 20,
-              "Magical Strength": 4,
-              "Luck": 10,
-              "Charisma": 3
+appearance = {"Body": "Resources/Images/Character Customisation/Body/white.png",
+              "Face": None,
+              "Dress": None,
+              "Hair": None
               }
+testAppearance = {"Body": None,
+              "Face": None,
+              "Dress": None,
+              "Hair": None
+              }
+Attributes = {"Speed": 0,
+              "Max Health": 0,
+              "Defence": 0,
+              "Strength": 0,
+              "Max Mana": 0,
+              "Magical Strength": 0,
+              "Luck": 0,
+              "Charisma": 0
+              }
+classAttributes = {"Paladin":{"Speed": 2,
+                              "Max Health": 20,
+                              "Defence": 5,
+                              "Strength": 4,
+                              "Max Mana": 10,
+                              "Magical Strength": 2,
+                              "Luck": 7,
+                              "Charisma": 5
+                              }, # 55
+                   "Mage":{"Speed": 2,
+                          "Max Health": 10,
+                          "Defence": 3,
+                          "Strength": 2,
+                          "Max Mana": 20,
+                          "Magical Strength": 4,
+                          "Luck": 10,
+                          "Charisma": 4
+                          } # 55
+                   
+                   }

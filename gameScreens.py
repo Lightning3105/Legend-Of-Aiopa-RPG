@@ -4,6 +4,7 @@ import MenuItems
 import entityClasses 
 import guiClasses 
 from functools import reduce
+from os import listdir
 
 import Map
 import entityClasses
@@ -16,16 +17,18 @@ def mainMenu():
     v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
     MenuItems.screen = v.screen
     buttons = py.sprite.Group()
+    texts = []
     buttons.add(MenuItems.Button("New Game", (160, 380), 80, colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "play"))
-    titletext1 = MenuItems.Text("The Legend", (90, 60), 80, colour("red"), "Resources\Fonts\RunicClear.ttf")
-    titletext2 = MenuItems.Text("Of Aiopa", (160, 140), 80, colour("red"), "Resources\Fonts\RunicClear.ttf")
+    texts.append(MenuItems.Text("The Legend", (90, 60), 80, colour("red"), "Resources\Fonts\RunicClear.ttf"))
+    texts.append(MenuItems.Text("Of Aiopa", (160, 140), 80, colour("red"), "Resources\Fonts\RunicClear.ttf"))
+    
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
     while True:
         py.event.pump()
         MenuItems.fill_gradient(v.screen, colour("cyan"), colour("dark blue"))
-        titletext1.draw()
-        titletext2.draw()
+        for text in texts:
+            text.draw()
         buttons.update()
         v.events = []
         v.events = py.event.get()
@@ -119,12 +122,6 @@ def game():
 def classSelection():
     py.init()
     v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
-    colourMod = 255
-    colour1 = colour(50, 0, 0)
-    colour2 = colour(205, 0, 0)
-    colourDirection = True
-    colourModIncreasing = False
-    colourForward = True
 
     classes = py.sprite.Group()
     classes.add(MenuItems.characterSelector("Resources/Images/PaladinClass.png", (v.screen.get_rect()[2]/2, v.screen.get_rect()[3]/2), "Paladin"))
@@ -136,8 +133,12 @@ def classSelection():
     os = MenuItems.optionSlate()
     
     attOptions = py.sprite.Group()
-    attOptions.add(MenuItems.optionAttribute(100, "Max Health"))
-    attOptions.add(MenuItems.optionAttribute(130, "Speed"))
+    AoX = 100
+    for attribute in v.Attributes:
+        attOptions.add(MenuItems.optionAttribute(AoX, attribute))
+        AoX += 30
+    #attOptions.add(MenuItems.optionAttribute(100, "Max Health"))
+    #attOptions.add(MenuItems.optionAttribute(130, "Speed"))
     
     labels = py.sprite.Group()
     labels.add(MenuItems.textLabel("Define Character Attributes", (250, 40), colour("Black"), "Resources/Fonts/RPGSystem.ttf", 35))
@@ -148,28 +149,23 @@ def classSelection():
     buttons.add(MenuItems.Button("Back", (10, 440), 30, colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
     buttons.add(MenuItems.Button("Continue", (550, 417), 20, colour("brown"), (153, 76, 0), "Resources\Fonts\RunicSolid.ttf", "continue"))
 
+    background = MenuItems.shiftingGradient((50, 0, 0), (205, 0, 0))
+    
+    aps = py.sprite.Group()
+    
+    num = 1
+    for i in listdir("Resources/Images/Character Customisation/Body"):
+        aps.add(MenuItems.apearanceSelector("Resources/Images/Character Customisation/Body/" + i, "Body", num))
+        num += 1
+    
+    ap = MenuItems.appearancePreview()
     while True:
         py.event.pump()
-
         v.events = []
         v.events = py.event.get()
-        if colourModIncreasing == False:
-            colourMod -= 0.1
-        if colourModIncreasing == True:
-            colourMod += 0.1
-        colourMod = round(colourMod, 6)
-        if colourMod <= 50:
-            colourModIncreasing = True
-        if colourMod >= 205:
-            colourModIncreasing = False
-        if colourMod == 127:
-            colourDirection = not colourDirection
-            if colourModIncreasing == False:
-                colourForward = not colourForward
-        colour1 = (255 - colourMod, 0, 0)
-        colour2 = (0 + colourMod, 0, 0)
-        MenuItems.fill_gradient(v.screen, colour1, colour2, vertical=colourDirection, forward=colourForward)
-
+        
+        background.draw()
+        
         classes.update()
         classes.draw(v.screen)
         
@@ -185,6 +181,12 @@ def classSelection():
         
         if v.custimizationStage == "Attributes":
             labels.update()
+        if v.custimizationStage == "Customisation":
+            aps.update()
+            aps.draw(v.screen)
+            ap.draw()
+            for key in v.testAppearance:
+                v.testAppearance[key] = None
             
         for event in v.events:
             if event.type == py.QUIT:
@@ -199,7 +201,8 @@ def classSelection():
                         if id == "continue":
                             if v.custimizationStage == "Attributes":
                                 v.custimizationStage = "Customisation"
-                                print(v.custimizationStage)
+                                for ao in attOptions:
+                                    ao.save()
                         
             
         

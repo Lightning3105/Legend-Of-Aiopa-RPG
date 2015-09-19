@@ -3,6 +3,7 @@ import entityClasses
 import Variables as v
 from _operator import pos
 from msilib.schema import Font
+from os import listdir
 
 class Button(py.sprite.Sprite):
 
@@ -169,6 +170,7 @@ class characterSelector(py.sprite.Sprite):
                 if event.type == py.MOUSEBUTTONDOWN and self.hovered:
                     v.playerClass = self.name
                     v.custimizationStage = "To Attributes"
+                    v.Attributes = v.classAttributes[v.playerClass]
                 if event.type == py.USEREVENT + 1: 
                     if self.hovered and self.hoveredCycle < 30:
                         self.hoveredCycle += 1
@@ -198,7 +200,7 @@ class characterSelector(py.sprite.Sprite):
             font = py.font.SysFont("Resources/Fonts/RPGSystem.ttf", int(10 * sMod)) #TODO: Scale
             label = font.render(self.name, 1, (cMod, cMod, cMod))
             v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.bottom  + (2 * sMod)))
-        if v.custimizationStage == "To Attributes":
+        elif v.custimizationStage == "To Attributes":
             if self.name == v.playerClass:
                 for event in v.events:
                     if event.type == py.USEREVENT + 1:
@@ -220,6 +222,8 @@ class characterSelector(py.sprite.Sprite):
                 self.opacity -= 1
                 if self.opacity < 0:
                     self.opacity = 0
+        if v.custimizationStage == "Customisation":
+            pass
                 
 class optionSlate():
     
@@ -261,8 +265,13 @@ class optionAttribute(py.sprite.Sprite):
         self.baseValue = v.Attributes[attribute]
         self.addedValue = 0
     
+    def save(self):
+        v.Attributes[self.attribute] += self.addedValue
+        self.addedValue = 0
+    
     def update(self):
         if v.custimizationStage == "Attributes":
+            self.baseValue = v.Attributes[self.attribute]
             arrow = py.image.load("Resources/Images/AttributeArrow.png")
             arrow = py.transform.scale(arrow, (int(arrow.get_rect().width * 1.5), int(arrow.get_rect().height * 1.5)))
             
@@ -325,3 +334,85 @@ class textLabel(py.sprite.Sprite):
             label = font.render(str(getattr(v, self.text)), 1, self.colour)
     
         v.screen.blit(label, self.pos)
+        
+class shiftingGradient():
+    
+    def __init__(self, colour1, colour2):
+        self.colourMod = 255
+        self.colour1 = colour1
+        self.colour2 = colour2
+        self.colourDirection = True
+        self.colourModIncreasing = False
+        self.colourForward = True
+    
+    def draw(self):
+        if self.colourModIncreasing == False:
+            self.colourMod -= 0.1
+        if self.colourModIncreasing == True:
+            self.colourMod += 0.1
+        self.colourMod = round(self.colourMod, 6)
+        if self.colourMod <= 50:
+            self.colourModIncreasing = True
+        if self.colourMod >= 205:
+            self.colourModIncreasing = False
+        if self.colourMod == 127:
+            self.colourDirection = not self.colourDirection
+            if self.colourModIncreasing == False:
+                self.colourForward = not self.colourForward
+        colour1 = (255 - self.colourMod, 0, 0)
+        colour2 = (0 + self.colourMod, 0, 0)
+        fill_gradient(v.screen, colour1, colour2, vertical=self.colourDirection, forward=self.colourForward)
+
+class apearanceSelector(py.sprite.Sprite):
+    
+    def __init__(self, sheet, part, number):
+        super().__init__()
+        self.skin = sheet
+        self.sheet = entityClasses.SpriteSheet(self.skin, 4, 3)
+        self.part = part
+        self.num = number
+        if number % 3 == 1:
+            self.posx = 300
+        if number % 3 == 2:
+            self.posx = 400
+        if number % 3 == 0:
+            self.posx = 500
+        
+        self.posy = (int((number / 3)  - 0.1) * 100) + 100
+    
+    def update(self):
+        self.image = self.sheet.images[7]
+        size = self.image.get_rect()
+        self.image = py.transform.scale(self.image, (size.width * 3, size.height * 3))
+        size = self.image.get_rect()
+        self.rect = py.Rect(self.posx, self.posy, size.width, size.height)
+        if self.rect.collidepoint(py.mouse.get_pos()):
+            py.draw.rect(v.screen, (255, 255, 0), self.rect, 4)
+            v.testAppearance[self.part] = self.skin
+            for event in v.events:
+                if event.type == py.MOUSEBUTTONDOWN:
+                    v.appearance[self.part] = self.skin
+        elif v.appearance[self.part] == self.skin:
+            py.draw.rect(v.screen, (0, 0, 255), self.rect, 4)
+        else:
+            py.draw.rect(v.screen, (255, 165, 0), self.rect, 4)
+
+class appearancePreview():
+    
+    def __init__(self):
+        self.pos = (0, 0)
+        self.sMod = 11
+    
+    def draw(self):
+        if v.testAppearance["Body"] == None:
+            self.sheet = entityClasses.SpriteSheet(v.appearance["Body"], 4, 3)
+            self.image = self.sheet.images[7]
+            size = self.image.get_rect()
+            self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
+        else:
+            self.sheet = entityClasses.SpriteSheet(v.testAppearance["Body"], 4, 3)
+            self.image = self.sheet.images[7]
+            size = self.image.get_rect()
+            self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
+        
+        v.screen.blit(self.image, self.pos)

@@ -10,6 +10,7 @@ import Map
 import entityClasses
 import MenuItems
 import guiClasses
+import itemClasses
 from pygame.color import Color as colour
 import sys
 def mainMenu():
@@ -40,7 +41,8 @@ def mainMenu():
                     if button.pressed():
                         id = button.ID
                         if id == "play":
-                            classSelection()
+                            #classSelection()
+                            game()
                             return
         fade.draw()
         fade.opacity -= 1
@@ -53,7 +55,8 @@ def game():
     v.screen.fill(colour("Red"))
     v.p_class = entityClasses.Player()
     v.clock = py.time.Clock()
-    py.time.set_timer(py.USEREVENT, 200)
+    py.time.set_timer(py.USEREVENT, 200) # walking
+    py.time.set_timer(py.USEREVENT + 1, 50) # Spell animation
 
     tileset = entityClasses.SpriteSheet("Resources/Images/Tile_Land2.png", 12, 16)
     v.hitList = py.sprite.Group()
@@ -68,9 +71,14 @@ def game():
             ["0","0","0","0","0","0","0","0","0","0"],]
     v.allTiles = py.sprite.Group()
     tiles = Map.generateMap(v.map1, tileset)
-    v.cur_weapon = entityClasses.Sword()
-    v.cur_weapon.image = "Resources/Images/Sword_1.png"
-    v.cur_weapon.get_rend()
+    v.damagesNPCs = py.sprite.Group()
+    sword = itemClasses.weapon("Broken Sword", "Swing", "Resources/Images/Sword_1.png")
+    orb = itemClasses.weapon("Magic Orb", "manaOrb", "Resources/Images/castOrbPurple.png")
+    v.equipped["Weapon"] = orb
+    #v.cur_weapon = entityClasses.Sword()
+    #v.cur_weapon.image = "Resources/Images/Sword_1.png"
+    #v.cur_weapon.get_rend()
+    
     v.hits = py.sprite.Group()
     v.hits.add(entityClasses.HitBox(centre(v.screen)[0] + (5 * v.scale), centre(v.screen)[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale), "Right"))
     v.hits.add(entityClasses.HitBox(centre(v.screen)[0] - (5 * v.scale), centre(v.screen)[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale), "Left"))
@@ -82,6 +90,8 @@ def game():
     v.particles = py.sprite.Group()
 
     npc = entityClasses.NPC("Groblin Lvl. 1", 100, 100, 5)
+    
+    v.Attributes.update(v.classAttributes["Paladin"]) # TODO: Remove when done
     while True:
         v.ticks += 1
         #print(v.clock.get_fps())
@@ -93,13 +103,13 @@ def game():
         tiles.update()
         tiles.draw(v.screen)
         v.p_class.draw()
-        v.cur_weapon.update()
+        v.equipped["Weapon"].object.update()
         v.allNpc.update()
         v.allNpc.draw(v.screen)
         v.p_class.update()
         v.playerStopped = False
 
-        v.cur_weapon.draw()
+        v.equipped["Weapon"].object.draw()
         v.particles.update()
         #v.hits.draw(v.screen)
         guiClasses.update_health()
@@ -115,7 +125,8 @@ def game():
 
         keys_pressed = py.key.get_pressed()
         if keys_pressed[py.K_SPACE]:
-            v.cur_weapon.attacking = True
+            v.equipped["Weapon"].object.attacking = True
+        
 
 def classSelection():
     py.init()
@@ -124,7 +135,7 @@ def classSelection():
     classes = py.sprite.Group()
     classes.add(MenuItems.characterSelector("Resources/Images/PaladinClass.png", (v.screen.get_rect()[2]/2, v.screen.get_rect()[3]/2), "Paladin"))
     classes.add(MenuItems.characterSelector("Resources/Images/MageClass.png", (v.screen.get_rect()[2]/4, v.screen.get_rect()[3]/2), "Mage"))
-    py.time.set_timer(py.USEREVENT + 1, 10)
+    py.time.set_timer(py.USEREVENT, 10) # something
     
     v.custimizationStage = "Class Selection"
     

@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Batch version="1.0"><TaskList><Task type="ReplaceColorsTask" enabled="True"><FromType>0</FromType><FromColor>#209C00</FromColor><FromTolerance>0</FromTolerance><FromColorStart>#808080</FromColorStart><FromColorEnd>#000000</FromColorEnd><FromAlphaStart>0</FromAlphaStart><FromAlphaEnd>255</FromAlphaEnd><ToType>1</ToType><ToColor>#FFFFFF</ToColor><ToAlphaStart>255</ToAlphaStart><ToAlphaEnd>255</ToAlphaEnd></Task></TaskList></Batch>

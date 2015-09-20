@@ -17,7 +17,10 @@ class SpriteSheet(object):
         self.columns = columns
 
         # Load the sprite sheet.
-        self.sprite_sheet = py.image.load(file_name).convert_alpha()
+        if type(file_name) is py.Surface:
+            self.sprite_sheet = file_name.convert_alpha()
+        else:
+            self.sprite_sheet = py.image.load(file_name).convert_alpha()
         self.getGrid()
 
 
@@ -66,6 +69,7 @@ class Player(py.sprite.Sprite):
         self.prevHealth = v.playerHealth
         self.dead = False
         self.invulnLength = 30
+        self.combineImages()
 
 
     def initSheet(self):
@@ -83,6 +87,12 @@ class Player(py.sprite.Sprite):
                       "LeftL": self.sheet.images[9],
                       "LeftC": self.sheet.images[10],
                       "LeftR": self.sheet.images[11]}
+    def combineImages(self):
+        self.sheetImage = py.image.load(v.appearance["Body"])
+        self.sheetImage.blit(py.image.load(v.appearance["Face"]), (0, 0))
+        self.sheetImage.blit(py.image.load(v.appearance["Dress"]), (0, 0))
+        v.screen.blit(self.sheetImage, (0, 0))
+        self.initSheet()
     def draw(self):
         self.set_rect()
         self.get_view()

@@ -52,8 +52,6 @@ def game():
     v.screen.fill(colour("Green"))
     v.screen.fill(colour("Red"))
     v.p_class = entityClasses.Player()
-    v.p_class.sheetImage = "Resources/Images/Male_Basic.png"
-    v.p_class.initSheet()
     v.clock = py.time.Clock()
     py.time.set_timer(py.USEREVENT, 200)
 
@@ -158,7 +156,21 @@ def classSelection():
         aps.add(MenuItems.apearanceSelector("Resources/Images/Character Customisation/Body/" + i, "Body", num))
         num += 1
     
+    num = 1
+    for i in listdir("Resources/Images/Character Customisation/Face"):
+        aps.add(MenuItems.apearanceSelector("Resources/Images/Character Customisation/Face/" + i, "Face", num))
+        num += 1
+    
+    num = 1
+    for i in listdir("Resources/Images/Character Customisation/Dress"):
+        aps.add(MenuItems.apearanceSelector("Resources/Images/Character Customisation/Dress/" + i, "Dress", num))
+        num += 1
+    
     ap = MenuItems.appearancePreview()
+    
+    aTabs = MenuItems.appearanceTab()
+    
+    py.time.set_timer(py.USEREVENT, 2000)
     while True:
         py.event.pump()
         v.events = []
@@ -176,7 +188,7 @@ def classSelection():
             if button.ID == "back":
                 button.update()
             else:
-                if v.custimizationStage == "Attributes":
+                if v.custimizationStage == "Attributes" or v.custimizationStage == "Customisation":
                     button.update()
         
         if v.custimizationStage == "Attributes":
@@ -185,8 +197,21 @@ def classSelection():
             aps.update()
             aps.draw(v.screen)
             ap.draw()
+            aTabs.draw()
             for key in v.testAppearance:
                 v.testAppearance[key] = None
+            for event in v.events:
+                if event.type == py.USEREVENT:
+                    if v.appearancePrevNum == 7:
+                        v.appearancePrevNum = 10
+                    elif v.appearancePrevNum == 10:
+                        v.appearancePrevNum = 1
+                    elif v.appearancePrevNum == 1:
+                        v.appearancePrevNum = 4
+                    elif v.appearancePrevNum == 4:
+                        v.appearancePrevNum = 7
+                    else:
+                        v.appearancePrevNum = 7
             
         for event in v.events:
             if event.type == py.QUIT:
@@ -201,8 +226,11 @@ def classSelection():
                         if id == "continue":
                             if v.custimizationStage == "Attributes":
                                 v.custimizationStage = "Customisation"
+                                v.appearanceTab = "Body"
                                 for ao in attOptions:
                                     ao.save()
+                            elif v.custimizationStage == "Customisation":
+                                game()
                         
             
         

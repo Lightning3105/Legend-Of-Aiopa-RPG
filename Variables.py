@@ -5,6 +5,7 @@ playerHealth = 20
 hitList = None
 allTiles = None
 allNpc = None
+damagesNPCs = None
 scale = 2
 screen = None
 ticks = 0
@@ -24,6 +25,7 @@ custimizationStage = None
 skillPoints = 5
 appearanceTab = "Body"
 appearancePrevNum = 7
+equipped = {"Weapon": None}
 appearance = {"Body": "Resources/Images/Character Customisation/Body/white.png",
               "Face": "Resources/Images/Character Customisation/Face/whiteNormal.png",
               "Dress": "Resources/Images/Character Customisation/Dress/cloakBrown.png"

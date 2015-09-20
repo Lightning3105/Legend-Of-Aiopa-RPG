@@ -171,7 +171,7 @@ class characterSelector(py.sprite.Sprite):
                     v.playerClass = self.name
                     v.custimizationStage = "To Attributes"
                     v.Attributes = v.classAttributes[v.playerClass]
-                if event.type == py.USEREVENT + 1: 
+                if event.type == py.USEREVENT: 
                     if self.hovered and self.hoveredCycle < 30:
                         self.hoveredCycle += 1
                         self.greyedCycle -= 1
@@ -203,7 +203,7 @@ class characterSelector(py.sprite.Sprite):
         elif v.custimizationStage == "To Attributes":
             if self.name == v.playerClass:
                 for event in v.events:
-                    if event.type == py.USEREVENT + 1:
+                    if event.type == py.USEREVENT:
                         sMod = 6 + ((200 - self.movingCycle) / 40)
                         size = self.skin.get_rect()
                         self.image = py.transform.scale(self.skin, (int(size.width * sMod), int(size.height * sMod)))

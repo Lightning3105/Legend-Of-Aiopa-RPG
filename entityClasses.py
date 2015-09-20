@@ -412,11 +412,11 @@ class manaOrb(py.sprite.Sprite):
         self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
         self.rend = self.image
         for thing in v.hitList:
-            #if not thing.ID == "playerHitbox":
-                #print(thing.ID)
             if self.rect.colliderect(thing.rect):
                 self.attCyclePos = 30
-                print(thing)
+        for thing in v.allNpc:
+            if self.rect.colliderect(thing.rect):
+                self.attCyclePos = 30
                 
     def draw(self):
         if self.attacking:
@@ -467,6 +467,7 @@ class NPC(py.sprite.Sprite):
         self.initSheet()
         #v.hitList.add(self)
         self.ID = "npc"
+        self.rect = py.Rect(0, 0, 0, 0)
 
     def initSheet(self):
         self.sheet = SpriteSheet(self.sheetImage, 4, 3)

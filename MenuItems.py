@@ -4,6 +4,7 @@ import Variables as v
 from _operator import pos
 from msilib.schema import Font
 from os import listdir
+import itemClasses
 
 class Button(py.sprite.Sprite):
 
@@ -169,6 +170,10 @@ class characterSelector(py.sprite.Sprite):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN and self.hovered:
                     v.playerClass = self.name
+                    if self.name == "Mage":
+                        v.equipped["Weapon"] = itemClasses.weapon("Magic Orb", "manaOrb", "Resources/Images/castOrbPurple.png")
+                    if self.name == "Paladin":
+                        v.equipped["Weapon"] = itemClasses.weapon("Broken Sword", "Swing", "Resources/Images/Sword_1.png")
                     v.custimizationStage = "To Attributes"
                     v.Attributes = v.classAttributes[v.playerClass]
                 if event.type == py.USEREVENT: 

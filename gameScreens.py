@@ -41,8 +41,8 @@ def mainMenu():
                     if button.pressed():
                         id = button.ID
                         if id == "play":
-                            #classSelection()
-                            game()
+                            classSelection()
+                            #game()
                             return
         fade.draw()
         fade.opacity -= 1
@@ -71,10 +71,10 @@ def game():
             ["0","0","0","0","0","0","0","0","0","0"],]
     v.allTiles = py.sprite.Group()
     tiles = Map.generateMap(v.map1, tileset)
-    v.damagesNPCs = py.sprite.Group()
+    #v.damagesNPCs = py.sprite.Group()
     sword = itemClasses.weapon("Broken Sword", "Swing", "Resources/Images/Sword_1.png")
     orb = itemClasses.weapon("Magic Orb", "manaOrb", "Resources/Images/castOrbPurple.png")
-    v.equipped["Weapon"] = orb
+    #v.equipped["Weapon"] = orb
     #v.cur_weapon = entityClasses.Sword()
     #v.cur_weapon.image = "Resources/Images/Sword_1.png"
     #v.cur_weapon.get_rend()
@@ -131,11 +131,13 @@ def game():
 def classSelection():
     py.init()
     v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
+    
+    v.damagesNPCs = py.sprite.Group()
 
     classes = py.sprite.Group()
     classes.add(MenuItems.characterSelector("Resources/Images/PaladinClass.png", (v.screen.get_rect()[2]/2, v.screen.get_rect()[3]/2), "Paladin"))
     classes.add(MenuItems.characterSelector("Resources/Images/MageClass.png", (v.screen.get_rect()[2]/4, v.screen.get_rect()[3]/2), "Mage"))
-    py.time.set_timer(py.USEREVENT, 10) # something
+    py.time.set_timer(py.USEREVENT, 10) # moving and growing animation speed
     
     v.custimizationStage = "Class Selection"
     
@@ -181,7 +183,7 @@ def classSelection():
     
     aTabs = MenuItems.appearanceTab()
     
-    py.time.set_timer(py.USEREVENT, 2000)
+    py.time.set_timer(py.USEREVENT + 1, 2000) #preview rotate speed
     while True:
         py.event.pump()
         v.events = []
@@ -212,7 +214,7 @@ def classSelection():
             for key in v.testAppearance:
                 v.testAppearance[key] = None
             for event in v.events:
-                if event.type == py.USEREVENT:
+                if event.type == py.USEREVENT + 1:
                     if v.appearancePrevNum == 7:
                         v.appearancePrevNum = 10
                     elif v.appearancePrevNum == 10:

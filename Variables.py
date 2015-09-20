@@ -22,10 +22,11 @@ characterHovered = False
 playerClass = None
 custimizationStage = None
 skillPoints = 5
+appearanceTab = "Body"
+appearancePrevNum = 7
 appearance = {"Body": "Resources/Images/Character Customisation/Body/white.png",
-              "Face": None,
-              "Dress": None,
-              "Hair": None
+              "Face": "Resources/Images/Character Customisation/Face/whiteNormal.png",
+              "Dress": "Resources/Images/Character Customisation/Dress/cloakBrown.png"
               }
 testAppearance = {"Body": None,
               "Face": None,

@@ -223,7 +223,7 @@ class characterSelector(py.sprite.Sprite):
                 if self.opacity < 0:
                     self.opacity = 0
         if v.custimizationStage == "Customisation":
-            pass
+            self.image.fill((255, 255, 255, 0))
                 
 class optionSlate():
     
@@ -381,21 +381,26 @@ class apearanceSelector(py.sprite.Sprite):
         self.posy = (int((number / 3)  - 0.1) * 100) + 100
     
     def update(self):
-        self.image = self.sheet.images[7]
-        size = self.image.get_rect()
-        self.image = py.transform.scale(self.image, (size.width * 3, size.height * 3))
-        size = self.image.get_rect()
-        self.rect = py.Rect(self.posx, self.posy, size.width, size.height)
-        if self.rect.collidepoint(py.mouse.get_pos()):
-            py.draw.rect(v.screen, (255, 255, 0), self.rect, 4)
-            v.testAppearance[self.part] = self.skin
-            for event in v.events:
-                if event.type == py.MOUSEBUTTONDOWN:
-                    v.appearance[self.part] = self.skin
-        elif v.appearance[self.part] == self.skin:
-            py.draw.rect(v.screen, (0, 0, 255), self.rect, 4)
+        if v.appearanceTab == self.part:
+            self.image = self.sheet.images[7]
+            size = self.image.get_rect()
+            self.image = py.transform.scale(self.image, (size.width * 3, size.height * 3))
+            size = self.image.get_rect()
+            self.rect = py.Rect(self.posx, self.posy, size.width, size.height)
+            if self.rect.collidepoint(py.mouse.get_pos()):
+                py.draw.rect(v.screen, (255, 255, 0), self.rect, 4)
+                v.testAppearance[self.part] = self.skin
+                for event in v.events:
+                    if event.type == py.MOUSEBUTTONDOWN:
+                        v.appearance[self.part] = self.skin
+            elif v.appearance[self.part] == self.skin:
+                py.draw.rect(v.screen, (0, 0, 255), self.rect, 4)
+            else:
+                py.draw.rect(v.screen, (255, 165, 0), self.rect, 4)
         else:
-            py.draw.rect(v.screen, (255, 165, 0), self.rect, 4)
+            self.image = py.Surface((0, 0))
+            self.rect = py.Rect(0,0,0,0)
+            self.image.fill((255, 255, 255, 0))
 
 class appearancePreview():
     
@@ -406,13 +411,110 @@ class appearancePreview():
     def draw(self):
         if v.testAppearance["Body"] == None:
             self.sheet = entityClasses.SpriteSheet(v.appearance["Body"], 4, 3)
-            self.image = self.sheet.images[7]
+            self.image = self.sheet.images[v.appearancePrevNum]
             size = self.image.get_rect()
             self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
         else:
             self.sheet = entityClasses.SpriteSheet(v.testAppearance["Body"], 4, 3)
-            self.image = self.sheet.images[7]
+            self.image = self.sheet.images[v.appearancePrevNum]
             size = self.image.get_rect()
             self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
         
         v.screen.blit(self.image, self.pos)
+        
+        if v.testAppearance["Face"] == None and v.appearance["Face"] != None:
+            self.sheet = entityClasses.SpriteSheet(v.appearance["Face"], 4, 3)
+            self.image = self.sheet.images[v.appearancePrevNum]
+            size = self.image.get_rect()
+            self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
+        elif v.testAppearance["Face"] != None:
+            self.sheet = entityClasses.SpriteSheet(v.testAppearance["Face"], 4, 3)
+            self.image = self.sheet.images[v.appearancePrevNum]
+            size = self.image.get_rect()
+            self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
+        else:
+            self.image = py.Surface((0, 0))
+        v.screen.blit(self.image, self.pos)
+        
+        if v.testAppearance["Dress"] == None and v.appearance["Dress"] != None:
+            self.sheet = entityClasses.SpriteSheet(v.appearance["Dress"], 4, 3)
+            self.image = self.sheet.images[v.appearancePrevNum]
+            size = self.image.get_rect()
+            self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
+        elif v.testAppearance["Dress"] != None:
+            self.sheet = entityClasses.SpriteSheet(v.testAppearance["Dress"], 4, 3)
+            self.image = self.sheet.images[v.appearancePrevNum]
+            size = self.image.get_rect()
+            self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
+        else:
+            self.image = py.Surface((0, 0))
+        v.screen.blit(self.image, self.pos)
+
+class appearanceTab(py.sprite.Sprite):
+    
+    def __init__(self):
+        super().__init__()
+        self.startx = 250
+        self.posy = 40
+    
+    def draw(self):
+        image = py.image.load("Resources/Images/Character Customisation/Tabs/Body.png")
+        size = image.get_rect()
+        image = py.transform.scale(image, (int(size.width * 1.5), int(size.height * 1.5)))
+        rect = py.Rect(self.startx, self.posy + 2, 20, 20)
+        v.screen.blit(image, rect)
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
+        label = font.render("Body", 1, (255, 255, 255))
+        v.screen.blit(label, (280, 50))
+        rect = py.Rect(241, 41, 80, 38)
+        if rect.collidepoint(py.mouse.get_pos()):
+            for event in v.events:
+                if event.type == py.MOUSEBUTTONDOWN:
+                    v.appearanceTab = "Body"
+            py.draw.rect(v.screen, (255, 255, 0), rect, 4)
+        elif v.appearanceTab == "Body":
+            py.draw.rect(v.screen, (0, 0, 255), rect, 4)
+        else:
+            py.draw.rect(v.screen, (153, 76, 0), rect, 4)
+            
+        
+        image = py.image.load("Resources/Images/Character Customisation/Tabs/Face.png")
+        size = image.get_rect()
+        image = py.transform.scale(image, (int(size.width * 2), int(size.height * 2)))
+        rect = py.Rect(self.startx + 80, self.posy + 7, 20, 20)
+        v.screen.blit(image, rect)
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
+        label = font.render("Face", 1, (255, 255, 255))
+        v.screen.blit(label, (280 + 83, 50))
+        rect = py.Rect(241 + 83, 41, 80, 38)
+        if rect.collidepoint(py.mouse.get_pos()):
+            for event in v.events:
+                if event.type == py.MOUSEBUTTONDOWN:
+                    v.appearanceTab = "Face"
+            py.draw.rect(v.screen, (255, 255, 0), rect, 4)
+        elif v.appearanceTab == "Face":
+            py.draw.rect(v.screen, (0, 0, 255), rect, 4)
+        else:
+            py.draw.rect(v.screen, (153, 76, 0), rect, 4)
+        
+        
+        
+        image = py.image.load("Resources/Images/Character Customisation/Tabs/Dress.png")
+        size = image.get_rect()
+        image = py.transform.scale(image, (int(size.width * 2), int(size.height * 2)))
+        rect = py.Rect(self.startx + 160, self.posy + 7, 20, 20)
+        v.screen.blit(image, rect)
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
+        label = font.render("Dress", 1, (255, 255, 255))
+        v.screen.blit(label, (280 + 166, 50))
+        rect = py.Rect(241 + 166, 41, 85, 38)
+        if rect.collidepoint(py.mouse.get_pos()):
+            for event in v.events:
+                if event.type == py.MOUSEBUTTONDOWN:
+                    v.appearanceTab = "Dress"
+            py.draw.rect(v.screen, (255, 255, 0), rect, 4)
+        elif v.appearanceTab == "Dress":
+            py.draw.rect(v.screen, (0, 0, 255), rect, 4)
+        else:
+            py.draw.rect(v.screen, (153, 76, 0), rect, 4)
+        

@@ -245,6 +245,7 @@ class HitBox(py.sprite.Sprite):
         self.rect = py.Rect(x, y, w, h)
         self.image = py.Surface((w, h))
         self.image.fill((255, 0, 0))
+        self.ID = "playerHitbox"
 
     def draw(self):
         py.draw.rect(v.screen, (255, 0, 0), self.rect)
@@ -284,6 +285,7 @@ class Tile(py.sprite.Sprite):
         if wall:
             v.hitList.add(self)
         v.allTiles.add(self)
+        self.ID = "tile"
 
     def draw(self):
         self.set_rect()
@@ -298,15 +300,18 @@ class Tile(py.sprite.Sprite):
         #self.rect.height = self.rect.height * v.scale
 
 
-class Sword:
+class Sword(py.sprite.Sprite):
 
-    def __init__(self):
-        self.image = None
+    def __init__(self, image):
+        super().__init__()
+        self.image = image
         self.attacking = False
         self.attCyclePos = 0
         self.attSpeed = 16
         self.posX = v.screen.get_rect()[2] / 2
         self.posY = v.screen.get_rect()[3] / 2
+        v.damagesNPCs.add(self)
+        self.rect = py.Rect(0, 0, 0, 0)
 
     def get_rend(self):
         self.rend = py.image.load(self.image)
@@ -338,14 +343,82 @@ class Sword:
                 if self.attCyclePos > 180:
                     self.attacking = False
                     self.attCyclePos = 0
+                    v.playerAttacking = False
+                    v.playerStopped = False
         else:
-            self.rend = None
-            self.rect = None
-            v.playerAttacking = False
-            v.playerStopped = False
+            self.rect = py.Rect(0, 0, 0, 0)
 
     def draw(self):
         #self.update()
+        if self.attacking:
+            v.screen.blit(self.rend, self.rect)
+
+class manaOrb(py.sprite.Sprite):
+    
+    def __init__(self, image):
+        super().__init__()
+        self.attacking = False
+        self.attSpeed = 3
+        self.attCyclePos = 0
+        self.aniCyclePos = 0
+        self.posx = 0
+        self.posy = -20
+        self.sheet = SpriteSheet(image, 1, 10)
+        self.image = self.sheet.images[0]
+        self.direction = "Down"
+        self.rect = py.Rect(0, 0, 0, 0)
+        v.damagesNPCs.add(self)
+    
+    def update(self):
+        if self.attacking:
+            v.playerAttacking = True
+            v.playerStopped = True
+            self.image = self.sheet.images[self.aniCyclePos]
+            size = self.image.get_rect()
+            self.image = py.transform.scale(self.image, (size.width * v.scale, size.height * v.scale))
+            if self.aniCyclePos < 9:
+                self.posx = v.playerPosX
+                self.posy = v.playerPosY - 7
+                for event in v.events:
+                    if event.type == py.USEREVENT + 1:
+                        self.aniCyclePos += 1
+            if self.aniCyclePos == 9:
+                self.image = self.sheet.images[9]
+                if self.attCyclePos == 0:
+                    self.direction = v.playerDirection
+                if self.direction == "Down":
+                    self.posy -= self.attSpeed
+                if self.direction == "Up":
+                    self.posy += self.attSpeed
+                if self.direction == "Left":
+                    self.posx -= self.attSpeed
+                if self.direction == "Right":
+                    self.posx += self.attSpeed
+                self.attCyclePos += 1
+            if self.attCyclePos >= 10:
+                v.playerStopped = False
+            if self.attCyclePos >= 30:
+                self.attacking = False
+                v.playerAttacking = False
+                v.playerStopped = False
+                self.aniCyclePos = 0
+                self.attCyclePos = 0
+            
+        else:
+            self.rect = py.Rect(0, 0, 0, 0)
+                    
+        self.rect = self.image.get_rect()
+        self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
+        self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
+        self.rend = self.image
+        for thing in v.hitList:
+            #if not thing.ID == "playerHitbox":
+                #print(thing.ID)
+            if self.rect.colliderect(thing.rect):
+                self.attCyclePos = 30
+                print(thing)
+                
+    def draw(self):
         if self.attacking:
             v.screen.blit(self.rend, self.rect)
 
@@ -393,6 +466,7 @@ class NPC(py.sprite.Sprite):
         v.allNpc.add(self)
         self.initSheet()
         #v.hitList.add(self)
+        self.ID = "npc"
 
     def initSheet(self):
         self.sheet = SpriteSheet(self.sheetImage, 4, 3)
@@ -459,8 +533,8 @@ class NPC(py.sprite.Sprite):
             if self.invulnCooldown > 0:
                 self.invulnCooldown -= 1
             elif self.invulnCooldown == 0:
-                if v.playerAttacking:
-                    if self.rect.colliderect(v.cur_weapon.rect): # TODO: Add cooldown for damage
+                for thing in v.damagesNPCs:
+                    if self.rect.colliderect(thing.rect): # TODO: Add cooldown for damage
                         self.health -= 2
                         self.invulnCooldown = self.invulnLength
                         self.damaged = True
@@ -491,9 +565,9 @@ class NPC(py.sprite.Sprite):
         v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.top - 30))
 
     def attack(self):
-        print(abs(self.posx - v.playerPosX))
-        print(abs(self.posy - v.playerPosY))
-        print()
+        #print(abs(self.posx - v.playerPosX))
+        #print(abs(self.posy - v.playerPosY))
+        #print()
         attImage = py.image.load("Resources/Images/ClawSlash.png").convert_alpha()
         attImage = py.transform.scale(attImage, (20 * v.scale, 20 * v.scale))
         attImage.fill((255, 255, 255, 255), special_flags=py.BLEND_RGBA_MULT)

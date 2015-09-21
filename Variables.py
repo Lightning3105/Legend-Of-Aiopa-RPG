@@ -44,7 +44,7 @@ Attributes = {"Speed": 0,
               "Luck": 0,
               "Charisma": 0
               }
-classAttributes = {"Paladin":{"Speed": 2,
+classAttributes = {"Paladin":{"Speed": 4,
                               "Max Health": 20,
                               "Defence": 5,
                               "Strength": 4,
@@ -52,8 +52,8 @@ classAttributes = {"Paladin":{"Speed": 2,
                               "Magical Strength": 2,
                               "Luck": 7,
                               "Charisma": 5
-                              }, # 55
-                   "Mage":{"Speed": 2,
+                              }, # 57
+                   "Mage":{"Speed": 4,
                           "Max Health": 10,
                           "Defence": 3,
                           "Strength": 2,
@@ -61,6 +61,15 @@ classAttributes = {"Paladin":{"Speed": 2,
                           "Magical Strength": 4,
                           "Luck": 10,
                           "Charisma": 4
-                          } # 55
+                          }, # 57
+                   "Ranger":{"Speed": 7,
+                          "Max Health": 15,
+                          "Defence": 2,
+                          "Strength": 3,
+                          "Max Mana": 16,
+                          "Magical Strength": 3,
+                          "Luck": 8,
+                          "Charisma": 3
+                          } # 57
                    
                    }

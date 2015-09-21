@@ -189,13 +189,13 @@ class Player(py.sprite.Sprite):
                         moveDown = False"""
             keys_pressed = py.key.get_pressed()
             if keys_pressed[py.K_a]:
-                self.velX = -v.Attributes["Speed"]
+                self.velX = -v.Attributes["Speed"] / 2
             if keys_pressed[py.K_d]:
-                self.velX = v.Attributes["Speed"]
+                self.velX = v.Attributes["Speed"] / 2
             if keys_pressed[py.K_s]:
-                self.velY = -v.Attributes["Speed"]
+                self.velY = -v.Attributes["Speed"] / 2
             if keys_pressed[py.K_w]:
-                self.velY = v.Attributes["Speed"]
+                self.velY = v.Attributes["Speed"] / 2
 
             if keys_pressed[py.K_s]:
                 self.direction = "Down"
@@ -262,13 +262,13 @@ class HitBox(py.sprite.Sprite):
                 hit = True
         if hit:
             if self.side == "Top":
-                velY += -v.Attributes["Speed"]
+                velY += -v.Attributes["Speed"] / 2
             if self.side == "Bottom":
-                velY += v.Attributes["Speed"]
+                velY += v.Attributes["Speed"] / 2
             if self.side == "Left":
-                velX += v.Attributes["Speed"]
+                velX += v.Attributes["Speed"] / 2
             if self.side == "Right":
-                velX += -v.Attributes["Speed"]
+                velX += -v.Attributes["Speed"] / 2
         return velX, velY
 
 
@@ -302,7 +302,7 @@ class Tile(py.sprite.Sprite):
 
 class Sword(py.sprite.Sprite):
 
-    def __init__(self, image):
+    def __init__(self, image, weapon):
         super().__init__()
         self.image = image
         self.attacking = False
@@ -312,6 +312,7 @@ class Sword(py.sprite.Sprite):
         self.posY = v.screen.get_rect()[3] / 2
         v.damagesNPCs.add(self)
         self.rect = py.Rect(0, 0, 0, 0)
+        self.master = weapon
 
     def get_rend(self):
         self.rend = py.image.load(self.image)
@@ -355,19 +356,20 @@ class Sword(py.sprite.Sprite):
 
 class manaOrb(py.sprite.Sprite):
     
-    def __init__(self, image):
+    def __init__(self, image, weapon):
         super().__init__()
         self.attacking = False
         self.attSpeed = 3
         self.attCyclePos = 0
         self.aniCyclePos = 0
         self.posx = 0
-        self.posy = -20
+        self.posy = -10 * v.scale
         self.sheet = SpriteSheet(image, 1, 10)
         self.image = self.sheet.images[0]
         self.direction = "Down"
         self.rect = py.Rect(0, 0, 0, 0)
         v.damagesNPCs.add(self)
+        self.master = weapon
     
     def update(self):
         if self.attacking:
@@ -422,6 +424,91 @@ class manaOrb(py.sprite.Sprite):
         if self.attacking:
             v.screen.blit(self.rend, self.rect)
 
+class shooter(py.sprite.Sprite):
+    
+    def __init__(self, image, weapon):
+        super().__init__()
+        self.attacking = False
+        self.projectiles = py.sprite.Group()
+        
+        self.image = image
+        self.master = weapon
+        
+        self.coolDown = 0
+    
+    def update(self):
+        if self.attacking:
+            if self.coolDown <= 0:
+                v.playerAttacking = True
+                self.projectiles.add(self.projectile(self.image, self.master, self))
+                self.coolDown = 20
+            self.attacking = False
+        if self.coolDown > 0:
+            self.coolDown -= 1
+    
+    def draw(self):
+        for thing in self.projectiles:
+            thing.update()
+            thing.draw()
+
+    class projectile(py.sprite.Sprite):
+        
+        def __init__(self, image, weapon, shooter):
+            super().__init__()
+            self.attacking = True
+            self.attSpeed = 8
+            self.attCyclePos = 0
+            self.posx = v.playerPosX
+            self.posy = v.playerPosY - (5 * v.scale)
+            self.skin = py.image.load(image)
+            self.direction = "Down"
+            self.rect = py.Rect(0, 0, 0, 0)
+            v.damagesNPCs.add(self)
+            self.master = weapon
+            self.shooter = shooter
+        
+        def update(self):
+            if self.attacking:
+                size = self.skin.get_rect()
+                self.image = py.transform.scale(self.skin, (int(size.width * v.scale / 2), int(size.height * v.scale / 2)))
+                if self.attCyclePos == 0:
+                    self.direction = v.playerDirection
+                if self.direction == "Down":
+                    self.posy -= self.attSpeed
+                    self.image = py.transform.rotate(self.image, 180)
+                if self.direction == "Up":
+                    self.posy += self.attSpeed
+                if self.direction == "Left":
+                    self.posx -= self.attSpeed
+                    self.image = py.transform.rotate(self.image, 90)
+                if self.direction == "Right":
+                    self.posx += self.attSpeed
+                    self.image = py.transform.rotate(self.image, 270)
+                self.attCyclePos += 1
+                if self.attCyclePos >= 20:
+                    self.attacking = False
+                    self.attCyclePos = 0
+                
+            else:
+                self.rect = py.Rect(0, 0, 0, 0)
+                v.damagesNPCs.remove(self)
+                self.shooter.projectiles.remove(self)
+                        
+            self.rect = self.image.get_rect()
+            self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
+            self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
+            self.rend = self.image
+            for thing in v.hitList:
+                if self.rect.colliderect(thing.rect):
+                    self.attCyclePos = 30
+            for thing in v.allNpc:
+                if self.rect.colliderect(thing.rect):
+                    self.attCyclePos = 30
+                    
+        def draw(self):
+            if self.attacking:
+                v.screen.blit(self.rend, self.rect)
+
 def rot_center(image, angle):
     """rotate an image while keeping its center and size"""
     orig_rect = image.get_rect()
@@ -456,6 +543,7 @@ class NPC(py.sprite.Sprite):
         self.health = health
         self.invulnCooldown = 0
         self.invulnLength = 30
+        self.knockback = 0
         self.damaged = False
         self.damage_alpha = 0
         self.damage_fade = True
@@ -536,7 +624,8 @@ class NPC(py.sprite.Sprite):
             elif self.invulnCooldown == 0:
                 for thing in v.damagesNPCs:
                     if self.rect.colliderect(thing.rect): # TODO: Add cooldown for damage
-                        self.health -= 2
+                        self.health -= thing.master.attributes["Damage"]
+                        self.knockback = thing.master.attributes["Knockback"]
                         self.invulnCooldown = self.invulnLength
                         self.damaged = True
             else:
@@ -620,8 +709,9 @@ class NPC(py.sprite.Sprite):
             self.direction = "Left"
 
     def damage_knockback(self):
-        if self.damage_fade and self.damaged and not self.dead:
+        if self.knockback > 0 and self.damaged and not self.dead:
             self.moving = False
+            self.knockback -= 1
             if self.direction == "Up":
                 self.prevX = self.posx
                 self.prevY = self.posy

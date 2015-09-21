@@ -72,9 +72,10 @@ def game():
     v.allTiles = py.sprite.Group()
     tiles = Map.generateMap(v.map1, tileset)
     #v.damagesNPCs = py.sprite.Group()
-    sword = itemClasses.weapon("Broken Sword", "Swing", "Resources/Images/Sword_1.png")
-    orb = itemClasses.weapon("Magic Orb", "manaOrb", "Resources/Images/castOrbPurple.png")
-    #v.equipped["Weapon"] = orb
+    sword = itemClasses.weapon("Broken Sword", "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10})
+    orb = itemClasses.weapon("Magic Orb", "manaOrb", "Resources/Images/castOrbPurple.png", {"Damage":2, "Knockback": 10})
+    arrow = itemClasses.weapon("Bow and Arrow", "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10})
+    v.equipped["Weapon"] = arrow
     #v.cur_weapon = entityClasses.Sword()
     #v.cur_weapon.image = "Resources/Images/Sword_1.png"
     #v.cur_weapon.get_rend()
@@ -137,6 +138,7 @@ def classSelection():
     classes = py.sprite.Group()
     classes.add(MenuItems.characterSelector("Resources/Images/PaladinClass.png", (v.screen.get_rect()[2]/2, v.screen.get_rect()[3]/2), "Paladin"))
     classes.add(MenuItems.characterSelector("Resources/Images/MageClass.png", (v.screen.get_rect()[2]/4, v.screen.get_rect()[3]/2), "Mage"))
+    classes.add(MenuItems.characterSelector("Resources/Images/RangerClass.png", (v.screen.get_rect()[2]/1.3, v.screen.get_rect()[3]/2), "Ranger"))
     py.time.set_timer(py.USEREVENT, 10) # moving and growing animation speed
     
     v.custimizationStage = "Class Selection"

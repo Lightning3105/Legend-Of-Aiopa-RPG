@@ -354,75 +354,107 @@ class Sword(py.sprite.Sprite):
         if self.attacking:
             v.screen.blit(self.rend, self.rect)
 
+
 class manaOrb(py.sprite.Sprite):
     
     def __init__(self, image, weapon):
         super().__init__()
         self.attacking = False
-        self.attSpeed = 3
-        self.attCyclePos = 0
-        self.aniCyclePos = 0
-        self.posx = 0
-        self.posy = -10 * v.scale
-        self.sheet = SpriteSheet(image, 1, 10)
-        self.image = self.sheet.images[0]
-        self.direction = "Down"
-        self.rect = py.Rect(0, 0, 0, 0)
-        v.damagesNPCs.add(self)
+        self.projectiles = py.sprite.Group()
+        
+        self.image = image
         self.master = weapon
+        
+        self.coolDown = 0
     
     def update(self):
         if self.attacking:
-            v.playerAttacking = True
-            v.playerStopped = True
-            self.image = self.sheet.images[self.aniCyclePos]
-            size = self.image.get_rect()
-            self.image = py.transform.scale(self.image, (size.width * v.scale, size.height * v.scale))
-            if self.aniCyclePos < 9:
-                self.posx = v.playerPosX
-                self.posy = v.playerPosY - 7
-                for event in v.events:
-                    if event.type == py.USEREVENT + 1:
-                        self.aniCyclePos += 1
-            if self.aniCyclePos == 9:
-                self.image = self.sheet.images[9]
-                if self.attCyclePos == 0:
-                    self.direction = v.playerDirection
-                if self.direction == "Down":
-                    self.posy -= self.attSpeed
-                if self.direction == "Up":
-                    self.posy += self.attSpeed
-                if self.direction == "Left":
-                    self.posx -= self.attSpeed
-                if self.direction == "Right":
-                    self.posx += self.attSpeed
-                self.attCyclePos += 1
-            if self.attCyclePos >= 10:
-                v.playerStopped = False
-            if self.attCyclePos >= 30:
-                self.attacking = False
-                v.playerAttacking = False
-                v.playerStopped = False
-                self.aniCyclePos = 0
-                self.attCyclePos = 0
-            
-        else:
-            self.rect = py.Rect(0, 0, 0, 0)
-                    
-        self.rect = self.image.get_rect()
-        self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
-        self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
-        self.rend = self.image
-        for thing in v.hitList:
-            if self.rect.colliderect(thing.rect):
-                self.attCyclePos = 30
-        for thing in v.allNpc:
-            if self.rect.colliderect(thing.rect):
-                self.attCyclePos = 30
-                
+            if self.coolDown <= 0:
+                v.playerAttacking = True
+                self.projectiles.add(self.projectile(self.image, self.master, self))
+                self.coolDown = 20
+            self.attacking = False
+        if self.coolDown > 0:
+            self.coolDown -= 1
+    
     def draw(self):
-        if self.attacking:
-            v.screen.blit(self.rend, self.rect)
+        for thing in self.projectiles:
+            thing.update()
+            thing.draw()
+    
+    class projectile(py.sprite.Sprite):
+        def __init__(self, image, weapon, shooter):
+            super().__init__()
+            self.attacking = True
+            self.attSpeed = 3
+            self.attCyclePos = 0
+            self.aniCyclePos = 0
+            self.posx = 0
+            self.posy = -10 * v.scale
+            self.sheet = SpriteSheet(image, 1, 10)
+            self.image = self.sheet.images[0]
+            self.direction = "Down"
+            self.rect = py.Rect(0, 0, 0, 0)
+            v.damagesNPCs.add(self)
+            self.master = weapon
+            self.shooter = shooter
+        
+        
+    
+        def update(self):
+            if self.attacking:
+                v.playerAttacking = True
+                self.image = self.sheet.images[self.aniCyclePos]
+                size = self.image.get_rect()
+                self.image = py.transform.scale(self.image, (size.width * v.scale, size.height * v.scale))
+                if self.aniCyclePos < 9:
+                    v.playerStopped = True
+                    self.posx = v.playerPosX
+                    self.posy = v.playerPosY - 7
+                    for event in v.events:
+                        if event.type == py.USEREVENT + 1:
+                            self.aniCyclePos += 1
+                if self.aniCyclePos == 9:
+                    self.image = self.sheet.images[9]
+                    if self.attCyclePos == 0:
+                        self.direction = v.playerDirection
+                    if self.direction == "Down":
+                        self.posy -= self.attSpeed
+                    if self.direction == "Up":
+                        self.posy += self.attSpeed
+                    if self.direction == "Left":
+                        self.posx -= self.attSpeed
+                    if self.direction == "Right":
+                        self.posx += self.attSpeed
+                    self.attCyclePos += 1
+                if self.attCyclePos >= 10:
+                    v.playerStopped = False
+                if self.attCyclePos >= 30:
+                    self.attacking = False
+                    v.playerAttacking = False
+                    v.playerStopped = False
+                    self.aniCyclePos = 0
+                    self.attCyclePos = 0
+                
+            else:
+                v.damagesNPCs.remove(self)
+                self.shooter.projectiles.remove(self)
+                        
+            self.rect = self.image.get_rect()
+            self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
+            self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
+            self.rend = self.image
+            if self.aniCyclePos == 9:
+                for thing in v.hitList:
+                    if self.rect.colliderect(thing.rect):
+                        self.attacking = False
+                for thing in v.allNpc:
+                    if self.rect.colliderect(thing.rect):
+                        self.attacking = False
+        
+        def draw(self):
+            if self.attacking:
+                v.screen.blit(self.rend, self.rect)
 
 class shooter(py.sprite.Sprite):
     

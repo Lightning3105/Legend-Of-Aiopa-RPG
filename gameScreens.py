@@ -75,7 +75,7 @@ def game():
     sword = itemClasses.weapon("Broken Sword", "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10})
     orb = itemClasses.weapon("Magic Orb", "manaOrb", "Resources/Images/castOrbPurple.png", {"Damage":2, "Knockback": 10})
     arrow = itemClasses.weapon("Bow and Arrow", "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10})
-    v.equipped["Weapon"] = arrow
+    #v.equipped["Weapon"] = arrow
     #v.cur_weapon = entityClasses.Sword()
     #v.cur_weapon.image = "Resources/Images/Sword_1.png"
     #v.cur_weapon.get_rend()

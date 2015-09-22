@@ -174,7 +174,7 @@ class characterSelector(py.sprite.Sprite):
                         v.equipped["Weapon"] = itemClasses.weapon("Magic Orb", "manaOrb", "Resources/Images/castOrbPurple.png", {"Damage":2, "Knockback": 10})
                     if self.name == "Paladin":
                         v.equipped["Weapon"] = itemClasses.weapon("Broken Sword", "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10})
-                    if self.name == "Paladin":
+                    if self.name == "Ranger":
                         v.equipped["Weapon"] = itemClasses.weapon("Short Bow", "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10})
                     v.custimizationStage = "To Attributes"
                     v.Attributes = v.classAttributes[v.playerClass]

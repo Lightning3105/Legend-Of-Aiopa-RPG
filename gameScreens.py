@@ -114,6 +114,7 @@ def game():
         v.particles.update()
         #v.hits.draw(v.screen)
         guiClasses.update_health()
+        guiClasses.update_mana()
         weaponSlot.draw()
 
 

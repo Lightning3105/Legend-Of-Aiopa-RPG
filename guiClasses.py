@@ -1,6 +1,7 @@
 import pygame as py
 import Variables as v
 import entityClasses
+from time import sleep
 
 class health:
 
@@ -56,15 +57,15 @@ class mana:
         self.number = number
 
     def getPercent(self):
-        if ((v.Attributes["Max Health"] / 5) * self.number) <= v.playerHealth:
+        if ((v.Attributes["Max Mana"] / 5) * self.number) <= v.playerHealth:
             self.image = self.Q4
-        if (((v.Attributes["Max Health"] / 5) * self.number) - ((v.Attributes["Max Health"] / 20) * 1)) >= v.playerHealth:
+        if (((v.Attributes["Max Mana"] / 5) * self.number) - ((v.Attributes["Max Mana"] / 20) * 1)) >= v.playerMana:
             self.image = self.Q3
-        if (((v.Attributes["Max Health"] / 5) * self.number) - ((v.Attributes["Max Health"] / 20) * 2)) >= v.playerHealth:
+        if (((v.Attributes["Max Mana"] / 5) * self.number) - ((v.Attributes["Max Mana"] / 20) * 2)) >= v.playerMana:
             self.image = self.Q2
-        if (((v.Attributes["Max Health"] / 5) * self.number) - ((v.Attributes["Max Health"] / 20) * 3)) >= v.playerHealth:
+        if (((v.Attributes["Max Mana"] / 5) * self.number) - ((v.Attributes["Max Mana"] / 20) * 3)) >= v.playerMana:
             self.image = self.Q1
-        if (((v.Attributes["Max Health"] / 5) * self.number) - ((v.Attributes["Max Health"] / 20) * 4)) >= v.playerHealth:
+        if (((v.Attributes["Max Mana"] / 5) * self.number) - ((v.Attributes["Max Mana"] / 20) * 4)) >= v.playerMana:
             self.image = self.Q0
     def draw(self):
         self.getPercent()
@@ -87,3 +88,36 @@ class weaponSlot:
         rect = image.get_rect()
         rect.center = (44, 435)
         v.screen.blit(image, rect)
+
+class XP:
+    
+    def __init__(self):
+        self.posx = 320
+        self.posy = 440
+        
+    def update(self):
+        if v.experience["XP"] >= v.experience["XPtoL"]:
+            v.experience["XP"] -= v.experience["XPtoL"]
+            v.experience["XPL"] += 1
+            v.experience["XPtoL"] *= v.xpMod
+        self.draw()
+    
+    def draw(self):
+        if not v.experience["XP"] == 0:
+            xpSegment = 360 / v.experience["XPtoL"]
+            seg = py.Surface((2, 5))
+            seg.fill((0, 255, 255))
+            segRect = seg.get_rect()
+            deg = 0
+            
+            for i in range(90):
+                deg += 8
+                if deg <= xpSegment * v.experience["XP"]:
+                    #rend = entityClasses.rot_center(seg, deg)
+                    rend = py.transform.rotate(seg, deg)
+                    segRect.center = entityClasses.arc((self.posx, self.posy), 30, -deg - 180)
+                    v.screen.blit(rend, segRect)
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
+        label = font.render(str(v.experience["XPL"]), 1, (0, 255, 255))
+        pos = (self.posx - font.size(str(v.experience["XPL"]))[0]/2, self.posy - font.size(str(v.experience["XPL"]))[1]/2)
+        v.screen.blit(label, pos)

@@ -93,6 +93,8 @@ def game():
     npc = entityClasses.NPC("Groblin Lvl. 1", 100, 100, 5)
     
     v.Attributes.update(v.classAttributes["Paladin"]) # TODO: Remove when done
+    
+    xp = guiClasses.XP()
     while True:
         v.ticks += 1
         #print(v.clock.get_fps())
@@ -115,6 +117,8 @@ def game():
         #v.hits.draw(v.screen)
         guiClasses.update_health()
         guiClasses.update_mana()
+        xp.update()
+        v.experience["XP"] += 1
         weaponSlot.draw()
 
 

@@ -204,7 +204,7 @@ class characterSelector(py.sprite.Sprite):
             
             
                 
-            font = py.font.SysFont("Resources/Fonts/RPGSystem.ttf", int(10 * sMod)) #TODO: Scale
+            font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(10 * sMod)) #TODO: Scale
             label = font.render(self.name, 1, (cMod, cMod, cMod))
             v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.bottom  + (2 * sMod)))
         elif v.custimizationStage == "To Attributes":

@@ -121,3 +121,10 @@ class XP:
         label = font.render(str(v.experience["XPL"]), 1, (0, 255, 255))
         pos = (self.posx - font.size(str(v.experience["XPL"]))[0]/2, self.posy - font.size(str(v.experience["XPL"]))[1]/2)
         v.screen.blit(label, pos)
+        
+class ability(py.sprite.Sprite):
+    
+    def __init__(self, ability, num):
+        self.ability = ability
+        self.posx = 15 + (30 * num)
+        self.posy = 15

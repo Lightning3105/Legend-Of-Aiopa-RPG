@@ -4,16 +4,17 @@ import pygame as py
 
 
 
-class manaBeam(py.sprite.Sprite):
+class beam(py.sprite.Sprite):
     
-    def __init__(self):
+    def __init__(self, image, master):
         super().__init__()
-        self.sheet = entityClasses.SpriteSheet("Resources/Images/manaBeam.png", 4, 1)
+        self.sheet = entityClasses.SpriteSheet(image, 4, 1)
         self.aniCyclePos = 3
         self.sizeCyclePos = 0
         self.attCyclePos = 0
         self.direction = "Up"
         self.attacking = True
+        self.master = master
     
     def update(self):
         if self.attacking:
@@ -28,6 +29,9 @@ class manaBeam(py.sprite.Sprite):
                 self.attCyclePos += 1
             if self.attCyclePos >= 30:
                 self.attacking = False
+                self.aniCyclePos = 3
+                self.sizeCyclePos = 0
+                self.attCyclePos = 0
                 v.currentSpells.remove(self)
                 v.damagesNPCs.remove(self)
             if self.sizeCyclePos < 200:

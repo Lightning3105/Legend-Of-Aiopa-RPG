@@ -1,4 +1,5 @@
 import entityClasses
+import spellClasses
 import Variables as v
 
 class weapon():
@@ -14,3 +15,13 @@ class weapon():
             self.object = entityClasses.manaOrb(self.image, self)
         if self.attType == "shoot":
             self.object = entityClasses.shooter(self.image, self)
+
+class spell():
+    
+    def __init__(self, name, spellType, image, attributes = {}):
+        self.name = name
+        self.spellType = spellType
+        self.image = image
+        self.attributes = attributes
+        if self.spellType == "beam":
+            self.object = spellType.beam(self.image, self)

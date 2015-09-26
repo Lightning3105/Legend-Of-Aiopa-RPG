@@ -10,6 +10,7 @@ import Map
 import entityClasses
 import MenuItems
 import guiClasses
+import spellClasses
 import itemClasses
 from pygame.color import Color as colour
 import sys
@@ -95,6 +96,8 @@ def game():
     v.Attributes.update(v.classAttributes["Paladin"]) # TODO: Remove when done
     
     xp = guiClasses.XP()
+    
+    v.currentSpells = py.sprite.Group()
     while True:
         v.ticks += 1
         #print(v.clock.get_fps())
@@ -107,12 +110,14 @@ def game():
         tiles.draw(v.screen)
         v.p_class.draw()
         v.equipped["Weapon"].object.update()
+        v.currentSpells.update()
         v.allNpc.update()
         v.allNpc.draw(v.screen)
         v.p_class.update()
         v.playerStopped = False
 
         v.equipped["Weapon"].object.draw()
+        v.currentSpells.draw(v.screen)
         v.particles.update()
         #v.hits.draw(v.screen)
         guiClasses.update_health()
@@ -132,6 +137,9 @@ def game():
         keys_pressed = py.key.get_pressed()
         if keys_pressed[py.K_SPACE]:
             v.equipped["Weapon"].object.attacking = True
+        if keys_pressed[py.K_1]:
+            v.currentSpells.add(spellClasses.manaBeam())
+            
         
 
 def classSelection():

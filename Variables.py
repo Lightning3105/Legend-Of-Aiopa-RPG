@@ -21,6 +21,7 @@ playerStopped = False
 clock = None
 events = []
 particles = None
+currentSpells = None
 attackerDirection = "Down"
 characterHovered = False
 playerClass = None

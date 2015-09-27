@@ -58,6 +58,7 @@ def game():
     v.clock = py.time.Clock()
     py.time.set_timer(py.USEREVENT, 200) # walking
     py.time.set_timer(py.USEREVENT + 1, 50) # Spell animation
+    py.time.set_timer(py.USEREVENT + 2, 1000) #One second
 
     tileset = entityClasses.SpriteSheet("Resources/Images/Tile_Land2.png", 12, 16)
     v.hitList = py.sprite.Group()
@@ -93,13 +94,21 @@ def game():
 
     npc = entityClasses.NPC("Groblin Lvl. 1", 100, 100, 20)
     
-    v.Attributes.update(v.classAttributes["Paladin"]) # TODO: Remove when done
+    #v.Attributes.update(v.classAttributes["Paladin"]) # TODO: Remove when done
     
     xp = guiClasses.XP()
     
     v.currentSpells = py.sprite.Group()
+    v.equipedSpells = py.sprite.Group()
     
-    v.equipedSpells.append(itemClasses.spell("Fire Beam", "beam", "Resources/Images/fireBeam.png", "Resources/Images/redCastCircle.png", {"Damage": 3, "Knockback": "S"}))
+    fb = itemClasses.spell("Fire Beam", "beam", "Resources/Images/fireBeam.png", "Resources/Images/redCastCircle.png", {"Damage": 3, "Knockback": "S", "Cooldown": 5, "Mana": 10})
+    
+    abilityButtons = py.sprite.Group()
+    abilityButtons.add(guiClasses.ability(fb, "Resources/Images/Spell Icons/fireBeam.png", 0))
+    
+    v.playerHealth = v.Attributes["Max Health"]
+    v.playerMana = v.Attributes["Max Mana"]
+    
     while True:
         v.ticks += 1
         #print(v.clock.get_fps())
@@ -112,14 +121,14 @@ def game():
         tiles.draw(v.screen)
         v.p_class.draw()
         v.equipped["Weapon"].object.update()
-        v.currentSpells.update()
+        v.equipedSpells.update()
         v.allNpc.update()
         v.allNpc.draw(v.screen)
         v.p_class.update()
         v.playerStopped = False
-
+        v.playerActing = False
         v.equipped["Weapon"].object.draw()
-        v.currentSpells.draw(v.screen)
+        v.equipedSpells.draw(v.screen)
         v.particles.update()
         #v.hits.draw(v.screen)
         guiClasses.update_health()
@@ -127,6 +136,7 @@ def game():
         xp.update()
         v.experience["XP"] += 1
         weaponSlot.draw()
+        abilityButtons.update()
 
 
         py.display.flip()
@@ -137,11 +147,8 @@ def game():
                 v.screen = py.display.set_mode(event.dict['size'],py.HWSURFACE|py.DOUBLEBUF)
 
         keys_pressed = py.key.get_pressed()
-        if keys_pressed[py.K_SPACE]:
+        if keys_pressed[py.K_SPACE] and not v.playerActing:
             v.equipped["Weapon"].object.attacking = True
-        if keys_pressed[py.K_1]:
-            v.currentSpells.add(v.equipedSpells[0].object)
-            v.equipedSpells[0].object.attacking = True
             
         
 

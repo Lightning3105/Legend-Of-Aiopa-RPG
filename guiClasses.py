@@ -57,7 +57,7 @@ class mana:
         self.number = number
 
     def getPercent(self):
-        if ((v.Attributes["Max Mana"] / 5) * self.number) <= v.playerHealth:
+        if ((v.Attributes["Max Mana"] / 5) * self.number) <= v.playerMana:
             self.image = self.Q4
         if (((v.Attributes["Max Mana"] / 5) * self.number) - ((v.Attributes["Max Mana"] / 20) * 1)) >= v.playerMana:
             self.image = self.Q3
@@ -67,6 +67,7 @@ class mana:
             self.image = self.Q1
         if (((v.Attributes["Max Mana"] / 5) * self.number) - ((v.Attributes["Max Mana"] / 20) * 4)) >= v.playerMana:
             self.image = self.Q0
+        print(v.Attributes["Max Mana"])
     def draw(self):
         self.getPercent()
         rect = self.image.get_rect()
@@ -124,7 +125,35 @@ class XP:
         
 class ability(py.sprite.Sprite):
     
-    def __init__(self, ability, num):
+    def __init__(self, ability, image, num):
+        super().__init__()
         self.ability = ability
-        self.posx = 15 + (30 * num)
-        self.posy = 15
+        self.posx = 20 + (30 * num)
+        self.posy = 20
+        self.icon = py.image.load(image).convert_alpha()
+    
+    def update(self):
+        maxCooldown = self.ability.attributes["Cooldown"]
+        cooldown = self.ability.object.coolDown
+        self.image = py.transform.scale(self.icon, (32, 32))
+        self.image.fill((255, 255, 255, int((cooldown / maxCooldown) * 255)), special_flags=py.BLEND_RGBA_MULT)
+        self.rect = self.image.get_rect()
+        self.rect.center = (self.posx, self.posy)
+        py.draw.rect(v.screen, (0, 0, 0), self.rect)
+        v.screen.blit(self.image, self.rect)
+        
+        if self.ability.object.attacking:
+            border = (255, 255, 0)
+        else:
+            border = (153, 76, 0)
+        self.rect.width += 2
+        self.rect.height += 2
+        self.rect.center = (self.posx, self.posy)
+        py.draw.rect(v.screen, border, self.rect, 2)
+        
+        keys_pressed = py.key.get_pressed()
+        if keys_pressed[py.K_1] and not v.playerActing:
+            if cooldown == maxCooldown:
+                if v.playerMana >= self.ability.attributes["Mana"]:
+                    self.ability.object.attacking = True
+                    

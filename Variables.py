@@ -16,7 +16,7 @@ map1 = []
 hits = None
 p_class = None
 cur_weapon = None
-playerAttacking = False
+playerActing = False
 playerStopped = False
 clock = None
 events = []
@@ -30,7 +30,7 @@ skillPoints = 5
 appearanceTab = "Body"
 appearancePrevNum = 7
 equipped = {"Weapon": None}
-equipedSpells = []
+equipedSpells = None
 appearance = {"Body": "Resources/Images/Character Customisation/Body/white.png",
               "Face": "Resources/Images/Character Customisation/Face/whiteNormal.png",
               "Dress": "Resources/Images/Character Customisation/Dress/cloakBrown.png"

@@ -66,7 +66,7 @@ class Player(py.sprite.Sprite):
         self.damaged = False
         self.damage_alpha = 0
         self.damage_fade = True
-        self.prevHealth = v.playerHealth
+        self.prevHealth = v.Attributes["Max Health"]
         self.dead = False
         self.invulnLength = 30
         self.combineImages()
@@ -321,7 +321,7 @@ class Sword(py.sprite.Sprite):
     def update(self):
         self.get_rend()
         if self.attacking:
-            v.playerAttacking = True
+            v.playerActing = True
             v.playerStopped = True
             if v.playerDirection == "Up":
                 angleMod = -90
@@ -344,8 +344,6 @@ class Sword(py.sprite.Sprite):
                 if self.attCyclePos > 180:
                     self.attacking = False
                     self.attCyclePos = 0
-                    v.playerAttacking = False
-                    v.playerStopped = False
         else:
             self.rect = py.Rect(0, 0, 0, 0)
 
@@ -370,7 +368,6 @@ class manaOrb(py.sprite.Sprite):
     def update(self):
         if self.attacking:
             if self.coolDown <= 0:
-                v.playerAttacking = True
                 self.projectiles.add(self.projectile(self.image, self.master, self))
                 self.coolDown = 20
             self.attacking = False
@@ -403,12 +400,12 @@ class manaOrb(py.sprite.Sprite):
     
         def update(self):
             if self.attacking:
-                v.playerAttacking = True
                 self.image = self.sheet.images[self.aniCyclePos]
                 size = self.image.get_rect()
                 self.image = py.transform.scale(self.image, (size.width * v.scale, size.height * v.scale))
                 if self.aniCyclePos < 9:
                     v.playerStopped = True
+                    v.playerActing = True
                     self.posx = v.playerPosX
                     self.posy = v.playerPosY - 7
                     for event in v.events:
@@ -431,8 +428,6 @@ class manaOrb(py.sprite.Sprite):
                     v.playerStopped = False
                 if self.attCyclePos >= 30:
                     self.attacking = False
-                    v.playerAttacking = False
-                    v.playerStopped = False
                     self.aniCyclePos = 0
                     self.attCyclePos = 0
                 
@@ -471,7 +466,6 @@ class shooter(py.sprite.Sprite):
     def update(self):
         if self.attacking:
             if self.coolDown <= 0:
-                v.playerAttacking = True
                 self.projectiles.add(self.projectile(self.image, self.master, self))
                 self.coolDown = 20
             self.attacking = False
@@ -501,6 +495,7 @@ class shooter(py.sprite.Sprite):
         
         def update(self):
             if self.attacking:
+                v.playerActing = True
                 size = self.skin.get_rect()
                 self.image = py.transform.scale(self.skin, (int(size.width * v.scale / 2), int(size.height * v.scale / 2)))
                 if self.attCyclePos == 0:

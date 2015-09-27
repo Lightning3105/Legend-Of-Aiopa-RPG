@@ -30,6 +30,7 @@ skillPoints = 5
 appearanceTab = "Body"
 appearancePrevNum = 7
 equipped = {"Weapon": None}
+equipedSpells = []
 appearance = {"Body": "Resources/Images/Character Customisation/Body/white.png",
               "Face": "Resources/Images/Character Customisation/Face/whiteNormal.png",
               "Dress": "Resources/Images/Character Customisation/Dress/cloakBrown.png"

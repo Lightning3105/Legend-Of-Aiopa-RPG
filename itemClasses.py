@@ -18,10 +18,11 @@ class weapon():
 
 class spell():
     
-    def __init__(self, name, spellType, image, attributes = {}):
+    def __init__(self, name, spellType, spellImage, castImage, attributes = {}):
         self.name = name
         self.spellType = spellType
-        self.image = image
+        self.spellImage = spellImage
+        self.castImage = castImage
         self.attributes = attributes
         if self.spellType == "beam":
-            self.object = spellType.beam(self.image, self)
+            self.object = spellClasses.beam(self.spellImage, self.castImage, self)

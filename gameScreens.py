@@ -91,13 +91,15 @@ def game():
 
     v.particles = py.sprite.Group()
 
-    npc = entityClasses.NPC("Groblin Lvl. 1", 100, 100, 5)
+    npc = entityClasses.NPC("Groblin Lvl. 1", 100, 100, 20)
     
     v.Attributes.update(v.classAttributes["Paladin"]) # TODO: Remove when done
     
     xp = guiClasses.XP()
     
     v.currentSpells = py.sprite.Group()
+    
+    v.equipedSpells.append(itemClasses.spell("Fire Beam", "beam", "Resources/Images/fireBeam.png", "Resources/Images/redCastCircle.png", {"Damage": 3, "Knockback": "S"}))
     while True:
         v.ticks += 1
         #print(v.clock.get_fps())
@@ -138,7 +140,8 @@ def game():
         if keys_pressed[py.K_SPACE]:
             v.equipped["Weapon"].object.attacking = True
         if keys_pressed[py.K_1]:
-            v.currentSpells.add(spellClasses.manaBeam())
+            v.currentSpells.add(v.equipedSpells[0].object)
+            v.equipedSpells[0].object.attacking = True
             
         
 

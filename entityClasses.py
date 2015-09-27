@@ -588,6 +588,7 @@ class NPC(py.sprite.Sprite):
         #v.hitList.add(self)
         self.ID = "npc"
         self.rect = py.Rect(0, 0, 0, 0)
+        self.stopped = False
 
     def initSheet(self):
         self.sheet = SpriteSheet(self.sheetImage, 4, 3)
@@ -637,6 +638,7 @@ class NPC(py.sprite.Sprite):
             self.image = self.views[self.view]
             self.image = py.transform.scale(self.image, (int(24 * v.scale), int(32 * v.scale)))
             self.rect = self.image.get_rect()
+            self.stopped = False
             self.damage_knockback()
             self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
             self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
@@ -741,7 +743,11 @@ class NPC(py.sprite.Sprite):
             self.direction = "Left"
 
     def damage_knockback(self):
-        if self.knockback > 0 and self.damaged and not self.dead:
+        if not self.damaged:
+            self.knockback = None
+        elif self.knockback == "S" and self.damaged and not self.dead:
+            self.stopped = True
+        elif self.knockback > 0 and self.damaged and not self.dead:
             self.moving = False
             self.knockback -= 1
             if self.direction == "Up":
@@ -779,53 +785,53 @@ class NPC(py.sprite.Sprite):
                     self.damage_fade = True
 
     def pathfind(self):
-
-        surrounding = []
-        surrounding.append((self.posx + 1, self.posy + -1))
-        surrounding.append((self.posx + 1, self.posy + 0))
-        surrounding.append((self.posx + 1, self.posy + 1))
-        surrounding.append((self.posx + 0, self.posy + -1))
-        surrounding.append((self.posx + 1, self.posy + 1))
-        surrounding.append((self.posx + -1, self.posy + -1))
-        surrounding.append((self.posx + -1, self.posy + 0))
-        surrounding.append((self.posx + -1, self.posy + 1))
-
-        if len(self.pf_tried) == len(surrounding):
-            self.pf_tried = []
-
-        best = None
-        bestDist = float("inf")
-
-        for pos in surrounding:
-            dist = math.sqrt((pos[0] - v.playerPosX)**2 + (pos[1] - v.playerPosY)**2)
-            if dist < bestDist:
-                if not pos in self.pf_tried:
-                    best = pos
-                    bestDist = dist
-
-        self.prevX = self.posx
-        self.prevY = self.posy
-        self.posx, self.posy = best
-
-        self.moving = True
-
-
-
-        if abs(self.posx - v.playerPosX) < 20:
-            if abs(self.posy - v.playerPosY) < 20:
-                self.posx = self.prevX
-                self.posy = self.prevY
-                self.moving = False
-
-        """if abs(curpos[0] - v.playerPosX) < 30: #TODO Adjust For Scale
-            if abs(curpos[1] - v.playerPosY) < 30:
-                print("Got To Player")
-                print(self.pf_route)
-                self.pf_been = []
-                break
-        if runs > 10:
-            print("Force Exit Pathfind")
-            break"""
+        if not self.stopped:
+            surrounding = []
+            surrounding.append((self.posx + 1, self.posy + -1))
+            surrounding.append((self.posx + 1, self.posy + 0))
+            surrounding.append((self.posx + 1, self.posy + 1))
+            surrounding.append((self.posx + 0, self.posy + -1))
+            surrounding.append((self.posx + 1, self.posy + 1))
+            surrounding.append((self.posx + -1, self.posy + -1))
+            surrounding.append((self.posx + -1, self.posy + 0))
+            surrounding.append((self.posx + -1, self.posy + 1))
+    
+            if len(self.pf_tried) == len(surrounding):
+                self.pf_tried = []
+    
+            best = None
+            bestDist = float("inf")
+    
+            for pos in surrounding:
+                dist = math.sqrt((pos[0] - v.playerPosX)**2 + (pos[1] - v.playerPosY)**2)
+                if dist < bestDist:
+                    if not pos in self.pf_tried:
+                        best = pos
+                        bestDist = dist
+    
+            self.prevX = self.posx
+            self.prevY = self.posy
+            self.posx, self.posy = best
+    
+            self.moving = True
+    
+    
+    
+            if abs(self.posx - v.playerPosX) < 20:
+                if abs(self.posy - v.playerPosY) < 20:
+                    self.posx = self.prevX
+                    self.posy = self.prevY
+                    self.moving = False
+    
+            """if abs(curpos[0] - v.playerPosX) < 30: #TODO Adjust For Scale
+                if abs(curpos[1] - v.playerPosY) < 30:
+                    print("Got To Player")
+                    print(self.pf_route)
+                    self.pf_been = []
+                    break
+            if runs > 10:
+                print("Force Exit Pathfind")
+                break"""
     def move(self):
         try:
             end = (v.playerPosX, v.playerPosY)

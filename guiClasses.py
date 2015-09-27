@@ -67,7 +67,7 @@ class mana:
             self.image = self.Q1
         if (((v.Attributes["Max Mana"] / 5) * self.number) - ((v.Attributes["Max Mana"] / 20) * 4)) >= v.playerMana:
             self.image = self.Q0
-        print(v.Attributes["Max Mana"])
+
     def draw(self):
         self.getPercent()
         rect = self.image.get_rect()

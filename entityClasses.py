@@ -66,7 +66,7 @@ class Player(py.sprite.Sprite):
         self.damaged = False
         self.damage_alpha = 0
         self.damage_fade = True
-        self.prevHealth = v.Attributes["Max Health"]
+        self.prevHealth = v.playerHealth
         self.dead = False
         self.invulnLength = 30
         self.combineImages()

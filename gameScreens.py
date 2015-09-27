@@ -54,6 +54,10 @@ def game():
     v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
     v.screen.fill(colour("Green"))
     v.screen.fill(colour("Red"))
+    
+    v.playerHealth = v.Attributes["Max Health"]
+    v.playerMana = v.Attributes["Max Mana"]
+    
     v.p_class = entityClasses.Player()
     v.clock = py.time.Clock()
     py.time.set_timer(py.USEREVENT, 200) # walking
@@ -106,8 +110,7 @@ def game():
     abilityButtons = py.sprite.Group()
     abilityButtons.add(guiClasses.ability(fb, "Resources/Images/Spell Icons/fireBeam.png", 0))
     
-    v.playerHealth = v.Attributes["Max Health"]
-    v.playerMana = v.Attributes["Max Mana"]
+    
     
     while True:
         v.ticks += 1

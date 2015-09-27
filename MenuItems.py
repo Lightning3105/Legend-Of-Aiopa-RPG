@@ -178,7 +178,6 @@ class characterSelector(py.sprite.Sprite):
                         v.equipped["Weapon"] = itemClasses.weapon("Short Bow", "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10})
                     v.custimizationStage = "To Attributes"
                     v.Attributes = v.classAttributes[v.playerClass]
-                    print(v.Attributes)
                 if event.type == py.USEREVENT: 
                     if self.hovered and self.hoveredCycle < 30:
                         self.hoveredCycle += 1

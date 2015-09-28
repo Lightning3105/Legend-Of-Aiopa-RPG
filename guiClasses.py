@@ -156,4 +156,14 @@ class ability(py.sprite.Sprite):
             if cooldown == maxCooldown:
                 if v.playerMana >= self.ability.attributes["Mana"]:
                     self.ability.object.attacking = True
-                    
+
+class pauseScreen:
+    
+    def __init__(self):
+        self.pos = (v.screen.get_rect()[2] / 2, v.screen.get_rect()[3] / 2)
+        self.bigRect = py.Rect(0, 0, v.screen.get_rect()[2], v.screen.get_rect()[3])
+    
+    def update(self):
+        grey = py.Surface((v.screen.get_rect()[2], v.screen.get_rect()[3])).convert_alpha()
+        grey.fill((20, 20, 20, 200))
+        v.screen.blit(grey, self.bigRect)

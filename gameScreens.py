@@ -112,58 +112,80 @@ def game():
     
     v.xpGroup = py.sprite.Group()
     
+    pause = guiClasses.pauseScreen()
+    
     while True:
-        v.ticks += 1
-        #print(v.clock.get_fps())
-        v.screen.fill(colour("Dark Green"))
-        py.event.pump()
-        v.events = []
-        v.events = py.event.get()
-        v.clock.tick(30)
-        tiles.update()
-        tiles.draw(v.screen)
-        v.p_class.draw()
-        v.equipped["Weapon"].object.update()
-        v.equipedSpells.update()
-        v.allNpc.update()
-        v.allNpc.draw(v.screen)
-        v.p_class.update()
-        v.xpGroup.update()
-        v.xpGroup.draw(v.screen)
-        v.playerStopped = False
-        v.playerActing = False
-        v.equipped["Weapon"].object.draw()
-        v.equipedSpells.draw(v.screen)
-        v.particles.update()
-        #v.hits.draw(v.screen)
-        guiClasses.update_health()
-        guiClasses.update_mana()
-        xp.update()
-        weaponSlot.draw()
-        abilityButtons.update()
-
-        
-        py.display.flip()
-        for event in v.events:
-            if event.type == py.QUIT:
-                sys.exit()
-            elif event.type==py.VIDEORESIZE:
-                v.screen = py.display.set_mode(event.dict['size'],py.HWSURFACE|py.DOUBLEBUF)
-
-        keys_pressed = py.key.get_pressed()
-        if keys_pressed[py.K_SPACE] and not v.playerActing:
-            v.equipped["Weapon"].object.attacking = True
-        if keys_pressed[py.K_KP_PLUS]:
-            v.scale += 0.1
-            v.scale = round(v.scale, 1)
-            print(v.scale)
-        if keys_pressed[py.K_KP_MINUS]:
-            v.scale -= 0.1
-            v.scale = round(v.scale, 1)
-            print(v.scale)
-        
-        if v.scale <= 0.1:
-            v.scale = 0.1
+        if not v.PAUSED:
+            v.ticks += 1
+            #print(v.clock.get_fps())
+            v.screen.fill(colour("Dark Green"))
+            py.event.pump()
+            v.events = []
+            v.events = py.event.get()
+            v.clock.tick(30)
+            tiles.update()
+            tiles.draw(v.screen)
+            v.p_class.draw()
+            v.equipped["Weapon"].object.update()
+            v.equipedSpells.update()
+            v.allNpc.update()
+            v.allNpc.draw(v.screen)
+            v.p_class.update()
+            v.xpGroup.update()
+            v.xpGroup.draw(v.screen)
+            v.playerStopped = False
+            v.playerActing = False
+            v.equipped["Weapon"].object.draw()
+            v.equipedSpells.draw(v.screen)
+            v.particles.update()
+            #v.hits.draw(v.screen)
+            guiClasses.update_health()
+            guiClasses.update_mana()
+            xp.update()
+            weaponSlot.draw()
+            abilityButtons.update()
+    
+            
+            py.display.flip()
+            for event in v.events:
+                if event.type == py.QUIT:
+                    sys.exit()
+                elif event.type==py.VIDEORESIZE:
+                    v.screen = py.display.set_mode(event.dict['size'],py.HWSURFACE|py.DOUBLEBUF)
+    
+            keys_pressed = py.key.get_pressed()
+            if keys_pressed[py.K_SPACE] and not v.playerActing:
+                v.equipped["Weapon"].object.attacking = True
+            if keys_pressed[py.K_KP_PLUS]:
+                v.scale += 0.1
+                v.scale = round(v.scale, 1)
+                print(v.scale)
+            if keys_pressed[py.K_KP_MINUS]:
+                v.scale -= 0.1
+                v.scale = round(v.scale, 1)
+                print(v.scale)
+            if keys_pressed[py.K_ESCAPE]:
+                v.PAUSED = True
+                v.justPaused = True
+                py.time.delay(200)
+            if v.scale <= 0.1:
+                v.scale = 0.1
+        if v.PAUSED:
+            if v.justPaused:
+                background = py.image.tostring(v.screen, "RGBA")
+                v.justPaused = False
+            py.event.pump()
+            v.events = []
+            v.events = py.event.get()
+            backgroundImage = py.image.fromstring(background, (v.screen.get_rect()[2], v.screen.get_rect()[3]), "RGBA")
+            v.screen.blit(backgroundImage, (0, 0))
+            pause.update()
+            py.display.flip()
+            
+            keys_pressed = py.key.get_pressed()
+            if keys_pressed[py.K_ESCAPE]:
+                v.PAUSED = False
+                py.time.delay(200)
             
         
 

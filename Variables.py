@@ -1,3 +1,5 @@
+PAUSED = False
+justPaused = True
 playerPosX = 0
 playerPosY = 0
 playerDirection = ""
@@ -10,7 +12,7 @@ hitList = None
 allTiles = None
 allNpc = None
 damagesNPCs = None
-scale = 0.5
+scale = 2
 screen = None
 ticks = 0
 map1 = []

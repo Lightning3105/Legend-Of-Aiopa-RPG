@@ -153,15 +153,17 @@ def game():
         keys_pressed = py.key.get_pressed()
         if keys_pressed[py.K_SPACE] and not v.playerActing:
             v.equipped["Weapon"].object.attacking = True
-        if keys_pressed[py.K_f]:
-            if v.scale == 1:
-                v.scale = 2
-            elif v.scale == 2:
-                v.scale = 3
-            elif v.scale == 3:
-                v.scale = 1
+        if keys_pressed[py.K_KP_PLUS]:
+            v.scale += 0.1
+            v.scale = round(v.scale, 1)
             print(v.scale)
-            py.time.delay(100)
+        if keys_pressed[py.K_KP_MINUS]:
+            v.scale -= 0.1
+            v.scale = round(v.scale, 1)
+            print(v.scale)
+        
+        if v.scale <= 0.1:
+            v.scale = 0.1
             
         
 

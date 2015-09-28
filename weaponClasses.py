@@ -105,7 +105,7 @@ class manaOrb(py.sprite.Sprite):
             if self.attacking:
                 self.image = self.sheet.images[self.aniCyclePos]
                 size = self.image.get_rect()
-                self.image = py.transform.scale(self.image, (size.width * v.scale, size.height * v.scale))
+                self.image = py.transform.scale(self.image, (int(size.width * v.scale), int(size.height * v.scale)))
                 if self.aniCyclePos < 9:
                     v.playerStopped = True
                     v.playerActing = True
@@ -116,7 +116,7 @@ class manaOrb(py.sprite.Sprite):
                             self.aniCyclePos += 1
                 if self.aniCyclePos == 9:
                     self.image = self.sheet.images[9]
-                    self.image = py.transform.scale(self.image, (int(size.width / 2) * v.scale, int(size.height / 2) * v.scale))
+                    self.image = py.transform.scale(self.image, (int(int(size.width / 2) * v.scale), int(int(size.height / 2) * v.scale)))
                     if self.attCyclePos == 0:
                         self.direction = v.playerDirection
                     if self.direction == "Down":
@@ -140,8 +140,8 @@ class manaOrb(py.sprite.Sprite):
                 self.shooter.projectiles.remove(self)
                         
             self.rect = self.image.get_rect()
-            self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
-            self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
+            self.rect.centerx = v.screen.get_rect()[2] / 2 + int(((-v.playerPosX + (1 * self.posx)) * v.scale))
+            self.rect.centery = v.screen.get_rect()[3] / 2 - int(((-v.playerPosY + (1 * self.posy)) * v.scale))
             self.rend = self.image
             if self.aniCyclePos == 9:
                 for thing in v.hitList:
@@ -189,7 +189,7 @@ class shooter(py.sprite.Sprite):
             self.attSpeed = 8
             self.attCyclePos = 0
             self.posx = v.playerPosX
-            self.posy = v.playerPosY - (5 * v.scale)
+            self.posy = v.playerPosY - int(5 * v.scale)
             self.skin = py.image.load(image)
             self.direction = "Down"
             self.rect = py.Rect(0, 0, 0, 0)
@@ -226,8 +226,8 @@ class shooter(py.sprite.Sprite):
                 self.shooter.projectiles.remove(self)
                         
             self.rect = self.image.get_rect()
-            self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
-            self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
+            self.rect.centerx = v.screen.get_rect()[2] / 2 + int(((-v.playerPosX + (1 * self.posx)) * v.scale))
+            self.rect.centery = v.screen.get_rect()[3] / 2 - int(((-v.playerPosY + (1 * self.posy)) * v.scale))
             self.rend = self.image
             for thing in v.hitList:
                 if self.rect.colliderect(thing.rect):

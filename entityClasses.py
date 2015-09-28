@@ -442,7 +442,7 @@ class NPC(py.sprite.Sprite):
         py.draw.rect(v.screen, (0,0,0), (self.rect.left, self.rect.top - (5 * v.scale), self.rect.width, 2 * v.scale))
         py.draw.rect(v.screen, (255,0,0), (self.rect.left, self.rect.top - (5 * v.scale), (self.health/self.maxHealth * self.rect.width), 2 * v.scale))
     def title(self):
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 10 * v.scale) #TODO: Scale
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(10 * v.scale)) #TODO: Scale
         label = font.render(self.name, 1, (255,255,255))
         v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.top - (15 * v.scale)))
 
@@ -451,33 +451,33 @@ class NPC(py.sprite.Sprite):
         #print(abs(self.posy - v.playerPosY))
         #print()
         attImage = py.image.load("Resources/Images/ClawSlash.png").convert_alpha()
-        attImage = py.transform.scale(attImage, (20 * v.scale, 20 * v.scale))
+        attImage = py.transform.scale(attImage, (int(20 * v.scale), int(20 * v.scale)))
         attImage.fill((255, 255, 255, 255), special_flags=py.BLEND_RGBA_MULT)
 
         if abs(self.posx - v.playerPosX) < 30:
             if abs(self.posy - v.playerPosY) < 30:
                 if self.attCount <= -20:
-                    self.attCount = 25 * v.scale
+                    self.attCount = int(25 * v.scale)
                     self.attPos = (v.playerPosX, v.playerPosY)
                     self.damagedPlayer = False
-        if self.attCount > -20 * v.scale:
-            self.attCount -= 1.5 * v.scale
+        if self.attCount > int(-20 * v.scale):
+            self.attCount -= int(1.5 * v.scale)
             self.posx = self.prevX
             self.posy = self.prevY
             self.moving = False
             v.attackerDirection = self.direction
-        if self.attCount <= 15 * v.scale and self.attCount > -10 * v.scale:
-            pos = (v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (self.attPos[0])) * v.scale) - self.attCount - 10 * v.scale, v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (self.attPos[1])) * v.scale) + self.attCount)
+        if self.attCount <= int(15 * v.scale) and self.attCount > int(-10 * v.scale):
+            pos = (v.screen.get_rect()[2] / 2 + int((-v.playerPosX + (self.attPos[0])) * v.scale) - self.attCount - int(10 * v.scale), v.screen.get_rect()[3] / 2 - int((-v.playerPosY + (self.attPos[1])) * v.scale) + self.attCount)
             v.screen.blit(attImage, pos)
         if abs(self.posx - v.playerPosX) < 32:
             if abs(self.posy - v.playerPosY) < 32:
-                if self.attCount <= 7.5 * v.scale and self.damagedPlayer == False and self.attCount > -10 * v.scale:
+                if self.attCount <= int(7.5 * v.scale) and self.damagedPlayer == False and self.attCount > int(-10 * v.scale):
                     v.playerHealth -= 3
                     self.damagedPlayer = True
     def death(self):
         if self.dead:
-            self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
-            self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
+            self.rect.centerx = v.screen.get_rect()[2] / 2 + int((-v.playerPosX + (1 * self.posx)) * v.scale)
+            self.rect.centery = v.screen.get_rect()[3] / 2 - int((-v.playerPosY + (1 * self.posy)) * v.scale)
             if self.firstDeath:
                 self.damage_alpha = 255
                 self.firstDeath = False
@@ -633,9 +633,9 @@ class Particle(py.sprite.Sprite):
             self.timer -= 1
             self.posx += randint(-self.jump, self.jump)
             self.posy += randint(-self.jump, self.jump)
-            self.rect = py.Rect(0, 0, 2 *v.scale, 2 *v.scale)
-            self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
-            self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
+            self.rect = py.Rect(0, 0, int(2 *v.scale), int(2 *v.scale))
+            self.rect.centerx = v.screen.get_rect()[2] / 2 + int((-v.playerPosX + (1 * self.posx)) * v.scale)
+            self.rect.centery = v.screen.get_rect()[3] / 2 - int((-v.playerPosY + (1 * self.posy)) * v.scale)
             py.draw.rect(v.screen, self.colour, self.rect)
             if self.timer <= 0:
                 self.alive = False
@@ -653,10 +653,10 @@ class xp(py.sprite.Sprite):
         self.velocity = 1
         
     def update(self):
-        self.image = py.transform.scale(self.skin, (8 * v.scale, 8 * v.scale))
+        self.image = py.transform.scale(self.skin, (int(8 * v.scale), int(8 * v.scale)))
         if self.wait <= 0:
-            if abs(self.posx - v.playerPosX) < 25 * v.scale:
-                if abs(self.posy - v.playerPosY) < 25 * v.scale:
+            if abs(self.posx - v.playerPosX) < int(25 * v.scale):
+                if abs(self.posy - v.playerPosY) < int(25 * v.scale):
                     
                     if self.posx > v.playerPosX:
                         self.posx -= self.velocity
@@ -670,12 +670,12 @@ class xp(py.sprite.Sprite):
         else:
             self.wait -= 1
         
-        if abs(self.posx - v.playerPosX) < 10 * v.scale:
-            if abs(self.posy - v.playerPosY) < 10 * v.scale:
+        if abs(self.posx - v.playerPosX) < int(10 * v.scale):
+            if abs(self.posy - v.playerPosY) < int(10 * v.scale):
                 v.xpGroup.remove(self)
                 v.experience["XP"] += self.amount
         
         self.rect = self.image.get_rect()
-        self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + self.posx) * v.scale)
-        self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + self.posy) * v.scale)
+        self.rect.centerx = v.screen.get_rect()[2] / 2 + int((-v.playerPosX + self.posx) * v.scale)
+        self.rect.centery = v.screen.get_rect()[3] / 2 - int((-v.playerPosY + self.posy) * v.scale)
     

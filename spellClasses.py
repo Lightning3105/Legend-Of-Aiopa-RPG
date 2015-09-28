@@ -66,7 +66,7 @@ class beam(py.sprite.Sprite):
             
             
             if self.aniCyclePos <= 3:
-                self.image = py.transform.scale(self.image, (self.sizeCyclePos * v.scale, int(self.image.get_rect().height / 2)  * v.scale))
+                self.image = py.transform.scale(self.image, (int(self.sizeCyclePos * v.scale), int(self.image.get_rect().height / 2  * v.scale)))
                 self.image = py.transform.rotate(self.image, rotate)
                 self.rect = self.image.get_rect()
                 self.rect.center = (v.screen.get_rect()[2]/2, v.screen.get_rect()[3]/2)
@@ -75,7 +75,7 @@ class beam(py.sprite.Sprite):
                 if self.direction == "Left" or self.direction == "Right":
                     self.rect.centerx = (self.rect.centerx + (mod * (self.rect.width / 2)))
             else:
-                self.image = py.transform.scale(self.image, (self.image.get_rect().width * v.scale, self.image.get_rect().height * v.scale))
+                self.image = py.transform.scale(self.image, (int(self.image.get_rect().width * v.scale), int(self.image.get_rect().height * v.scale)))
                 self.rect = self.image.get_rect()
                 self.rect.center = (v.screen.get_rect()[2]/2, v.screen.get_rect()[3]/2)
             
@@ -91,7 +91,7 @@ class beam(py.sprite.Sprite):
                     if self.sizeCyclePos < 0:
                         self.sizeCyclePos = 0
             
-            self.rect.centery += (5 * v.scale)
+            self.rect.centery += int(5 * v.scale)
         else:
             self.image = py.Surface((0, 0))
             self.rect = py.Rect(0, 0, 0, 0)

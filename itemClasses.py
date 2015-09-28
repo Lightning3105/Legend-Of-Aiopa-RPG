@@ -1,5 +1,6 @@
 import entityClasses
 import spellClasses
+import weaponClasses
 import Variables as v
 
 class weapon():
@@ -10,11 +11,11 @@ class weapon():
         self.image = image
         self.attributes = attributes
         if self.attType == "swing":
-            self.object = entityClasses.Sword(self.image, self)
+            self.object = weaponClasses.Sword(self.image, self)
         if self.attType == "manaOrb":
-            self.object = entityClasses.manaOrb(self.image, self)
+            self.object = weaponClasses.manaOrb(self.image, self)
         if self.attType == "shoot":
-            self.object = entityClasses.shooter(self.image, self)
+            self.object = weaponClasses.shooter(self.image, self)
 
 class spell():
     

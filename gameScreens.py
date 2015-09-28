@@ -96,7 +96,7 @@ def game():
 
     v.particles = py.sprite.Group()
 
-    npc = entityClasses.NPC("Groblin Lvl. 1", 100, 100, 20)
+    npc = entityClasses.NPC("Groblin Lvl. 1", 100, 100, 5)
     
     #v.Attributes.update(v.classAttributes["Paladin"]) # TODO: Remove when done
     
@@ -110,7 +110,7 @@ def game():
     abilityButtons = py.sprite.Group()
     abilityButtons.add(guiClasses.ability(fb, "Resources/Images/Spell Icons/fireBeam.png", 0))
     
-    
+    v.xpGroup = py.sprite.Group()
     
     while True:
         v.ticks += 1
@@ -128,6 +128,8 @@ def game():
         v.allNpc.update()
         v.allNpc.draw(v.screen)
         v.p_class.update()
+        v.xpGroup.update()
+        v.xpGroup.draw(v.screen)
         v.playerStopped = False
         v.playerActing = False
         v.equipped["Weapon"].object.draw()
@@ -137,11 +139,10 @@ def game():
         guiClasses.update_health()
         guiClasses.update_mana()
         xp.update()
-        v.experience["XP"] += 1
         weaponSlot.draw()
         abilityButtons.update()
 
-
+        
         py.display.flip()
         for event in v.events:
             if event.type == py.QUIT:
@@ -152,6 +153,15 @@ def game():
         keys_pressed = py.key.get_pressed()
         if keys_pressed[py.K_SPACE] and not v.playerActing:
             v.equipped["Weapon"].object.attacking = True
+        if keys_pressed[py.K_f]:
+            if v.scale == 1:
+                v.scale = 2
+            elif v.scale == 2:
+                v.scale = 3
+            elif v.scale == 3:
+                v.scale = 1
+            print(v.scale)
+            py.time.delay(100)
             
         
 

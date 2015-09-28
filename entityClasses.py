@@ -299,243 +299,6 @@ class Tile(py.sprite.Sprite):
         #self.rect.width = self.rect.width * v.scale
         #self.rect.height = self.rect.height * v.scale
 
-
-class Sword(py.sprite.Sprite):
-
-    def __init__(self, image, weapon):
-        super().__init__()
-        self.image = image
-        self.attacking = False
-        self.attCyclePos = 0
-        self.attSpeed = 16
-        self.posX = v.screen.get_rect()[2] / 2
-        self.posY = v.screen.get_rect()[3] / 2
-        v.damagesNPCs.add(self)
-        self.rect = py.Rect(0, 0, 0, 0)
-        self.master = weapon
-
-    def get_rend(self):
-        self.rend = py.image.load(self.image)
-        self.rend = py.transform.scale(self.rend, (int(20 * v.scale), int(20 * v.scale)))
-
-    def update(self):
-        self.get_rend()
-        if self.attacking:
-            v.playerActing = True
-            v.playerStopped = True
-            if v.playerDirection == "Up":
-                angleMod = -90
-            elif v.playerDirection == "Down":
-                angleMod = 90
-            elif v.playerDirection == "Left":
-                angleMod = 0
-            elif v.playerDirection == "Right":
-                angleMod = 180
-            if self.attCyclePos == 0:
-                self.rect = self.rend.get_rect()
-                self.rect.center = (self.posX, self.posY)
-                self.rend = rot_center(self.rend, angleMod + 180)
-                self.rect.center = arc((centre()[0], centre()[1]), 20 * v.scale, angleMod)
-                self.attCyclePos += self.attSpeed
-            else:
-                self.rend = rot_center(self.rend, angleMod + 180 - self.attCyclePos)
-                self.rect.center = arc((centre()[0], centre()[1]), 20 * v.scale, angleMod - self.attCyclePos)
-                self.attCyclePos += self.attSpeed
-                if self.attCyclePos > 180:
-                    self.attacking = False
-                    self.attCyclePos = 0
-        else:
-            self.rect = py.Rect(0, 0, 0, 0)
-
-    def draw(self):
-        #self.update()
-        if self.attacking:
-            v.screen.blit(self.rend, self.rect)
-
-
-class manaOrb(py.sprite.Sprite):
-    
-    def __init__(self, image, weapon):
-        super().__init__()
-        self.attacking = False
-        self.projectiles = py.sprite.Group()
-        
-        self.image = image
-        self.master = weapon
-        
-        self.coolDown = 0
-    
-    def update(self):
-        if self.attacking:
-            if self.coolDown <= 0:
-                self.projectiles.add(self.projectile(self.image, self.master, self))
-                self.coolDown = 20
-            self.attacking = False
-        if self.coolDown > 0:
-            self.coolDown -= 1
-    
-    def draw(self):
-        for thing in self.projectiles:
-            thing.update()
-            thing.draw()
-    
-    class projectile(py.sprite.Sprite):
-        def __init__(self, image, weapon, shooter):
-            super().__init__()
-            self.attacking = True
-            self.attSpeed = 3
-            self.attCyclePos = 0
-            self.aniCyclePos = 0
-            self.posx = 0
-            self.posy = -10 * v.scale
-            self.sheet = SpriteSheet(image, 1, 10)
-            self.image = self.sheet.images[0]
-            self.direction = "Down"
-            self.rect = py.Rect(0, 0, 0, 0)
-            v.damagesNPCs.add(self)
-            self.master = weapon
-            self.shooter = shooter
-        
-        
-    
-        def update(self):
-            if self.attacking:
-                self.image = self.sheet.images[self.aniCyclePos]
-                size = self.image.get_rect()
-                self.image = py.transform.scale(self.image, (size.width * v.scale, size.height * v.scale))
-                if self.aniCyclePos < 9:
-                    v.playerStopped = True
-                    v.playerActing = True
-                    self.posx = v.playerPosX
-                    self.posy = v.playerPosY - 7
-                    for event in v.events:
-                        if event.type == py.USEREVENT + 1:
-                            self.aniCyclePos += 1
-                if self.aniCyclePos == 9:
-                    self.image = self.sheet.images[9]
-                    if self.attCyclePos == 0:
-                        self.direction = v.playerDirection
-                    if self.direction == "Down":
-                        self.posy -= self.attSpeed
-                    if self.direction == "Up":
-                        self.posy += self.attSpeed
-                    if self.direction == "Left":
-                        self.posx -= self.attSpeed
-                    if self.direction == "Right":
-                        self.posx += self.attSpeed
-                    self.attCyclePos += 1
-                if self.attCyclePos >= 10:
-                    v.playerStopped = False
-                if self.attCyclePos >= 30:
-                    self.attacking = False
-                    self.aniCyclePos = 0
-                    self.attCyclePos = 0
-                
-            else:
-                v.damagesNPCs.remove(self)
-                self.shooter.projectiles.remove(self)
-                        
-            self.rect = self.image.get_rect()
-            self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
-            self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
-            self.rend = self.image
-            if self.aniCyclePos == 9:
-                for thing in v.hitList:
-                    if self.rect.colliderect(thing.rect):
-                        self.attacking = False
-                for thing in v.allNpc:
-                    if self.rect.colliderect(thing.rect):
-                        self.attacking = False
-        
-        def draw(self):
-            if self.attacking:
-                v.screen.blit(self.rend, self.rect)
-
-class shooter(py.sprite.Sprite):
-    
-    def __init__(self, image, weapon):
-        super().__init__()
-        self.attacking = False
-        self.projectiles = py.sprite.Group()
-        
-        self.image = image
-        self.master = weapon
-        
-        self.coolDown = 0
-    
-    def update(self):
-        if self.attacking:
-            if self.coolDown <= 0:
-                self.projectiles.add(self.projectile(self.image, self.master, self))
-                self.coolDown = 20
-            self.attacking = False
-        if self.coolDown > 0:
-            self.coolDown -= 1
-    
-    def draw(self):
-        for thing in self.projectiles:
-            thing.update()
-            thing.draw()
-
-    class projectile(py.sprite.Sprite):
-        
-        def __init__(self, image, weapon, shooter):
-            super().__init__()
-            self.attacking = True
-            self.attSpeed = 8
-            self.attCyclePos = 0
-            self.posx = v.playerPosX
-            self.posy = v.playerPosY - (5 * v.scale)
-            self.skin = py.image.load(image)
-            self.direction = "Down"
-            self.rect = py.Rect(0, 0, 0, 0)
-            v.damagesNPCs.add(self)
-            self.master = weapon
-            self.shooter = shooter
-        
-        def update(self):
-            if self.attacking:
-                v.playerActing = True
-                size = self.skin.get_rect()
-                self.image = py.transform.scale(self.skin, (int(size.width * v.scale / 2), int(size.height * v.scale / 2)))
-                if self.attCyclePos == 0:
-                    self.direction = v.playerDirection
-                if self.direction == "Down":
-                    self.posy -= self.attSpeed
-                    self.image = py.transform.rotate(self.image, 180)
-                if self.direction == "Up":
-                    self.posy += self.attSpeed
-                if self.direction == "Left":
-                    self.posx -= self.attSpeed
-                    self.image = py.transform.rotate(self.image, 90)
-                if self.direction == "Right":
-                    self.posx += self.attSpeed
-                    self.image = py.transform.rotate(self.image, 270)
-                self.attCyclePos += 1
-                if self.attCyclePos >= 20:
-                    self.attacking = False
-                    self.attCyclePos = 0
-                
-            else:
-                self.rect = py.Rect(0, 0, 0, 0)
-                v.damagesNPCs.remove(self)
-                self.shooter.projectiles.remove(self)
-                        
-            self.rect = self.image.get_rect()
-            self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
-            self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
-            self.rend = self.image
-            for thing in v.hitList:
-                if self.rect.colliderect(thing.rect):
-                    self.attCyclePos = 30
-            for thing in v.allNpc:
-                if self.rect.colliderect(thing.rect):
-                    self.attCyclePos = 30
-                    
-        def draw(self):
-            if self.attacking:
-                v.screen.blit(self.rend, self.rect)
-
 def rot_center(image, angle):
     """rotate an image while keeping its center and size"""
     orig_rect = image.get_rect()
@@ -576,7 +339,7 @@ class NPC(py.sprite.Sprite):
         self.damage_fade = True
         self.dead = False
         self.firstDeath = True
-        self.attCount = -20
+        self.attCount = -float("inf")
         self.damagedPlayer = False
         v.allNpc.add(self)
         self.initSheet()
@@ -676,12 +439,12 @@ class NPC(py.sprite.Sprite):
         #self.move()
 
     def healthbar(self):
-        py.draw.rect(v.screen, (0,0,0), (self.rect.left, self.rect.top - 10, self.rect.width, 3))
-        py.draw.rect(v.screen, (255,0,0), (self.rect.left, self.rect.top - 10, (self.health/self.maxHealth * self.rect.width), 3))
+        py.draw.rect(v.screen, (0,0,0), (self.rect.left, self.rect.top - (5 * v.scale), self.rect.width, 2 * v.scale))
+        py.draw.rect(v.screen, (255,0,0), (self.rect.left, self.rect.top - (5 * v.scale), (self.health/self.maxHealth * self.rect.width), 2 * v.scale))
     def title(self):
         font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 10 * v.scale) #TODO: Scale
         label = font.render(self.name, 1, (255,255,255))
-        v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.top - 30))
+        v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.top - (15 * v.scale)))
 
     def attack(self):
         #print(abs(self.posx - v.playerPosX))
@@ -697,7 +460,7 @@ class NPC(py.sprite.Sprite):
                     self.attCount = 25 * v.scale
                     self.attPos = (v.playerPosX, v.playerPosY)
                     self.damagedPlayer = False
-        if self.attCount > -20:
+        if self.attCount > -20 * v.scale:
             self.attCount -= 1.5 * v.scale
             self.posx = self.prevX
             self.posy = self.prevY
@@ -726,6 +489,8 @@ class NPC(py.sprite.Sprite):
             self.damage_alpha -= 10
             if self.damage_alpha <= 0:
                 v.allNpc.remove(self)
+                for i in range(5):
+                    v.xpGroup.add(xp(self.posx + randint(-10, 10), self.posy + randint(-10, 10), 3))
 
     def get_direction(self):
         if self.posy - v.playerPosY < -25:
@@ -856,21 +621,61 @@ class NPC(py.sprite.Sprite):
 
 class Particle(py.sprite.Sprite):
 
-        def __init__(self, pos, colour, jump, life):
-            super().__init__()
-            self.posx, self.posy = pos
-            self.colour = colour
-            self.alive = True
-            self.timer = life
-            self.jump = jump
-        def update(self):
-            if self.alive:
-                self.timer -= 1
-                self.posx += randint(-self.jump, self.jump)
-                self.posy += randint(-self.jump, self.jump)
-                self.rect = py.Rect(0, 0, 2 *v.scale, 2 *v.scale)
-                self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
-                self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
-                py.draw.rect(v.screen, self.colour, self.rect)
-                if self.timer <= 0:
-                    self.alive = False
+    def __init__(self, pos, colour, jump, life):
+        super().__init__()
+        self.posx, self.posy = pos
+        self.colour = colour
+        self.alive = True
+        self.timer = life
+        self.jump = jump
+    def update(self):
+        if self.alive:
+            self.timer -= 1
+            self.posx += randint(-self.jump, self.jump)
+            self.posy += randint(-self.jump, self.jump)
+            self.rect = py.Rect(0, 0, 2 *v.scale, 2 *v.scale)
+            self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
+            self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
+            py.draw.rect(v.screen, self.colour, self.rect)
+            if self.timer <= 0:
+                self.alive = False
+
+class xp(py.sprite.Sprite):
+    
+    def __init__(self, posx, posy, amount):
+        super().__init__()
+        self.posx = posx
+        self.posy = posy
+        self.amount = amount
+        self.skin = py.image.load("Resources/Images/XPOrb.png")
+        v.xpGroup.add(self)
+        self.wait = randint(25, 35)
+        self.velocity = 1
+        
+    def update(self):
+        self.image = py.transform.scale(self.skin, (8 * v.scale, 8 * v.scale))
+        if self.wait <= 0:
+            if abs(self.posx - v.playerPosX) < 25 * v.scale:
+                if abs(self.posy - v.playerPosY) < 25 * v.scale:
+                    
+                    if self.posx > v.playerPosX:
+                        self.posx -= self.velocity
+                    if self.posx < v.playerPosX:
+                        self.posx += self.velocity
+                    if self.posy > v.playerPosY:
+                        self.posy -= self.velocity
+                    if self.posy < v.playerPosY:
+                        self.posy += self.velocity
+                    self.velocity += 0.2
+        else:
+            self.wait -= 1
+        
+        if abs(self.posx - v.playerPosX) < 10 * v.scale:
+            if abs(self.posy - v.playerPosY) < 10 * v.scale:
+                v.xpGroup.remove(self)
+                v.experience["XP"] += self.amount
+        
+        self.rect = self.image.get_rect()
+        self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + self.posx) * v.scale)
+        self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + self.posy) * v.scale)
+    

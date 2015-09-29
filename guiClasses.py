@@ -1,7 +1,10 @@
 import pygame as py
 import Variables as v
 import entityClasses
+import MenuItems
 from time import sleep
+from pygame.color import Color as colour 
+import gameScreens
 
 class health:
 
@@ -162,8 +165,27 @@ class pauseScreen:
     def __init__(self):
         self.pos = (v.screen.get_rect()[2] / 2, v.screen.get_rect()[3] / 2)
         self.bigRect = py.Rect(0, 0, v.screen.get_rect()[2], v.screen.get_rect()[3])
-    
+        self.text = py.sprite.Group()
+        self.text.add(MenuItems.textLabel("Paused", (v.screen.get_rect()[2] / 2, 100), (255, 255, 255), "Resources\Fonts\RunicClear.ttf", 80, centred=True))
+        self.buttons = py.sprite.Group()
+        self.buttons.add(MenuItems.Button("Main Menu", (v.screen.get_rect()[2] / 2, 200), 40, colour("brown"), colour("white"), "Resources\Fonts\RunicSolid.ttf", "mainMenu", True))
+        self.buttons.add(MenuItems.Button("Exit Game", (v.screen.get_rect()[2] / 2, 300), 40, colour("brown"), colour("white"), "Resources\Fonts\RunicSolid.ttf", "quit", True))
+        
     def update(self):
         grey = py.Surface((v.screen.get_rect()[2], v.screen.get_rect()[3])).convert_alpha()
         grey.fill((20, 20, 20, 200))
         v.screen.blit(grey, self.bigRect)
+        self.text.update()
+        self.buttons.update()
+        
+        for event in v.events:
+            if event.type == py.MOUSEBUTTONDOWN:
+                for button in self.buttons:
+                    if button.pressed():
+                        id = button.ID
+                        if id == "mainMenu":
+                            gameScreens.mainMenu()
+                            continue
+                        if id == "quit":
+                            from sys import exit
+                            exit()

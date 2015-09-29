@@ -8,7 +8,7 @@ import itemClasses
 
 class Button(py.sprite.Sprite):
 
-    def __init__(self, text, pos, size, hovercolour, normalcolour, font, ID):
+    def __init__(self, text, pos, size, hovercolour, normalcolour, font, ID, centred = False):
         super().__init__()
         self.ID = ID
         self.hovered = False
@@ -19,6 +19,7 @@ class Button(py.sprite.Sprite):
         self.ncolour = normalcolour
         self.font = font
         self.font = py.font.Font(font, size)
+        self.centred = centred
         self.set_rect()
     
     def update(self):
@@ -42,7 +43,10 @@ class Button(py.sprite.Sprite):
     def set_rect(self):
         self.set_rend()
         self.rect = self.rend.get_rect()
-        self.rect.topleft = self.pos
+        if not self.centred:
+            self.rect.topleft = self.pos
+        if self.centred:
+            self.rect.center = self.pos
 
     def pressed(self):
         mouse = py.mouse.get_pos()
@@ -324,7 +328,7 @@ class optionAttribute(py.sprite.Sprite):
 
 class textLabel(py.sprite.Sprite):
     
-    def __init__(self, text, pos, colour, font, size, variable = False):
+    def __init__(self, text, pos, colour, font, size, variable = False, centred = False):
         super().__init__()
         self.text = text
         self.pos = pos
@@ -332,15 +336,22 @@ class textLabel(py.sprite.Sprite):
         self.font = font
         self.size = size
         self.variable = variable
+        self.centred = centred
         
     def update(self):
+        pos = self.pos
         font = py.font.Font(self.font, self.size)
         if not self.variable:
             label = font.render(self.text, 1, self.colour)
         if self.variable:
             label = font.render(str(getattr(v, self.text)), 1, self.colour)
+        if self.centred:
+            pos = list(self.pos)
+            pos[0] -= font.size(self.text)[0] / 2
+            pos[1] -= font.size(self.text)[1] / 2
+            pos = tuple(pos)
     
-        v.screen.blit(label, self.pos)
+        v.screen.blit(label, pos)
         
 class shiftingGradient():
     

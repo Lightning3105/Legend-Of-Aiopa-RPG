@@ -189,3 +189,62 @@ class pauseScreen:
                         if id == "quit":
                             from sys import exit
                             exit()
+
+class miniMap:
+    
+    def __init__(self):
+        self.windowScale = 6
+        self.tileScale = 4
+        self.scale = 4
+        self.hovered = False
+        
+    
+    def update(self):
+        self.scale = self.tileScale * (self.windowScale / 6)
+        #self.scale = self.tileScale
+        self.pos = (640 - (640/self.windowScale), 0)
+        self.size = (640/self.windowScale, 480/self.windowScale)
+        self.map = py.Surface(self.size)
+        self.map.fill((100, 255, 100))
+        for tile in v.allTiles:
+            x = tile.tilePosX
+            y = tile.tilePosY
+            size = (int(30/self.scale), int(30/self.scale))
+            image = py.transform.scale(tile.image, size)
+            pos = (self.size[0] / 2 + ((-v.playerPosX / self.scale) + (int(30 / self.scale) * x)) - (22 / self.scale), self.size[1] / 2 + ((v.playerPosY / self.scale) + (int(30 / self.scale) * y)) - (30 / self.scale))
+            rect = py.Rect(pos, size)
+            self.map.blit(image, rect)
+        py.draw.rect(self.map, (255, 0, 0), (self.size[0]/2 - (22 / self.scale) / 2, self.size[1]/2 - (30 / self.scale) / 2, 15 / self.scale, 20 / self.scale))
+        
+        v.screen.blit(self.map, self.pos)
+        rect = py.Rect(self.pos, self.size)
+        py.draw.rect(v.screen, (153, 76, 0), rect, 2)
+        
+        if rect.collidepoint(py.mouse.get_pos()):
+            self.hovered = True
+        else:
+            self.hovered = False
+        
+        if self.hovered:
+            if self.windowScale > 4:
+                self.windowScale -= 0.1
+        else:
+            if self.windowScale < 6:
+                self.windowScale += 0.1
+        
+        for event in v.events:
+            if event.type == py.MOUSEBUTTONUP:
+                if event.button == 4:
+                    pre = int(30 / self.tileScale)
+                    while int(30 / self.tileScale) == pre and self.tileScale > 0.1:
+                        self.tileScale -= 0.1
+                if event.button == 5:
+                    pre = int(30 / self.tileScale)
+                    while int(30 / self.tileScale) == pre and self.tileScale < 7:
+                        self.tileScale += 0.1
+                self.tileScale = round(self.tileScale, 1)
+                if self.tileScale <= 0.1:
+                    self.tileScale = 0.1
+                if self.tileScale >= 7:
+                    self.tileScale = 7
+        

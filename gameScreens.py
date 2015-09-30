@@ -87,10 +87,10 @@ def game():
     #v.cur_weapon.get_rend()
     
     v.hits = py.sprite.Group()
-    v.hits.add(entityClasses.HitBox(centre(v.screen)[0] + (5 * v.scale), centre(v.screen)[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale), "Right"))
-    v.hits.add(entityClasses.HitBox(centre(v.screen)[0] - (5 * v.scale), centre(v.screen)[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale), "Left"))
-    v.hits.add(entityClasses.HitBox(centre(v.screen)[0] - (3 * v.scale), centre(v.screen)[1] - (8 * v.scale), (8 * v.scale), (2 * v.scale), "Top"))
-    v.hits.add(entityClasses.HitBox(centre(v.screen)[0] - (3 * v.scale), centre(v.screen)[1] + (16 * v.scale), (8 * v.scale), (2 * v.scale), "Bottom"))
+    v.hits.add(entityClasses.HitBox("Right"))
+    v.hits.add(entityClasses.HitBox("Left"))
+    v.hits.add(entityClasses.HitBox("Top"))
+    v.hits.add(entityClasses.HitBox("Bottom"))
     v.allNpc = py.sprite.Group()
     weaponSlot = guiClasses.weaponSlot()
 
@@ -113,6 +113,8 @@ def game():
     v.xpGroup = py.sprite.Group()
     
     pause = guiClasses.pauseScreen()
+    
+    map = guiClasses.miniMap()
     
     while True:
         if not v.PAUSED:
@@ -144,6 +146,7 @@ def game():
             xp.update()
             weaponSlot.draw()
             abilityButtons.update()
+            map.update()
     
             
             py.display.flip()
@@ -157,13 +160,13 @@ def game():
             if keys_pressed[py.K_SPACE] and not v.playerActing:
                 v.equipped["Weapon"].object.attacking = True
             if keys_pressed[py.K_KP_PLUS]:
-                v.scale += 0.1
-                v.scale = round(v.scale, 1)
-                print(v.scale)
+                map.scale += 0.1
+                map.scale = round(map.scale, 1)
+                #print(v.scale)
             if keys_pressed[py.K_KP_MINUS]:
-                v.scale -= 0.1
-                v.scale = round(v.scale, 1)
-                print(v.scale)
+                map.scale -= 0.1
+                map.scale = round(map.scale, 1)
+                #print(v.scale)
             if keys_pressed[py.K_ESCAPE]:
                 v.PAUSED = True
                 v.justPaused = True

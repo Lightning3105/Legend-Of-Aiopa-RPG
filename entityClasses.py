@@ -235,22 +235,25 @@ class Player(py.sprite.Sprite):
 
 class HitBox(py.sprite.Sprite):
 
-    def __init__(self, x, y, w, h, side):
+    def __init__(self, side):
         super().__init__()
-        self.x = x
-        self.y = y
-        self.w = w
-        self.h = h
         self.side = side
-        self.rect = py.Rect(x, y, w, h)
-        self.image = py.Surface((w, h))
-        self.image.fill((255, 0, 0))
         self.ID = "playerHitbox"
 
     def draw(self):
         py.draw.rect(v.screen, (255, 0, 0), self.rect)
 
-    def update(self, velocity): # use new positition
+    def update(self, velocity): #TODO: use new positition
+        if self.side == "Top":
+            self.rect = py.Rect(centre()[0] - (3 * v.scale), centre()[1] - (8 * v.scale), (8 * v.scale), (2 * v.scale))
+        if self.side == "Bottom":
+            self.rect = py.Rect(centre()[0] - (3 * v.scale), centre()[1] + (16 * v.scale), (8 * v.scale), (2 * v.scale))
+        if self.side == "Left":
+            self.rect = py.Rect(centre()[0] - (5 * v.scale), centre()[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale))
+        if self.side == "Right":
+            self.rect = py.Rect(centre()[0] + (5 * v.scale), centre()[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale))
+        self.image = py.Surface((self.rect.width, self.rect.height))
+        self.image.fill((255, 0, 0))
         velX, velY = velocity
         newrect = self.rect
         hit = False
@@ -290,12 +293,14 @@ class Tile(py.sprite.Sprite):
     def draw(self):
         self.set_rect()
         v.screen.blit(self.rend, self.rect)
+        
 
     def update(self):
         self.image = py.transform.scale(self.skin, (int(30 * v.scale), int(30 * v.scale)))
         self.rect = self.image.get_rect()
         self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (30 * self.tilePosX)) * v.scale)
         self.rect.centery = v.screen.get_rect()[3] / 2 + ((v.playerPosY + (30 * self.tilePosY)) * v.scale)
+        
         #self.rect.width = self.rect.width * v.scale
         #self.rect.height = self.rect.height * v.scale
 

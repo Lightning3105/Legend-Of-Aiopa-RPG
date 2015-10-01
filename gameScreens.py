@@ -7,9 +7,6 @@ from functools import reduce
 from os import listdir
 
 import Map
-import entityClasses
-import MenuItems
-import guiClasses
 import spellClasses
 import itemClasses
 from pygame.color import Color as colour
@@ -64,19 +61,19 @@ def game():
     py.time.set_timer(py.USEREVENT + 1, 50) # Spell animation
     py.time.set_timer(py.USEREVENT + 2, 1000) #One second
 
-    tileset = entityClasses.SpriteSheet("Resources/Images/Tile_Land2.png", 12, 16)
+    tileset = entityClasses.SpriteSheet("Resources/Images/Tilesets/Outside_A2.png", 12, 16)
     v.hitList = py.sprite.Group()
     v.map1 = [["0","0","0","0","0","0","0","0","0","0"],
-            ["#","0","0","0","#","#","0","0","0","0"],
-            ["#","#","0","#","#","#","#","#","0","0"],
-            ["#","#","#","#","0","0","0","#","0","0"],
-            ["#","#","#","#","0","0","0","0","0","0"],
-            ["#","#","#","#","0","0","0","0","0","0"],
-            ["#","#","#","#","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0","0","0","0"],
+            ["0","0","0","#44","#13","#13","#13","#45","0","0"],
+            ["0","0","0","0","0","0","0","#44","0","0"],
+            ["0","0","0","0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0","0","0","0"],
+            ["0","0","0","0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0","0","0","0"],
             ["0","0","0","0","0","0","0","0","0","0"],]
     v.allTiles = py.sprite.Group()
-    tiles = Map.generateMap(v.map1, tileset)
+    Map.generateMap(v.map1, tileset)
     #v.damagesNPCs = py.sprite.Group()
     sword = itemClasses.weapon("Broken Sword", "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10})
     orb = itemClasses.weapon("Magic Orb", "manaOrb", "Resources/Images/castOrbPurple.png", {"Damage":2, "Knockback": 10})
@@ -125,8 +122,8 @@ def game():
             v.events = []
             v.events = py.event.get()
             v.clock.tick(30)
-            tiles.update()
-            tiles.draw(v.screen)
+            v.allTiles.update()
+            v.allTiles.draw(v.screen)
             v.p_class.draw()
             v.equipped["Weapon"].object.update()
             v.equipedSpells.update()

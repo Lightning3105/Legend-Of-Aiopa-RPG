@@ -11,6 +11,7 @@ import spellClasses
 import itemClasses
 from pygame.color import Color as colour
 import sys
+import inventoryScreen
 def mainMenu():
     py.init()
     v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
@@ -113,6 +114,8 @@ def game():
     
     map = guiClasses.miniMap()
     
+    v.inventory = inventoryScreen.inventory()
+    
     while True:
         if not v.PAUSED:
             v.ticks += 1
@@ -167,10 +170,16 @@ def game():
             if keys_pressed[py.K_ESCAPE]:
                 v.PAUSED = True
                 v.justPaused = True
-                py.time.delay(200)
+                v.pauseType = "Pause"
+                py.time.delay(100)
+            if keys_pressed[py.K_e]:
+                v.PAUSED = True
+                v.justPaused = True
+                v.pauseType = "Inventory"
+                py.time.delay(100)
             if v.scale <= 0.1:
                 v.scale = 0.1
-        if v.PAUSED:
+        if v.PAUSED and v.pauseType == "Pause":
             if v.justPaused:
                 background = py.image.tostring(v.screen, "RGBA")
                 v.justPaused = False
@@ -185,7 +194,23 @@ def game():
             keys_pressed = py.key.get_pressed()
             if keys_pressed[py.K_ESCAPE]:
                 v.PAUSED = False
-                py.time.delay(200)
+                py.time.delay(100)
+        if v.PAUSED and v.pauseType == "Inventory":
+            if v.justPaused:
+                background = py.image.tostring(v.screen, "RGBA")
+                v.justPaused = False
+            py.event.pump()
+            
+            backgroundImage = py.image.fromstring(background, (v.screen.get_rect()[2], v.screen.get_rect()[3]), "RGBA")
+            v.screen.blit(backgroundImage, (0, 0))
+            
+            v.inventory.update()
+            
+            py.display.flip()
+            keys_pressed = py.key.get_pressed()
+            if keys_pressed[py.K_e]:
+                v.PAUSED = False
+                py.time.delay(100)
             
         
 

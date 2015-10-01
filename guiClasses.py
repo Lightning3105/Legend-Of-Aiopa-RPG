@@ -139,7 +139,11 @@ class ability(py.sprite.Sprite):
         maxCooldown = self.ability.attributes["Cooldown"]
         cooldown = self.ability.object.coolDown
         self.image = py.transform.scale(self.icon, (32, 32))
-        self.image.fill((255, 255, 255, int((cooldown / maxCooldown) * 255)), special_flags=py.BLEND_RGBA_MULT)
+        try:
+            self.image.fill((255, 255, 255, int((cooldown / maxCooldown) * 255)), special_flags=py.BLEND_RGBA_MULT)
+        except TypeError as detail:
+            print("INVALID COLOUR:", (255, 255, 255, int((cooldown / maxCooldown) * 255)))
+            print(detail)
         self.rect = self.image.get_rect()
         self.rect.center = (self.posx, self.posy)
         py.draw.rect(v.screen, (0, 0, 0), self.rect)

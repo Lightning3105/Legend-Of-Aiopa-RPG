@@ -1,4 +1,5 @@
 PAUSED = False
+pauseType = "Pause"
 justPaused = True
 playerPosX = 0
 playerPosY = 0
@@ -34,6 +35,7 @@ appearanceTab = "Body"
 appearancePrevNum = 7
 equipped = {"Weapon": None}
 equipedSpells = None
+inventory = None
 appearance = {"Body": "Resources/Images/Character Customisation/Body/white.png",
               "Face": "Resources/Images/Character Customisation/Face/whiteNormal.png",
               "Dress": "Resources/Images/Character Customisation/Dress/cloakBrown.png"

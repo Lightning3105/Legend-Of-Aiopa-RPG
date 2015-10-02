@@ -115,6 +115,7 @@ def game():
     map = guiClasses.miniMap()
     
     v.inventory = inventoryScreen.inventory()
+    v.inventory.contents.append(itemClasses.item("Thing", py.image.load("Resources/Images/Sword_1.png")))
     
     while True:
         if not v.PAUSED:

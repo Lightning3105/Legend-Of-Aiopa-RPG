@@ -20,7 +20,7 @@ class weapon():
 
 class spell():
     
-    def __init__(self, name, spellType, spellImage, castImage, attributes = {}):
+    def __init__(self, name, spellType, spellImage, castImage, attributes = {}): #TODO: icon
         self.name = name
         self.spellType = spellType
         self.spellImage = spellImage
@@ -29,3 +29,9 @@ class spell():
         if self.spellType == "beam":
             self.object = spellClasses.beam(self.spellImage, self.castImage, self)
             v.equipedSpells.add(self.object)
+
+class item():
+    
+    def __init__(self, name, icon):
+        self.name = name
+        self.icon = icon

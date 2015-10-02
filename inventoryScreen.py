@@ -13,6 +13,9 @@ class inventory():
         self.background()
         self.player()
         self.equipedSlots("Weapon")
+        for i in range(0, 24):
+            self.inventorySlots(i)
+        self.grabbed = None
         
     def grey(self):
         grey = py.Surface((v.screen.get_rect()[2], v.screen.get_rect()[3])).convert_alpha()
@@ -39,13 +42,12 @@ class inventory():
     
     def equipedSlots(self, slot):
         item = v.equipped[slot]
-        size = (30, 30)
+        size = (50, 50)
         if slot == "Weapon":
             pos = (70, 100)
             image = py.image.load("Resources/Images/Inventory Icons/Weapon.png").convert_alpha()
-            image = py.transform.scale(image, size)
         
-        
+        image = py.transform.scale(image, size)
         rect = py.Rect(pos, size)
         py.draw.rect(v.screen, (255, 255, 255), rect, 2)
         if rect.collidepoint(py.mouse.get_pos()):
@@ -55,6 +57,37 @@ class inventory():
         v.screen.blit(image, pos)
         
         if not item == None:
-            icon = py.transform.scale(item.icon, (28, 28))
+            icon = py.transform.scale(item.icon, (size[0] - 2, size[1] - 2))
             v.screen.blit(icon, pos)
+    
+    def inventorySlots(self, slotNum):
+        size = (50, 50)
+        if slotNum >= len(self.contents):
+            image = py.image.load("Resources/Images/Inventory Icons/Empty.png").convert_alpha()
+        else:
+            image = py.Surface(size).convert_alpha()
+            image.fill((255, 255, 255))
+        posx = 280 + (slotNum % 6) * 50
+        posy = (int(slotNum / 6) * 50) + 200
+        
+        pos = (posx, posy)
+        
+        image = py.transform.scale(image, size)
+        
+        
+        rect = py.Rect(pos, size)
+        py.draw.rect(v.screen, (255, 255, 255), rect, 2)
+        
+        if rect.collidepoint(py.mouse.get_pos()):
+            pass
+        else:
+            image.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)
+        v.screen.blit(image, pos)
+        
+        try:
+            icon = py.transform.scale(self.contents[slotNum].icon, (size[0] - 4, size[1] - 4))
+            icon.convert_alpha()
+            v.screen.blit(icon, pos)
+        except:
+            pass
         

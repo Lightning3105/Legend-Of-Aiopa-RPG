@@ -28,7 +28,7 @@ class spell():
         self.attributes = attributes
         if self.spellType == "beam":
             self.object = spellClasses.beam(self.spellImage, self.castImage, self)
-            v.equipedSpells.add(self.object)
+            v.equippedSpells.add(self.object)
 
 class item():
     

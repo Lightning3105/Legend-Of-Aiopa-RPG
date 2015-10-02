@@ -34,7 +34,7 @@ skillPoints = 5
 appearanceTab = "Body"
 appearancePrevNum = 7
 equipped = {"Weapon": None}
-equipedSpells = None
+equippedSpells = None
 inventory = None
 appearance = {"Body": "Resources/Images/Character Customisation/Body/white.png",
               "Face": "Resources/Images/Character Customisation/Face/whiteNormal.png",

@@ -2,22 +2,36 @@ import Variables as v
 import pygame as py
 import entityClasses
 
-class inventory(): #TODO: Split into inventory and inventoryScreen
+
+class inventory():
     
     def __init__(self):
-        self.size = 3
+        self.size = 10
         self.contents = []
+    
+    def add(self, item):
+        self.contents.append(item)
+
+
+class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
+    
+    def __init__(self):
         self.grabbed = None
+        self.grabbedOrigin = None
         self.hovering = None
+        self.inventorySlots = py.sprite.Group()
+        for i in range(0, 24):
+            self.inventorySlots.add(self.inventorySlot(i, self))
+        self.equippedSlots = py.sprite.Group()
+        self.equippedSlots.add(self.equippedSlot("Weapon", self))
     
     def update(self):
         self.hovering = None
         self.grey()
         self.background()
         self.player()
-        self.equipedSlots("Weapon")
-        for i in range(0, 24):
-            self.inventorySlots(i)
+        self.inventorySlots.update()
+        self.equippedSlots.update()
         self.drag()
         
         
@@ -44,70 +58,98 @@ class inventory(): #TODO: Split into inventory and inventoryScreen
         image = py.transform.scale(image, (image.get_rect().width * 5, image.get_rect().height * 5))
         v.screen.blit(image, pos)
     
-    def equipedSlots(self, slot):
-        hovered = False
-        item = v.equipped[slot]
-        size = (50, 50)
-        if slot == "Weapon":
-            pos = (70, 100)
-            image = py.image.load("Resources/Images/Inventory Icons/Weapon.png").convert_alpha()
+    class equippedSlot(py.sprite.Sprite):
         
-        image = py.transform.scale(image, size)
-        rect = py.Rect(pos, size)
-        py.draw.rect(v.screen, (255, 255, 255), rect, 2)
-        if rect.collidepoint(py.mouse.get_pos()):
-            hovered = True
-            self.hovering = ("Equiped", slot)
-        else:
-            image.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)
-        v.screen.blit(image, pos)
+        def __init__(self, slot, master):
+            super().__init__()
+            self.hovered = False
+            self.item = v.equipped[slot]
+            self.size = (50, 50)
+            self.master = master
+            self.slot = slot
+            self.ID = "Equipped"
+            
         
-        if not item == None:
-            icon = py.transform.scale(item.icon, (size[0] - 2, size[1] - 2))
-            v.screen.blit(icon, pos)
-            if hovered:
-                for event in v.events:
-                    if event.type == py.MOUSEBUTTONDOWN:
-                        self.grabbed = item
+        def update(self):
+            if self.slot == "Weapon":
+                self.pos = (70, 100)
+                self.image = py.image.load("Resources/Images/Inventory Icons/Weapon.png").convert_alpha()
+            image = py.transform.scale(self.image, self.size)
+            rect = py.Rect(self.pos, self.size)
+            py.draw.rect(v.screen, (255, 255, 255), rect, 2)
+            if rect.collidepoint(py.mouse.get_pos()):
+                self.hovered = True
+                self.master.hovering = self
+            else:
+                self.hovered = False
+                image.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)
+            v.screen.blit(image, self.pos)
+            
+            if not self.item == None:
+                icon = py.transform.scale(self.item.icon, (self.size[0] - 2, self.size[1] - 2))
+                if self.master.grabbed == self.item:
+                    icon.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(icon, self.pos)
+                if self.hovered:
+                    for event in v.events:
+                        if event.type == py.MOUSEBUTTONDOWN:
+                            self.master.grabbed = self.item
+                            self.master.grabbedOrigin = self
         
         
     
-    def inventorySlots(self, slotNum):
-        size = (50, 50)
-        hovered = False
-        if slotNum >= len(self.contents):
-            image = py.image.load("Resources/Images/Inventory Icons/Empty.png").convert_alpha()
-        else:
-            image = py.Surface(size).convert_alpha()
-            image.fill((255, 255, 255))
-        posx = 280 + (slotNum % 6) * 50
-        posy = (int(slotNum / 6) * 50) + 200
+    class inventorySlot(py.sprite.Sprite):
         
-        pos = (posx, posy)
+        def __init__(self, slotNum, master):
+            super().__init__()
+            self.size = (50, 50)
+            self.hovered = False
+            self.slotNum = slotNum
+            self.master = master
+            try:
+                self.item = v.inventory.contents[self.slotNum]
+            except:
+                self.item = None
+            self.ID = "Inventory"
         
-        image = py.transform.scale(image, size)
-        
-        
-        rect = py.Rect(pos, size)
-        py.draw.rect(v.screen, (255, 255, 255), rect, 2)
-        
-        if rect.collidepoint(py.mouse.get_pos()):
-            hovered = True
-            self.hovering = ("Inventory", slotNum)
-        else:
-            image.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)
-        v.screen.blit(image, pos)
-        
-        try:
-            icon = py.transform.scale(self.contents[slotNum].icon, (size[0] - 4, size[1] - 4))
-            icon.convert_alpha()
-            v.screen.blit(icon, pos)
-            if hovered:
-                for event in v.events:
-                    if event.type == py.MOUSEBUTTONDOWN:
-                        self.grabbed = self.contents[slotNum]
-        except:
-            pass
+        def update(self):
+            if self.item == None:
+                image = py.image.load("Resources/Images/Inventory Icons/Empty.png").convert_alpha()
+            else:
+                image = py.Surface(self.size).convert_alpha()
+                image.fill((255, 255, 255))
+            posx = 280 + (self.slotNum % 6) * 50
+            posy = (int(self.slotNum / 6) * 50) + 200
+            
+            pos = (posx, posy)
+            
+            image = py.transform.scale(image, self.size)
+            
+            
+            rect = py.Rect(pos, self.size)
+            py.draw.rect(v.screen, (255, 255, 255), rect, 2)
+            
+            if rect.collidepoint(py.mouse.get_pos()):
+                self.hovered = True
+                self.master.hovering = self
+            else:
+                self.hovered = False
+                image.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)
+            v.screen.blit(image, pos)
+            
+            try:
+                icon = py.transform.scale(self.item.icon, (self.size[0] - 4, self.size[1] - 4))
+                icon.convert_alpha()
+                if self.master.grabbed == self.item:
+                    icon.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(icon, pos)
+                if self.hovered:
+                    for event in v.events:
+                        if event.type == py.MOUSEBUTTONDOWN:
+                            self.master.grabbed = self.item
+                            self.master.grabbedOrigin = self
+            except:
+                pass
         
         
     def drag(self):
@@ -119,7 +161,14 @@ class inventory(): #TODO: Split into inventory and inventoryScreen
             v.screen.blit(image, pos)
             rect = py.Rect(pos, size)
             py.draw.rect(v.screen, (200, 200, 200), rect, 2)
-            if not py.mouse.get_pressed()[0]:
-                self.grabbed = None
+            for event in v.events:
+                if event.type == py.MOUSEBUTTONUP:
+                    if not self.hovering == None:
+                        old = self.grabbed
+                        self.grabbedOrigin.item = self.hovering.item
+                        self.hovering.item = old
+                        self.grabbed = None
+                    if self.hovering == None:
+                        self.grabbed = None
                                        
         

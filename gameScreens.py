@@ -101,7 +101,7 @@ def game():
     xp = guiClasses.XP()
     
     v.currentSpells = py.sprite.Group()
-    v.equipedSpells = py.sprite.Group()
+    v.equippedSpells = py.sprite.Group()
     
     fb = itemClasses.spell("Fire Beam", "beam", "Resources/Images/fireBeam.png", "Resources/Images/redCastCircle.png", {"Damage": 3, "Knockback": "S", "Cooldown": 5, "Mana": 10})
     
@@ -130,7 +130,7 @@ def game():
             v.allTiles.draw(v.screen)
             v.p_class.draw()
             v.equipped["Weapon"].object.update()
-            v.equipedSpells.update()
+            v.equippedSpells.update()
             v.allNpc.update()
             v.allNpc.draw(v.screen)
             v.p_class.update()
@@ -139,7 +139,7 @@ def game():
             v.playerStopped = False
             v.playerActing = False
             v.equipped["Weapon"].object.draw()
-            v.equipedSpells.draw(v.screen)
+            v.equippedSpells.draw(v.screen)
             v.particles.update()
             #v.hits.draw(v.screen)
             guiClasses.update_health()
@@ -200,6 +200,7 @@ def game():
             if v.justPaused:
                 background = py.image.tostring(v.screen, "RGBA")
                 v.justPaused = False
+                invScreen = inventoryScreen.inventoryScreen()
             py.event.pump()
             v.events = []
             v.events = py.event.get()
@@ -207,7 +208,7 @@ def game():
             backgroundImage = py.image.fromstring(background, (v.screen.get_rect()[2], v.screen.get_rect()[3]), "RGBA")
             v.screen.blit(backgroundImage, (0, 0))
             
-            v.inventory.update()
+            invScreen.update()
             
             py.display.flip()
             for event in v.events:

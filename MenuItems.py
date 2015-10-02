@@ -175,7 +175,7 @@ class characterSelector(py.sprite.Sprite):
                 if event.type == py.MOUSEBUTTONDOWN and self.hovered:
                     v.playerClass = self.name
                     if self.name == "Mage":
-                        v.equipped["Weapon"] = itemClasses.weapon("Magic Orb", "manaOrb", "Resources/Images/castOrbPurple.png", {"Damage":2, "Knockback": 10})
+                        v.equipped["Weapon"] = itemClasses.weapon("Magic Orb", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[56], "manaOrb", "Resources/Images/castOrbPurple.png", {"Damage":2, "Knockback": 10})
                     if self.name == "Paladin":
                         v.equipped["Weapon"] = itemClasses.weapon("Broken Sword", "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10})
                     if self.name == "Ranger":

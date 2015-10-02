@@ -173,12 +173,10 @@ def game():
                         v.PAUSED = True
                         v.justPaused = True
                         v.pauseType = "Pause"
-                        #py.time.delay(100)
                     if event.key == py.K_e:
                         v.PAUSED = True
                         v.justPaused = True
                         v.pauseType = "Inventory"
-                        #py.time.delay(100)
             if v.scale <= 0.1:
                 v.scale = 0.1
         if v.PAUSED and v.pauseType == "Pause":
@@ -197,7 +195,6 @@ def game():
                 if event.type == py.KEYDOWN:
                     if event.key == py.K_ESCAPE:
                         v.PAUSED = False
-                        #py.time.delay(100)
         if v.PAUSED and v.pauseType == "Inventory":
             if v.justPaused:
                 background = py.image.tostring(v.screen, "RGBA")

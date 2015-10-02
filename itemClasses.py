@@ -5,11 +5,12 @@ import Variables as v
 
 class weapon():
     
-    def __init__(self, name, attType, image, attributes = {}):
+    def __init__(self, name, icon, attType, image, attributes = {}):
         self.name = name
         self.attType = attType
         self.image = image
         self.attributes = attributes
+        self.icon = icon
         if self.attType == "swing":
             self.object = weaponClasses.Sword(self.image, self)
         if self.attType == "manaOrb":

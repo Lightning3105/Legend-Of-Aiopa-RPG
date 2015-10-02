@@ -91,7 +91,7 @@ class Player(py.sprite.Sprite):
         self.sheetImage = py.image.load(v.appearance["Body"])
         self.sheetImage.blit(py.image.load(v.appearance["Face"]), (0, 0))
         self.sheetImage.blit(py.image.load(v.appearance["Dress"]), (0, 0))
-        v.screen.blit(self.sheetImage, (0, 0))
+        #v.screen.blit(self.sheetImage, (0, 0))
         self.initSheet()
     def draw(self):
         self.set_rect()

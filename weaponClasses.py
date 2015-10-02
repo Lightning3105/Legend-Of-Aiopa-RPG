@@ -239,3 +239,15 @@ class shooter(py.sprite.Sprite):
         def draw(self):
             if self.attacking:
                 v.screen.blit(self.rend, self.rect)
+
+def updateEquipped(key):
+    if not v.equipped[key] == None:
+        v.equipped[key].object.update()
+    
+def drawEquipped(key):
+    if not v.equipped[key] == None:
+        v.equipped[key].object.draw()
+
+def weaponAttack():
+    if not v.equipped["Weapon"] == None:
+        v.equipped["Weapon"].object.attacking = True

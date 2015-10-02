@@ -8,6 +8,7 @@ from os import listdir
 
 import Map
 import spellClasses
+import weaponClasses
 import itemClasses
 from pygame.color import Color as colour
 import sys
@@ -115,7 +116,10 @@ def game():
     map = guiClasses.miniMap()
     
     v.inventory = inventoryScreen.inventory()
-    v.inventory.contents.append(itemClasses.item("Thing", py.image.load("Resources/Images/Sword_1.png")))
+    v.inventory.add(itemClasses.item("Thing", py.image.load("Resources/Images/XPOrb.png")))
+    v.inventory.add(itemClasses.weapon("Magic Orb", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[56], "manaOrb", "Resources/Images/castOrbPurple.png", {"Damage":2, "Knockback": 10}))
+    v.inventory.add(itemClasses.weapon("Broken Sword", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[0], "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10}))
+    v.inventory.add(itemClasses.weapon("Short Bow", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[72], "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10}))
     
     while True:
         if not v.PAUSED:
@@ -129,7 +133,7 @@ def game():
             v.allTiles.update()
             v.allTiles.draw(v.screen)
             v.p_class.draw()
-            v.equipped["Weapon"].object.update()
+            weaponClasses.updateEquipped("Weapon")
             v.equippedSpells.update()
             v.allNpc.update()
             v.allNpc.draw(v.screen)
@@ -138,7 +142,7 @@ def game():
             v.xpGroup.draw(v.screen)
             v.playerStopped = False
             v.playerActing = False
-            v.equipped["Weapon"].object.draw()
+            weaponClasses.drawEquipped("Weapon")
             v.equippedSpells.draw(v.screen)
             v.particles.update()
             #v.hits.draw(v.screen)
@@ -159,7 +163,7 @@ def game():
     
             keys_pressed = py.key.get_pressed()
             if keys_pressed[py.K_SPACE] and not v.playerActing:
-                v.equipped["Weapon"].object.attacking = True
+                weaponClasses.weaponAttack()
             if keys_pressed[py.K_KP_PLUS]:
                 map.scale += 0.1
                 map.scale = round(map.scale, 1)
@@ -215,6 +219,7 @@ def game():
                 if event.type == py.KEYDOWN:
                     if event.key == py.K_e:
                         v.PAUSED = False
+                        invScreen.save()
                         #py.time.delay(100)
             
         

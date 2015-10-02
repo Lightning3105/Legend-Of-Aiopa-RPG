@@ -11,6 +11,7 @@ class weapon():
         self.image = image
         self.attributes = attributes
         self.icon = icon
+        self.equipType = "Weapon"
         if self.attType == "swing":
             self.object = weaponClasses.Sword(self.image, self)
         if self.attType == "manaOrb":
@@ -35,3 +36,4 @@ class item():
     def __init__(self, name, icon):
         self.name = name
         self.icon = icon
+        self.equipType = "Item"

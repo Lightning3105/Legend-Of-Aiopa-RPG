@@ -10,7 +10,13 @@ class inventory():
         self.contents = []
     
     def add(self, item):
-        self.contents.append(item)
+        if not item == None:
+            if not item in self.contents:
+                self.contents.append(item)
+    
+    def remove(self, item):
+        if item in self.contents:
+            self.contents.remove(item)
 
 
 class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
@@ -33,6 +39,12 @@ class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
         self.inventorySlots.update()
         self.equippedSlots.update()
         self.drag()
+    
+    def save(self):
+            for thing in self.inventorySlots:
+                thing.save()
+            for thing in self.equippedSlots:
+                thing.save()
         
         
     def grey(self):
@@ -67,7 +79,11 @@ class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
             self.size = (50, 50)
             self.master = master
             self.slot = slot
-            self.ID = "Equipped"
+            self.equipType = slot
+        
+        def save(self):
+            v.equipped[self.slot] = self.item
+            v.inventory.remove(self.item)
             
         
         def update(self):
@@ -97,6 +113,7 @@ class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
                             self.master.grabbedOrigin = self
         
         
+        
     
     class inventorySlot(py.sprite.Sprite):
         
@@ -110,7 +127,10 @@ class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
                 self.item = v.inventory.contents[self.slotNum]
             except:
                 self.item = None
-            self.ID = "Inventory"
+            self.equipType = "Item"
+        
+        def save(self):
+            v.inventory.add(self.item)
         
         def update(self):
             if self.item == None:
@@ -164,11 +184,13 @@ class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
             for event in v.events:
                 if event.type == py.MOUSEBUTTONUP:
                     if not self.hovering == None:
-                        old = self.grabbed
-                        self.grabbedOrigin.item = self.hovering.item
-                        self.hovering.item = old
-                        self.grabbed = None
-                    if self.hovering == None:
-                        self.grabbed = None
+                        if self.grabbed.equipType == self.hovering.equipType or self.hovering.equipType == "Item":
+                            old = self.grabbed
+                            self.grabbedOrigin.item = self.hovering.item
+                            self.hovering.item = old
+                            self.grabbed = None
+            if not py.mouse.get_pressed()[0]:
+                self.grabbed = None
+                self.grabbedOrigin = None
                                        
         

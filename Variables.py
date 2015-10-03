@@ -12,6 +12,7 @@ xpMod = 1.5
 hitList = None
 allTiles = None
 allNpc = None
+npcID = 1
 damagesNPCs = None
 droppedItems = None
 scale = 2

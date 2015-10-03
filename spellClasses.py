@@ -88,11 +88,11 @@ class beam(py.sprite.Sprite):
                         self.sizeCyclePos -= 10
                         if self.sizeCyclePos < 0:
                             self.sizeCyclePos = 0
-            for thing in v.allNpc:
+            """for thing in v.allNpc:
                 if self.rect.colliderect(thing.rect):
                     self.sizeCyclePos -= 10
                     if self.sizeCyclePos < 0:
-                        self.sizeCyclePos = 0
+                        self.sizeCyclePos = 0"""
             
             self.rect.centery += int(5 * v.scale)
         else:

@@ -9,7 +9,8 @@ class weapon():
         self.name = name
         self.attType = attType
         self.image = image
-        self.attributes = attributes
+        self.attributes = {"Damage": 0, "Knockback": 1, "InvulnMod": 1}
+        self.attributes.update(attributes)
         self.icon = icon
         self.equipType = "Weapon"
         if self.attType == "swing":
@@ -26,7 +27,8 @@ class spell():
         self.spellType = spellType
         self.spellImage = spellImage
         self.castImage = castImage
-        self.attributes = attributes
+        self.attributes = {"Damage": 0, "Knockback": 1, "InvulnMod": 1}
+        self.attributes.update(attributes)
         if self.spellType == "beam":
             self.object = spellClasses.beam(self.spellImage, self.castImage, self)
             v.equippedSpells.add(self.object)

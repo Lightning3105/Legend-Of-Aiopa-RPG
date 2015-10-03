@@ -88,7 +88,7 @@ def update_mana():
                 v.playerMana += ((v.Attributes["Max Mana"]/200) + (v.Attributes["Magical Strength"]/100)) / 4 #TODO: Turn into proper function
     if v.playerMana > v.Attributes["Max Mana"]:
         v.playerMana = v.Attributes["Max Mana"]
-    #v.playerMana = int(v.playerMana)
+    v.playerMana = round(v.playerMana, 3)
         
     print(v.playerMana)
 

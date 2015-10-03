@@ -98,7 +98,7 @@ def game():
     v.currentSpells = py.sprite.Group()
     v.equippedSpells = py.sprite.Group()
     
-    fb = itemClasses.spell("Fire Beam", "beam", "Resources/Images/fireBeam.png", "Resources/Images/redCastCircle.png", {"Damage": 3, "Knockback": "S", "Cooldown": 5, "Mana": 10})
+    fb = itemClasses.spell("Fire Beam", "beam", "Resources/Images/fireBeam.png", "Resources/Images/redCastCircle.png", {"Damage": 0.2, "Knockback": "S", "Cooldown": 5, "Mana": 10, "InvulnMod": 0})
     
     abilityButtons = py.sprite.Group()
     abilityButtons.add(guiClasses.ability(fb, "Resources/Images/Spell Icons/fireBeam.png", 0))

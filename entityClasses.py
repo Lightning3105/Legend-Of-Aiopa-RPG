@@ -332,7 +332,6 @@ class NPC(py.sprite.Sprite):
         self.view = "DownC"
         self.moving = False
         self.movFlip = True
-        self.pf_tried = []
         self.sheetImage = "Resources/Images/Generic Goblin.png"
         self.maxHealth = health
         self.health = health
@@ -350,6 +349,8 @@ class NPC(py.sprite.Sprite):
         self.initSheet()
         #v.hitList.add(self)
         self.ID = "npc"
+        self.npcID = v.npcID
+        v.npcID += 1
         self.rect = py.Rect(0, 0, 0, 0)
         self.stopped = False
 
@@ -407,15 +408,41 @@ class NPC(py.sprite.Sprite):
             self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
             self.rect.height = 27 * v.scale
             self.rect.width = 21 * v.scale
-            for thing in v.hitList:
-                if self.rect.colliderect(thing.rect) == True or self.rect.colliderect(v.p_class.rect) == True:
-                    self.posx = self.prevX
-                    self.posy = self.prevY
-                    self.pf_tried.append((self.posx, self.posy))
-                    self.moving = False
-                    self.view = self.direction + "C"
-                    self.image = self.views[self.view]
-                    self.image = py.transform.scale(self.image, (int(24 * v.scale), int(32 * v.scale)))
+            hitlist = list(v.hitList) + list(v.allNpc)
+            top = py.Rect(self.rect.topleft, (self.rect.width, 2))
+            bottom = py.Rect(self.rect.bottomleft, (self.rect.width, 2))
+            left = py.Rect(self.rect.topleft, (2, self.rect.height))
+            right = py.Rect(self.rect.topright, (2, self.rect.height))
+            yStopped = False
+            xStopped = False
+            cancel = False
+            for thing in hitlist:
+                if thing.ID == "npc":
+                    if thing.npcID == self.npcID:
+                        cancel = True
+                if not cancel:
+                    if bottom.colliderect(thing.rect) == True or bottom.colliderect(v.p_class.rect) == True:
+                        self.posy = self.prevY
+                        yStopped = True
+                        
+                    if top.colliderect(thing.rect) == True or top.colliderect(v.p_class.rect) == True:
+                        self.posy = self.prevY
+                        yStopped = True
+                        
+                    if left.colliderect(thing.rect) == True or left.colliderect(v.p_class.rect) == True:
+                        self.posx = self.prevX
+                        xStopped = True
+                        
+                    if right.colliderect(thing.rect) == True or right.colliderect(v.p_class.rect) == True:
+                        self.posx = self.prevX
+                        xStopped = True
+                        
+                    if xStopped and yStopped:
+                        print(thing)
+                        self.view = self.direction + "C"
+                        self.image = self.views[self.view]
+                        self.image = py.transform.scale(self.image, (int(24 * v.scale), int(32 * v.scale)))
+            
             if self.invulnCooldown > 0:
                 self.invulnCooldown -= 1
             elif self.invulnCooldown == 0:
@@ -423,7 +450,7 @@ class NPC(py.sprite.Sprite):
                     if self.rect.colliderect(thing.rect): # TODO: Add cooldown for damage
                         self.health -= thing.master.attributes["Damage"]
                         self.knockback = thing.master.attributes["Knockback"]
-                        self.invulnCooldown = self.invulnLength
+                        self.invulnCooldown = (self.invulnLength * thing.master.attributes["InvulnMod"]) + 1
                         self.damaged = True
             else:
                 self.invulnCooldown = 0
@@ -508,29 +535,33 @@ class NPC(py.sprite.Sprite):
             self.direction = "Left"
 
     def damage_knockback(self):
+        distance = 4
         if not self.damaged:
             self.knockback = None
         elif self.knockback == "S" and self.damaged and not self.dead:
             self.stopped = True
+        elif self.knockback < 1 and self.knockback > 0:
+            distance = self.knockback
+            self.knockback = 1
         elif self.knockback > 0 and self.damaged and not self.dead:
             self.moving = False
             self.knockback -= 1
             if self.direction == "Up":
                 self.prevX = self.posx
                 self.prevY = self.posy
-                self.posx, self.posy = (self.prevX, self.prevY - 4)
+                self.posx, self.posy = (self.prevX, self.prevY - distance)
             if self.direction == "Down":
                 self.prevX = self.posx
                 self.prevY = self.posy
-                self.posx, self.posy = (self.prevX, self.prevY + 4)
+                self.posx, self.posy = (self.prevX, self.prevY + distance)
             if self.direction == "Right":
                 self.prevX = self.posx
                 self.prevY = self.posy
-                self.posx, self.posy = (self.prevX - 4, self.prevY)
+                self.posx, self.posy = (self.prevX - distance, self.prevY)
             if self.direction == "Left":
                 self.prevX = self.posx
                 self.prevY = self.posy
-                self.posx, self.posy = (self.prevX + 4, self.prevY)
+                self.posx, self.posy = (self.prevX + distance, self.prevY)
 
     def damage_animation(self):
         if self.damaged and not self.dead:
@@ -561,18 +592,14 @@ class NPC(py.sprite.Sprite):
             surrounding.append((self.posx + -1, self.posy + 0))
             surrounding.append((self.posx + -1, self.posy + 1))
     
-            if len(self.pf_tried) == len(surrounding):
-                self.pf_tried = []
-    
             best = None
             bestDist = float("inf")
     
             for pos in surrounding:
                 dist = math.sqrt((pos[0] - v.playerPosX)**2 + (pos[1] - v.playerPosY)**2)
                 if dist < bestDist:
-                    if not pos in self.pf_tried:
-                        best = pos
-                        bestDist = dist
+                    best = pos
+                    bestDist = dist
     
             self.prevX = self.posx
             self.prevY = self.posy
@@ -587,16 +614,6 @@ class NPC(py.sprite.Sprite):
                     self.posx = self.prevX
                     self.posy = self.prevY
                     self.moving = False
-    
-            """if abs(curpos[0] - v.playerPosX) < 30: #TODO Adjust For Scale
-                if abs(curpos[1] - v.playerPosY) < 30:
-                    print("Got To Player")
-                    print(self.pf_route)
-                    self.pf_been = []
-                    break
-            if runs > 10:
-                print("Force Exit Pathfind")
-                break"""
     def move(self):
         try:
             end = (v.playerPosX, v.playerPosY)

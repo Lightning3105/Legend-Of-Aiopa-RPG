@@ -121,6 +121,8 @@ def game():
     v.inventory.add(itemClasses.weapon("Broken Sword", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[0], "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10}))
     v.inventory.add(itemClasses.weapon("Short Bow", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[72], "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10}))
     
+    v.droppedItems = py.sprite.Group()
+    entityClasses.droppedItem(itemClasses.item("Thing", py.image.load("Resources/Images/XPOrb.png")), (100, 100))
     while True:
         if not v.PAUSED:
             v.ticks += 1
@@ -140,6 +142,8 @@ def game():
             v.p_class.update()
             v.xpGroup.update()
             v.xpGroup.draw(v.screen)
+            v.droppedItems.update()
+            v.droppedItems.draw(v.screen)
             v.playerStopped = False
             v.playerActing = False
             weaponClasses.drawEquipped("Weapon")

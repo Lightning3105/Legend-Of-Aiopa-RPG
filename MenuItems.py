@@ -177,9 +177,9 @@ class characterSelector(py.sprite.Sprite):
                     if self.name == "Mage":
                         v.equipped["Weapon"] = itemClasses.weapon("Magic Orb", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[56], "manaOrb", "Resources/Images/castOrbPurple.png", {"Damage":2, "Knockback": 10})
                     if self.name == "Paladin":
-                        v.equipped["Weapon"] = itemClasses.weapon("Broken Sword", "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10})
+                        v.equipped["Weapon"] = itemClasses.weapon("Broken Sword", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[0], "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10})
                     if self.name == "Ranger":
-                        v.equipped["Weapon"] = itemClasses.weapon("Short Bow", "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10})
+                        v.equipped["Weapon"] = itemClasses.weapon("Short Bow", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[72], "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10})
                     v.custimizationStage = "To Attributes"
                     v.Attributes = v.classAttributes[v.playerClass]
                 if event.type == py.USEREVENT: 

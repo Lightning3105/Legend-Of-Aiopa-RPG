@@ -13,6 +13,8 @@ class inventory():
         if not item == None:
             if not item in self.contents:
                 self.contents.append(item)
+                return True
+        return False
     
     def remove(self, item):
         if item in self.contents:

@@ -13,6 +13,7 @@ hitList = None
 allTiles = None
 allNpc = None
 damagesNPCs = None
+droppedItems = None
 scale = 2
 screen = None
 ticks = 0

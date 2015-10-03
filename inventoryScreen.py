@@ -1,6 +1,7 @@
 import Variables as v
 import pygame as py
 import entityClasses
+from random import randint
 
 
 class inventory():
@@ -30,6 +31,7 @@ class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
         self.inventorySlots = py.sprite.Group()
         for i in range(0, 24):
             self.inventorySlots.add(self.inventorySlot(i, self))
+        self.inventorySlots.add(self.discardSlot(self))
         self.equippedSlots = py.sprite.Group()
         self.equippedSlots.add(self.equippedSlot("Weapon", self))
     
@@ -172,7 +174,44 @@ class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
                             self.master.grabbedOrigin = self
             except:
                 pass
+            
+    class discardSlot(py.sprite.Sprite):
         
+        def __init__(self, master):
+            super().__init__()
+            self.size = (50, 50)
+            self.hovered = False
+            self.master = master
+            self.equipType = "Item"
+            self.item = None
+        
+        def save(self):
+            pass
+        
+        def update(self):
+            image = py.image.load("Resources/Images/Inventory Icons/Discard.png").convert_alpha()
+            
+            posx = 229
+            posy = 350
+            
+            pos = (posx, posy)
+            image = py.transform.scale(image, self.size)
+            
+            rect = py.Rect(pos, self.size)
+            py.draw.rect(v.screen, (255, 0, 0), rect, 2)
+            
+            if rect.collidepoint(py.mouse.get_pos()):
+                self.hovered = True
+                self.master.hovering = self
+                image.fill((200, 0, 0), special_flags=py.BLEND_RGBA_MULT)
+            else:
+                self.hovered = False
+                image.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)
+            v.screen.blit(image, pos)
+            if not self.item == None:
+                v.inventory.remove(self.item)
+                entityClasses.droppedItem(self.item, (v.playerPosX + randint(-5, 5), v.playerPosY + randint(-5, 5)))
+                self.item = None
         
     def drag(self):
         if not self.grabbed == None:

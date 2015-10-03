@@ -125,15 +125,19 @@ def game():
     entityClasses.droppedItem(itemClasses.item("Thing", py.image.load("Resources/Images/XPOrb.png")), (100, 100))
     while True:
         if not v.PAUSED:
+            #print([i.name for i in v.inventory.contents ])
             v.ticks += 1
             #print(v.clock.get_fps())
             v.screen.fill(colour("Dark Green"))
             py.event.pump()
+            v.actionsDone = []
             v.events = []
             v.events = py.event.get()
             v.clock.tick(30)
             v.allTiles.update()
             v.allTiles.draw(v.screen)
+            v.droppedItems.update()
+            v.droppedItems.draw(v.screen)
             v.p_class.draw()
             weaponClasses.updateEquipped("Weapon")
             v.equippedSpells.update()
@@ -142,8 +146,6 @@ def game():
             v.p_class.update()
             v.xpGroup.update()
             v.xpGroup.draw(v.screen)
-            v.droppedItems.update()
-            v.droppedItems.draw(v.screen)
             v.playerStopped = False
             v.playerActing = False
             weaponClasses.drawEquipped("Weapon")
@@ -152,6 +154,7 @@ def game():
             #v.hits.draw(v.screen)
             guiClasses.update_health()
             guiClasses.update_mana()
+            guiClasses.actionText()
             xp.update()
             weaponSlot.draw()
             abilityButtons.update()

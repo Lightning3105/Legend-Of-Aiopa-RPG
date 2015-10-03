@@ -676,7 +676,7 @@ class xp(py.sprite.Sprite):
             self.wait -= 1
         
         if abs(self.posx - v.playerPosX) < 20:
-            if abs(self.posy - v.playerPosY) < 20:
+            if abs(self.posy - v.playerPosY) < 30:
                 v.xpGroup.remove(self)
                 v.experience["XP"] += self.amount
         
@@ -692,12 +692,37 @@ class droppedItem(py.sprite.Sprite):
         self.posx = pos[0]
         self.posy = pos[1]
         v.droppedItems.add(self)
+        self.justNear = False
     def update(self):
         self.image = py.transform.scale(self.item.icon, (25, 25))
         self.rect = self.image.get_rect()
         self.rect.centerx = v.screen.get_rect()[2] / 2 + int((-v.playerPosX + self.posx) * v.scale)
         self.rect.centery = v.screen.get_rect()[3] / 2 - int((-v.playerPosY + self.posy) * v.scale)
+        actionString = "Pickup " + str(self.item.name) + " - Press F"
         if abs(self.posx - v.playerPosX) < 20:
-            if abs(self.posy - v.playerPosY) < 20:
-                if v.inventory.add(self.item) == True:
-                    v.droppedItems.remove(self)
+            if abs(self.posy - v.playerPosY) < 30:
+                self.justNear = True
+                if not actionString in v.actionQueue:
+                    v.actionQueue.append(actionString)
+                for event in v.events:
+                    if event.type == py.KEYDOWN:
+                        if event.key == py.K_f and not "F" in v.actionsDone:
+                            v.actionsDone.append("F")
+                            if v.actionQueue[0] == actionString:
+                                if v.inventory.add(self.item) == True:
+                                    v.droppedItems.remove(self)
+                                    v.actionQueue.remove(actionString)
+            else:
+                try:
+                    if self.justNear:
+                        v.actionQueue.remove(actionString)
+                        self.justNear = False
+                except:
+                    pass
+        else:
+            try:
+                if self.justNear:
+                    v.actionQueue.remove(actionString)
+                    self.justNear = False
+            except:
+                    pass

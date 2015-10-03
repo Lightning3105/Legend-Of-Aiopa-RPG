@@ -251,4 +251,11 @@ class miniMap:
                     self.tileScale = 0.1
                 if self.tileScale >= 7:
                     self.tileScale = 7
-        
+
+def actionText():
+    if not v.actionQueue == []:
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
+        label = font.render(v.actionQueue[0], 1, (255, 255, 255))
+        posy = 380
+        posx = (v.screen.get_rect()[2]/2) - (font.size(v.actionQueue[0])[0] / 2)
+        v.screen.blit(label, (posx, posy))

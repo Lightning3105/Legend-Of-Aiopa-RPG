@@ -18,15 +18,17 @@ class beam(py.sprite.Sprite):
         self.master = master
         self.coolDownTime = master.attributes["Cooldown"]
         self.coolDown = self.coolDownTime
+        self.firstTime = True
     
     def update(self):
         if self.attacking:
             v.playerStopped = True
             v.playerActing = True
-            if self.aniCyclePos == 11:
+            if self.firstTime:
                 self.direction = v.playerDirection
                 v.damagesNPCs.add(self)
                 v.playerMana -= self.master.attributes["Mana"]
+                self.firstTime = False
             if self.aniCyclePos <= 11 and self.aniCyclePos > 3:
                 self.image = self.castSheet.images[8 - (self.aniCyclePos - 3)]
             if self.aniCyclePos <= 3:
@@ -39,6 +41,7 @@ class beam(py.sprite.Sprite):
                 self.attCyclePos += 1
             if self.attCyclePos >= 30:
                 self.attacking = False
+                self.firstTime = True
                 self.coolDown = 0
                 self.aniCyclePos = 11
                 self.sizeCyclePos = 0

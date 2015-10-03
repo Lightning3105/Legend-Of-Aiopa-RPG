@@ -495,7 +495,7 @@ class NPC(py.sprite.Sprite):
             if self.damage_alpha <= 0:
                 v.allNpc.remove(self)
                 for i in range(5):
-                    v.xpGroup.add(xp(self.posx + randint(-10, 10), self.posy + randint(-10, 10), 3))
+                    v.xpGroup.add(xp(self.posx + randint(-10, 10), self.posy + randint(-10, 10), 1))
 
     def get_direction(self):
         if self.posy - v.playerPosY < -25:

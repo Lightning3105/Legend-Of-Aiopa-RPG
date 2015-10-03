@@ -82,6 +82,15 @@ class mana:
 def update_mana():
     for n in range(1, 6):
         mana(n).draw()
+    for event in v.events:
+        if event.type == py.USEREVENT + 1:
+            if v.playerMana < v.Attributes["Max Mana"]:
+                v.playerMana += ((v.Attributes["Max Mana"]/200) + (v.Attributes["Magical Strength"]/100)) / 4 #TODO: Turn into proper function
+    if v.playerMana > v.Attributes["Max Mana"]:
+        v.playerMana = v.Attributes["Max Mana"]
+    #v.playerMana = int(v.playerMana)
+        
+    print(v.playerMana)
 
 class weaponSlot:
 

@@ -51,8 +51,6 @@ def mainMenu():
 def game():
     py.init()
     v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
-    v.screen.fill(colour("Green"))
-    v.screen.fill(colour("Red"))
     
     v.playerHealth = v.Attributes["Max Health"]
     v.playerMana = v.Attributes["Max Mana"]
@@ -77,13 +75,6 @@ def game():
     v.allTiles = py.sprite.Group()
     Map.generateMap(v.map1, tileset)
     #v.damagesNPCs = py.sprite.Group()
-    sword = itemClasses.weapon("Broken Sword", "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10})
-    orb = itemClasses.weapon("Magic Orb", "manaOrb", "Resources/Images/castOrbPurple.png", {"Damage":2, "Knockback": 10})
-    arrow = itemClasses.weapon("Bow and Arrow", "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10})
-    #v.equipped["Weapon"] = arrow
-    #v.cur_weapon = entityClasses.Sword()
-    #v.cur_weapon.image = "Resources/Images/Sword_1.png"
-    #v.cur_weapon.get_rend()
     
     v.hits = py.sprite.Group()
     v.hits.add(entityClasses.HitBox("Right"))
@@ -95,7 +86,10 @@ def game():
 
     v.particles = py.sprite.Group()
 
-    npc = entityClasses.NPC("Groblin Lvl. 1", 100, 100, 5)
+    entityClasses.NPC("Groblin Lvl. 1", 100, 100, 5)
+    entityClasses.NPC("Groblin Lvl. 1", 100, -100, 5)
+    entityClasses.NPC("Groblin Lvl. 1", -100, 100, 5)
+    entityClasses.NPC("Groblin Lvl. 1", -100, -100, 5)
     
     #v.Attributes.update(v.classAttributes["Paladin"]) # TODO: Remove when done
     

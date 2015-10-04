@@ -61,10 +61,10 @@ def game():
     py.time.set_timer(py.USEREVENT + 1, 50) # Spell animation
     py.time.set_timer(py.USEREVENT + 2, 1000) #One second
 
-    tileset = entityClasses.SpriteSheet("Resources/Images/Tilesets/Outside_A2.png", 12, 16)
+    tileset = entityClasses.SpriteSheet("Resources/Images/Main_Tileset.png", 32, 63)
     v.hitList = py.sprite.Group()
     v.allTiles = py.sprite.Group()
-    Map.generateMap(map.Maps, tileset)
+    Map.generateMap(Map.Maps, tileset)
     #v.damagesNPCs = py.sprite.Group()
     
     v.hits = py.sprite.Group()

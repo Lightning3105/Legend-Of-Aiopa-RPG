@@ -10,7 +10,7 @@ class tile(py.sprite.Sprite):
         self.image = py.Surface((30, 30))
         self.image.fill((100, 0, 255))
         self.tileNumber = -1
-        self.sheetNum = 0
+        self.sheetNum = 326
     
     def update(self):
         self.rect = py.Rect(0, 0, 30 * scale, 30 * scale)
@@ -38,6 +38,7 @@ class tile(py.sprite.Sprite):
             if self.hovered:
                 if py.mouse.get_pressed()[0]:
                     self.sheetNum = selected
+                    print(selected)
         
         
 class image(py.sprite.Sprite):
@@ -88,6 +89,16 @@ def getGrid(tileset):
             all.append(image)
     return all
 
+def save():
+    outMap = []
+    for y in range(size[1]):
+        outMap.append([])
+        for x in range(size[0]):
+            outMap[y].append("")
+    for tile in tiles:
+        outMap[tile.posy][tile.posx] = tile.sheetNum
+    return outMap
+
 py.init()
 
 screen = py.display.set_mode((1000, 600), py.DOUBLEBUF)
@@ -125,7 +136,7 @@ while True:
     pallet.fill((255, 255, 255))
     tiles.update()
     palletImages.update()
-    print(clock.get_fps())
+    #print(clock.get_fps())
 
     keysPressed = py.key.get_pressed()
     speed = 20
@@ -146,6 +157,13 @@ while True:
             scale = round(scale, 1)
             if scale <= 0.1:
                 scale = 0.1
+        if event.type == py.KEYDOWN:
+            if event.key == py.K_RETURN:
+                outMap = save()
+                print("[")
+                for i in outMap:
+                    print(str(i) + ",")
+                print("]")
     screen.blit(map, (0, 0))
     screen.blit(pallet, (600, 0))
     py.display.flip()

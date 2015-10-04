@@ -63,17 +63,8 @@ def game():
 
     tileset = entityClasses.SpriteSheet("Resources/Images/Tilesets/Outside_A2.png", 12, 16)
     v.hitList = py.sprite.Group()
-    v.map1 = [["0","0","0","0","0","0","0","0","0","0"],
-            ["0","0","0","0","0","0","0","0","0","0"],
-            ["0","0","0","#44","#13","#13","#13","#45","0","0"],
-            ["0","0","0","0","0","0","0","#44","0","0"],
-            ["0","0","0","0","0","0","0","0","0","0"],
-            ["0","0","0","0","0","0","0","0","0","0"],
-            ["0","0","0","0","0","0","0","0","0","0"],
-            ["0","0","0","0","0","0","0","0","0","0"],
-            ["0","0","0","0","0","0","0","0","0","0"],]
     v.allTiles = py.sprite.Group()
-    Map.generateMap(v.map1, tileset)
+    Map.generateMap(map.Maps, tileset)
     #v.damagesNPCs = py.sprite.Group()
     
     v.hits = py.sprite.Group()

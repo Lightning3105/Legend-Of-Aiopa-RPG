@@ -1,5 +1,28 @@
 import pygame as py
 
+class toggleButton(py.sprite.Sprite):
+    
+    def __init__(self, text, variable, pos):
+        super().__init__()
+        self.text = text
+        self.variable = variable
+        self.pos = pos
+    
+    def update(self):
+        text = self.text + ":" + str(globals()[self.variable])
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
+        label = font.render(text, 1, (255, 255, 255))
+        rect = label.get_rect()
+        rect.topleft = self.pos
+        py.draw.rect(options, (0, 0, 255), rect)
+        options.blit(label, self.pos)
+        if rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1] - 550)):
+            for event in events:
+                if event.type == py.MOUSEBUTTONDOWN:
+                    globals()[self.variable] = not globals()[self.variable]
+        
+
+
 
 class tile(py.sprite.Sprite):
     
@@ -11,6 +34,8 @@ class tile(py.sprite.Sprite):
         self.image.fill((100, 0, 255))
         self.tileNumber = -1
         self.sheetNum = 326
+        self.hitable = False
+        self.waiting = False
     
     def update(self):
         self.rect = py.Rect(0, 0, 30 * scale, 30 * scale)
@@ -26,7 +51,11 @@ class tile(py.sprite.Sprite):
             map.blit(self.image, self.rect)
             
             if not scale < 0.5:
-                py.draw.rect(map, (0, 0, 0), self.rect, 1)
+                if self.hitable:
+                    c = (255, 0, 0)
+                else:
+                    c = (0, 0, 0)
+                py.draw.rect(map, c, self.rect, 1)
         
             if self.rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1])):
                 self.hovered = True
@@ -37,8 +66,13 @@ class tile(py.sprite.Sprite):
                 self.hovered = False
             if self.hovered:
                 if py.mouse.get_pressed()[0]:
-                    self.sheetNum = selected
-                    print(selected)
+                    if not editHitable:
+                        self.sheetNum = selected
+                    elif not self.waiting:
+                        self.hitable = not self.hitable
+                        self.waiting = True
+            if not py.mouse.get_pressed()[0]:
+                self.waiting = False
         
         
 class image(py.sprite.Sprite):
@@ -47,7 +81,7 @@ class image(py.sprite.Sprite):
         super().__init__()
         self.image = py.transform.scale(tileImages[slotNum], (10, 10))
         self.posx = (slotNum % 32) * 10
-        self.posy = round((slotNum / 31.5) - (0.5 + (slotNum / 31.5)/10), 0) * 10
+        self.posy = int((slotNum / 32)) * 10
         self.slotNum = slotNum
         self.hovered = False
     
@@ -96,21 +130,27 @@ def save():
         for x in range(size[0]):
             outMap[y].append("")
     for tile in tiles:
-        outMap[tile.posy][tile.posx] = tile.sheetNum
+        if tile.hitable:
+            h = "#"
+        else:
+            h = ""
+        outMap[tile.posy][tile.posx] = h + str(tile.sheetNum)
     return outMap
 
 py.init()
 
-screen = py.display.set_mode((1000, 600), py.DOUBLEBUF)
+screen = py.display.set_mode((920, 630), py.DOUBLEBUF)
 
 map = py.Surface((600, 550))
-pallet = py.Surface((400, 600))
+pallet = py.Surface((400, 630))
+options = py.Surface((1000, 80))
 
-size = (100, 100)
+size = (50, 50)
 scrollX = 0
 scrollY = 0
 scale = 1
 selected = 0
+editHitable = False
 
 tiles = py.sprite.Group()
 for x in range(size[0]):
@@ -126,6 +166,9 @@ clock = py.time.Clock()
 
 py.time.set_timer(py.USEREVENT, 1000) #1 sec delay
 
+buttons = py.sprite.Group()
+buttons.add(toggleButton("Hitable", "editHitable", (10, 10)))
+
 while True:
     py.event.pump()
     events = []
@@ -134,8 +177,10 @@ while True:
     screen.fill((255, 255, 255))
     map.fill((0, 0, 255))
     pallet.fill((255, 255, 255))
+    options.fill((0, 255, 255))
     tiles.update()
     palletImages.update()
+    buttons.update()
     #print(clock.get_fps())
 
     keysPressed = py.key.get_pressed()
@@ -165,5 +210,6 @@ while True:
                     print(str(i) + ",")
                 print("]")
     screen.blit(map, (0, 0))
+    screen.blit(options, (0, 550))
     screen.blit(pallet, (600, 0))
     py.display.flip()

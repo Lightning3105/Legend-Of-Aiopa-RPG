@@ -90,7 +90,7 @@ def update_mana():
         v.playerMana = v.Attributes["Max Mana"]
     v.playerMana = round(v.playerMana, 3)
         
-    print(v.playerMana)
+    #print(v.playerMana)
 
 class weaponSlot:
 
@@ -223,10 +223,11 @@ class miniMap:
             x = tile.tilePosX
             y = tile.tilePosY
             size = (int(30/self.scale), int(30/self.scale))
-            image = py.transform.scale(tile.image, size)
             pos = (self.size[0] / 2 + ((-v.playerPosX / self.scale) + (int(30 / self.scale) * x)) - (22 / self.scale), self.size[1] / 2 + ((v.playerPosY / self.scale) + (int(30 / self.scale) * y)) - (30 / self.scale))
             rect = py.Rect(pos, size)
-            self.map.blit(image, rect)
+            if rect.colliderect(self.map.get_rect()):
+                image = py.transform.scale(tile.image, size)
+                self.map.blit(image, rect)
         py.draw.rect(self.map, (255, 0, 0), (self.size[0]/2 - (22 / self.scale) / 2, self.size[1]/2 - (30 / self.scale) / 2, 15 / self.scale, 20 / self.scale))
         
         v.screen.blit(self.map, self.pos)

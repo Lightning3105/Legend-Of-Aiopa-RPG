@@ -289,21 +289,23 @@ class Tile(py.sprite.Sprite):
             v.hitList.add(self)
         v.allTiles.add(self)
         self.ID = "tile"
-
-    def draw(self):
-        self.set_rect()
-        v.screen.blit(self.rend, self.rect)
-        
+        self.oldScale = "Nope"  
+        self.oldx = "Nope"
+        self.oldy = "Nope"   
 
     def update(self):
-        self.image = py.transform.scale(self.skin, (int(30 * v.scale), int(30 * v.scale)))
-        self.rect = self.image.get_rect()
-        self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (30 * self.tilePosX)) * v.scale)
-        self.rect.centery = v.screen.get_rect()[3] / 2 + ((v.playerPosY + (30 * self.tilePosY)) * v.scale)
-        
-        #self.rect.width = self.rect.width * v.scale
-        #self.rect.height = self.rect.height * v.scale
-
+        if not self.oldScale == v.scale:
+            self.rect = py.Rect(0, 0, int(30 * v.scale), int(30 * v.scale))
+            self.image = py.transform.scale(self.skin, (int(30 * v.scale), int(30 * v.scale)))
+            self.oldScale = v.scale
+        if not self.oldx == v.playerPosX:
+            self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (30 * self.tilePosX)) * v.scale)
+            self.oldx = v.playerPosX
+        if not self.oldy == v.playerPosY:
+            self.rect.centery = v.screen.get_rect()[3] / 2 + ((v.playerPosY + (30 * self.tilePosY)) * v.scale)
+            self.oldy = v.playerPosY
+        if self.rect.colliderect(v.screen.get_rect()):
+            v.screen.blit(self.image, self.rect)
 def rot_center(image, angle):
     """rotate an image while keeping its center and size"""
     orig_rect = image.get_rect()
@@ -438,7 +440,7 @@ class NPC(py.sprite.Sprite):
                         xStopped = True
                         
                     if xStopped and yStopped:
-                        print(thing)
+                        #print(thing)
                         self.view = self.direction + "C"
                         self.image = self.views[self.view]
                         self.image = py.transform.scale(self.image, (int(24 * v.scale), int(32 * v.scale)))

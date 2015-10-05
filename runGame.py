@@ -1,5 +1,7 @@
 import gameScreens
+import pstats
+import cProfile
 if __name__ == "__main__":
-    gameScreens.mainMenu()
+    cProfile.run("gameScreens.mainMenu()", "Out.txt")
     
-    gameScreens.game()
+    #gameScreens.game()

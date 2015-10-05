@@ -13,6 +13,7 @@ import itemClasses
 from pygame.color import Color as colour
 import sys
 import inventoryScreen
+import time
 def mainMenu():
     py.init()
     v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
@@ -61,10 +62,11 @@ def game():
     py.time.set_timer(py.USEREVENT + 1, 50) # Spell animation
     py.time.set_timer(py.USEREVENT + 2, 1000) #One second
 
-    tileset = entityClasses.SpriteSheet("Resources/Images/Main_Tileset.png", 32, 63)
+    tileset = entityClasses.SpriteSheet("Resources/Images/Main_Tileset.png", 63, 32)
     v.hitList = py.sprite.Group()
     v.allTiles = py.sprite.Group()
     Map.generateMap(Map.Maps, tileset)
+    #py.time.wait(5000)
     #v.damagesNPCs = py.sprite.Group()
     
     v.hits = py.sprite.Group()
@@ -77,9 +79,9 @@ def game():
 
     v.particles = py.sprite.Group()
 
-    entityClasses.NPC("Groblin Lvl. 1", 100, 100, 5)
+    """entityClasses.NPC("Groblin Lvl. 1", 100, 100, 5)
     entityClasses.NPC("Groblin Lvl. 1", 100, -100, 5)
-    entityClasses.NPC("Groblin Lvl. 1", -100, 100, 5)
+    entityClasses.NPC("Groblin Lvl. 1", -100, 100, 5)"""
     entityClasses.NPC("Groblin Lvl. 1", -100, -100, 5)
     
     #v.Attributes.update(v.classAttributes["Paladin"]) # TODO: Remove when done
@@ -112,7 +114,7 @@ def game():
         if not v.PAUSED:
             #print([i.name for i in v.inventory.contents ])
             v.ticks += 1
-            #print(v.clock.get_fps())
+            print(v.clock.get_fps())
             v.screen.fill(colour("Dark Green"))
             py.event.pump()
             v.actionsDone = []
@@ -120,7 +122,7 @@ def game():
             v.events = py.event.get()
             v.clock.tick(30)
             v.allTiles.update()
-            v.allTiles.draw(v.screen)
+            #v.allTiles.draw(v.screen)
             v.droppedItems.update()
             v.droppedItems.draw(v.screen)
             v.p_class.draw()
@@ -149,6 +151,7 @@ def game():
             py.display.flip()
             for event in v.events:
                 if event.type == py.QUIT:
+                    print(v.testing)
                     sys.exit()
                 elif event.type==py.VIDEORESIZE:
                     v.screen = py.display.set_mode(event.dict['size'],py.HWSURFACE|py.DOUBLEBUF)

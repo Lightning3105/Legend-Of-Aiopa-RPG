@@ -10,7 +10,7 @@ class toggleButton(py.sprite.Sprite):
     
     def update(self):
         text = self.text + ":" + str(globals()[self.variable])
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
         label = font.render(text, 1, (255, 255, 255))
         rect = label.get_rect()
         rect.topleft = self.pos
@@ -26,16 +26,21 @@ class toggleButton(py.sprite.Sprite):
 
 class tile(py.sprite.Sprite):
     
-    def __init__(self, posx, posy):
+    def __init__(self, posx, posy, layer):
         super().__init__()
         self.posx = posx
         self.posy = posy
         self.image = py.Surface((30, 30))
         self.image.fill((100, 0, 255))
         self.tileNumber = -1
-        self.sheetNum = 326
         self.hitable = False
         self.waiting = False
+        self.topLayer = layer
+        if not self.topLayer:
+            self.sheetNum = 326
+        else:
+            self.sheetNum = "-"
+        tiles.add(self)
     
     def update(self):
         self.rect = py.Rect(0, 0, 30 * scale, 30 * scale)
@@ -46,9 +51,13 @@ class tile(py.sprite.Sprite):
                 self.image = py.Surface((30, 30))
                 self.image.fill((100, 0, 255))
             else:
-                self.image = tileImages[self.sheetNum]
-            self.image = py.transform.scale(self.image, (int(30 * scale), int(30 * scale)))
-            map.blit(self.image, self.rect)
+                if not self.sheetNum == "-":
+                    self.image = tileImages[self.sheetNum]
+                else:
+                    self.image = py.Surface((0, 0))
+            if not self.sheetNum == "-":
+                self.image = py.transform.scale(self.image, (int(30 * scale), int(30 * scale)))
+                map.blit(self.image, self.rect)
             
             if not scale < 0.5:
                 if self.hitable:
@@ -67,10 +76,15 @@ class tile(py.sprite.Sprite):
             if self.hovered:
                 if py.mouse.get_pressed()[0]:
                     if not editHitable:
-                        self.sheetNum = selected
+                        if upperLayer == self.topLayer:
+                            self.sheetNum = selected
                     elif not self.waiting:
-                        self.hitable = not self.hitable
-                        self.waiting = True
+                        if upperLayer == self.topLayer:
+                            self.hitable = not self.hitable
+                            self.waiting = True
+                if py.mouse.get_pressed()[2]:
+                    if upperLayer == self.topLayer and self.topLayer == True:
+                        self.sheetNum = "-"
             if not py.mouse.get_pressed()[0]:
                 self.waiting = False
         
@@ -148,14 +162,18 @@ options = py.Surface((1000, 80))
 size = (50, 50)
 scrollX = 0
 scrollY = 0
-scale = 1
+scale = 2
 selected = 0
 editHitable = False
+upperLayer = False
 
+baseTiles = py.sprite.Group()
+topTiles = py.sprite.Group()
 tiles = py.sprite.Group()
 for x in range(size[0]):
     for y in range(size[1]):
-        tiles.add(tile(x, y))
+        baseTiles.add(tile(x, y, False))
+        topTiles.add(tile(x, y, True))
 
 palletImages = py.sprite.Group()
 tileImages = getGrid(tileset)
@@ -167,7 +185,8 @@ clock = py.time.Clock()
 py.time.set_timer(py.USEREVENT, 1000) #1 sec delay
 
 buttons = py.sprite.Group()
-buttons.add(toggleButton("Hitable", "editHitable", (10, 10)))
+buttons.add(toggleButton("Hitable", "editHitable", (10, 20)))
+buttons.add(toggleButton("Edit Top Layer", "upperLayer", (150, 20)))
 
 while True:
     py.event.pump()
@@ -178,7 +197,8 @@ while True:
     map.fill((0, 0, 255))
     pallet.fill((255, 255, 255))
     options.fill((0, 255, 255))
-    tiles.update()
+    baseTiles.update()
+    topTiles.update()
     palletImages.update()
     buttons.update()
     #print(clock.get_fps())

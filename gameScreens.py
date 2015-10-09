@@ -79,10 +79,7 @@ def game():
 
     v.particles = py.sprite.Group()
 
-    """entityClasses.NPC("Groblin Lvl. 1", 100, 100, 5)
-    entityClasses.NPC("Groblin Lvl. 1", 100, -100, 5)
-    entityClasses.NPC("Groblin Lvl. 1", -100, 100, 5)"""
-    entityClasses.NPC("Groblin Lvl. 1", -100, -100, 5)
+    entityClasses.Enemy(-100, -100, {"Name": "Groblin Lvl. 1", "Health":5, "Attack":5})
     
     #v.Attributes.update(v.classAttributes["Paladin"]) # TODO: Remove when done
     
@@ -114,7 +111,6 @@ def game():
         if not v.PAUSED:
             #print([i.name for i in v.inventory.contents ])
             v.ticks += 1
-            print(v.clock.get_fps())
             v.screen.fill(colour("Dark Green"))
             py.event.pump()
             v.actionsDone = []
@@ -151,7 +147,6 @@ def game():
             py.display.flip()
             for event in v.events:
                 if event.type == py.QUIT:
-                    print(v.testing)
                     sys.exit()
                 elif event.type==py.VIDEORESIZE:
                     v.screen = py.display.set_mode(event.dict['size'],py.HWSURFACE|py.DOUBLEBUF)
@@ -195,6 +190,8 @@ def game():
                 if event.type == py.KEYDOWN:
                     if event.key == py.K_ESCAPE:
                         v.PAUSED = False
+                if event.type == py.QUIT:
+                    sys.exit()
         if v.PAUSED and v.pauseType == "Inventory":
             if v.justPaused:
                 background = py.image.tostring(v.screen, "RGBA")
@@ -216,6 +213,8 @@ def game():
                         v.PAUSED = False
                         invScreen.save()
                         #py.time.delay(100)
+                if event.type == py.QUIT:
+                    sys.exit()
             
         
 

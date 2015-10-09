@@ -323,11 +323,12 @@ def arc(point, radius, degrees):
 def centre():
     return v.screen.get_rect()[2] / 2, v.screen.get_rect()[3] / 2
 
-class NPC(py.sprite.Sprite):
+class Enemy(py.sprite.Sprite):
 
-    def __init__(self, name, posx, posy, health):
+    def __init__(self, posx, posy, attributes={}):
         super().__init__()
-        self.name = name
+        self.attributes = attributes
+        self.name = attributes["Name"]
         self.posx = posx
         self.posy = posy
         self.direction = "Down"
@@ -335,8 +336,8 @@ class NPC(py.sprite.Sprite):
         self.moving = False
         self.movFlip = True
         self.sheetImage = "Resources/Images/Generic Goblin.png"
-        self.maxHealth = health
-        self.health = health
+        self.maxHealth = attributes["Health"]
+        self.health = attributes["Health"]
         self.invulnCooldown = 0
         self.invulnLength = 30
         self.knockback = 0
@@ -456,6 +457,8 @@ class NPC(py.sprite.Sprite):
                         self.damaged = True
             else:
                 self.invulnCooldown = 0
+            
+            self.attack()
 
         self.damage_animation()
         if self.health <= 0:
@@ -465,7 +468,7 @@ class NPC(py.sprite.Sprite):
             self.title()
 
         self.death()
-        self.attack()
+        
 
 
 
@@ -506,7 +509,7 @@ class NPC(py.sprite.Sprite):
         if abs(self.posx - v.playerPosX) < 32:
             if abs(self.posy - v.playerPosY) < 32:
                 if self.attCount <= int(7.5 * v.scale) and self.damagedPlayer == False and self.attCount > int(-10 * v.scale):
-                    v.playerHealth -= 3
+                    v.playerHealth -= self.attributes["Attack"]
                     self.damagedPlayer = True
     def death(self):
         if self.dead:
@@ -745,3 +748,10 @@ class droppedItem(py.sprite.Sprite):
                     self.justNear = False
             except:
                     pass
+
+class NPC(py.sprite.Sprite):
+    
+    def __init__(self, pos, attributes):
+        self.posx = pos[0]
+        self.posy = pos[1]
+        self.name = attributes["Name"]

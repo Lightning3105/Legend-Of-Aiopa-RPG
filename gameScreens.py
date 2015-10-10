@@ -82,6 +82,8 @@ def game():
 
     entityClasses.Enemy(-100, -100, {"Name": "Groblin Lvl. 1", "Health":5, "Attack":5})
     
+    entityClasses.NPC((200, 100, "Down"), "Resources/Images/Male_Basic.png", {"Name":"Fred"})
+    
     #v.Attributes.update(v.classAttributes["Paladin"]) # TODO: Remove when done
     
     xp = guiClasses.XP()

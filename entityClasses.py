@@ -751,7 +751,98 @@ class droppedItem(py.sprite.Sprite):
 
 class NPC(py.sprite.Sprite):
     
-    def __init__(self, pos, attributes):
+    def __init__(self, pos, image, attributes):
+        super().__init__()
         self.posx = pos[0]
         self.posy = pos[1]
+        self.direction = pos[2]
         self.name = attributes["Name"]
+        self.sheetImage = image
+        self.view = "DownC"
+        self.ID = "npc"
+        self.npcID = v.npcID
+        v.allNpc.add(self)
+        self.initSheet()
+        self.justNear = False
+    
+    def initSheet(self):
+        self.sheet = SpriteSheet(self.sheetImage, 4, 3)
+        self.sheet.getGrid()
+        self.views = {"UpL": self.sheet.images[0],
+                      "UpC": self.sheet.images[1],
+                      "UpR": self.sheet.images[2],
+                      "RightL": self.sheet.images[3],
+                      "RightC": self.sheet.images[4],
+                      "RightR": self.sheet.images[5],
+                      "DownL": self.sheet.images[6],
+                      "DownC": self.sheet.images[7],
+                      "DownR": self.sheet.images[8],
+                      "LeftL": self.sheet.images[9],
+                      "LeftC": self.sheet.images[10],
+                      "LeftR": self.sheet.images[11]}
+        
+    def get_view(self):
+        for event in v.events:
+            if event.type == py.USEREVENT:
+                if self.view == self.direction + "C":
+                    if self.movFlip:
+                        self.view = self.direction + "R"
+                        self.movFlip = not self.movFlip
+                    else:
+                        self.view = self.direction + "L"
+                        self.movFlip = not self.movFlip
+                elif self.view == self.direction + "R":
+                    self.view = self.direction + "C"
+                elif self.view == self.direction + "L":
+                    self.view = self.direction + "C"
+                else:
+                    self.view = self.direction + "C"
+        if self.moving == False:
+            self.view = self.direction + "C"
+    
+    def title(self):
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(10 * v.scale)) #TODO: Scale
+        label = font.render(self.name, 1, (255,255,255))
+        v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.top - (15 * v.scale)))
+    
+    def update(self):
+        self.image = self.views[self.view]
+        self.image = py.transform.scale(self.image, (int(24 * v.scale), int(32 * v.scale)))
+        self.rect = self.image.get_rect()
+        self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
+        self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
+        self.title()
+        if self.nearPlayer():
+            self.talk()
+    
+    def nearPlayer(self):
+        actionString = "Talk to " + str(self.name) + " - Press F"
+        if abs(self.posx - v.playerPosX) < 20:
+            if abs(self.posy - v.playerPosY) < 30:
+                self.justNear = True
+                if not actionString in v.actionQueue:
+                    v.actionQueue.append(actionString)
+                for event in v.events:
+                    if event.type == py.KEYDOWN:
+                        if event.key == py.K_f and not "F" in v.actionsDone:
+                            v.actionsDone.append("F")
+                            if v.actionQueue[0] == actionString:
+                                return True
+            else:
+                try:
+                    if self.justNear:
+                        v.actionQueue.remove(actionString)
+                        self.justNear = False
+                except:
+                    pass
+        else:
+            try:
+                if self.justNear:
+                    v.actionQueue.remove(actionString)
+                    self.justNear = False
+            except:
+                    pass
+        return False
+    
+    def talk(self):
+        pass

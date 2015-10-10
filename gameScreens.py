@@ -14,6 +14,7 @@ from pygame.color import Color as colour
 import sys
 import inventoryScreen
 import time
+from random import randint
 def mainMenu():
     py.init()
     v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
@@ -119,7 +120,11 @@ def game():
             v.actionsDone = []
             v.events = []
             v.events = py.event.get()
-            v.clock.tick(v.fpsLock)
+            v.clock.tick(30)
+            try:
+                v.fpsAdjuster = (v.fpsLock/v.clock.get_fps())
+            except:
+                v.fpsAdjuster = 1
             v.allTiles.update()
             #v.allTiles.draw(v.screen)
             v.droppedItems.update()

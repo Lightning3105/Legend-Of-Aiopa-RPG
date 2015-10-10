@@ -196,6 +196,8 @@ class Player(py.sprite.Sprite):
                 self.velY = -v.Attributes["Speed"] / 2
             if keys_pressed[py.K_w]:
                 self.velY = v.Attributes["Speed"] / 2
+            
+            
 
             if keys_pressed[py.K_s]:
                 self.direction = "Down"
@@ -213,9 +215,17 @@ class Player(py.sprite.Sprite):
                 self.moving = False
 
             #print("\n", self.velX, self.velY)
+            
+            self.velX *= v.fpsAdjuster
+            self.velY *= v.fpsAdjuster
+            #print(adjuster)
+            vx = self.velX
+            vy = self.velY
 
             for hit in v.hits:
-                self.velX, self.velY = hit.update((self.velX, self.velY))
+                velmod = hit.update()
+                self.velX += velmod[0]
+                self.velY += velmod[1]
 
             #print(self.velX, self.velY)
 
@@ -243,7 +253,7 @@ class HitBox(py.sprite.Sprite):
     def draw(self):
         py.draw.rect(v.screen, (255, 0, 0), self.rect)
 
-    def update(self, velocity): #TODO: use new positition
+    def update(self): #TODO: use new positition
         if self.side == "Top":
             self.rect = py.Rect(centre()[0] - (3 * v.scale), centre()[1] - (8 * v.scale), (8 * v.scale), (2 * v.scale))
         if self.side == "Bottom":
@@ -254,7 +264,6 @@ class HitBox(py.sprite.Sprite):
             self.rect = py.Rect(centre()[0] + (5 * v.scale), centre()[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale))
         self.image = py.Surface((self.rect.width, self.rect.height))
         self.image.fill((255, 0, 0))
-        velX, velY = velocity
         newrect = self.rect
         hit = False
         for thing in v.hitList:
@@ -263,15 +272,26 @@ class HitBox(py.sprite.Sprite):
         for thing in v.allNpc:
             if newrect.colliderect(thing.rect):
                 hit = True
+        velX = 0
+        velY = 0
         if hit:
             if self.side == "Top":
-                velY += -v.Attributes["Speed"] / 2
-            if self.side == "Bottom":
-                velY += v.Attributes["Speed"] / 2
-            if self.side == "Left":
-                velX += v.Attributes["Speed"] / 2
-            if self.side == "Right":
-                velX += -v.Attributes["Speed"] / 2
+                velY = -v.Attributes["Speed"] / 2
+            elif self.side == "Bottom":
+                velY = v.Attributes["Speed"] / 2
+            elif self.side == "Left":
+                velX = v.Attributes["Speed"] / 2
+            elif self.side == "Right":
+                velX = -v.Attributes["Speed"] / 2
+            else:
+                print("how did I get here?")
+        
+            velX *= v.fpsAdjuster
+            velY *= v.fpsAdjuster
+        else:
+            velX = 0
+            velY = 0
+        
         return velX, velY
 
 
@@ -587,15 +607,16 @@ class Enemy(py.sprite.Sprite):
 
     def pathfind(self):
         if not self.stopped:
+            distance = 1 * v.fpsAdjuster
             surrounding = []
-            surrounding.append((self.posx + 1, self.posy + -1))
-            surrounding.append((self.posx + 1, self.posy + 0))
-            surrounding.append((self.posx + 1, self.posy + 1))
-            surrounding.append((self.posx + 0, self.posy + -1))
-            surrounding.append((self.posx + 1, self.posy + 1))
-            surrounding.append((self.posx + -1, self.posy + -1))
-            surrounding.append((self.posx + -1, self.posy + 0))
-            surrounding.append((self.posx + -1, self.posy + 1))
+            surrounding.append((self.posx + distance, self.posy + -distance))
+            surrounding.append((self.posx + distance, self.posy + 0))
+            surrounding.append((self.posx + distance, self.posy + distance))
+            surrounding.append((self.posx + 0, self.posy + -distance))
+            surrounding.append((self.posx + distance, self.posy + distance))
+            surrounding.append((self.posx + -distance, self.posy + -distance))
+            surrounding.append((self.posx + -distance, self.posy + 0))
+            surrounding.append((self.posx + -distance, self.posy + distance))
     
             best = None
             bestDist = float("inf")
@@ -621,16 +642,16 @@ class Enemy(py.sprite.Sprite):
                     self.moving = False
     def move(self):
         try:
-            end = (v.playerPosX, v.playerPosY)
+            distance = 2 * v.fpsAdjuster
             surrounding = []
-            surrounding.append((self.posx + 1, self.posy + -1))
-            surrounding.append((self.posx + 1, self.posy + 0))
-            surrounding.append((self.posx + 1, self.posy + 1))
-            surrounding.append((self.posx + 0, self.posy + -1))
-            surrounding.append((self.posx + 1, self.posy + 1))
-            surrounding.append((self.posx + -1, self.posy + -1))
-            surrounding.append((self.posx + -1, self.posy + 0))
-            surrounding.append((self.posx + -1, self.posy + 1))
+            surrounding.append((self.posx + distance, self.posy + -distance))
+            surrounding.append((self.posx + distance, self.posy + 0))
+            surrounding.append((self.posx + distance, self.posy + distance))
+            surrounding.append((self.posx + 0, self.posy + -distance))
+            surrounding.append((self.posx + distance, self.posy + distance))
+            surrounding.append((self.posx + -distance, self.posy + -distance))
+            surrounding.append((self.posx + -distance, self.posy + 0))
+            surrounding.append((self.posx + -distance, self.posy + distance))
             best = None
             bestDist = float("inf")
             for pos in surrounding:

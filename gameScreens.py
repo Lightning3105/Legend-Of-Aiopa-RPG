@@ -61,6 +61,7 @@ def game():
     py.time.set_timer(py.USEREVENT, 200) # walking
     py.time.set_timer(py.USEREVENT + 1, 50) # Spell animation
     py.time.set_timer(py.USEREVENT + 2, 1000) #One second
+    #py.time.set_timer(py.USEREVENT + 3, 20) #Game Speed
 
     tileset = entityClasses.SpriteSheet("Resources/Images/Main_Tileset.png", 63, 32)
     v.hitList = py.sprite.Group()
@@ -116,7 +117,7 @@ def game():
             v.actionsDone = []
             v.events = []
             v.events = py.event.get()
-            v.clock.tick(30)
+            v.clock.tick(v.fpsLock)
             v.allTiles.update()
             #v.allTiles.draw(v.screen)
             v.droppedItems.update()
@@ -142,6 +143,7 @@ def game():
             weaponSlot.draw()
             abilityButtons.update()
             map.update()
+            guiClasses.fps()
     
             
             py.display.flip()

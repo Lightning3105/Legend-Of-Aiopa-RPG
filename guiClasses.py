@@ -269,3 +269,9 @@ def actionText():
         posy = 380
         posx = (v.screen.get_rect()[2]/2) - (font.size(v.actionQueue[0])[0] / 2)
         v.screen.blit(label, (posx, posy))
+
+def fps():
+    pos = (320, 10)
+    font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
+    label = font.render(str(int(v.clock.get_fps())), 1, (255, 0, 0))
+    v.screen.blit(label, pos)

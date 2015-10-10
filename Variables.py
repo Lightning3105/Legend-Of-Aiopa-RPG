@@ -1,4 +1,5 @@
 PAUSED = False
+fpsLock = 10
 pauseType = "Pause"
 justPaused = True
 playerPosX = 0

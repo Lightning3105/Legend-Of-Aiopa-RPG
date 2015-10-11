@@ -21,19 +21,21 @@ class conversation():
         def __init__(self, message, master):
             self.message = message
             self.master = master
-            self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
+            self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 25)
             line = []
             self.lines = []
             for word in self.message.split(" "):
                 line.append(word)
-                print(line)
-                print(self.lines)
-                if self.font.size(" ".join(line))[0] > 200:
+                #print(word)
+                if self.font.size(" ".join(line))[0] > 350:
                     line.remove(word)
                     self.lines.append(" ".join(line))
                     line = [word]
+            self.lines.append(" ".join(line))
             
             v.conversationClass = self
+            self.lineno = 0
+            self.letterno = 0
             
         
         def update(self):
@@ -41,11 +43,27 @@ class conversation():
             outerRect = py.Rect(98, 298, 404, 154)
             py.draw.rect(v.screen, py.Color(153, 76, 0), outerRect)
             py.draw.rect(v.screen, py.Color(255, 178, 102), innerRect)
-            add = 0
-            for line in self.lines:
-                label = self.font.render(" ".join(line), 1, (255, 255, 255))
-                v.screen.blit(label, (110, 310 + add))
-                add += 20
+            yadd = 0
+            for line in range(len(self.lines)):
+                if line <= self.lineno:
+                    xadd = 0
+                    for letter in range(len(self.lines[line])):
+                        if letter <= self.letterno or self.lineno > line:
+                            label = self.font.render(self.lines[line][letter], 1, (255, 255, 255))
+                            v.screen.blit(label, (110 + xadd, 310 + yadd))
+                            xadd += self.font.size(self.lines[line][letter])[0]
+                            
+                    yadd += self.font.size(self.lines[line][letter])[1]
+                
+            #print(self.lines)
+            if self.letterno < len(self.lines[self.lineno]):
+                self.letterno += 1
+            else:
+                if self.lineno < len(self.lines) - 1:
+                    self.lineno += 1
+                    self.letterno = 0
+            #py.time.wait(10)
+                
             
             for event in v.events:
                 if event.type == py.KEYDOWN:

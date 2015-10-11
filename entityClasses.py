@@ -3,6 +3,7 @@ import Variables as v
 import math
 import time
 from random import randint
+import npcScripts
 
 class SpriteSheet(object):
     """ Class used to grab images out of a sprite sheet. """
@@ -785,6 +786,8 @@ class NPC(py.sprite.Sprite):
         v.allNpc.add(self)
         self.initSheet()
         self.justNear = False
+        self.icon = None
+        self.conversation = npcScripts.conversation(self, attributes["Conversation"])
     
     def initSheet(self):
         self.sheet = SpriteSheet(self.sheetImage, 4, 3)
@@ -866,4 +869,4 @@ class NPC(py.sprite.Sprite):
         return False
     
     def talk(self):
-        pass
+        self.conversation.say()

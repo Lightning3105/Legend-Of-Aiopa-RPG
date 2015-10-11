@@ -15,6 +15,7 @@ import sys
 import inventoryScreen
 import time
 from random import randint
+import npcScripts
 def mainMenu():
     py.init()
     v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
@@ -83,7 +84,8 @@ def game():
 
     entityClasses.Enemy(-100, -100, {"Name": "Groblin Lvl. 1", "Health":5, "Attack":5})
     
-    entityClasses.NPC((200, 100, "Down"), "Resources/Images/Male_Basic.png", {"Name":"Fred"})
+    cn = {"Message": "hello there, how are you. This is a very long test message to check if this auto line return thing works."}
+    entityClasses.NPC((200, 100, "Down"), "Resources/Images/Male_Basic.png", {"Name":"Fred", "Conversation":cn})
     
     #v.Attributes.update(v.classAttributes["Paladin"]) # TODO: Remove when done
     
@@ -152,7 +154,6 @@ def game():
             map.update()
             guiClasses.fps()
     
-            
             py.display.flip()
             for event in v.events:
                 if event.type == py.QUIT:
@@ -224,7 +225,25 @@ def game():
                         #py.time.delay(100)
                 if event.type == py.QUIT:
                     sys.exit()
+        
+        if v.PAUSED and v.pauseType == "Conversation":
+            if v.justPaused:
+                background = py.image.tostring(v.screen, "RGBA")
+                v.justPaused = False
+            py.event.pump()
+            v.events = []
+            v.events = py.event.get()
+            backgroundImage = py.image.fromstring(background, (v.screen.get_rect()[2], v.screen.get_rect()[3]), "RGBA")
+            v.screen.blit(backgroundImage, (0, 0))
+            grey = py.Surface((v.screen.get_rect()[2], v.screen.get_rect()[3])).convert_alpha()
+            grey.fill((20, 20, 20, 200))
+            v.screen.blit(grey, (0, 0))
+            v.conversationClass.update()
+            py.display.flip()
             
+            for event in v.events:
+                if event.type == py.QUIT:
+                    sys.exit()    
         
 
 def classSelection():

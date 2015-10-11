@@ -15,6 +15,7 @@ hitList = None
 allTiles = None
 allNpc = None
 npcID = 1
+conversationClass = None
 damagesNPCs = None
 droppedItems = None
 scale = 2

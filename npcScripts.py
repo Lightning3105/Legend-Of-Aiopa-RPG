@@ -12,14 +12,15 @@ class conversation():
         self.place = material
     
     def say(self):
-        self.speech(self.place["Message"])
+        self.speech(self.place["Message"], self)
         v.PAUSED = True
         v.pauseType = "Conversation"
         
     
     class speech():
-        def __init__(self, message):
+        def __init__(self, message, master):
             self.message = message
+            self.master = master
             self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
             line = []
             self.lines = []
@@ -45,4 +46,14 @@ class conversation():
                 label = self.font.render(" ".join(line), 1, (255, 255, 255))
                 v.screen.blit(label, (110, 310 + add))
                 add += 20
+            
+            for event in v.events:
+                if event.type == py.KEYDOWN:
+                    if event.key == py.K_f:
+                        v.conversationClass = None
+                        try:
+                            self.master.place = self.master.place["Next"]
+                            self.master.say()
+                        except:
+                            v.PAUSED = False
             

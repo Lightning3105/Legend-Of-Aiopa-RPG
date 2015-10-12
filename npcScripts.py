@@ -36,6 +36,8 @@ class conversation():
             v.conversationClass = self
             self.lineno = 0
             self.letterno = 0
+            self.alphaCycle = 0
+            self.alphaDirection = True
             
         
         def update(self):
@@ -63,6 +65,18 @@ class conversation():
                     self.lineno += 1
                     self.letterno = 0
             #py.time.wait(10)
+            label = self.font.render("Continue - F", 1, (255, 100, 255))
+            label.fill((255, 255, 255, self.alphaCycle), special_flags=py.BLEND_RGBA_MULT)
+            v.screen.blit(label, (380, 425))
+            if self.alphaDirection:
+                self.alphaCycle += 5
+            else:
+                self.alphaCycle -= 5
+            
+            if self.alphaCycle >= 250:
+                self.alphaDirection = False
+            if self.alphaCycle <= 100:
+                self.alphaDirection = True
                 
             
             for event in v.events:

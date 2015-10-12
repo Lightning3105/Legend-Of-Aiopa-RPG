@@ -189,6 +189,7 @@ def game():
                 background = py.image.tostring(v.screen, "RGBA")
                 v.justPaused = False
             py.event.pump()
+            v.clock.tick(30)
             v.events = []
             v.events = py.event.get()
             backgroundImage = py.image.fromstring(background, (v.screen.get_rect()[2], v.screen.get_rect()[3]), "RGBA")
@@ -208,6 +209,7 @@ def game():
                 v.justPaused = False
                 invScreen = inventoryScreen.inventoryScreen()
             py.event.pump()
+            v.clock.tick(30)
             v.events = []
             v.events = py.event.get()
             
@@ -231,6 +233,7 @@ def game():
                 background = py.image.tostring(v.screen, "RGBA")
                 v.justPaused = False
             py.event.pump()
+            v.clock.tick(30)
             v.events = []
             v.events = py.event.get()
             backgroundImage = py.image.fromstring(background, (v.screen.get_rect()[2], v.screen.get_rect()[3]), "RGBA")

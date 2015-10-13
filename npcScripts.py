@@ -9,16 +9,51 @@ class conversation():
         self.npc = npc
         self.npcName = npc.name
         self.npcIcon = npc.icon
-        self.place = material
+        self.place = material["O1"]
+        self.speechOutput = None
+        self.searchDone = False
     
     def say(self):
-        self.speech(self.place["Message"], self)
         v.PAUSED = True
         v.pauseType = "Conversation"
+        print(self.speechOutput)
+        if self.speechOutput == "Next":
+            self.place = self.place["Next"]
+            self.speechOutput = None
+        if self.speechOutput == "Goto":
+            self.searchDone = False
+            self.searchTree(self.material)
+            print("DONE SEARCHING!!!!!!!!!!!!!")
+            self.speechOutput = None
+        if self.speechOutput == "End":
+            v.PAUSED = False
+            self.speechOutput = None
+        
+        self.speech(self.place["Message"], self)
+                
+    def searchTree(self, tree={}):
+        print("BEGIN#####")
+        print(tree)
+        print(type(tree))
+        for key, value in tree.items():
+            print("LOOP~~~~~~")
+            print(key, value)
+            if self.searchDone:
+                return
+            if key == "ID":
+                if value == self.place["Goto"]:
+                    self.place = tree
+                    print("DONE")
+                    self.searchDone = True
+                    return
+            if key[0] == "O":
+                self.searchTree(value)
+            
         
     
     class speech():
         def __init__(self, message, master):
+            #self.speechOutput = None
             self.message = message
             self.master = master
             self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 25)
@@ -83,9 +118,14 @@ class conversation():
                 if event.type == py.KEYDOWN:
                     if event.key == py.K_f:
                         v.conversationClass = None
-                        try:
-                            self.master.place = self.master.place["Next"]
+                        if "Next" in self.master.place:
+                            self.master.speechOutput = "Next"
+                        elif "Goto" in self.master.place:
+                            self.master.speechOutput = "Goto"
+                        else:
+                            self.mater.speechOutput = "End"
+                        if not "End" in self.master.place:
                             self.master.say()
-                        except:
+                        else:
                             v.PAUSED = False
             

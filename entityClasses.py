@@ -786,7 +786,7 @@ class NPC(py.sprite.Sprite):
         v.allNpc.add(self)
         self.initSheet()
         self.justNear = False
-        self.icon = None
+        self.icon = py.image.load("Resources/Images/NpcSkins/Faces/Basic_Man.png")
         self.conversation = npcScripts.conversation(self, attributes["Conversation"])
     
     def initSheet(self):

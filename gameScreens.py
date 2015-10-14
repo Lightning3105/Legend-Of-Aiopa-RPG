@@ -84,7 +84,7 @@ def game():
 
     entityClasses.Enemy(-100, -100, {"Name": "Groblin Lvl. 1", "Health":5, "Attack":5})
     
-    cn = {"O1": {"Message": "hello there, how are you. This is a very long test message to check if this auto line return thing works.", "ID":1, "Next":{"Message": "Apparently it does. Have a very good day, sir.", "Goto":1, "End":True}}}
+    cn = {"O1": {"Message": "hello there, how are you. This is a very long test message to check if this auto line return thing works.", "B1": {"Text": "button 1", "ID": 2}, "B2": {"Text": "Button 2", "ID": 2}, "ID":1, "Next":{"Message": "Apparently it does. Have a very good day, sir.", "Goto":1, "End":True, "ID": 2}}}
     entityClasses.NPC((0, 30, "Down"), "Resources/Images/Male_Basic.png", {"Name":"Fred", "Conversation":cn})
     
     #v.Attributes.update(v.classAttributes["Paladin"]) # TODO: Remove when done

@@ -16,6 +16,7 @@ import inventoryScreen
 import time
 from random import randint
 import npcScripts
+#Possibly devastating changes incoming.
 def mainMenu():
     py.init()
     if v.fullScreen:

@@ -25,7 +25,7 @@ def mainMenu():
     buttons.add(MenuItems.Button("New Game", (160, 380), 80, colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "play"))
     texts.append(MenuItems.Text("The Legend", (90, 60), 80, colour("red"), "Resources\Fonts\RunicClear.ttf"))
     texts.append(MenuItems.Text("Of Aiopa", (160, 140), 80, colour("red"), "Resources\Fonts\RunicClear.ttf"))
-    texts.append(MenuItems.Text("Created By James", (160, 180), 40, colour("grey"), "Resources\Fonts\RunicClear.ttf"))
+    texts.append(MenuItems.Text("Created By James", (160, 240), 40, colour("black"), "Resources\Fonts\Vecna.otf"))
     
     fade = MenuItems.fadeIn()
     fade.fadeIn = True

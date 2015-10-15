@@ -22,6 +22,7 @@ def mainMenu():
         v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
     else:
         v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
+    py.display.set_caption("The Legend Of Aiopa")
     MenuItems.screen = v.screen
     buttons = py.sprite.Group()
     texts = []
@@ -61,10 +62,10 @@ def mainMenu():
 
 def options():
     py.init()
-    if v.fullScreen:
+    """if v.fullScreen:
         v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
     else:
-        v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
+        v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)"""
     buttons = py.sprite.Group()
     buttons.add(MenuItems.Button("Toggle Fullscreen", (20, 20), 60, colour("beige"), colour("grey"), "Resources\Fonts\MorrisRoman.ttf", "fullscreen"))
     buttons.add(MenuItems.Button("Back", (10, 440), 30, colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
@@ -102,10 +103,10 @@ def options():
 
 def game():
     py.init()
-    if v.fullScreen:
+    """if v.fullScreen:
         v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
     else:
-        v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
+        v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)"""
     
     v.playerHealth = v.Attributes["Max Health"]
     v.playerMana = v.Attributes["Max Mana"]
@@ -303,10 +304,10 @@ def game():
 
 def classSelection():
     py.init()
-    if v.fullScreen:
+    """if v.fullScreen:
         v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
     else:
-        v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
+        v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)"""
     
     v.damagesNPCs = py.sprite.Group()
 

@@ -18,11 +18,15 @@ from random import randint
 import npcScripts
 def mainMenu():
     py.init()
-    v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
+    if v.fullScreen:
+        v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
+    else:
+        v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
     MenuItems.screen = v.screen
     buttons = py.sprite.Group()
     texts = []
-    buttons.add(MenuItems.Button("New Game", (160, 380), 80, colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "play"))
+    buttons.add(MenuItems.Button("New Game", (160, 300), 80, colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "play"))
+    buttons.add(MenuItems.Button("Options", (160, 380), 60, colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "options"))
     texts.append(MenuItems.Text("The Legend", (90, 60), 80, colour("red"), "Resources\Fonts\RunicClear.ttf"))
     texts.append(MenuItems.Text("Of Aiopa", (160, 140), 80, colour("red"), "Resources\Fonts\RunicClear.ttf"))
     texts.append(MenuItems.Text("Created By James", (160, 240), 40, colour("black"), "Resources\Fonts\Vecna.otf"))
@@ -48,13 +52,60 @@ def mainMenu():
                             classSelection()
                             #game()
                             return
+                        if id == "options":
+                            options()
+                            return
         fade.draw()
         fade.opacity -= 1
         py.display.flip()
 
+def options():
+    py.init()
+    if v.fullScreen:
+        v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
+    else:
+        v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
+    buttons = py.sprite.Group()
+    buttons.add(MenuItems.Button("Toggle Fullscreen", (20, 20), 60, colour("beige"), colour("grey"), "Resources\Fonts\MorrisRoman.ttf", "fullscreen"))
+    buttons.add(MenuItems.Button("Back", (10, 440), 30, colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
+    
+    fade = MenuItems.fadeIn()
+    fade.fadeIn = True
+    while True:
+        py.event.pump()
+        MenuItems.fill_gradient(v.screen, colour("cyan"), colour("dark blue"))
+
+        buttons.update()
+        v.events = []
+        v.events = py.event.get()
+        for event in v.events:
+            if event.type == py.QUIT:
+                sys.exit()
+            elif event.type == py.MOUSEBUTTONDOWN:
+                for button in buttons:
+                    if button.pressed():
+                        id = button.ID
+                        if id == "fullscreen":
+                            if v.fullScreen == False:
+                                v.fullScreen = True
+                                v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
+                            else:
+                                v.fullScreen = False
+                                v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
+                        if id == "back":
+                            mainMenu()
+                            return
+        fade.draw()
+        fade.opacity -= 1
+        py.display.flip()
+
+
 def game():
     py.init()
-    v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
+    if v.fullScreen:
+        v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
+    else:
+        v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
     
     v.playerHealth = v.Attributes["Max Health"]
     v.playerMana = v.Attributes["Max Mana"]
@@ -252,7 +303,10 @@ def game():
 
 def classSelection():
     py.init()
-    v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
+    if v.fullScreen:
+        v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
+    else:
+        v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
     
     v.damagesNPCs = py.sprite.Group()
 

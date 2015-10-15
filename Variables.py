@@ -1,4 +1,5 @@
 PAUSED = False
+fullScreen = False
 fpsLock = 30
 fpsAdjuster = 1
 pauseType = "Pause"

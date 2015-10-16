@@ -467,6 +467,20 @@ class appearancePreview():
         else:
             self.image = py.Surface((0, 0))
         v.screen.blit(self.image, self.pos)
+        
+        if v.testAppearance["Hair"] == None and v.appearance["Hair"] != None:
+            self.sheet = entityClasses.SpriteSheet(v.appearance["Hair"], 4, 3)
+            self.image = self.sheet.images[v.appearancePrevNum]
+            size = self.image.get_rect()
+            self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
+        elif v.testAppearance["Hair"] != None:
+            self.sheet = entityClasses.SpriteSheet(v.testAppearance["Hair"], 4, 3)
+            self.image = self.sheet.images[v.appearancePrevNum]
+            size = self.image.get_rect()
+            self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
+        else:
+            self.image = py.Surface((0, 0))
+        v.screen.blit(self.image, self.pos)
 
 class appearanceTab(py.sprite.Sprite):
     
@@ -532,6 +546,25 @@ class appearanceTab(py.sprite.Sprite):
                     v.appearanceTab = "Dress"
             py.draw.rect(v.screen, (255, 255, 0), rect, 4)
         elif v.appearanceTab == "Dress":
+            py.draw.rect(v.screen, (0, 0, 255), rect, 4)
+        else:
+            py.draw.rect(v.screen, (153, 76, 0), rect, 4)
+        
+        image = py.image.load("Resources/Images/Character Customisation/Tabs/Hair.png")
+        size = image.get_rect()
+        image = py.transform.scale(image, (int(size.width * 2), int(size.height * 2)))
+        rect = py.Rect(self.startx + 250, self.posy + 10, 20, 20)
+        v.screen.blit(image, rect)
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
+        label = font.render("Hair", 1, (255, 255, 255))
+        v.screen.blit(label, (280 + 254, 50))
+        rect = py.Rect(241 + 254, 41, 85, 38)
+        if rect.collidepoint(py.mouse.get_pos()):
+            for event in v.events:
+                if event.type == py.MOUSEBUTTONDOWN:
+                    v.appearanceTab = "Hair"
+            py.draw.rect(v.screen, (255, 255, 0), rect, 4)
+        elif v.appearanceTab == "Hair":
             py.draw.rect(v.screen, (0, 0, 255), rect, 4)
         else:
             py.draw.rect(v.screen, (153, 76, 0), rect, 4)

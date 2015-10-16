@@ -1,5 +1,7 @@
 PAUSED = False
 fullScreen = False
+screenX = 640
+screenY = 480
 fpsLock = 30
 fpsAdjuster = 1
 pauseType = "Pause"
@@ -46,7 +48,8 @@ equippedSpells = None
 inventory = None
 appearance = {"Body": "Resources/Images/Character Customisation/Body/white.png",
               "Face": "Resources/Images/Character Customisation/Face/whiteNormal.png",
-              "Dress": "Resources/Images/Character Customisation/Dress/cloakBrown.png"
+              "Dress": "Resources/Images/Character Customisation/Dress/cloakBrown.png",
+              "Hair": "Resources/Images/Character Customisation/Hair/Brown1.png"
               }
 testAppearance = {"Body": None,
               "Face": None,

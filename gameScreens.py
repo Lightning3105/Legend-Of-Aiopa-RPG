@@ -19,11 +19,7 @@ import npcScripts
 #Possibly devastating changes incoming.
 def mainMenu():
     py.init()
-    if v.fullScreen:
-        v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
-    else:
-        v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
-    py.display.set_caption("The Legend Of Aiopa")
+    windowUpdate()
     MenuItems.screen = v.screen
     buttons = py.sprite.Group()
     texts = []
@@ -70,6 +66,7 @@ def options():
     buttons = py.sprite.Group()
     buttons.add(MenuItems.Button("Toggle Fullscreen", (20, 20), 60, colour("beige"), colour("grey"), "Resources\Fonts\MorrisRoman.ttf", "fullscreen"))
     buttons.add(MenuItems.Button("Back", (10, 440), 30, colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
+    buttons.add(MenuItems.Button("Toggle Resolution", (20, 100), 60, colour("beige"), colour("grey"), "Resources\Fonts\MorrisRoman.ttf", "resolution"))
     
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
@@ -90,20 +87,39 @@ def options():
                         if id == "fullscreen":
                             if v.fullScreen == False:
                                 v.fullScreen = True
-                                v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
                             else:
                                 v.fullScreen = False
-                                v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)
+                            
                         if id == "back":
                             mainMenu()
                             return
+                        if id == "resolution":
+                            if v.screenX == 640:
+                                v.screenX = 800
+                                v.screenY = 600
+                            elif v.screenX == 800:
+                                v.screenX = 1024
+                                v.screenY = 768
+                            elif v.screenX == 1024:
+                                v.screenX = 640
+                                v.screenY = 480
+                        windowUpdate()
         fade.draw()
         fade.opacity -= 1
         py.display.flip()
 
 
+def windowUpdate():
+    if v.fullScreen:
+        v.screen = py.display.set_mode((v.screenX, v.screenY),py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
+    else:
+        v.screen = py.display.set_mode((v.screenX, v.screenY),py.HWSURFACE|py.DOUBLEBUF)
+    py.display.set_caption("The Legend Of Aiopa")
+    print(v.screenX, v.screenY)
+
 def game():
     py.init()
+    v.PAUSED = False
     """if v.fullScreen:
         v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
     else:
@@ -356,6 +372,11 @@ def classSelection():
     num = 1
     for i in listdir("Resources/Images/Character Customisation/Dress"):
         aps.add(MenuItems.apearanceSelector("Resources/Images/Character Customisation/Dress/" + i, "Dress", num))
+        num += 1
+    
+    num = 1
+    for i in listdir("Resources/Images/Character Customisation/Hair"):
+        aps.add(MenuItems.apearanceSelector("Resources/Images/Character Customisation/Hair/" + i, "Hair", num))
         num += 1
     
     ap = MenuItems.appearancePreview()

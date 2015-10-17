@@ -133,7 +133,6 @@ def game():
     py.time.set_timer(py.USEREVENT, 200) # walking
     py.time.set_timer(py.USEREVENT + 1, 50) # Spell animation
     py.time.set_timer(py.USEREVENT + 2, 1000) #One second
-    #py.time.set_timer(py.USEREVENT + 3, 20) #Game Speed
 
     tileset = entityClasses.SpriteSheet("Resources/Images/Main_Tileset.png", 63, 32)
     v.hitList = py.sprite.Group()

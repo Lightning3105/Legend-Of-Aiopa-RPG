@@ -378,6 +378,23 @@ class Enemy(py.sprite.Sprite):
         v.npcID += 1
         self.rect = py.Rect(0, 0, 0, 0)
         self.stopped = False
+    
+    def save(self):
+        data = {
+                "attributes": self.attributes,
+                "name": self.name,
+                "posx": self.posx,
+                "posy": self.posy,
+                "direction": self.direction,
+                "view": self.view,
+                "sheetImage": self.sheetImage,
+                "maxHealth": self.maxHealth,
+                "health": self.health,
+                "invulnLength": self.invulnLength,
+                "ID": self.ID,
+                "npcID": self.npcID
+                }
+        return data
 
     def initSheet(self):
         self.sheet = SpriteSheet(self.sheetImage, 4, 3)

@@ -159,7 +159,7 @@ def game():
 
     entityClasses.Enemy(-100, -100, {"Name": "Groblin Lvl. 1", "Health":5, "Attack":5})
     
-    cn = {"O1": {"Message": "hello there, how are you. This is a very long test message to check if this auto line return thing works.", "B1": {"Text": "button 1", "ID": 2}, "B2": {"Text": "Button 2", "ID": 2}, "ID":1, "Next":{"Message": "Apparently it does. Have a very good day, sir.", "Goto":1, "End":True, "ID": 2}}}
+    cn = [{"Message": "hello there, how are you. This is a very long test message to check if this auto line return thing works.", "B1": {"Text": "Button 1", "ID": 1}, "B2": {"Text": "Button 2", "ID": 2}, "B3": {"Text": "Button 3", "ID": 3}, "B4": {"Text": "Button 4", "ID": 4}, "ID":0}, {"Message": "You pressed Button 1", "Goto":5, "ID": 1}, {"Message": "You pressed Button 2", "Goto":5, "ID": 2}, {"Message": "You pressed Button 3", "Goto":5, "ID": 3}, {"Message": "You pressed Button 4", "Goto":5, "ID": 4}, {"Message": "Congratulations. You won.", "ID": 5, "End":True}]
     entityClasses.NPC((0, 30, "Down"), "Resources/Images/Male_Basic.png", {"Name":"Fred", "Conversation":cn})
     
     #v.Attributes.update(v.classAttributes["Paladin"]) # TODO: Remove when done

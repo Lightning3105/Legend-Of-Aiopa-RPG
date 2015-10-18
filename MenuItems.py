@@ -9,18 +9,18 @@ import setupScripts
 
 class Button(py.sprite.Sprite):
 
-    def __init__(self, text, pos, size, hovercolour, normalcolour, font, ID, centred = False):
+    def __init__(self, text, pos, size, hovercolour, normalcolour, font, ID, centred = False, bsize=(0,0)):
         super().__init__()
         self.ID = ID
         self.hovered = False
         self.text = text
         self.pos = pos
-        self.size = size
         self.hcolour = hovercolour
         self.ncolour = normalcolour
         self.font = font
         self.font = py.font.Font(font, size)
         self.centred = centred
+        self.size = bsize
         self.set_rect()
     
     def update(self):
@@ -48,6 +48,11 @@ class Button(py.sprite.Sprite):
             self.rect.topleft = self.pos
         if self.centred:
             self.rect.center = self.pos
+        
+        if not self.size[0] == 0:
+            self.rect.width = self.size[0]
+        if not self.size[1] == 0:
+            self.rect.height = self.size[1]
 
     def pressed(self):
         mouse = py.mouse.get_pos()

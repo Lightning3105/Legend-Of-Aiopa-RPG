@@ -19,6 +19,7 @@ def generateMap(map, sheet):
                 wall = False
                 terrain = 1
             if not list(str(map[row][tile]))[0] == "-":
+                image = image.convert_alpha()
                 outmap.add(entityClasses.Tile((tile - modx, row - mody), image, terrain, wall))
     #v.screen.blit(sheet.images[325], (10, 10))
     #py.display.flip()

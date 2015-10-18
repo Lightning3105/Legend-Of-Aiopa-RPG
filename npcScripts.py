@@ -10,19 +10,17 @@ class conversation():
         self.npc = npc
         self.npcName = npc.name
         self.npcIcon = py.transform.scale(npc.icon, (150, 150))
-        self.place = material["O1"]
+        self.place = material[0]
         self.speechOutput = None
         self.searchDone = False
     
     def say(self):
         v.PAUSED = True
         v.pauseType = "Conversation"
-        if self.speechOutput == "Next":
-            self.place = self.place["Next"]
-            self.speechOutput = None
+
         if self.speechOutput == "Goto":
             self.searchDone = False
-            self.searchTree(self.material)
+            self.searchTree(self.place["Goto"], self.material)
             self.speechOutput = None
         if self.speechOutput == "End":
             v.PAUSED = False
@@ -30,17 +28,11 @@ class conversation():
         
         self.speech(self)
                 
-    def searchTree(self, tree={}):
-        for key, value in tree.items():
-            if self.searchDone:
+    def searchTree(self, target, tree={}):
+        for value in tree:
+            if value["ID"] == target:
+                self.place = value
                 return
-            if key == "ID":
-                if value == self.place["Goto"]:
-                    self.place = tree
-                    self.searchDone = True
-                    return
-            if key[0] == "O":
-                self.searchTree(value)
             
         
     
@@ -68,11 +60,20 @@ class conversation():
             self.alphaDirection = True
             
             self.buttons = py.sprite.Group()
-            xmod = 10
+            xmod = 0
+            ymod = 0
             for key, value in self.master.place.items():
                 if key[0] == "B":
-                    self.buttons.add(MenuItems.Button(value["Text"], (100 + xmod, 430), 20, (255, 255, 100), (153, 76, 0), "Resources/Fonts/RPGSystem.ttf", value["ID"]))
-                    xmod += 80
+                    self.buttons.add(MenuItems.Button(value["Text"], (220 + xmod, 200 + ymod), 40, (255, 255, 100), (153, 76, 0), "Resources/Fonts/RPGSystem.ttf", value["ID"], bsize=(190, 0)))
+                    xmod += 210
+                    if xmod >= 420:
+                        xmod = 0
+                        ymod += 50
+            
+            self.buts = True
+            if len([k for k, v in self.master.place.items() if k[0] == "B"]) == 0:
+                self.buts = False
+                        
             
         
         def update(self):
@@ -90,7 +91,7 @@ class conversation():
             label = nameFont.render(self.master.npcName, 1, (255, 255, 255))
             v.screen.blit(label, (125 - nameFont.size(self.master.npcName)[0]/2, 273 - nameFont.size(self.master.npcName)[1]/2))
             
-            #self.buttons.update()
+            self.buttons.update()
             yadd = 0
             for line in range(len(self.lines)):
                 if line <= self.lineno:
@@ -111,9 +112,10 @@ class conversation():
                     self.lineno += 1
                     self.letterno = 0
             #py.time.wait(10)
-            label = self.font.render("Continue - F", 1, (255, 100, 255))
-            label.fill((255, 255, 255, self.alphaCycle), special_flags=py.BLEND_RGBA_MULT)
-            v.screen.blit(label, (480, 425))
+            if self.buts == False:
+                label = self.font.render("Continue - F", 1, (255, 100, 255))
+                label.fill((255, 255, 255, self.alphaCycle), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (480, 425))
             if self.alphaDirection:
                 self.alphaCycle += 5
             else:
@@ -127,16 +129,28 @@ class conversation():
             
             for event in v.events:
                 if event.type == py.KEYDOWN:
-                    if event.key == py.K_f:
-                        v.conversationClass = None
-                        if "Next" in self.master.place:
-                            self.master.speechOutput = "Next"
-                        elif "Goto" in self.master.place:
-                            self.master.speechOutput = "Goto"
-                        else:
-                            self.mater.speechOutput = "End"
-                        if not "End" in self.master.place:
+                    if self.buts == False:
+                        if event.key == py.K_f:
+                            v.conversationClass = None
+                            if "Goto" in self.master.place:
+                                self.master.speechOutput = "Goto"
+                            else:
+                                self.master.speechOutput = "End"
+                            if not "End" in self.master.place:
+                                self.master.say()
+                            else:
+                                v.PAUSED = False
+                
+                if event.type == py.MOUSEBUTTONDOWN:
+                    if not len(self.buttons) == 0:
+                        id = None
+                        for but in self.buttons:
+                            if but.rect.collidepoint(py.mouse.get_pos()):
+                                id = but.ID
+                        
+                        if not id == None:
+                            self.searchDone = False
+                            self.master.searchTree(id, self.master.material)
                             self.master.say()
-                        else:
-                            v.PAUSED = False
+                        
             

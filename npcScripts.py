@@ -80,7 +80,7 @@ class conversation():
             outerRect = py.Rect(218, 298, 404, 154)
             py.draw.rect(v.screen, py.Color(153, 76, 0), outerRect)
             py.draw.rect(v.screen, py.Color(255, 178, 102), innerRect)
-            py.draw.rect(v.screen, (100, 100, 255), (50, 298, 150, 150))
+            py.draw.rect(v.screen, (255, 178, 102), (50, 298, 150, 150))
             v.screen.blit(self.master.npcIcon, (50, 298))
             py.draw.rect(v.screen, (153, 76, 0), (50, 298, 150, 150), 2)
             py.draw.rect(v.screen, (0, 0, 0), (50, 248, 150, 50))

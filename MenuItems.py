@@ -5,6 +5,7 @@ from _operator import pos
 from msilib.schema import Font
 from os import listdir
 import itemClasses
+import setupScripts
 
 class Button(py.sprite.Sprite):
 
@@ -174,14 +175,8 @@ class characterSelector(py.sprite.Sprite):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN and self.hovered:
                     v.playerClass = self.name
-                    if self.name == "Mage":
-                        v.equipped["Weapon"] = itemClasses.weapon("Magic Orb", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[56], "manaOrb", "Resources/Images/castOrbPurple.png", {"Damage":2, "Knockback": 10})
-                    if self.name == "Paladin":
-                        v.equipped["Weapon"] = itemClasses.weapon("Broken Sword", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[0], "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10})
-                    if self.name == "Ranger":
-                        v.equipped["Weapon"] = itemClasses.weapon("Short Bow", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[72], "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10})
                     v.custimizationStage = "To Attributes"
-                    v.Attributes = v.classAttributes[v.playerClass]
+                    setupScripts.setAttributes()
                 if event.type == py.USEREVENT: 
                     if self.hovered and self.hoveredCycle < 30:
                         self.hoveredCycle += 1

@@ -45,6 +45,7 @@ appearanceTab = "Body"
 appearancePrevNum = 7
 equipped = {"Weapon": None}
 equippedSpells = None
+abilityButtons = None
 inventory = None
 appearance = {"Body": "Resources/Images/Character Customisation/Body/white.png",
               "Face": "Resources/Images/Character Customisation/Face/whiteNormal.png",

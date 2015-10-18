@@ -16,6 +16,7 @@ import inventoryScreen
 import time
 from random import randint
 import npcScripts
+import setupScripts
 #Possibly devastating changes incoming.
 def mainMenu():
     py.init()
@@ -25,6 +26,7 @@ def mainMenu():
     texts = []
     buttons.add(MenuItems.Button("New Game", (160, 300), 80, colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "play"))
     buttons.add(MenuItems.Button("Options", (160, 380), 60, colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "options"))
+    buttons.add(MenuItems.Button("Load", (360, 380), 60, colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "load"))
     texts.append(MenuItems.Text("The Legend", (90, 60), 80, colour("red"), "Resources\Fonts\RunicClear.ttf"))
     texts.append(MenuItems.Text("Of Aiopa", (160, 140), 80, colour("red"), "Resources\Fonts\RunicClear.ttf"))
     texts.append(MenuItems.Text("Created By James", (160, 240), 40, colour("black"), "Resources\Fonts\Vecna.otf"))
@@ -47,12 +49,19 @@ def mainMenu():
                     if button.pressed():
                         id = button.ID
                         if id == "play":
-                            classSelection()
+                            """classSelection()
                             #game()
+                            return""" #Temporary, since I can't be bothered to wait.
+                            v.playerClass = "Mage"
+                            setupScripts.createGroups()
+                            setupScripts.setAttributes()
+                            game()
                             return
                         if id == "options":
                             options()
                             return
+                        if id == "load":
+                            print("Cannot load at the mo.")
         fade.draw()
         fade.opacity -= 1
         py.display.flip()
@@ -135,8 +144,7 @@ def game():
     py.time.set_timer(py.USEREVENT + 2, 1000) #One second
 
     tileset = entityClasses.SpriteSheet("Resources/Images/Main_Tileset.png", 63, 32)
-    v.hitList = py.sprite.Group()
-    v.allTiles = py.sprite.Group()
+    
     Map.generateMap(Map.Maps, tileset)
     #py.time.wait(5000)
     #v.damagesNPCs = py.sprite.Group()
@@ -146,10 +154,10 @@ def game():
     v.hits.add(entityClasses.HitBox("Left"))
     v.hits.add(entityClasses.HitBox("Top"))
     v.hits.add(entityClasses.HitBox("Bottom"))
-    v.allNpc = py.sprite.Group()
+    
     weaponSlot = guiClasses.weaponSlot()
 
-    v.particles = py.sprite.Group()
+    
 
     entityClasses.Enemy(-100, -100, {"Name": "Groblin Lvl. 1", "Health":5, "Attack":5})
     
@@ -160,15 +168,14 @@ def game():
     
     xp = guiClasses.XP()
     
-    v.currentSpells = py.sprite.Group()
-    v.equippedSpells = py.sprite.Group()
+    
     
     fb = itemClasses.spell("Fire Beam", "beam", "Resources/Images/fireBeam.png", "Resources/Images/redCastCircle.png", {"Damage": 0.2, "Knockback": "S", "Cooldown": 5, "Mana": 10, "InvulnMod": 0})
     
-    abilityButtons = py.sprite.Group()
-    abilityButtons.add(guiClasses.ability(fb, "Resources/Images/Spell Icons/fireBeam.png", 0))
     
-    v.xpGroup = py.sprite.Group()
+    v.abilityButtons.add(guiClasses.ability(fb, "Resources/Images/Spell Icons/fireBeam.png", 0))
+    
+    
     
     pause = guiClasses.pauseScreen()
     
@@ -180,7 +187,7 @@ def game():
     v.inventory.add(itemClasses.weapon("Broken Sword", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[0], "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10}))
     v.inventory.add(itemClasses.weapon("Short Bow", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[72], "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10}))
     
-    v.droppedItems = py.sprite.Group()
+    
     entityClasses.droppedItem(itemClasses.item("Thing", py.image.load("Resources/Images/XPOrb.png")), (100, 100))
     while True:
         if not v.PAUSED:
@@ -219,7 +226,7 @@ def game():
             guiClasses.actionText()
             xp.update()
             weaponSlot.draw()
-            abilityButtons.update()
+            v.abilityButtons.update()
             map.update()
             guiClasses.fps()
     
@@ -325,7 +332,7 @@ def classSelection():
     else:
         v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)"""
     
-    v.damagesNPCs = py.sprite.Group()
+    
 
     classes = py.sprite.Group()
     classes.add(MenuItems.characterSelector("Resources/Images/PaladinClass.png", (v.screen.get_rect()[2]/2, v.screen.get_rect()[3]/2), "Paladin"))
@@ -383,6 +390,8 @@ def classSelection():
     aTabs = MenuItems.appearanceTab()
     
     py.time.set_timer(py.USEREVENT + 1, 2000) #preview rotate speed
+    fade = MenuItems.fadeIn()
+    fade.fadeIn = True
     while True:
         py.event.pump()
         v.events = []
@@ -447,6 +456,8 @@ def classSelection():
             
         
         #v.characterHovered = False
+        fade.draw()
+        fade.opacity -= 1
 
         py.display.flip()
 

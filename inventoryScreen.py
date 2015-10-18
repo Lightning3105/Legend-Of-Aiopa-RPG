@@ -69,6 +69,7 @@ class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
         sheetImage = py.image.load(v.appearance["Body"])
         sheetImage.blit(py.image.load(v.appearance["Face"]), (0, 0))
         sheetImage.blit(py.image.load(v.appearance["Dress"]), (0, 0))
+        sheetImage.blit(py.image.load(v.appearance["Hair"]), (0, 0))
         sheet = entityClasses.SpriteSheet(sheetImage, 4, 3)
         image = sheet.images[7]
         image = py.transform.scale(image, (image.get_rect().width * 5, image.get_rect().height * 5))

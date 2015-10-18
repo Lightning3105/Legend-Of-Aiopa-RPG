@@ -716,8 +716,8 @@ class xp(py.sprite.Sprite):
     def update(self):
         self.image = py.transform.scale(self.skin, (int(8 * v.scale), int(8 * v.scale)))
         if self.wait <= 0:
-            if abs(self.posx - v.playerPosX) < int(25 * v.scale):
-                if abs(self.posy - v.playerPosY) < int(25 * v.scale):
+            if abs(self.posx - v.playerPosX) < int(40 * v.scale):
+                if abs(self.posy - v.playerPosY) < int(40 * v.scale):
                     
                     if self.posx > v.playerPosX:
                         self.posx -= self.velocity

@@ -25,6 +25,7 @@ scale = 2
 screen = None
 ticks = 0
 map1 = []
+MAP = None
 hits = None
 p_class = None
 cur_weapon = None

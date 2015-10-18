@@ -59,12 +59,13 @@ class tile(py.sprite.Sprite):
                 self.image = py.transform.scale(self.image, (int(30 * scale), int(30 * scale)))
                 map.blit(self.image, self.rect)
             
-            if not scale < 0.5:
-                if self.hitable:
-                    c = (255, 0, 0)
-                else:
-                    c = (0, 0, 0)
-                py.draw.rect(map, c, self.rect, 1)
+            if not upperLayer:
+                if not scale < 0.5:
+                    if self.hitable:
+                        c = (255, 0, 0)
+                    else:
+                        c = (0, 0, 0)
+                    py.draw.rect(map, c, self.rect, 1)
         
             if self.rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1])):
                 self.hovered = True
@@ -143,7 +144,7 @@ def save():
         outMap.append([])
         for x in range(size[0]):
             outMap[y].append("")
-    for tile in tiles:
+    for tile in baseTiles:
         if tile.hitable:
             h = "#"
         else:
@@ -198,7 +199,7 @@ while True:
     pallet.fill((255, 255, 255))
     options.fill((0, 255, 255))
     baseTiles.update()
-    topTiles.update()
+    #topTiles.update() #TODO: Fix this with editing hitboxes
     palletImages.update()
     buttons.update()
     #print(clock.get_fps())

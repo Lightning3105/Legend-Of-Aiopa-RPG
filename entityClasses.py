@@ -299,13 +299,12 @@ class HitBox(py.sprite.Sprite):
 
 class Tile(py.sprite.Sprite):
 
-    def __init__(self, tilePosition, skin, terrain, wall=False):
+    def __init__(self, tilePosition, terrain, wall=False):
         super().__init__()
         self.tilePosX = tilePosition[0]
         self.tilePosY = tilePosition[1]
         self.posX = 0
         self.posY = 0
-        self.skin = skin
         self.wall = wall
         if wall:
             v.hitList.add(self)
@@ -316,18 +315,13 @@ class Tile(py.sprite.Sprite):
         self.oldy = "Nope"   
 
     def update(self):
-        if not self.oldScale == v.scale:
-            self.rect = py.Rect(0, 0, int(30 * v.scale), int(30 * v.scale))
-            self.image = py.transform.scale(self.skin, (int(30 * v.scale), int(30 * v.scale)))
-            self.oldScale = v.scale
-        if not self.oldx == v.playerPosX:
-            self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (30 * self.tilePosX)) * v.scale)
-            self.oldx = v.playerPosX
-        if not self.oldy == v.playerPosY:
-            self.rect.centery = v.screen.get_rect()[3] / 2 + ((v.playerPosY + (30 * self.tilePosY)) * v.scale)
-            self.oldy = v.playerPosY
-        if self.rect.colliderect(v.screen.get_rect()):
-            v.screen.blit(self.image, self.rect)
+        self.rect = py.Rect(0, 0, int(30 * v.scale), int(30 * v.scale))
+
+        self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (30 * self.tilePosX)) * v.scale)
+
+        self.rect.centery = v.screen.get_rect()[3] / 2 + ((v.playerPosY + (30 * self.tilePosY)) * v.scale)
+
+
 def rot_center(image, angle):
     """rotate an image while keeping its center and size"""
     orig_rect = image.get_rect()

@@ -190,11 +190,13 @@ def game():
             v.actionsDone = []
             v.events = []
             v.events = py.event.get()
-            v.clock.tick(30)
+            v.clock.tick(60)
             try:
                 v.fpsAdjuster = (v.fpsLock/v.clock.get_fps())
             except:
                 v.fpsAdjuster = 1
+            
+            v.MAP.update()
             v.allTiles.update()
             #v.allTiles.draw(v.screen)
             v.droppedItems.update()
@@ -219,7 +221,7 @@ def game():
             xp.update()
             weaponSlot.draw()
             v.abilityButtons.update()
-            map.update()
+            #map.update()
             guiClasses.fps()
     
             py.display.flip()
@@ -233,12 +235,12 @@ def game():
             if keys_pressed[py.K_SPACE] and not v.playerActing:
                 weaponClasses.weaponAttack()
             if keys_pressed[py.K_KP_PLUS]:
-                map.scale += 0.1
-                map.scale = round(map.scale, 1)
+                v.scale += 0.1
+                v.scale = round(v.scale, 1)
                 #print(v.scale)
             if keys_pressed[py.K_KP_MINUS]:
-                map.scale -= 0.1
-                map.scale = round(map.scale, 1)
+                v.scale -= 0.1
+                v.scale = round(v.scale, 1)
                 #print(v.scale)
             for event in v.events:
                 if event.type == py.KEYDOWN:

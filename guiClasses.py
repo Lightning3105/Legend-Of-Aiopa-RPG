@@ -203,7 +203,7 @@ class pauseScreen:
                             from sys import exit
                             exit()
 
-class miniMap:
+class miniMap: #TODO make this work with baseMap
     
     def __init__(self):
         self.windowScale = 6
@@ -219,15 +219,12 @@ class miniMap:
         self.size = (640/self.windowScale, 480/self.windowScale)
         self.map = py.Surface(self.size)
         self.map.fill((100, 255, 100))
-        for tile in v.allTiles:
-            x = tile.tilePosX
-            y = tile.tilePosY
-            size = (int(30/self.scale), int(30/self.scale))
-            pos = (self.size[0] / 2 + ((-v.playerPosX / self.scale) + (int(30 / self.scale) * x)) - (22 / self.scale), self.size[1] / 2 + ((v.playerPosY / self.scale) + (int(30 / self.scale) * y)) - (30 / self.scale))
-            rect = py.Rect(pos, size)
-            if rect.colliderect(self.map.get_rect()):
-                image = py.transform.scale(tile.image, size)
-                self.map.blit(image, rect)
+        baseMap = v.MAP.skin
+        size = baseMap.get_rect().size
+        baseMap = py.transform.scale(baseMap, (int(size[0]/self.scale), int(size[1]/self.scale)))
+        rect = baseMap.get_rect()
+        rect.center = ((-v.playerPosX/self.scale) + (rect.width/(self.scale * 10)), (v.playerPosY/self.scale) + (rect.height/(self.scale * 10)))
+        self.map.blit(baseMap, rect)
         py.draw.rect(self.map, (255, 0, 0), (self.size[0]/2 - (22 / self.scale) / 2, self.size[1]/2 - (30 / self.scale) / 2, 15 / self.scale, 20 / self.scale))
         
         v.screen.blit(self.map, self.pos)

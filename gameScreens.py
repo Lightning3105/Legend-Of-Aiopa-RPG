@@ -157,8 +157,6 @@ def game():
     
     weaponSlot = guiClasses.weaponSlot()
 
-    
-
     entityClasses.Enemy(-100, -100, {"Name": "Groblin Lvl. 1", "Health":5, "Attack":5})
     
     cn = {"O1": {"Message": "hello there, how are you. This is a very long test message to check if this auto line return thing works.", "B1": {"Text": "button 1", "ID": 2}, "B2": {"Text": "Button 2", "ID": 2}, "ID":1, "Next":{"Message": "Apparently it does. Have a very good day, sir.", "Goto":1, "End":True, "ID": 2}}}
@@ -167,16 +165,11 @@ def game():
     #v.Attributes.update(v.classAttributes["Paladin"]) # TODO: Remove when done
     
     xp = guiClasses.XP()
-    
-    
-    
+ 
     fb = itemClasses.spell("Fire Beam", "beam", "Resources/Images/fireBeam.png", "Resources/Images/redCastCircle.png", {"Damage": 0.2, "Knockback": "S", "Cooldown": 5, "Mana": 10, "InvulnMod": 0})
-    
-    
-    v.abilityButtons.add(guiClasses.ability(fb, "Resources/Images/Spell Icons/fireBeam.png", 0))
-    
-    
-    
+       
+    v.abilityButtons.add(guiClasses.ability(fb, "Resources/Images/Spell Icons/fireBeam.png", 0))  
+       
     pause = guiClasses.pauseScreen()
     
     map = guiClasses.miniMap()
@@ -185,8 +178,7 @@ def game():
     v.inventory.add(itemClasses.item("Thing", py.image.load("Resources/Images/XPOrb.png")))
     v.inventory.add(itemClasses.weapon("Magic Orb", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[56], "manaOrb", "Resources/Images/castOrbPurple.png", {"Damage":2, "Knockback": 10}))
     v.inventory.add(itemClasses.weapon("Broken Sword", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[0], "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10}))
-    v.inventory.add(itemClasses.weapon("Short Bow", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[72], "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10}))
-    
+    v.inventory.add(itemClasses.weapon("Short Bow", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[72], "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10})) 
     
     entityClasses.droppedItem(itemClasses.item("Thing", py.image.load("Resources/Images/XPOrb.png")), (100, 100))
     while True:

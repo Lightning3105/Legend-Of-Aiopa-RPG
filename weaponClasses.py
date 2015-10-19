@@ -98,6 +98,7 @@ class manaOrb(py.sprite.Sprite):
             v.damagesNPCs.add(self)
             self.master = weapon
             self.shooter = shooter
+            self.killDown = 5
         
         
     
@@ -146,7 +147,9 @@ class manaOrb(py.sprite.Sprite):
             if self.aniCyclePos == 9:
                 for thing in v.hitList:
                     if self.rect.colliderect(thing.rect):
-                        self.attacking = False
+                        self.killDown -= 1
+                        if self.killDown <= 0:
+                            self.attacking = False
                 for thing in v.allNpc:
                     if self.rect.colliderect(thing.rect):
                         self.attacking = False

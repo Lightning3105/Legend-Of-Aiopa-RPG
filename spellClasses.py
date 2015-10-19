@@ -51,7 +51,7 @@ class beam(py.sprite.Sprite):
                 self.rect = py.Rect(0, 0, 0, 0)
             if self.aniCyclePos <= 3:
                 if self.sizeCyclePos < 100:
-                    self.sizeCyclePos += 10
+                    self.sizeCyclePos += 5
 
             mod = 1
             if self.direction == "Up":
@@ -85,7 +85,7 @@ class beam(py.sprite.Sprite):
             for thing in v.hitList:
                 if self.rect.colliderect(thing.rect):
                     if not thing.ID == "playerHitbox":
-                        self.sizeCyclePos -= 10
+                        self.sizeCyclePos -= 5
                         if self.sizeCyclePos < 0:
                             self.sizeCyclePos = 0
             """for thing in v.allNpc:

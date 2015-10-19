@@ -1,6 +1,7 @@
 import pygame as py
 import Variables as v
 import MenuItems
+import entityClasses
 
 
 class conversation():
@@ -153,4 +154,6 @@ class conversation():
                             self.master.searchTree(id, self.master.material)
                             self.master.say()
                         
-            
+def summon(npcType, pos):
+    if npcType == "Guard":
+        entityClasses.Enemy(pos[0], pos[1], "Resources/Images/GuardSheet.png", {"Name": "Guard Lvl. 100", "Health":100, "Attack":5})            

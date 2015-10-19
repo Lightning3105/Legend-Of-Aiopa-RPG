@@ -341,7 +341,7 @@ def centre():
 
 class Enemy(py.sprite.Sprite):
 
-    def __init__(self, posx, posy, attributes={}):
+    def __init__(self, posx, posy, sImage, attributes={}):
         super().__init__()
         self.attributes = attributes
         self.name = attributes["Name"]
@@ -351,7 +351,7 @@ class Enemy(py.sprite.Sprite):
         self.view = "DownC"
         self.moving = False
         self.movFlip = True
-        self.sheetImage = "Resources/Images/Generic Goblin.png"
+        self.sheetImage = sImage
         self.maxHealth = attributes["Health"]
         self.health = attributes["Health"]
         self.invulnCooldown = 0
@@ -371,7 +371,9 @@ class Enemy(py.sprite.Sprite):
         self.npcID = v.npcID
         v.npcID += 1
         self.rect = py.Rect(0, 0, 0, 0)
+        self.image = py.Surface((0, 0))
         self.stopped = False
+        
     
     def save(self):
         data = {
@@ -839,7 +841,7 @@ class NPC(py.sprite.Sprite):
     def title(self):
         font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(10 * v.scale)) #TODO: Scale
         label = font.render(self.name, 1, (255,255,255))
-        v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.top - (15 * v.scale)))
+        v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.top - (5 * v.scale)))
     
     def update(self):
         self.image = self.views[self.view]
@@ -850,6 +852,10 @@ class NPC(py.sprite.Sprite):
         self.title()
         if self.nearPlayer():
             self.talk()
+        
+        for thing in v.damagesNPCs:
+            if self.rect.colliderect(thing.rect):
+                npcScripts.summon("Guard", (self.posx - 50, self.posy - 50))
     
     def nearPlayer(self):
         actionString = "Talk to " + str(self.name) + " - Press F"

@@ -354,6 +354,8 @@ class Enemy(py.sprite.Sprite):
         self.sheetImage = sImage
         self.maxHealth = attributes["Health"]
         self.health = attributes["Health"]
+        self.speed = 1
+        self.xp = 5
         self.invulnCooldown = 0
         self.invulnLength = 30
         self.knockback = 0
@@ -561,8 +563,10 @@ class Enemy(py.sprite.Sprite):
             self.damage_alpha -= 10
             if self.damage_alpha <= 0:
                 v.allNpc.remove(self)
-                for i in range(5):
-                    v.xpGroup.add(xp(self.posx + randint(-10, 10), self.posy + randint(-10, 10), 1))
+                orbs = randint(2, 7)
+                amount = self.xp / orbs
+                for i in range(orbs):
+                    v.xpGroup.add(xp(self.posx + randint(-10, 10), self.posy + randint(-10, 10), amount))
 
     def get_direction(self):
         if self.posy - v.playerPosY < -25:
@@ -622,7 +626,7 @@ class Enemy(py.sprite.Sprite):
 
     def pathfind(self):
         if not self.stopped:
-            distance = 1 * v.fpsAdjuster
+            distance = self.speed * v.fpsAdjuster
             surrounding = []
             surrounding.append((self.posx + distance, self.posy + -distance))
             surrounding.append((self.posx + distance, self.posy + 0))
@@ -802,6 +806,7 @@ class NPC(py.sprite.Sprite):
         self.justNear = False
         self.icon = py.image.load("Resources/Images/NpcSkins/Faces/Basic_Man.png")
         self.conversation = npcScripts.conversation(self, attributes["Conversation"])
+        self.summonedGuard = False
     
     def initSheet(self):
         self.sheet = SpriteSheet(self.sheetImage, 4, 3)
@@ -855,7 +860,9 @@ class NPC(py.sprite.Sprite):
         
         for thing in v.damagesNPCs:
             if self.rect.colliderect(thing.rect):
-                npcScripts.summon("Guard", (self.posx - 50, self.posy - 50))
+                if not self.summonedGuard:
+                    npcScripts.summon("Guard", (self.posx - 50, self.posy - 50))
+                    self.summonedGuard = True
     
     def nearPlayer(self):
         actionString = "Talk to " + str(self.name) + " - Press F"

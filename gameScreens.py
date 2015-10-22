@@ -126,6 +126,8 @@ def windowUpdate():
     else:
         v.screen = py.display.set_mode((v.screenX, v.screenY),py.HWSURFACE|py.DOUBLEBUF)
     py.display.set_caption("The Legend Of Aiopa")
+    icon = py.image.load("Resources/Images/Icon.ico")
+    py.display.set_icon(icon)
     print(v.screenX, v.screenY)
 
 def game():

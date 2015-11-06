@@ -36,7 +36,7 @@ class health:
         self.getPercent()
         rect = self.image.get_rect()
         image = py.transform.scale(self.image, (30, 30))
-        pos = (65 + (31 * self.number), 410)
+        pos = (65 + (31 * self.number), v.screen.get_rect().bottom - 70)
         rect.center = pos
         v.screen.blit(image, rect)
 
@@ -75,7 +75,7 @@ class mana:
         self.getPercent()
         rect = self.image.get_rect()
         image = py.transform.scale(self.image, (30, 30))
-        pos = (65 + (31 * self.number), 450)
+        pos = (65 + (31 * self.number), v.screen.get_rect().bottom - 30)
         rect.center = pos
         v.screen.blit(image, rect)
 
@@ -99,14 +99,14 @@ class weaponSlot:
         image = py.image.load(image)
         image = py.transform.scale(image, (80, 80))
         rect = image.get_rect()
-        rect.center = (44, 435)
+        rect.center = (44, v.screen.get_rect().bottom - 45)
         v.screen.blit(image, rect)
 
 class XP:
     
     def __init__(self):
         self.posx = 320
-        self.posy = 440
+        self.posy = v.screen.get_rect().bottom - 40
         
     def update(self):
         if v.experience["XP"] >= v.experience["XPtoL"]:

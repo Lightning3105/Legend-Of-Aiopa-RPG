@@ -756,7 +756,7 @@ class droppedItem(py.sprite.Sprite):
         v.droppedItems.add(self)
         self.justNear = False
     def update(self):
-        self.image = py.transform.scale(self.item.icon, (25, 25))
+        self.image = py.transform.scale(self.item.icon, (int(12 * v.scale), int(12 * v.scale)))
         self.rect = self.image.get_rect()
         self.rect.centerx = v.screen.get_rect()[2] / 2 + int((-v.playerPosX + self.posx) * v.scale)
         self.rect.centery = v.screen.get_rect()[3] / 2 - int((-v.playerPosY + self.posy) * v.scale)

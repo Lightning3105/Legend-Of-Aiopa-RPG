@@ -104,7 +104,11 @@ class manaOrb(py.sprite.Sprite):
     
         def update(self):
             if self.attacking:
-                self.image = self.sheet.images[self.aniCyclePos]
+                try:
+                    self.image = self.sheet.images[self.aniCyclePos]
+                except:
+                    self.attacking = False
+                    return
                 size = self.image.get_rect()
                 self.image = py.transform.scale(self.image, (int(size.width * v.scale), int(size.height * v.scale)))
                 if self.aniCyclePos < 9:

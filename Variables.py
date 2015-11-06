@@ -2,6 +2,7 @@ PAUSED = False
 fullScreen = False
 screenX = 640
 screenY = 480
+screenScale = 2
 fpsLock = 30
 fpsAdjuster = 1
 pauseType = "Pause"

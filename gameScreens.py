@@ -75,9 +75,9 @@ def options():
     else:
         v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)"""
     buttons = py.sprite.Group()
-    buttons.add(MenuItems.Button("Toggle Fullscreen", (20, 20), 60, colour("beige"), colour("grey"), "Resources\Fonts\MorrisRoman.ttf", "fullscreen"))
-    buttons.add(MenuItems.Button("Back", (10, 440), 30, colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
-    buttons.add(MenuItems.Button("Toggle Resolution", (20, 100), 60, colour("beige"), colour("grey"), "Resources\Fonts\MorrisRoman.ttf", "resolution"))
+    buttons.add(MenuItems.Button("Toggle Fullscreen", (v.screenX * 0.03125, v.screenY * 0.04), int(v.screenX * 0.09375), colour("beige"), colour("grey"), "Resources\Fonts\MorrisRoman.ttf", "fullscreen"))
+    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY - v.screenY * 0.08), 30, colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
+    buttons.add(MenuItems.Button("Toggle Resolution", (v.screenX * 0.03125, v.screenY * 0.2), int(v.screenX * 0.09375), colour("beige"), colour("grey"), "Resources\Fonts\MorrisRoman.ttf", "resolution"))
     
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
@@ -115,6 +115,8 @@ def options():
                                 v.screenX = 640
                                 v.screenY = 480
                         windowUpdate()
+                        options()
+                        return
         fade.draw()
         fade.opacity -= 1
         py.display.flip()
@@ -129,6 +131,12 @@ def windowUpdate():
     icon = py.image.load("Resources/Images/Icon.ico")
     py.display.set_icon(icon)
     print(v.screenX, v.screenY)
+    if v.screenX == 480:
+        v.screenScale = 2
+    if v.screenX == 800:
+        v.screenScale = 2.5
+    if v.screenX == 1024:
+        v.screenScale = 4.3
 
 def game():
     py.init()

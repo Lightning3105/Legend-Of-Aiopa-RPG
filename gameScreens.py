@@ -24,12 +24,12 @@ def mainMenu():
     MenuItems.screen = v.screen
     buttons = py.sprite.Group()
     texts = []
-    buttons.add(MenuItems.Button("New Game", (160, 300), 80, colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "play"))
-    buttons.add(MenuItems.Button("Options", (160, 380), 60, colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "options"))
-    buttons.add(MenuItems.Button("Load", (360, 380), 60, colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "load"))
-    texts.append(MenuItems.Text("The Legend", (90, 60), 80, colour("red"), "Resources\Fonts\RunicClear.ttf"))
-    texts.append(MenuItems.Text("Of Aiopa", (160, 140), 80, colour("red"), "Resources\Fonts\RunicClear.ttf"))
-    texts.append(MenuItems.Text("Created By James", (160, 240), 40, colour("black"), "Resources\Fonts\Vecna.otf"))
+    buttons.add(MenuItems.Button("New Game", (v.screenX * 0.25, v.screenY * 0.625), int(v.screenX * 0.125), colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "play"))
+    buttons.add(MenuItems.Button("Options", (v.screenX * 0.25, v.screenY * 0.79), int(v.screenX * 0.09375), colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "options"))
+    buttons.add(MenuItems.Button("Load", (v.screenX * 0.5625, v.screenY * 0.79), int(v.screenX * 0.09375), colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "load"))
+    texts.append(MenuItems.Text("The Legend", (v.screenX * 0.140625, v.screenY * 0.125), int(v.screenX * 0.125), colour("red"), "Resources\Fonts\RunicClear.ttf"))
+    texts.append(MenuItems.Text("Of Aiopa", (v.screenX * 0.25, v.screenY * 0.29), int(v.screenX * 0.125), colour("red"), "Resources\Fonts\RunicClear.ttf"))
+    texts.append(MenuItems.Text("Created By James", (v.screenX * 0.25, v.screenY * 0.5), int(v.screenX * 0.0625), colour("black"), "Resources\Fonts\Vecna.otf"))
     
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
@@ -76,7 +76,7 @@ def options():
         v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)"""
     buttons = py.sprite.Group()
     buttons.add(MenuItems.Button("Toggle Fullscreen", (v.screenX * 0.03125, v.screenY * 0.04), int(v.screenX * 0.09375), colour("beige"), colour("grey"), "Resources\Fonts\MorrisRoman.ttf", "fullscreen"))
-    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY - v.screenY * 0.08), 30, colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
+    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY - v.screenY * 0.08), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
     buttons.add(MenuItems.Button("Toggle Resolution", (v.screenX * 0.03125, v.screenY * 0.2), int(v.screenX * 0.09375), colour("beige"), colour("grey"), "Resources\Fonts\MorrisRoman.ttf", "resolution"))
     
     fade = MenuItems.fadeIn()
@@ -109,8 +109,10 @@ def options():
                                 v.screenX = 800
                                 v.screenY = 600
                             elif v.screenX == 800:
-                                v.screenX = 1024
-                                v.screenY = 768
+                                #v.screenX = 1024
+                                #v.screenY = 768
+                                v.screenX = 933
+                                v.screenY = 700
                             elif v.screenX == 1024:
                                 v.screenX = 640
                                 v.screenY = 480
@@ -131,12 +133,15 @@ def windowUpdate():
     icon = py.image.load("Resources/Images/Icon.ico")
     py.display.set_icon(icon)
     print(v.screenX, v.screenY)
-    if v.screenX == 480:
+    v.screenScale = round(v.screenX * 0.004, 1)
+    v.scale = v.screenScale
+    print(v.scale)
+    """if v.screenX == 480:
         v.screenScale = 2
     if v.screenX == 800:
         v.screenScale = 2.5
     if v.screenX == 1024:
-        v.screenScale = 4.3
+        v.screenScale = 4.3"""
 
 def game():
     py.init()

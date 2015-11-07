@@ -113,6 +113,9 @@ def options():
                                 #v.screenY = 768
                                 v.screenX = 933
                                 v.screenY = 700
+                            elif v.screenX == 933:
+                                v.screenX = 640
+                                v.screenY = 480
                             elif v.screenX == 1024:
                                 v.screenX = 640
                                 v.screenY = 480
@@ -134,8 +137,6 @@ def windowUpdate():
     py.display.set_icon(icon)
     print(v.screenX, v.screenY)
     v.screenScale = round(v.screenX * 0.004, 1)
-    v.scale = v.screenScale
-    print(v.scale)
     """if v.screenX == 480:
         v.screenScale = 2
     if v.screenX == 800:

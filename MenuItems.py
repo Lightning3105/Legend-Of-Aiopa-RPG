@@ -167,6 +167,8 @@ class characterSelector(py.sprite.Sprite):
             cMod = self.greyedCycle * 4
             cMod = 255 - cMod
             size = self.skin.get_rect()
+            size.width = (size.width / 640) * v.screenX
+            size.height = (size.height / 480) * v.screenY
             self.image = py.transform.scale(self.skin, (int(size.width * sMod), int(size.height * sMod)))
             
             self.image.fill((cMod, cMod, cMod), special_flags=py.BLEND_RGBA_MULT)
@@ -217,6 +219,8 @@ class characterSelector(py.sprite.Sprite):
                     if event.type == py.USEREVENT:
                         sMod = 6 + ((200 - self.movingCycle) / 40)
                         size = self.skin.get_rect()
+                        size.width = (size.width / 640) * v.screenX
+                        size.height = (size.height / 480) * v.screenY
                         self.image = py.transform.scale(self.skin, (int(size.width * sMod), int(size.height * sMod)))
                         self.rect = self.image.get_rect()
                         newpos = list(self.pos)
@@ -228,6 +232,8 @@ class characterSelector(py.sprite.Sprite):
                         
             else:
                 size = self.skin.get_rect()
+                size.width = (size.width / 640) * v.screenX
+                size.height = (size.height / 480) * v.screenY
                 self.image = py.transform.scale(self.skin, (int(size.width * 3), int(size.height * 3)))
                 self.image.fill((135, 135, 135, self.opacity), special_flags=py.BLEND_RGBA_MULT)
                 self.opacity -= 1
@@ -239,10 +245,11 @@ class characterSelector(py.sprite.Sprite):
 class optionSlate():
     
     def __init__(self):
-        self.posx = 960
-        self.posy = 240
-        self.width = 400
-        self.height = 400
+        self.width = v.screenX * 0.625
+        self.height = v.screenX * 0.625
+        self.posx = v.screenX * 1.5
+        self.posy = v.screenY * 0.5
+        
     
     def update(self):
         if v.custimizationStage == "To Attributes":
@@ -252,13 +259,13 @@ class optionSlate():
             self.outerRect.center = self.posx, self.posy
             py.draw.rect(v.screen, py.Color(153, 76, 0), self.outerRect)
             py.draw.rect(v.screen, py.Color(255, 178, 102), self.innerRect)
-            if self.posx != 440:
-                self.posx -= 1
+            if self.posx != v.screenX * 0.6875:
+                self.posx -= v.screenX * 0.003125
             else:
                 v.custimizationStage = "Attributes"
         if v.custimizationStage == "Attributes" or v.custimizationStage == "Customisation":
-            self.posx = 440
-            self.posy = 240
+            self.posx = v.screenX * 0.6875
+            self.posy = v.screenY * 0.5
             self.innerRect = py.Rect(0, 0, self.width, self.height)
             self.innerRect.center = self.posx, self.posy
             self.outerRect = py.Rect(0, 0, self.width + 20, self.height + 20)
@@ -270,7 +277,7 @@ class optionAttribute(py.sprite.Sprite):
     
     def __init__(self, posy, attribute):
         super().__init__()
-        self.posx = 240
+        self.posx = v.screenX * 0.375
         self.posy = posy
         self.attribute = attribute
         self.baseValue = v.Attributes[attribute]
@@ -284,28 +291,28 @@ class optionAttribute(py.sprite.Sprite):
         if v.custimizationStage == "Attributes":
             self.baseValue = v.Attributes[self.attribute]
             arrow = py.image.load("Resources/Images/AttributeArrow.png")
-            arrow = py.transform.scale(arrow, (int(arrow.get_rect().width * 1.5), int(arrow.get_rect().height * 1.5)))
+            arrow = py.transform.scale(arrow, (int(arrow.get_rect().width * v.screenX * 0.00234375), int(arrow.get_rect().height * v.screenX * 0.00234375)))
             
             arrowL = py.transform.rotate(arrow, 180)
             v.screen.blit(arrowL, (self.posx, self.posy))
             self.minusRect = py.Rect(self.posx, self.posy, arrow.get_rect().width, arrow.get_rect().height)
             
-            font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
+            font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.046875))
             
             label = font.render(str(self.attribute) + ":", 1, (255,255,255))
-            lx = 260
+            lx = v.screenX * 0.40625
             v.screen.blit(label, (lx, self.posy - 6))
             
             textLength = font.size(str(self.attribute) + ":")[0] + 5
             
             label = font.render(str(self.baseValue), 1, (255,255,255))
-            lx = 260 + textLength
+            lx = (v.screenX * 0.40625) + textLength
             v.screen.blit(label, (lx, self.posy - 6))
             
             textLength += font.size(str(self.baseValue))[0] + 5
             
             label = font.render("+" + str(self.addedValue), 1, (0,255,0))
-            lx = 260 + textLength
+            lx = (v.screenX * 0.40625) + textLength
             v.screen.blit(label, (lx, self.posy - 6))
             
             textLength += font.size("+" + str(self.addedValue))[0] + 25

@@ -17,7 +17,8 @@ import time
 from random import randint
 import npcScripts
 import setupScripts
-#Possibly devastating changes incoming.
+
+#TODO: Change projectiles so they work with lag
 def mainMenu():
     py.init()
     windowUpdate()
@@ -49,14 +50,11 @@ def mainMenu():
                     if button.pressed():
                         id = button.ID
                         if id == "play":
-                            """classSelection()
-                            #game()
-                            return""" #Temporary, since I can't be bothered to wait.
-                            setupScripts.defaultVariables()
-                            v.playerClass = "Mage"
                             setupScripts.createGroups()
+                            classSelection()
+                            setupScripts.defaultVariables()
+                            #v.playerClass = "Mage"
                             setupScripts.setAttributes()
-                            
                             game()
                             return
                         if id == "options":
@@ -358,21 +356,21 @@ def classSelection():
     os = MenuItems.optionSlate()
     
     attOptions = py.sprite.Group()
-    AoX = 100
+    AoX = v.screenY * 0.21
     for attribute in v.Attributes:
         attOptions.add(MenuItems.optionAttribute(AoX, attribute))
-        AoX += 30
+        AoX += v.screenX * 0.046875
     #attOptions.add(MenuItems.optionAttribute(100, "Max Health"))
     #attOptions.add(MenuItems.optionAttribute(130, "Speed"))
     
     labels = py.sprite.Group()
-    labels.add(MenuItems.textLabel("Define Character Attributes", (250, 40), colour("Black"), "Resources/Fonts/RPGSystem.ttf", 35))
-    labels.add(MenuItems.textLabel("Skill Points Remaining:", (250, 65), colour("grey"), "Resources/Fonts/RPGSystem.ttf", 30))
-    labels.add(MenuItems.textLabel("skillPoints", (500, 65), colour("green"), "Resources/Fonts/RPGSystem.ttf", 30, True))
+    labels.add(MenuItems.textLabel("Define Character Attributes", (v.screenX * 0.390625, v.screenY * 0.08), colour("Black"), "Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.0546875)))
+    labels.add(MenuItems.textLabel("Skill Points Remaining:", (v.screenX * 0.390625, v.screenY * 0.14), colour("grey"), "Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.046875)))
+    labels.add(MenuItems.textLabel("skillPoints", (v.screenX * 0.78125, v.screenY * 0.14), colour("green"), "Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.046875), True))
     
     buttons = py.sprite.Group()
-    buttons.add(MenuItems.Button("Back", (10, 440), 30, colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
-    buttons.add(MenuItems.Button("Continue", (550, 417), 20, colour("brown"), (153, 76, 0), "Resources\Fonts\RunicSolid.ttf", "continue"))
+    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
+    buttons.add(MenuItems.Button("Continue", (v.screenX * 0.859375, v.screenY * 0.86875), int(v.screenX * 0.03125), colour("brown"), (153, 76, 0), "Resources\Fonts\RunicSolid.ttf", "continue"))
 
     background = MenuItems.shiftingGradient((50, 0, 0), (205, 0, 0))
     

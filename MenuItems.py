@@ -514,7 +514,7 @@ class appearanceTab(py.sprite.Sprite):
         self.startx = v.screenX * 0.390625
         self.posy = v.screenY * 0.08
     
-    def draw(self): #TODO: Fixe with screen size
+    def draw(self): #TODO: Fix with screen size
         image = py.image.load("Resources/Images/Character Customisation/Tabs/Body.png")
         size = image.get_rect()
         size.width = (size.width / 640) * v.screenX

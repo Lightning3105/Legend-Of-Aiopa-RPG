@@ -35,13 +35,26 @@ class BaseMap():
         self.posy = 0
         self.skin = image.convert()
         v.MAP = self
+        self.oldScale = None
+        self.oldPos = None
+        self.reRender = False
     
     def update(self):
-        size = self.skin.get_rect().size
-        self.image = py.transform.scale(self.skin, (int(size[0] * v.scale), int(size[1] * v.scale)))
+        if self.oldScale != v.scale:
+            size = self.skin.get_rect().size
+            self.image = py.transform.scale(self.skin, (int(size[0] * v.scale), int(size[1] * v.scale)))
+            self.oldScale = v.scale
+            self.reRender = True
+        #if self.oldPos != (v.playerPosX, v.playerPosY):
         self.rect = self.image.get_rect()
         self.rect.centerx = v.screenX / 2 + ((-v.playerPosX + (1 * self.posx) - 15) * v.scale)
         self.rect.centery = v.screenY / 2 + ((v.playerPosY + (1 * self.posy) - 15) * v.scale)
+            #self.oldPos = (v.playerPosX, v.playerPosY)
+            #self.reRender = True
+        if self.reRender:
+            self.image = self.image.convert()
+            print("Rerender")
+            self.reRender = False
         self.draw()
         
     def draw(self):

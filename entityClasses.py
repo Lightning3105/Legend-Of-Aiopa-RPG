@@ -57,7 +57,7 @@ class Player(py.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.posx = v.screen.get_rect()[2] / 2
-        self.posy = v.screen.get_rect()[3] / 2
+        self.posy = v.screenY / 2
         self.direction = "Down"
         v.playerDirection = self.direction
         self.moving = False
@@ -319,7 +319,7 @@ class Tile(py.sprite.Sprite):
 
         self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (30 * self.tilePosX)) * v.scale)
 
-        self.rect.centery = v.screen.get_rect()[3] / 2 + ((v.playerPosY + (30 * self.tilePosY)) * v.scale)
+        self.rect.centery = v.screenY / 2 + ((v.playerPosY + (30 * self.tilePosY)) * v.scale)
 
 
 def rot_center(image, angle):
@@ -337,7 +337,7 @@ def arc(point, radius, degrees):
     return out
 
 def centre():
-    return v.screen.get_rect()[2] / 2, v.screen.get_rect()[3] / 2
+    return v.screen.get_rect()[2] / 2, v.screenY / 2
 
 class Enemy(py.sprite.Sprite):
 
@@ -445,7 +445,7 @@ class Enemy(py.sprite.Sprite):
             self.stopped = False
             self.damage_knockback()
             self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
-            self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
+            self.rect.centery = v.screenY / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
             self.rect.height = 27 * v.scale
             self.rect.width = 21 * v.scale
             hitlist = list(v.hitList) + list(v.allNpc)
@@ -541,7 +541,7 @@ class Enemy(py.sprite.Sprite):
             self.moving = False
             v.attackerDirection = self.direction
         if self.attCount <= int(15 * v.scale) and self.attCount > int(-10 * v.scale):
-            pos = (v.screen.get_rect()[2] / 2 + int((-v.playerPosX + (self.attPos[0])) * v.scale) - self.attCount - int(10 * v.scale), v.screen.get_rect()[3] / 2 - int((-v.playerPosY + (self.attPos[1])) * v.scale) + self.attCount)
+            pos = (v.screen.get_rect()[2] / 2 + int((-v.playerPosX + (self.attPos[0])) * v.scale) - self.attCount - int(10 * v.scale), v.screenY / 2 - int((-v.playerPosY + (self.attPos[1])) * v.scale) + self.attCount)
             v.screen.blit(attImage, pos)
         if abs(self.posx - v.playerPosX) < 32:
             if abs(self.posy - v.playerPosY) < 32:
@@ -551,7 +551,7 @@ class Enemy(py.sprite.Sprite):
     def death(self):
         if self.dead:
             self.rect.centerx = v.screen.get_rect()[2] / 2 + int((-v.playerPosX + (1 * self.posx)) * v.scale)
-            self.rect.centery = v.screen.get_rect()[3] / 2 - int((-v.playerPosY + (1 * self.posy)) * v.scale)
+            self.rect.centery = v.screenY / 2 - int((-v.playerPosY + (1 * self.posy)) * v.scale)
             if self.firstDeath:
                 self.damage_alpha = 255
                 self.firstDeath = False
@@ -702,7 +702,7 @@ class Particle(py.sprite.Sprite):
             self.posy += randint(-self.jump, self.jump)
             self.rect = py.Rect(0, 0, int(2 *v.scale), int(2 *v.scale))
             self.rect.centerx = v.screen.get_rect()[2] / 2 + int((-v.playerPosX + (1 * self.posx)) * v.scale)
-            self.rect.centery = v.screen.get_rect()[3] / 2 - int((-v.playerPosY + (1 * self.posy)) * v.scale)
+            self.rect.centery = v.screenY / 2 - int((-v.playerPosY + (1 * self.posy)) * v.scale)
             py.draw.rect(v.screen, self.colour, self.rect)
             if self.timer <= 0:
                 self.alive = False
@@ -744,7 +744,7 @@ class xp(py.sprite.Sprite):
         
         self.rect = self.image.get_rect()
         self.rect.centerx = v.screen.get_rect()[2] / 2 + int((-v.playerPosX + self.posx) * v.scale)
-        self.rect.centery = v.screen.get_rect()[3] / 2 - int((-v.playerPosY + self.posy) * v.scale)
+        self.rect.centery = v.screenY / 2 - int((-v.playerPosY + self.posy) * v.scale)
 
 class droppedItem(py.sprite.Sprite):
     
@@ -759,7 +759,7 @@ class droppedItem(py.sprite.Sprite):
         self.image = py.transform.scale(self.item.icon, (int(12 * v.scale), int(12 * v.scale)))
         self.rect = self.image.get_rect()
         self.rect.centerx = v.screen.get_rect()[2] / 2 + int((-v.playerPosX + self.posx) * v.scale)
-        self.rect.centery = v.screen.get_rect()[3] / 2 - int((-v.playerPosY + self.posy) * v.scale)
+        self.rect.centery = v.screenY / 2 - int((-v.playerPosY + self.posy) * v.scale)
         actionString = "Pickup " + str(self.item.name) + " - Press F"
         if abs(self.posx - v.playerPosX) < 20:
             if abs(self.posy - v.playerPosY) < 30:
@@ -853,7 +853,7 @@ class NPC(py.sprite.Sprite):
         self.image = py.transform.scale(self.image, (int(24 * v.scale), int(32 * v.scale)))
         self.rect = self.image.get_rect()
         self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx)) * v.scale)
-        self.rect.centery = v.screen.get_rect()[3] / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
+        self.rect.centery = v.screenY / 2 - ((-v.playerPosY + (1 * self.posy)) * v.scale)
         self.title()
         if self.nearPlayer():
             self.talk()

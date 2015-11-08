@@ -176,16 +176,16 @@ class ability(py.sprite.Sprite):
 class pauseScreen:
     
     def __init__(self):
-        self.pos = (v.screen.get_rect()[2] / 2, v.screen.get_rect()[3] / 2)
-        self.bigRect = py.Rect(0, 0, v.screen.get_rect()[2], v.screen.get_rect()[3])
+        self.pos = (v.screenX / 2, v.screenY / 2)
+        self.bigRect = py.Rect(0, 0, v.screenX, v.screenY)
         self.text = py.sprite.Group()
-        self.text.add(MenuItems.textLabel("Paused", (v.screen.get_rect()[2] / 2, 100), (255, 255, 255), "Resources\Fonts\RunicClear.ttf", 80, centred=True))
+        self.text.add(MenuItems.textLabel("Paused", (v.screenX / 2, 100), (255, 255, 255), "Resources\Fonts\RunicClear.ttf", 80, centred=True))
         self.buttons = py.sprite.Group()
-        self.buttons.add(MenuItems.Button("Main Menu", (v.screen.get_rect()[2] / 2, 200), 40, colour("brown"), colour("white"), "Resources\Fonts\RunicSolid.ttf", "mainMenu", True))
-        self.buttons.add(MenuItems.Button("Exit Game", (v.screen.get_rect()[2] / 2, 300), 40, colour("brown"), colour("white"), "Resources\Fonts\RunicSolid.ttf", "quit", True))
+        self.buttons.add(MenuItems.Button("Main Menu", (v.screenX / 2, 200), 40, colour("brown"), colour("white"), "Resources\Fonts\RunicSolid.ttf", "mainMenu", True))
+        self.buttons.add(MenuItems.Button("Exit Game", (v.screenX / 2, 300), 40, colour("brown"), colour("white"), "Resources\Fonts\RunicSolid.ttf", "quit", True))
         
     def update(self):
-        grey = py.Surface((v.screen.get_rect()[2], v.screen.get_rect()[3])).convert_alpha()
+        grey = py.Surface((v.screenX, v.screenY)).convert_alpha()
         grey.fill((20, 20, 20, 200))
         v.screen.blit(grey, self.bigRect)
         self.text.update()
@@ -264,7 +264,7 @@ def actionText():
         font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
         label = font.render(v.actionQueue[0], 1, (255, 255, 255))
         posy = 380
-        posx = (v.screen.get_rect()[2]/2) - (font.size(v.actionQueue[0])[0] / 2)
+        posx = (v.screenX/2) - (font.size(v.actionQueue[0])[0] / 2)
         v.screen.blit(label, (posx, posy))
 
 def fps():

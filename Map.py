@@ -40,8 +40,8 @@ class BaseMap():
         size = self.skin.get_rect().size
         self.image = py.transform.scale(self.skin, (int(size[0] * v.scale), int(size[1] * v.scale)))
         self.rect = self.image.get_rect()
-        self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (1 * self.posx) - 15) * v.scale)
-        self.rect.centery = v.screen.get_rect()[3] / 2 + ((v.playerPosY + (1 * self.posy) - 15) * v.scale)
+        self.rect.centerx = v.screenX / 2 + ((-v.playerPosX + (1 * self.posx) - 15) * v.scale)
+        self.rect.centery = v.screenY / 2 + ((v.playerPosY + (1 * self.posy) - 15) * v.scale)
         self.draw()
         
     def draw(self):

@@ -279,7 +279,7 @@ def game():
             v.clock.tick(30)
             v.events = []
             v.events = py.event.get()
-            backgroundImage = py.image.fromstring(background, (v.screen.get_rect()[2], v.screen.get_rect()[3]), "RGBA")
+            backgroundImage = py.image.fromstring(background, (v.screenX, v.screen.get_rect()[3]), "RGBA")
             v.screen.blit(backgroundImage, (0, 0))
             pause.update()
             py.display.flip()
@@ -300,7 +300,7 @@ def game():
             v.events = []
             v.events = py.event.get()
             
-            backgroundImage = py.image.fromstring(background, (v.screen.get_rect()[2], v.screen.get_rect()[3]), "RGBA")
+            backgroundImage = py.image.fromstring(background, (v.screenX, v.screen.get_rect()[3]), "RGBA")
             v.screen.blit(backgroundImage, (0, 0))
             
             invScreen.update()
@@ -323,9 +323,9 @@ def game():
             v.clock.tick(30)
             v.events = []
             v.events = py.event.get()
-            backgroundImage = py.image.fromstring(background, (v.screen.get_rect()[2], v.screen.get_rect()[3]), "RGBA")
+            backgroundImage = py.image.fromstring(background, (v.screenX, v.screen.get_rect()[3]), "RGBA")
             v.screen.blit(backgroundImage, (0, 0))
-            grey = py.Surface((v.screen.get_rect()[2], v.screen.get_rect()[3])).convert_alpha()
+            grey = py.Surface((v.screenX, v.screen.get_rect()[3])).convert_alpha()
             grey.fill((20, 20, 20, 200))
             v.screen.blit(grey, (0, 0))
             v.conversationClass.update()
@@ -346,9 +346,9 @@ def classSelection():
     
 
     classes = py.sprite.Group()
-    classes.add(MenuItems.characterSelector("Resources/Images/PaladinClass.png", (v.screen.get_rect()[2]/2, v.screen.get_rect()[3]/2), "Paladin"))
-    classes.add(MenuItems.characterSelector("Resources/Images/MageClass.png", (v.screen.get_rect()[2]/4, v.screen.get_rect()[3]/2), "Mage"))
-    classes.add(MenuItems.characterSelector("Resources/Images/RangerClass.png", (v.screen.get_rect()[2]/1.3, v.screen.get_rect()[3]/2), "Ranger"))
+    classes.add(MenuItems.characterSelector("Resources/Images/PaladinClass.png", (v.screenX/2, v.screen.get_rect()[3]/2), "Paladin"))
+    classes.add(MenuItems.characterSelector("Resources/Images/MageClass.png", (v.screenX/4, v.screen.get_rect()[3]/2), "Mage"))
+    classes.add(MenuItems.characterSelector("Resources/Images/RangerClass.png", (v.screenX/1.3, v.screen.get_rect()[3]/2), "Ranger"))
     py.time.set_timer(py.USEREVENT, 10) # moving and growing animation speed
     
     v.custimizationStage = "Class Selection"

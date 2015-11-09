@@ -520,12 +520,12 @@ class appearanceTab(py.sprite.Sprite):
         size.width = (size.width / 640) * v.screenX
         size.height = (size.height / 480) * v.screenY
         image = py.transform.scale(image, (int(size.width * 1.5), int(size.height * 1.5)))
-        rect = py.Rect(self.startx, self.posy + 2, v.screenX * 0.03125, v.screenX * 0.03125)
+        rect = py.Rect(self.startx, self.posy + 2 / 640 * v.screenX, v.screenX * 0.03125, v.screenX * 0.03125)
         v.screen.blit(image, rect)
         font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.03125))
         label = font.render("Body", 1, (255, 255, 255))
-        v.screen.blit(label, (280, 50))
-        rect = py.Rect(241, 41, 80, 38)
+        v.screen.blit(label, (280 / 640 * v.screenX, 50 / 640 * v.screenX))
+        rect = py.Rect(241 / 640 * v.screenX, 41 / 640 * v.screenX, 80 / 640 * v.screenX, 38 / 640 * v.screenX)
         if rect.collidepoint(py.mouse.get_pos()):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
@@ -542,12 +542,12 @@ class appearanceTab(py.sprite.Sprite):
         size.width = (size.width / 640) * v.screenX
         size.height = (size.height / 480) * v.screenY
         image = py.transform.scale(image, (int(size.width * 2), int(size.height * 2)))
-        rect = py.Rect(self.startx + 80, self.posy + 7, v.screenX * 0.03125, v.screenX * 0.03125)
+        rect = py.Rect(self.startx + 80 / 640 * v.screenX, self.posy + 7 / 640 * v.screenX, v.screenX * 0.03125, v.screenX * 0.03125)
         v.screen.blit(image, rect)
         font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.03125))
         label = font.render("Face", 1, (255, 255, 255))
-        v.screen.blit(label, (280 + 83, 50))
-        rect = py.Rect(241 + 83, 41, 80, 38)
+        v.screen.blit(label, (280 / 640 * v.screenX + 83 / 640 * v.screenX, 50 / 640 * v.screenX))
+        rect = py.Rect(241 / 640 * v.screenX + 83 / 640 * v.screenX, 41 / 640 * v.screenX, 80 / 640 * v.screenX, 38 / 640 * v.screenX)
         if rect.collidepoint(py.mouse.get_pos()):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
@@ -565,12 +565,12 @@ class appearanceTab(py.sprite.Sprite):
         size.width = (size.width / 640) * v.screenX
         size.height = (size.height / 480) * v.screenY
         image = py.transform.scale(image, (int(size.width * 2), int(size.height * 2)))
-        rect = py.Rect(self.startx + 160, self.posy + 7, v.screenX * 0.03125, v.screenX * 0.03125)
+        rect = py.Rect(self.startx + 160 / 640 * v.screenX, self.posy + 7 / 640 * v.screenX, v.screenX * 0.03125, v.screenX * 0.03125)
         v.screen.blit(image, rect)
         font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.03125))
         label = font.render("Dress", 1, (255, 255, 255))
-        v.screen.blit(label, (280 + 166, 50))
-        rect = py.Rect(241 + 166, 41, 85, 38)
+        v.screen.blit(label, (280 / 640 * v.screenX + 166 / 640 * v.screenX, 50 / 640 * v.screenX))
+        rect = py.Rect(241 / 640 * v.screenX + 166 / 640 * v.screenX, 41 / 640 * v.screenX, 85 / 640 * v.screenX, 38 / 640 * v.screenX)
         if rect.collidepoint(py.mouse.get_pos()):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
@@ -586,12 +586,12 @@ class appearanceTab(py.sprite.Sprite):
         size.width = (size.width / 640) * v.screenX
         size.height = (size.height / 480) * v.screenY
         image = py.transform.scale(image, (int(size.width * 2), int(size.height * 2)))
-        rect = py.Rect(self.startx + 250, self.posy + 10, v.screenX * 0.03125, v.screenX * 0.03125)
+        rect = py.Rect(self.startx + 250 / 640 * v.screenX, self.posy + 10 / 640 * v.screenX, v.screenX * 0.03125, v.screenX * 0.03125)
         v.screen.blit(image, rect)
         font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.03125))
         label = font.render("Hair", 1, (255, 255, 255))
-        v.screen.blit(label, (280 + 254, 50))
-        rect = py.Rect(241 + 254, 41, 85, 38)
+        v.screen.blit(label, (280 / 640 * v.screenX + 254 / 640 * v.screenX, 50 / 640 * v.screenX))
+        rect = py.Rect(241 / 640 * v.screenX + 254 / 640 * v.screenX, 41 / 640 * v.screenX, 85 / 640 * v.screenX, 38 / 640 * v.screenX)
         if rect.collidepoint(py.mouse.get_pos()):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:

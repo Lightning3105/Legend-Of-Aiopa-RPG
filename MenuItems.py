@@ -18,7 +18,7 @@ class Button(py.sprite.Sprite):
         self.hcolour = hovercolour
         self.ncolour = normalcolour
         self.font = font
-        self.font = py.font.Font(font, size)
+        self.font = py.font.Font(font, int(size))
         self.centred = centred
         self.size = bsize
         self.set_rect()

@@ -254,11 +254,11 @@ def game():
             if keys_pressed[py.K_KP_PLUS]:
                 v.scale += 0.1
                 v.scale = round(v.scale, 1)
-                #print(v.scale)
+                print(v.scale)
             if keys_pressed[py.K_KP_MINUS]:
                 v.scale -= 0.1
                 v.scale = round(v.scale, 1)
-                #print(v.scale)
+                print(v.scale)
             for event in v.events:
                 if event.type == py.KEYDOWN:
                     if event.key == py.K_ESCAPE:

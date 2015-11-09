@@ -513,12 +513,14 @@ class Enemy(py.sprite.Sprite):
         #self.move()
 
     def healthbar(self):
-        py.draw.rect(v.screen, (0,0,0), (self.rect.left, self.rect.top - (5 * v.scale), self.rect.width, 2 * v.scale))
-        py.draw.rect(v.screen, (255,0,0), (self.rect.left, self.rect.top - (5 * v.scale), (self.health/self.maxHealth * self.rect.width), 2 * v.scale))
+        if v.scale > 0.7:
+            py.draw.rect(v.screen, (0,0,0), (self.rect.left, self.rect.top - (5 * v.scale), self.rect.width, 2 * v.scale))
+            py.draw.rect(v.screen, (255,0,0), (self.rect.left, self.rect.top - (5 * v.scale), (self.health/self.maxHealth * self.rect.width), 2 * v.scale))
     def title(self):
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(10 * v.scale)) #TODO: Scale
-        label = font.render(self.name, 1, (255,255,255))
-        v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.top - (15 * v.scale)))
+        if v.scale > 0.7:
+            font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(10 * v.scale)) #TODO: Scale
+            label = font.render(self.name, 1, (255,255,255))
+            v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.top - (15 * v.scale)))
 
     def attack(self):
         #print(abs(self.posx - v.playerPosX))
@@ -844,9 +846,10 @@ class NPC(py.sprite.Sprite):
             self.view = self.direction + "C"
     
     def title(self):
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(10 * v.scale)) #TODO: Scale
-        label = font.render(self.name, 1, (255,255,255))
-        v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.top - (5 * v.scale)))
+        if v.scale > 0.7:
+            font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(10 * v.scale)) #TODO: Scale
+            label = font.render(self.name, 1, (255,255,255))
+            v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.top - (5 * v.scale)))
     
     def update(self):
         self.image = self.views[self.view]

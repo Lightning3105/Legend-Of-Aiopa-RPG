@@ -35,8 +35,8 @@ class health:
     def draw(self):
         self.getPercent()
         rect = self.image.get_rect()
-        image = py.transform.scale(self.image, (30, 30))
-        pos = (65 + (31 * self.number), v.screen.get_rect().bottom - 70)
+        image = py.transform.scale(self.image, (int(30 / 640 * v.screenX), int(30 / 640 * v.screenX)))
+        pos = ((65 + (31 * self.number)) / 640 * v.screenX, 410 / 640 * v.screenX)
         rect.center = pos
         v.screen.blit(image, rect)
 
@@ -74,8 +74,8 @@ class mana:
     def draw(self):
         self.getPercent()
         rect = self.image.get_rect()
-        image = py.transform.scale(self.image, (30, 30))
-        pos = (65 + (31 * self.number), v.screen.get_rect().bottom - 30)
+        image = py.transform.scale(self.image, (int(30 / 640 * v.screenX), int(30 / 640 * v.screenX)))
+        pos = ((65 + (31 * self.number)) / 640 * v.screenX, 450 / 640 * v.screenX)
         rect.center = pos
         v.screen.blit(image, rect)
 
@@ -97,7 +97,7 @@ class weaponSlot:
     def draw(self):
         image = "Resources/Images/Empty_Weapon_Slot.png"
         image = py.image.load(image)
-        image = py.transform.scale(image, (80, 80))
+        image = py.transform.scale(image, (int(80 / 640 * v.screenX), int(80 / 640 * v.screenX)))
         rect = image.get_rect()
         rect.center = (44, v.screen.get_rect().bottom - 45)
         v.screen.blit(image, rect)
@@ -105,8 +105,8 @@ class weaponSlot:
 class XP:
     
     def __init__(self):
-        self.posx = 320
-        self.posy = v.screen.get_rect().bottom - 40
+        self.posx = 320 / 640 * v.screenX
+        self.posy = 440 / 640 * v.screenX
         
     def update(self):
         if v.experience["XP"] >= v.experience["XPtoL"]:
@@ -130,7 +130,7 @@ class XP:
                     rend = py.transform.rotate(seg, deg)
                     segRect.center = entityClasses.arc((self.posx, self.posy), 30, -deg - 180)
                     v.screen.blit(rend, segRect)
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(30 / 640 * v.screenX))
         label = font.render(str(v.experience["XPL"]), 1, (0, 255, 255))
         pos = (self.posx - font.size(str(v.experience["XPL"]))[0]/2, self.posy - font.size(str(v.experience["XPL"]))[1]/2)
         v.screen.blit(label, pos)
@@ -140,14 +140,14 @@ class ability(py.sprite.Sprite):
     def __init__(self, ability, image, num):
         super().__init__()
         self.ability = ability
-        self.posx = 20 + (30 * num)
-        self.posy = 20
+        self.posx = (20 + (30 * num)) / 640 * v.screenX
+        self.posy = 20 / 640 * v.screenX
         self.icon = py.image.load(image).convert_alpha()
     
     def update(self):
         maxCooldown = self.ability.attributes["Cooldown"]
         cooldown = self.ability.object.coolDown
-        self.image = py.transform.scale(self.icon, (32, 32))
+        self.image = py.transform.scale(self.icon, (int(32 / 640 * v.screenX), int(32 / 640 * v.screenX)))
         try:
             self.image.fill((255, 255, 255, int((cooldown / maxCooldown) * 255)), special_flags=py.BLEND_RGBA_MULT)
         except TypeError as detail:
@@ -261,10 +261,10 @@ class miniMap: #TODO make this work with baseMap
 
 def actionText():
     if not v.actionQueue == []:
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(20 / 640 * v.screenX))
         label = font.render(v.actionQueue[0], 1, (255, 255, 255))
-        posy = 380
-        posx = (v.screenX/2) - (font.size(v.actionQueue[0])[0] / 2)
+        posy = 380 / 640 * v.screenX
+        posx = ((v.screenX/2) - (font.size(v.actionQueue[0])[0] / 2)) / 640 * v.screenX
         v.screen.blit(label, (posx, posy))
 
 def fps():

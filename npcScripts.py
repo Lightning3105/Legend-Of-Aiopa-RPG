@@ -10,7 +10,7 @@ class conversation():
         self.material = material
         self.npc = npc
         self.npcName = npc.name
-        self.npcIcon = py.transform.scale(npc.icon, (150, 150))
+        self.npcIcon = py.transform.scale(npc.icon, (int(150 / 640 * v.screenX), int(150 / 640 * v.screenX)))
         self.place = material[0]
         self.speechOutput = None
         self.searchDone = False
@@ -42,13 +42,13 @@ class conversation():
             #self.speechOutput = None
             self.message = master.place["Message"]
             self.master = master
-            self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 25)
+            self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(25 / 640 * v.screenX))
             line = []
             self.lines = []
             for word in self.message.split(" "):
                 line.append(word)
                 #print(word)
-                if self.font.size(" ".join(line))[0] > 350:
+                if self.font.size(" ".join(line))[0] > 350 / 640 * v.screenX:
                     line.remove(word)
                     self.lines.append(" ".join(line))
                     line = [word]
@@ -65,11 +65,11 @@ class conversation():
             ymod = 0
             for key, value in self.master.place.items():
                 if key[0] == "B":
-                    self.buttons.add(MenuItems.Button(value["Text"], (220 + xmod, 200 + ymod), 40, (255, 255, 100), (153, 76, 0), "Resources/Fonts/RPGSystem.ttf", value["ID"], bsize=(190, 0)))
-                    xmod += 210
-                    if xmod >= 420:
+                    self.buttons.add(MenuItems.Button(value["Text"], (220 / 640 * v.screenX + xmod, 200 / 640 * v.screenX + ymod), 40 / 640 * v.screenX, (255, 255, 100), (153, 76, 0), "Resources/Fonts/RPGSystem.ttf", value["ID"], bsize=(190 / 640 * v.screenX, 0)))
+                    xmod += 210 / 640 * v.screenX
+                    if xmod >= 420 / 640 * v.screenX:
                         xmod = 0
-                        ymod += 50
+                        ymod += 50 / 640 * v.screenX
             
             self.buts = True
             if len([k for k, v in self.master.place.items() if k[0] == "B"]) == 0:
@@ -78,19 +78,19 @@ class conversation():
             
         
         def update(self):
-            innerRect = py.Rect(220, 300, 400, 150)
-            outerRect = py.Rect(218, 298, 404, 154)
+            innerRect = py.Rect(220 / 640 * v.screenX, 300 / 640 * v.screenX, 400 / 640 * v.screenX, 150 / 640 * v.screenX)
+            outerRect = py.Rect(218 / 640 * v.screenX, 298 / 640 * v.screenX, 404 / 640 * v.screenX, 154 / 640 * v.screenX)
             py.draw.rect(v.screen, py.Color(153, 76, 0), outerRect)
             py.draw.rect(v.screen, py.Color(255, 178, 102), innerRect)
-            py.draw.rect(v.screen, (255, 178, 102), (50, 298, 150, 150))
-            v.screen.blit(self.master.npcIcon, (50, 298))
-            py.draw.rect(v.screen, (153, 76, 0), (50, 298, 150, 150), 2)
-            py.draw.rect(v.screen, (0, 0, 0), (50, 248, 150, 50))
-            py.draw.rect(v.screen, (153, 76, 0), (50, 248, 150, 50), 2)
+            py.draw.rect(v.screen, (255, 178, 102), (50 / 640 * v.screenX, 298 / 640 * v.screenX, 150 / 640 * v.screenX, 150 / 640 * v.screenX))
+            v.screen.blit(self.master.npcIcon, (50 / 640 * v.screenX, 298 / 640 * v.screenX))
+            py.draw.rect(v.screen, (153, 76, 0), (50 / 640 * v.screenX, 298 / 640 * v.screenX, 150 / 640 * v.screenX, 150 / 640 * v.screenX), 2)
+            py.draw.rect(v.screen, (0, 0, 0), (50 / 640 * v.screenX, 248 / 640 * v.screenX, 150 / 640 * v.screenX, 50 / 640 * v.screenX))
+            py.draw.rect(v.screen, (153, 76, 0), (50 / 640 * v.screenX, 248 / 640 * v.screenX, 150 / 640 * v.screenX, 50 / 640 * v.screenX), 2)
             
-            nameFont = py.font.Font("Resources/Fonts/RPGSystem.ttf", 35)
+            nameFont = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(35 / 640 * v.screenX))
             label = nameFont.render(self.master.npcName, 1, (255, 255, 255))
-            v.screen.blit(label, (125 - nameFont.size(self.master.npcName)[0]/2, 273 - nameFont.size(self.master.npcName)[1]/2))
+            v.screen.blit(label, (125 / 640 * v.screenX - nameFont.size(self.master.npcName)[0]/2, 273 / 640 * v.screenX - nameFont.size(self.master.npcName)[1]/2))
             
             self.buttons.update()
             yadd = 0
@@ -100,7 +100,7 @@ class conversation():
                     for letter in range(len(self.lines[line])):
                         if letter <= self.letterno or self.lineno > line:
                             label = self.font.render(self.lines[line][letter], 1, (255, 255, 255))
-                            v.screen.blit(label, (230 + xadd, 310 + yadd))
+                            v.screen.blit(label, (230 / 640 * v.screenX + xadd, 310 / 640 * v.screenX + yadd))
                             xadd += self.font.size(self.lines[line][letter])[0]
                             
                     yadd += self.font.size(self.lines[line][letter])[1]
@@ -116,7 +116,7 @@ class conversation():
             if self.buts == False:
                 label = self.font.render("Continue - F", 1, (255, 100, 255))
                 label.fill((255, 255, 255, self.alphaCycle), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (480, 425))
+                v.screen.blit(label, (480 / 640 * v.screenX, 425 / 640 * v.screenX))
             if self.alphaDirection:
                 self.alphaCycle += 5
             else:

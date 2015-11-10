@@ -200,6 +200,8 @@ class pauseScreen:
                             gameScreens.mainMenu()
                             continue
                         if id == "quit":
+                            import SaveLoad
+                            SaveLoad.Save()
                             from sys import exit
                             exit()
 

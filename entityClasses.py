@@ -341,8 +341,62 @@ def centre():
 
 class Enemy(py.sprite.Sprite):
 
-    def __init__(self, posx, posy, sImage, attributes={}):
+    def __init__(self, posx=None, posy=None, sImage=None, attributes={}, blank = False):
         super().__init__()
+        if not blank:
+            self.newStats(posx, posy, sImage, attributes)
+    
+    def save(self):
+        data = {
+                "attributes": self.attributes,
+                "name": self.name,
+                "posx": self.posx,
+                "posy": self.posy,
+                "direction": self.direction,
+                "view": self.view,
+                "sheetImage": self.sheetImage,
+                "maxHealth": self.maxHealth,
+                "health": self.health,
+                "invulnLength": self.invulnLength,
+                "ID": self.ID,
+                "npcID": self.npcID
+                }
+        return data
+    
+    def load(self, dic):
+        self.attributes = dic["attributes"]
+        self.name = dic["name"]
+        self.posx = dic["posx"]
+        self.posy = dic["posy"]
+        self.direction = dic["direction"]
+        self.view = dic["view"]
+        self.sheetImage = dic["sheetImage"]
+        self.maxHealth = dic["maxHealth"]
+        self.health = dic["health"]
+        self.invulnLength = dic["invulnLength"]
+        self.ID = dic["ID"]
+        self.npcID = dic["npcID"]
+        
+        self.moving = False
+        self.movFlip = True
+        self.speed = 1
+        self.xp = 5
+        self.invulnCooldown = 0
+        self.knockback = 0
+        self.damaged = False
+        self.damage_alpha = 0
+        self.damage_fade = True
+        self.dead = False
+        self.firstDeath = True
+        self.attCount = -float("inf")
+        self.damagedPlayer = False
+        v.allNpc.add(self)
+        self.initSheet()
+        self.rect = py.Rect(0, 0, 0, 0)
+        self.image = py.Surface((0, 0))
+        self.stopped = False
+    
+    def newStats(self, posx=None, posy=None, sImage=None, attributes={}):
         self.attributes = attributes
         self.name = attributes["Name"]
         self.posx = posx
@@ -369,30 +423,12 @@ class Enemy(py.sprite.Sprite):
         v.allNpc.add(self)
         self.initSheet()
         #v.hitList.add(self)
-        self.ID = "npc"
+        self.ID = "enemy"
         self.npcID = v.npcID
         v.npcID += 1
         self.rect = py.Rect(0, 0, 0, 0)
         self.image = py.Surface((0, 0))
         self.stopped = False
-        
-    
-    def save(self):
-        data = {
-                "attributes": self.attributes,
-                "name": self.name,
-                "posx": self.posx,
-                "posy": self.posy,
-                "direction": self.direction,
-                "view": self.view,
-                "sheetImage": self.sheetImage,
-                "maxHealth": self.maxHealth,
-                "health": self.health,
-                "invulnLength": self.invulnLength,
-                "ID": self.ID,
-                "npcID": self.npcID
-                }
-        return data
 
     def initSheet(self):
         self.sheet = SpriteSheet(self.sheetImage, 4, 3)
@@ -457,7 +493,7 @@ class Enemy(py.sprite.Sprite):
             xStopped = False
             cancel = False
             for thing in hitlist:
-                if thing.ID == "npc":
+                if thing.ID == "enemy":
                     if thing.npcID == self.npcID:
                         cancel = True
                 if not cancel:
@@ -809,6 +845,20 @@ class NPC(py.sprite.Sprite):
         self.icon = py.image.load("Resources/Images/NpcSkins/Faces/Basic_Man.png")
         self.conversation = npcScripts.conversation(self, attributes["Conversation"])
         self.summonedGuard = False
+    
+    def save(self):
+        data = {
+                "conversation": self.conversation,
+                "name": self.name,
+                "posx": self.posx,
+                "posy": self.posy,
+                "direction": self.direction,
+                "view": self.view,
+                "sheetImage": self.sheetImage,
+                "ID": self.ID,
+                "npcID": self.npcID
+                }
+        return data
     
     def initSheet(self):
         self.sheet = SpriteSheet(self.sheetImage, 4, 3)

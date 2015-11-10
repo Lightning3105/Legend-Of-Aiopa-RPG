@@ -17,6 +17,7 @@ import time
 from random import randint
 import npcScripts
 import setupScripts
+import SaveLoad
 
 #TODO: Change projectiles so they work with lag
 def mainMenu():
@@ -66,7 +67,10 @@ def mainMenu():
                             options()
                             return
                         if id == "load":
-                            print("Cannot load at the mo.")
+                            setupScripts.createGroups()
+                            setupScripts.defaultVariables()
+                            SaveLoad.Load()
+                            game()
         fade.draw()
         fade.opacity -= 1
         py.display.flip()
@@ -158,10 +162,7 @@ def game():
         v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
     else:
         v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)"""
-    
-    v.playerHealth = v.Attributes["Max Health"]
-    v.playerMana = v.Attributes["Max Mana"]
-    
+
     v.p_class = entityClasses.Player()
     v.clock = py.time.Clock()
     py.time.set_timer(py.USEREVENT, 200) # walking
@@ -171,8 +172,6 @@ def game():
     tileset = entityClasses.SpriteSheet("Resources/Images/Main_Tileset.png", 63, 32)
     
     Map.generateMap(Map.Maps, tileset)
-    #py.time.wait(5000)
-    #v.damagesNPCs = py.sprite.Group()
     
     v.hits = py.sprite.Group()
     v.hits.add(entityClasses.HitBox("Right"))
@@ -181,31 +180,15 @@ def game():
     v.hits.add(entityClasses.HitBox("Bottom"))
     
     weaponSlot = guiClasses.weaponSlot()
-
-    entityClasses.Enemy(-100, -100, "Resources/Images/Generic Goblin.png", {"Name": "Groblin Lvl. 1", "Health":5, "Attack":5})
-    
-    cn = [{"Message": "Greetings. Why not press a button? Who knows, you might win a prize!", "B1": {"Text": "Button 1", "ID": 1}, "B2": {"Text": "Button 2", "ID": 2}, "B3": {"Text": "Button 3", "ID": 3}, "B4": {"Text": "Button 4", "ID": 4}, "ID":0}, {"Message": "You pressed Button 1", "Goto":5, "ID": 1}, {"Message": "You pressed Button 2", "Goto":5, "ID": 2}, {"Message": "You pressed Button 3", "Goto":5, "ID": 3}, {"Message": "You pressed Button 4", "Goto":5, "ID": 4}, {"Message": "Congratulations. You won.", "ID": 5, "End":True}]
-    entityClasses.NPC((0, 30, "Down"), "Resources/Images/Male_Basic.png", {"Name":"Fred", "Conversation":cn})
-    
-    #v.Attributes.update(v.classAttributes["Paladin"]) # TODO: Remove when done
     
     xp = guiClasses.XP()
- 
-    fb = itemClasses.spell("Fire Beam", "beam", "Resources/Images/fireBeam.png", "Resources/Images/redCastCircle.png", {"Damage": 0.2, "Knockback": "S", "Cooldown": 5, "Mana": 10, "InvulnMod": 0})
-       
-    v.abilityButtons.add(guiClasses.ability(fb, "Resources/Images/Spell Icons/fireBeam.png", 0))  
-       
+
     pause = guiClasses.pauseScreen()
     
     map = guiClasses.miniMap()
     
     v.inventory = inventoryScreen.inventory()
-    v.inventory.add(itemClasses.item("Thing", py.image.load("Resources/Images/XPOrb.png")))
-    v.inventory.add(itemClasses.weapon("Magic Orb", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[56], "manaOrb", "Resources/Images/castOrbPurple.png", {"Damage":2, "Knockback": 10}))
-    v.inventory.add(itemClasses.weapon("Broken Sword", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[0], "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10}))
-    v.inventory.add(itemClasses.weapon("Short Bow", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[72], "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10})) 
-    
-    entityClasses.droppedItem(itemClasses.item("Thing", py.image.load("Resources/Images/XPOrb.png")), (100, 100))
+        
     while True:
         if not v.PAUSED:
             #print([i.name for i in v.inventory.contents ])

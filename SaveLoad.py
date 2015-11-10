@@ -16,6 +16,7 @@ def Save():
             "xpMod": v.xpMod,
             "skillPoints": v.skillPoints,
             "appearance": v.appearance,
+            "equipped": v.equipped
             }
     
     pickle.dump(save, savefile)
@@ -33,13 +34,29 @@ def Load():
     savefile = open("Saves/Variables.save", "rb")
     save = pickle.load(savefile)
     v.Attributes = save["Attributes"]
+    v.playerPosX = save["playerPosX"]
+    v.playerPosY = save["playerPosY"]
+    v.playerDirection = save["playerDirection"]
+    v.playerHealth = save["playerHealth"]
+    v.playerMana = save["playerMana"]
+    v.experience = save["experience"]
+    v.xpMod = save["xpMod"]
+    v.skillPoints = save["skillPoints"]
+    v.appearance = save["appearance"]
+    v.equipped = save["equipped"]
     
-    savefile = open("Saves/Entities.save", "wb")
+    savefile = open("Saves/Entities.save", "rb")
     save = pickle.load(savefile)
     
     for thing in save:
-        entityClasses.Enemy() # Create blank enemy here
+        print(thing)
+        if thing["ID"] == "enemy":
+            ne = entityClasses.Enemy(blank=True)
+            print("create enemy")
+            ne.load(thing)
+        #n = entityClasses.Enemy(blank=True) # Create blank enemy here
+        #n.load()
 
 
-Save()
-Load()
+#Save()
+#Load()

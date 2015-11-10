@@ -34,8 +34,13 @@ def mainMenu():
     
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
+    
+    setupScripts.initSound()
+    v.music = py.mixer.Sound("Resources/Music/Title 1.ogg")
+    v.music.play(loops=-1)
     while True:
         py.event.pump()
+        
         MenuItems.fill_gradient(v.screen, colour("cyan"), colour("dark blue"))
         for text in texts:
             text.draw()
@@ -144,6 +149,9 @@ def windowUpdate():
 
 def game():
     py.init()
+    v.music.fadeout(2000)
+    v.music = py.mixer.Sound("Resources/Music/Ambient 1.ogg")
+    v.music.play(loops=-1)
     v.PAUSED = False
     
     """if v.fullScreen:

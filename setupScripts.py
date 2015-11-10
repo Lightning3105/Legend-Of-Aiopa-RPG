@@ -3,6 +3,10 @@ import itemClasses
 import entityClasses
 import pygame as py
 
+
+def initSound():
+    py.mixer.init()
+
 def setAttributes():
     v.Attributes = v.classAttributes[v.playerClass]
     if v.playerClass == "Mage":

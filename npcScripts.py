@@ -6,12 +6,15 @@ import entityClasses
 
 class conversation():
     
-    def __init__(self, npc, material):
+    def __init__(self, npc, material, place=None):
         self.material = material
         self.npc = npc
         self.npcName = npc.name
         self.npcIcon = py.transform.scale(npc.icon, (int(150 / 640 * v.screenX), int(150 / 640 * v.screenX)))
-        self.place = material[0]
+        if place == None:
+            self.place = material[0]
+        else:
+            self.place = place
         self.speechOutput = None
         self.searchDone = False
     
@@ -78,11 +81,13 @@ class conversation():
             
         
         def update(self):
+            print("convo update")
             innerRect = py.Rect(220 / 640 * v.screenX, 300 / 640 * v.screenX, 400 / 640 * v.screenX, 150 / 640 * v.screenX)
             outerRect = py.Rect(218 / 640 * v.screenX, 298 / 640 * v.screenX, 404 / 640 * v.screenX, 154 / 640 * v.screenX)
             py.draw.rect(v.screen, py.Color(153, 76, 0), outerRect)
             py.draw.rect(v.screen, py.Color(255, 178, 102), innerRect)
             py.draw.rect(v.screen, (255, 178, 102), (50 / 640 * v.screenX, 298 / 640 * v.screenX, 150 / 640 * v.screenX, 150 / 640 * v.screenX))
+            print(self.master.npcIcon)
             v.screen.blit(self.master.npcIcon, (50 / 640 * v.screenX, 298 / 640 * v.screenX))
             py.draw.rect(v.screen, (153, 76, 0), (50 / 640 * v.screenX, 298 / 640 * v.screenX, 150 / 640 * v.screenX, 150 / 640 * v.screenX), 2)
             py.draw.rect(v.screen, (0, 0, 0), (50 / 640 * v.screenX, 248 / 640 * v.screenX, 150 / 640 * v.screenX, 50 / 640 * v.screenX))

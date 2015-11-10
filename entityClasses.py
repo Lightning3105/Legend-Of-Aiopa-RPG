@@ -67,7 +67,7 @@ class Player(py.sprite.Sprite):
         self.damaged = False
         self.damage_alpha = 0
         self.damage_fade = True
-        self.prevHealth = v.playerHealth
+        self.prevHealth = v.Attributes["Max Health"]
         self.dead = False
         self.invulnLength = 30
         self.combineImages()
@@ -829,8 +829,12 @@ class droppedItem(py.sprite.Sprite):
 
 class NPC(py.sprite.Sprite):
     
-    def __init__(self, pos, image, attributes):
+    def __init__(self, pos=None, image=None, attributes={}, blank=False):
         super().__init__()
+        if not blank:
+            self.newStats(pos, image, attributes)
+    
+    def newStats(self, pos=None, image=None, attributes={}):
         self.posx = pos[0]
         self.posy = pos[1]
         self.direction = pos[2]
@@ -846,9 +850,29 @@ class NPC(py.sprite.Sprite):
         self.conversation = npcScripts.conversation(self, attributes["Conversation"])
         self.summonedGuard = False
     
+    def load(self, dic):
+        
+        self.name = dic["name"]
+        self.posx = dic["posx"]
+        self.posy = dic["posy"]
+        self.direction = dic["direction"]
+        self.view = dic["view"]
+        self.sheetImage = dic["sheetImage"]
+        self.ID = dic["ID"]
+        self.npcID = dic["npcID"]
+        
+        v.allNpc.add(self)
+        self.initSheet()
+        self.justNear = False
+        self.icon = py.image.load("Resources/Images/NpcSkins/Faces/Basic_Man.png")
+        self.summonedGuard = False
+        
+        self.conversation = npcScripts.conversation(self, dic["conversation"], dic["convoPlace"])
+        
     def save(self):
         data = {
-                "conversation": self.conversation,
+                "conversation": self.conversation.material,
+                "convoPlace": self.conversation.place,
                 "name": self.name,
                 "posx": self.posx,
                 "posy": self.posy,

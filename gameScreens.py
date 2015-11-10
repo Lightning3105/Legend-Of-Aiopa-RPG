@@ -61,6 +61,8 @@ def mainMenu():
                             setupScripts.defaultVariables()
                             #v.playerClass = "Mage"
                             setupScripts.setAttributes()
+                            v.newGame = True
+                            print("run game")
                             game()
                             return
                         if id == "options":
@@ -70,6 +72,7 @@ def mainMenu():
                             setupScripts.createGroups()
                             setupScripts.defaultVariables()
                             SaveLoad.Load()
+                            v.newGame = False
                             game()
         fade.draw()
         fade.opacity -= 1
@@ -152,6 +155,7 @@ def windowUpdate():
         v.screenScale = 4.3"""
 
 def game():
+    print("in game")
     py.init()
     v.music.fadeout(2000)
     v.music = py.mixer.Sound("Resources/Music/Ambient 1.ogg")
@@ -168,6 +172,8 @@ def game():
     py.time.set_timer(py.USEREVENT, 200) # walking
     py.time.set_timer(py.USEREVENT + 1, 50) # Spell animation
     py.time.set_timer(py.USEREVENT + 2, 1000) #One second
+    
+    
 
     tileset = entityClasses.SpriteSheet("Resources/Images/Main_Tileset.png", 63, 32)
     
@@ -188,7 +194,9 @@ def game():
     map = guiClasses.miniMap()
     
     v.inventory = inventoryScreen.inventory()
-        
+    
+    if v.newGame:
+        setupScripts.newGame()
     while True:
         if not v.PAUSED:
             #print([i.name for i in v.inventory.contents ])
@@ -286,6 +294,7 @@ def game():
                 background = py.image.tostring(v.screen, "RGBA")
                 v.justPaused = False
                 invScreen = inventoryScreen.inventoryScreen()
+                print(v.inventory.contents)
             py.event.pump()
             v.clock.tick(30)
             v.events = []
@@ -453,7 +462,7 @@ def classSelection():
                                 for ao in attOptions:
                                     ao.save()
                             elif v.custimizationStage == "Customisation":
-                                game()
+                                return
                         
             
         

@@ -19,6 +19,9 @@ class weapon():
             self.object = weaponClasses.manaOrb(self.image, self)
         if self.attType == "shoot":
             self.object = weaponClasses.shooter(self.image, self)
+    
+    def save(self):
+        pass
 
 class spell():
     

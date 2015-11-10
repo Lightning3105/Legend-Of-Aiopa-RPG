@@ -107,6 +107,7 @@ class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
             v.screen.blit(image, self.pos)
             
             if not self.item == None:
+                print(self.item)
                 icon = py.transform.scale(self.item.icon, (self.size[0] - 2, self.size[1] - 2))
                 if self.master.grabbed == self.item:
                     icon.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)

@@ -16,7 +16,6 @@ def Save():
             "xpMod": v.xpMod,
             "skillPoints": v.skillPoints,
             "appearance": v.appearance,
-            "equipped": v.equipped
             }
     
     pickle.dump(save, savefile)
@@ -29,6 +28,15 @@ def Save():
         save.append(thing.save())
         
     pickle.dump(save, savefile)
+    
+    savefile = open("Saves/Inventory.save", "wb")
+    
+    save = []
+    eSave = []
+    
+    #for k, v in v.equipped.items():
+        #eSave.append([k, v.]) #TODO: yeah, this thing. Saving items.
+    
 
 def Load():
     savefile = open("Saves/Variables.save", "rb")
@@ -43,7 +51,6 @@ def Load():
     v.xpMod = save["xpMod"]
     v.skillPoints = save["skillPoints"]
     v.appearance = save["appearance"]
-    v.equipped = save["equipped"]
     
     savefile = open("Saves/Entities.save", "rb")
     save = pickle.load(savefile)
@@ -53,6 +60,10 @@ def Load():
         if thing["ID"] == "enemy":
             ne = entityClasses.Enemy(blank=True)
             print("create enemy")
+            ne.load(thing)
+        if thing["ID"] == "npc":
+            ne = entityClasses.NPC(blank=True)
+            print("create npc")
             ne.load(thing)
         #n = entityClasses.Enemy(blank=True) # Create blank enemy here
         #n.load()

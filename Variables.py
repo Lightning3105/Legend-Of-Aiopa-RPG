@@ -1,4 +1,5 @@
 PAUSED = False
+newGame = True
 fullScreen = False
 screenX = 640
 screenY = 480

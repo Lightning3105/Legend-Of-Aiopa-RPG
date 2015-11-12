@@ -143,6 +143,8 @@ class ability(py.sprite.Sprite):
         self.posx = (20 + (30 * num)) / 640 * v.screenX
         self.posy = 20 / 640 * v.screenX
         self.icon = py.image.load(image).convert_alpha()
+        self.saveIcon = image
+        self.saveNum = num
     
     def update(self):
         maxCooldown = self.ability.attributes["Cooldown"]
@@ -172,6 +174,14 @@ class ability(py.sprite.Sprite):
             if cooldown == maxCooldown:
                 if v.playerMana >= self.ability.attributes["Mana"]:
                     self.ability.object.attacking = True
+    
+    def save(self):
+        save = {}
+        save["icon"] = self.saveIcon
+        save["num"] = self.saveNum
+        save["ability"] = self.ability.save()
+        return save
+        
 
 class pauseScreen:
     

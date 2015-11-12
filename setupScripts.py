@@ -3,6 +3,7 @@ import itemClasses
 import entityClasses
 import pygame as py
 import guiClasses
+import inventoryScreen
 
 
 def newGame():
@@ -43,6 +44,7 @@ def createGroups():
     v.abilityButtons = py.sprite.Group()
     v.xpGroup = py.sprite.Group()
     v.droppedItems = py.sprite.Group()
+    v.inventory = inventoryScreen.inventory()
 
 def defaultVariables():
     v.playerPosX = 0

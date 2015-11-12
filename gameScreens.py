@@ -193,8 +193,6 @@ def game():
     
     map = guiClasses.miniMap()
     
-    v.inventory = inventoryScreen.inventory()
-    
     if v.newGame:
         setupScripts.newGame()
     while True:

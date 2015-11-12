@@ -1,6 +1,9 @@
 import Variables as v
 import pickle
 import entityClasses
+import itemClasses
+import pygame as py
+import guiClasses
 
 def Save():
     savefile = open("Saves/Variables.save", "wb")
@@ -31,11 +34,24 @@ def Save():
     
     savefile = open("Saves/Inventory.save", "wb")
     
-    save = []
-    eSave = []
+    save = {}
+    eSave = {}
+    iSave = []
+    aSave = []
     
-    #for k, v in v.equipped.items():
-        #eSave.append([k, v.]) #TODO: yeah, this thing. Saving items.
+    for k, va in v.equipped.items():
+        eSave[k] = va.save()
+    
+    for item in v.inventory.contents:
+        iSave.append(item.save())
+    
+    for item in v.abilityButtons:
+        aSave.append(item.save())
+    
+    save["eSave"] = eSave
+    save["iSave"] = iSave
+    save["aSave"] = aSave
+    pickle.dump(save, savefile)
     
 
 def Load():
@@ -56,18 +72,28 @@ def Load():
     save = pickle.load(savefile)
     
     for thing in save:
-        print(thing)
         if thing["ID"] == "enemy":
             ne = entityClasses.Enemy(blank=True)
-            print("create enemy")
             ne.load(thing)
         if thing["ID"] == "npc":
             ne = entityClasses.NPC(blank=True)
-            print("create npc")
             ne.load(thing)
-        #n = entityClasses.Enemy(blank=True) # Create blank enemy here
-        #n.load()
+    
+    savefile = open("Saves/Inventory.save", "rb")
+    save = pickle.load(savefile)
+    
+    for k, va in save["eSave"].items():
+        if k == "Weapon":
+            v.equipped[k] = itemClasses.weapon(va["name"], va["icon"], va["attType"], va["image"], va["attributes"])
+    
+    for item in save["iSave"]:
+        if item["equipType"] == "Item":
+            v.inventory.contents.append(itemClasses.item(item["name"], item["icon"]))
+        if item["equipType"] == "Weapon":
+            v.inventory.contents.append(itemClasses.weapon(item["name"], item["icon"], item["attType"], item["image"], item["attributes"]))
 
-
+    for item in save["aSave"]:
+        spell = itemClasses.spell(item["ability"]["name"], item["ability"]["spellType"], item["ability"]["spellImage"], item["ability"]["castImage"], item["ability"]["attributes"])
+        v.abilityButtons.add(guiClasses.ability(spell, item["icon"], item["num"]))
 #Save()
 #Load()

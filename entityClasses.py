@@ -285,7 +285,7 @@ class HitBox(py.sprite.Sprite):
 
 class Tile(py.sprite.Sprite):
 
-    def __init__(self, tilePosition, terrain, wall=False):
+    def __init__(self, tilePosition, terrain, wall=False, top=False, image=None):
         super().__init__()
         self.tilePosX = tilePosition[0]
         self.tilePosY = tilePosition[1]
@@ -298,15 +298,19 @@ class Tile(py.sprite.Sprite):
         self.ID = "tile"
         self.oldScale = "Nope"  
         self.oldx = "Nope"
-        self.oldy = "Nope"   
+        self.oldy = "Nope"
+        self.top = top
+        if top:
+            v.topTiles.add(self)
+            self.skin = image
 
     def update(self):
         self.rect = py.Rect(0, 0, int(30 * v.scale), int(30 * v.scale))
-
         self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (30 * self.tilePosX)) * v.scale)
-
         self.rect.centery = v.screenY / 2 + ((v.playerPosY + (30 * self.tilePosY)) * v.scale)
-
+        
+        if self.top:
+            self.image = py.transform.scale(self.skin, self.rect.size)
 
 def rot_center(image, angle):
     """rotate an image while keeping its center and size"""

@@ -35,12 +35,14 @@ class tile(py.sprite.Sprite):
         self.tileNumber = -1
         self.hitable = False
         self.waiting = False
-        self.topLayer = layer
-        if not self.topLayer:
+        self.layer = layer
+        self.hovered = False
+        if self.layer == "base":
             self.sheetNum = 326
         else:
             self.sheetNum = "-"
         tiles.add(self)
+        self.overP = False
     
     def update(self):
         self.rect = py.Rect(0, 0, 30 * scale, 30 * scale)
@@ -57,34 +59,44 @@ class tile(py.sprite.Sprite):
                     self.image = py.Surface((0, 0))
             if not self.sheetNum == "-":
                 self.image = py.transform.scale(self.image, (int(30 * scale), int(30 * scale)))
+                if self.layer != eLayer:
+                    self.image.fill((255, 255, 255, 200), special_flags=py.BLEND_RGBA_MULT)
                 map.blit(self.image, self.rect)
             
-            if not upperLayer:
-                if not scale < 0.5:
-                    if self.hitable:
-                        c = (255, 0, 0)
-                    else:
-                        c = (0, 0, 0)
+            c = None
+            if not scale < 0.5:
+                if self.hitable:
+                    c = (255, 0, 0)
+                elif self.layer == "base":
+                    c = (0, 0, 0)
+                elif self.layer == "top" and self.overP:
+                    c = (0, 255, 255)
+                if c != None:
                     py.draw.rect(map, c, self.rect, 1)
         
             if self.rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1])):
-                self.hovered = True
-                h = py.Surface((int(30 * scale), int(30 * scale))).convert_alpha()
-                h.fill((255, 255, 255, 100))
-                map.blit(h, self.rect)
+                if map.get_rect().collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1])):
+                    if eLayer == self.layer:
+                        self.hovered = True
+                        h = py.Surface((int(30 * scale), int(30 * scale))).convert_alpha()
+                        h.fill((255, 255, 255, 100))
+                        map.blit(h, self.rect)
             else:
                 self.hovered = False
             if self.hovered:
+                print(self.overP)
                 if py.mouse.get_pressed()[0]:
                     if not editHitable:
-                        if upperLayer == self.topLayer:
+                        if eLayer == self.layer:
                             self.sheetNum = selected
                     elif not self.waiting:
-                        if upperLayer == self.topLayer:
+                        if self.layer == "base":
                             self.hitable = not self.hitable
                             self.waiting = True
+                        if self.layer == "top":
+                            self.overP = overPlayer
                 if py.mouse.get_pressed()[2]:
-                    if upperLayer == self.topLayer and self.topLayer == True:
+                    if eLayer == self.layer and self.layer == "top":
                         self.sheetNum = "-"
             if not py.mouse.get_pressed()[0]:
                 self.waiting = False
@@ -150,7 +162,21 @@ def save():
         else:
             h = ""
         outMap[tile.posy][tile.posx] = h + str(tile.sheetNum)
-    return outMap
+    
+    print("[[")
+    for i in outMap:
+        print(str(i) + ",")
+    print("], ")
+    
+    for tile in topTiles:
+        if tile.overP:
+            h = "+"
+        outMap[tile.posy][tile.posx] = h + str(tile.sheetNum)
+    
+    print("[")
+    for i in outMap:
+        print(str(i) + ",")
+    print("]]")
 
 py.init()
 
@@ -166,15 +192,17 @@ scrollY = 0
 scale = 2
 selected = 0
 editHitable = False
-upperLayer = False
+eLayer = False
+layerBool = False
+overPlayer = False
 
 baseTiles = py.sprite.Group()
 topTiles = py.sprite.Group()
 tiles = py.sprite.Group()
 for x in range(size[0]):
     for y in range(size[1]):
-        baseTiles.add(tile(x, y, False))
-        topTiles.add(tile(x, y, True))
+        baseTiles.add(tile(x, y, "base"))
+        topTiles.add(tile(x, y, "top"))
 
 palletImages = py.sprite.Group()
 tileImages = getGrid(tileset)
@@ -187,7 +215,8 @@ py.time.set_timer(py.USEREVENT, 1000) #1 sec delay
 
 buttons = py.sprite.Group()
 buttons.add(toggleButton("Hitable", "editHitable", (10, 20)))
-buttons.add(toggleButton("Edit Top Layer", "upperLayer", (150, 20)))
+buttons.add(toggleButton("Edit Top Layer", "layerBool", (150, 20)))
+buttons.add(toggleButton("Over Player", "overPlayer", (380, 20)))
 
 while True:
     py.event.pump()
@@ -199,9 +228,14 @@ while True:
     pallet.fill((255, 255, 255))
     options.fill((0, 255, 255))
     baseTiles.update()
-    #topTiles.update() #TODO: Fix this with editing hitboxes
+    topTiles.update() #TODO: Fix this with editing hitboxes
     palletImages.update()
     buttons.update()
+    
+    if layerBool:
+        eLayer = "top"
+    else:
+        eLayer = "base"
 
     keysPressed = py.key.get_pressed()
     speed = 20
@@ -225,10 +259,7 @@ while True:
         if event.type == py.KEYDOWN:
             if event.key == py.K_RETURN:
                 outMap = save()
-                print("[")
-                for i in outMap:
-                    print(str(i) + ",")
-                print("]")
+                
     screen.blit(map, (0, 0))
     screen.blit(options, (0, 550))
     screen.blit(pallet, (600, 0))

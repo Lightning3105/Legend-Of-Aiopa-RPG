@@ -30,6 +30,7 @@ sounds = None
 ticks = 0
 map1 = []
 MAP = None
+topTiles = None
 hits = None
 p_class = None
 cur_weapon = None

@@ -225,6 +225,8 @@ def game():
             v.equippedSpells.draw(v.screen)
             v.particles.update()
             #v.hits.draw(v.screen)
+            v.topTiles.draw(v.screen)
+            
             guiClasses.update_health()
             guiClasses.update_mana()
             guiClasses.actionText()

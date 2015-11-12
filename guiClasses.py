@@ -89,8 +89,6 @@ def update_mana():
     if v.playerMana > v.Attributes["Max Mana"]:
         v.playerMana = v.Attributes["Max Mana"]
     v.playerMana = round(v.playerMana, 3)
-        
-    #print(v.playerMana)
 
 class weaponSlot:
 

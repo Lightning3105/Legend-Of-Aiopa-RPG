@@ -216,11 +216,8 @@ class Player(py.sprite.Sprite):
             else:
                 self.moving = False
 
-            #print("\n", self.velX, self.velY)
-            
             self.velX *= v.fpsAdjuster
             self.velY *= v.fpsAdjuster
-            #print(adjuster)
             vx = self.velX
             vy = self.velY
 
@@ -229,20 +226,9 @@ class Player(py.sprite.Sprite):
                 self.velX += velmod[0]
                 self.velY += velmod[1]
 
-            #print(self.velX, self.velY)
-
             v.playerPosX += self.velX
             v.playerPosY += self.velY
             v.playerDirection = self.direction
-
-
-
-            """for wall in v.hitList:
-                if self.rect.colliderect(wall.rect):
-                    print("COLLIDE")
-                    if self.rect.right > wall.rect.left:
-                        v.playerPosX = preX
-                        self.draw()"""
 
 
 class HitBox(py.sprite.Sprite):
@@ -446,8 +432,6 @@ class Enemy(py.sprite.Sprite):
                       "LeftC": self.sheet.images[4],
                       "LeftR": self.sheet.images[5]}
     def get_view(self):
-        #print(self.direction)
-        #print(self.view)
         for event in v.events:
             if event.type == py.USEREVENT:
                 if self.view == self.direction + "C":
@@ -468,8 +452,6 @@ class Enemy(py.sprite.Sprite):
 
 
     def update(self):
-        #print("NX: " + str(self.posx))
-        #print("NY: " + str(self.posy))
         py.event.pump()
         if not self.dead:
             self.pathfind()
@@ -514,7 +496,6 @@ class Enemy(py.sprite.Sprite):
                         xStopped = True
                         
                     if xStopped and yStopped:
-                        #print(thing)
                         self.view = self.direction + "C"
                         self.image = self.views[self.view]
                         self.image = py.transform.scale(self.image, (int(24 * v.scale), int(32 * v.scale)))
@@ -559,9 +540,6 @@ class Enemy(py.sprite.Sprite):
             v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.top - (15 * v.scale)))
 
     def attack(self):
-        #print(abs(self.posx - v.playerPosX))
-        #print(abs(self.posy - v.playerPosY))
-        #print()
         attImage = py.image.load("Resources/Images/ClawSlash.png").convert_alpha()
         attImage = py.transform.scale(attImage, (int(20 * v.scale), int(20 * v.scale)))
         attImage.fill((255, 255, 255, 255), special_flags=py.BLEND_RGBA_MULT)

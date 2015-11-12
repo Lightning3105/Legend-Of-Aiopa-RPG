@@ -202,7 +202,6 @@ while True:
     #topTiles.update() #TODO: Fix this with editing hitboxes
     palletImages.update()
     buttons.update()
-    #print(clock.get_fps())
 
     keysPressed = py.key.get_pressed()
     speed = 20

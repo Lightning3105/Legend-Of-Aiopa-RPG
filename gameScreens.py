@@ -62,7 +62,6 @@ def mainMenu():
                             #v.playerClass = "Mage"
                             setupScripts.setAttributes()
                             v.newGame = True
-                            print("run game")
                             game()
                             return
                         if id == "options":
@@ -145,7 +144,6 @@ def windowUpdate():
     py.display.set_caption("The Legend Of Aiopa")
     icon = py.image.load("Resources/Images/Icon.ico")
     py.display.set_icon(icon)
-    print(v.screenX, v.screenY)
     v.screenScale = round(v.screenX * 0.004, 1)
     """if v.screenX == 480:
         v.screenScale = 2
@@ -155,7 +153,6 @@ def windowUpdate():
         v.screenScale = 4.3"""
 
 def game():
-    print("in game")
     py.init()
     v.music.fadeout(2000)
     v.music = py.mixer.Sound("Resources/Music/Ambient 1.ogg")
@@ -197,7 +194,6 @@ def game():
         setupScripts.newGame()
     while True:
         if not v.PAUSED:
-            #print([i.name for i in v.inventory.contents ])
             v.ticks += 1
             v.screen.fill(colour("Dark Green"))
             py.event.pump()
@@ -292,7 +288,6 @@ def game():
                 background = py.image.tostring(v.screen, "RGBA")
                 v.justPaused = False
                 invScreen = inventoryScreen.inventoryScreen()
-                print(v.inventory.contents)
             py.event.pump()
             v.clock.tick(30)
             v.events = []

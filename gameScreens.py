@@ -19,6 +19,10 @@ import npcScripts
 import setupScripts
 import SaveLoad
 
+import cProfile
+import pstats
+from threading import Thread
+
 #TODO: Change projectiles so they work with lag
 def mainMenu():
     py.init()
@@ -153,6 +157,10 @@ def windowUpdate():
         v.screenScale = 4.3"""
 
 def game():
+    load = guiClasses.loadingScreen()
+    load.update(0)
+    load.update(1)
+    t = time.clock()
     py.init()
     v.music.fadeout(2000)
     v.music = py.mixer.Sound("Resources/Music/Ambient 1.ogg")
@@ -190,8 +198,12 @@ def game():
     
     map = guiClasses.miniMap()
     
+    print(time.clock() - t)
+    t = time.clock()
     if v.newGame:
         setupScripts.newGame()
+    print(time.clock() - t)
+    load.update(2)
     while True:
         if not v.PAUSED:
             v.ticks += 1

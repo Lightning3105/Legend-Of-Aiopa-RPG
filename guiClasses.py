@@ -282,3 +282,50 @@ def fps():
     font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.03125))
     label = font.render(str(int(v.clock.get_fps())), 1, (255, 0, 0))
     v.screen.blit(label, pos)
+
+
+class loadingScreen():
+    
+    def __init__(self):
+        self.wizSheet = entityClasses.SpriteSheet("Resources/Images/LoadingWizard.png", 6, 7)
+        self.aniPos = 7
+        self.fade = MenuItems.fadeIn()
+        self.fade.fadeIn = True
+        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(20/640 * v.screenX))
+        self.label = self.font.render("Loading...", 1, (255, 255, 255))
+        self.mod = self.font.size("Loading...")
+        self.mod = (self.mod[0] / 2, self.mod[1] / 2)
+    
+    def update(self, stage=1):
+        if stage == 0:
+            for i in range(7, 14):
+                self.image = self.wizSheet.images[i]
+                self.rect = (0, 0, v.screenX, v.screenY)
+                py.draw.rect(v.screen, (0, 0, 0), self.rect)
+                v.screen.blit(self.image, ((v.screenX / 2) - self.image.get_rect().width / 2, (v.screenY / 2)  - self.image.get_rect().height / 2))
+                v.screen.blit(self.label, ((v.screenX / 2) - self.mod[0], (v.screenY / 2)  - self.mod[1] + 50/640 * v.screenX))
+                self.fade.draw()
+                self.fade.opacity -= 40
+                py.display.flip()
+                py.time.delay(100)
+        if stage == 1:
+            self.image = self.wizSheet.images[14]
+            self.rect = (0, 0, v.screenX, v.screenY)
+            py.draw.rect(v.screen, (0, 0, 0), self.rect)
+            v.screen.blit(self.image, ((v.screenX / 2) - self.image.get_rect().width / 2, (v.screenY / 2)  - self.image.get_rect().height / 2))
+            v.screen.blit(self.label, ((v.screenX / 2) - self.mod[0], (v.screenY / 2)  - self.mod[1] + 50/640 * v.screenX))
+        if stage == 2:
+            for i in range(28, 38):
+                py.time.delay(100)
+                self.image = self.wizSheet.images[i]
+                self.rect = (0, 0, v.screenX, v.screenY)
+                py.draw.rect(v.screen, (0, 0, 0), self.rect)
+                v.screen.blit(self.image, ((v.screenX / 2) - self.image.get_rect().width / 2, (v.screenY / 2)  - self.image.get_rect().height / 2))
+                v.screen.blit(self.label, ((v.screenX / 2) - self.mod[0], (v.screenY / 2)  - self.mod[1] + 50/640 * v.screenX))
+                self.fade.draw()
+                self.fade.opacity += 40
+                py.display.flip()
+
+def upLoad():
+    while True:
+        v.load.update()

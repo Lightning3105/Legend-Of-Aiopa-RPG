@@ -145,6 +145,10 @@ class fadeIn:
         black.fill((0, 0, 0))
         black.set_alpha(self.opacity)
         v.screen.blit(black, (0, 0))
+        if self.opacity <= 0:
+            self.opacity = 0
+        if self.opacity >= 255:
+            self.opacity = 255
 
 class characterSelector(py.sprite.Sprite):
 

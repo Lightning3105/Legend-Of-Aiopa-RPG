@@ -1,4 +1,5 @@
 PAUSED = False
+load = None
 newGame = True
 fullScreen = False
 screenX = 640

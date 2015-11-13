@@ -304,7 +304,7 @@ class Tile(py.sprite.Sprite):
             v.topTiles.add(self)
             self.skin = image
 
-    def update(self):
+    def update(self): #TODO: Make more efficient
         self.rect = py.Rect(0, 0, int(30 * v.scale), int(30 * v.scale))
         self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (30 * self.tilePosX)) * v.scale)
         self.rect.centery = v.screenY / 2 + ((v.playerPosY + (30 * self.tilePosY)) * v.scale)

@@ -1,4 +1,5 @@
 import gameScreens
+import setupScripts
 import cProfile
 import pstats
 if __name__ == "__main__":

@@ -1,4 +1,5 @@
 import pygame as py
+import sys
 
 class toggleButton(py.sprite.Sprite):
     
@@ -73,6 +74,8 @@ class tile(py.sprite.Sprite):
                     c = (0, 255, 255)
                 if c != None:
                     py.draw.rect(map, c, self.rect, 1)
+            
+            
         
             if self.rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1])):
                 if map.get_rect().collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1])):
@@ -84,17 +87,19 @@ class tile(py.sprite.Sprite):
             else:
                 self.hovered = False
             if self.hovered:
-                print(self.overP)
+                global hoverPos
+                hoverPos = (int(self.posx - (size[0] / 2)), int(self.posy - (size[1] / 2)))
                 if py.mouse.get_pressed()[0]:
-                    if not editHitable:
+                    if not editHitable and not overPlayer:
                         if eLayer == self.layer:
                             self.sheetNum = selected
                     elif not self.waiting:
-                        if self.layer == "base":
+                        if self.layer == "base" and editHitable:
                             self.hitable = not self.hitable
                             self.waiting = True
-                        if self.layer == "top":
-                            self.overP = overPlayer
+                        if self.layer == "top" and overPlayer:
+                            self.overP = not self.overP
+                            self.waiting = True
                 if py.mouse.get_pressed()[2]:
                     if eLayer == self.layer and self.layer == "top":
                         self.sheetNum = "-"
@@ -171,12 +176,20 @@ def save():
     for tile in topTiles:
         if tile.overP:
             h = "+"
+        else:
+            h = ""
         outMap[tile.posy][tile.posx] = h + str(tile.sheetNum)
     
     print("[")
     for i in outMap:
         print(str(i) + ",")
     print("]]")
+
+def toolTip():
+    if not hoverPos == None:
+        font = py.font.SysFont("Calibri", 20, True)
+        label = font.render(str(hoverPos), 1, (255, 0, 0), (255, 255, 255, 100))
+        screen.blit(label, py.mouse.get_pos())
 
 py.init()
 
@@ -195,6 +208,7 @@ editHitable = False
 eLayer = False
 layerBool = False
 overPlayer = False
+hoverPos = None
 
 baseTiles = py.sprite.Group()
 topTiles = py.sprite.Group()
@@ -220,6 +234,7 @@ buttons.add(toggleButton("Over Player", "overPlayer", (380, 20)))
 
 while True:
     py.event.pump()
+    hoverPos = None
     events = []
     events = py.event.get()
     clock.tick(30)
@@ -259,8 +274,12 @@ while True:
         if event.type == py.KEYDOWN:
             if event.key == py.K_RETURN:
                 outMap = save()
+        if event.type == py.QUIT:
+            save()
+            sys.exit()
                 
     screen.blit(map, (0, 0))
     screen.blit(options, (0, 550))
     screen.blit(pallet, (600, 0))
+    toolTip()
     py.display.flip()

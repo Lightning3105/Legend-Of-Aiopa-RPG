@@ -44,6 +44,7 @@ class tile(py.sprite.Sprite):
             self.sheetNum = "-"
         tiles.add(self)
         self.overP = False
+        self.teleport = None
     
     def update(self):
         self.rect = py.Rect(0, 0, 30 * scale, 30 * scale)
@@ -72,6 +73,8 @@ class tile(py.sprite.Sprite):
                     c = (0, 0, 0)
                 elif self.layer == "top" and self.overP:
                     c = (0, 255, 255)
+                elif self.layer == "top" and self.teleport != None:
+                    c = (0, 255, 0)
                 if c != None:
                     py.draw.rect(map, c, self.rect, 1)
             
@@ -89,8 +92,10 @@ class tile(py.sprite.Sprite):
             if self.hovered:
                 global hoverPos
                 hoverPos = (int(self.posx - (size[0] / 2)), int(self.posy - (size[1] / 2)))
+                global hoverData
+                hoverData = {"Teleport": self.teleport, "Skin": self.sheetNum, "Layer":self.layer, "Hitable":self.hitable}
                 if py.mouse.get_pressed()[0]:
-                    if not editHitable and not overPlayer:
+                    if not editHitable and not overPlayer and not makeTeleport:
                         if eLayer == self.layer:
                             self.sheetNum = selected
                     elif not self.waiting:
@@ -100,6 +105,13 @@ class tile(py.sprite.Sprite):
                         if self.layer == "top" and overPlayer:
                             self.overP = not self.overP
                             self.waiting = True
+                        if self.layer == "top" and makeTeleport:
+                            tpid = textInput((300, 275), 40, 3)
+                            while not tpid.done:
+                                tpid.update()
+                            self.teleport = outText
+                            global makeTeleport
+                            makeTeleport = False
                 if py.mouse.get_pressed()[2]:
                     if eLayer == self.layer and self.layer == "top":
                         self.sheetNum = "-"
@@ -134,7 +146,62 @@ class image(py.sprite.Sprite):
                     if py.mouse.get_pressed()[0]:
                         selected = self.slotNum
         
-
+class textInput():
+    
+    def __init__(self, pos, fontSize, characters):
+        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", fontSize)
+        self.rect = py.Rect(pos, self.font.size("W" * characters))
+        self.rect.width += 20
+        self.rect.height += 20
+        self.string = []
+        self.pos = pos
+        self.characters = characters
+        self.shift = False
+        self.done = False
+    
+    def draw(self):
+        py.draw.rect(screen, (255, 255, 255), self.rect)
+        py.draw.rect(screen, (0, 0, 0), self.rect, 5)
+        x = self.pos[0] + 10
+        y = self.pos[1] + 10
+        for letter in self.string:
+            ren = self.font.render(letter, 1, (0, 0, 0))
+            screen.blit(ren, (x, y))
+            x += self.font.size(letter)[0] + 5
+    
+    def update(self):
+        global textEdit
+        textEdit = True
+        events = py.event.get()
+        for event in events:
+            if event.type == py.KEYDOWN:
+                if len(self.string) < self.characters:
+                    if py.key.name(event.key) in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0']:
+                        if py.key.get_mods() == py.KMOD_LSHIFT:
+                            let = py.key.name(event.key).upper()
+                        else:
+                            let = py.key.name(event.key)
+                        self.string.append(let)
+                    if event.key == py.K_SPACE:
+                        self.string.append(" ")
+                if event.key == py.K_BACKSPACE:
+                    if len(self.string) > 0:
+                        self.string.pop(-1)
+        self.draw()
+        
+        label = self.font.render("GO", 1, (0, 0, 0))
+        butRect = py.Rect(self.rect.topright, (self.rect.height, self.rect.height))
+        butRect.centerx += 5
+        py.draw.rect(screen, (255, 255, 255), butRect)
+        py.draw.rect(screen, (0, 0, 0), butRect, 5)
+        screen.blit(label, (butRect.centerx - self.font.size("GO")[0] / 2, butRect.centery - self.font.size("GO")[1] / 2))
+        for event in events:
+            if event.type == py.MOUSEBUTTONDOWN:
+                global outText
+                outText = "".join(self.string)
+                self.done = True
+        
+        py.display.flip()
 
 
 
@@ -176,6 +243,8 @@ def save():
     for tile in topTiles:
         if tile.overP:
             h = "+"
+        elif tile.teleport != None:
+            h = "&" + str(tile.teleport) + "|"
         else:
             h = ""
         outMap[tile.posy][tile.posx] = h + str(tile.sheetNum)
@@ -190,6 +259,12 @@ def toolTip():
         font = py.font.SysFont("Calibri", 20, True)
         label = font.render(str(hoverPos), 1, (255, 0, 0), (255, 255, 255, 100))
         screen.blit(label, py.mouse.get_pos())
+        ymod = font.size(str(hoverPos))[1]
+        for k, v in hoverData.items():
+            if not v == None:
+                label = font.render(str(k) + ": " + str(v), 1, (255, 0, 0), (255, 255, 255, 100))
+                screen.blit(label, (py.mouse.get_pos()[0], py.mouse.get_pos()[1] + ymod))
+                ymod += font.size(str(k) + ": " + str(v))[1]
 
 py.init()
 
@@ -199,7 +274,7 @@ map = py.Surface((600, 550))
 pallet = py.Surface((400, 630))
 options = py.Surface((1000, 80))
 
-size = (50, 50)
+size = (5, 5)
 scrollX = 0
 scrollY = 0
 scale = 2
@@ -209,6 +284,8 @@ eLayer = False
 layerBool = False
 overPlayer = False
 hoverPos = None
+hoverData = None
+makeTeleport = False
 
 baseTiles = py.sprite.Group()
 topTiles = py.sprite.Group()
@@ -231,6 +308,10 @@ buttons = py.sprite.Group()
 buttons.add(toggleButton("Hitable", "editHitable", (10, 20)))
 buttons.add(toggleButton("Edit Top Layer", "layerBool", (150, 20)))
 buttons.add(toggleButton("Over Player", "overPlayer", (380, 20)))
+buttons.add(toggleButton("Teleport", "makeTeleport", (10, 50)))
+
+textEdit = False
+outText = ""
 
 while True:
     py.event.pump()

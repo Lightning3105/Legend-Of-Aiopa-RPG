@@ -19,10 +19,6 @@ import npcScripts
 import setupScripts
 import SaveLoad
 
-import cProfile
-import pstats
-from threading import Thread
-
 #TODO: Change projectiles so they work with lag
 def mainMenu():
     py.init()
@@ -160,7 +156,6 @@ def game():
     load = guiClasses.loadingScreen()
     load.update(0)
     load.update(1)
-    t = time.clock()
     py.init()
     v.music.fadeout(2000)
     v.music = py.mixer.Sound("Resources/Music/Ambient 1.ogg")
@@ -197,12 +192,9 @@ def game():
     pause = guiClasses.pauseScreen()
     
     map = guiClasses.miniMap()
-    
-    print(time.clock() - t)
-    t = time.clock()
+
     if v.newGame:
         setupScripts.newGame()
-    print(time.clock() - t)
     load.update(2)
     while True:
         if not v.PAUSED:
@@ -345,13 +337,6 @@ def game():
 
 def classSelection():
     py.init()
-    """if v.fullScreen:
-        v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
-    else:
-        v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)"""
-    
-    
-
     classes = py.sprite.Group()
     classes.add(MenuItems.characterSelector("Resources/Images/PaladinClass.png", (v.screenX/2, v.screen.get_rect()[3]/2), "Paladin"))
     classes.add(MenuItems.characterSelector("Resources/Images/MageClass.png", (v.screenX/4, v.screen.get_rect()[3]/2), "Mage"))

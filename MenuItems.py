@@ -28,7 +28,7 @@ class Button(py.sprite.Sprite):
         py.draw.rect(v.screen, self.get_color(), self.rect)
         v.screen.blit(self.rend, self.rect)
         if self.rect.collidepoint(py.mouse.get_pos()):
-                self.hovered = True
+            self.hovered = True
         else:
             self.hovered = False
 
@@ -605,3 +605,4 @@ class appearanceTab(py.sprite.Sprite):
             py.draw.rect(v.screen, (0, 0, 255), rect, 4)
         else:
             py.draw.rect(v.screen, (153, 76, 0), rect, 4)
+

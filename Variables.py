@@ -31,6 +31,7 @@ sounds = None
 ticks = 0
 map1 = []
 MAP = None
+mapNum = 1
 topTiles = None
 hits = None
 p_class = None

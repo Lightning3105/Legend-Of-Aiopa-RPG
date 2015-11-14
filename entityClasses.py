@@ -71,6 +71,7 @@ class Player(py.sprite.Sprite):
         self.dead = False
         self.invulnLength = 30
         self.combineImages()
+        self.rect = py.Rect(0, 0, 0, 0)
 
 
     def initSheet(self):
@@ -285,7 +286,7 @@ class HitBox(py.sprite.Sprite):
 
 class Tile(py.sprite.Sprite):
 
-    def __init__(self, tilePosition, terrain, wall=False, top=False, image=None):
+    def __init__(self, tilePosition, terrain, wall=False, top=False, image=None, teleport=None):
         super().__init__()
         self.tilePosX = tilePosition[0]
         self.tilePosY = tilePosition[1]
@@ -303,6 +304,7 @@ class Tile(py.sprite.Sprite):
         if top:
             v.topTiles.add(self)
             self.skin = image
+        self.teleport = teleport
 
     def update(self): #TODO: Make more efficient
         self.rect = py.Rect(0, 0, int(30 * v.scale), int(30 * v.scale))
@@ -311,6 +313,10 @@ class Tile(py.sprite.Sprite):
         
         if self.top:
             self.image = py.transform.scale(self.skin, self.rect.size)
+        
+        if self.teleport != None:
+            if self.rect.colliderect(v.p_class.rect):
+                print(self.teleport)
 
 def rot_center(image, angle):
     """rotate an image while keeping its center and size"""

@@ -1,5 +1,7 @@
 import pygame as py
 import sys
+from os import listdir
+from entityClasses import SpriteSheet
 
 class toggleButton(py.sprite.Sprite):
     
@@ -45,6 +47,7 @@ class tile(py.sprite.Sprite):
         tiles.add(self)
         self.overP = False
         self.teleport = None
+        self.npc = None
     
     def update(self):
         self.rect = py.Rect(0, 0, 30 * scale, 30 * scale)
@@ -75,6 +78,12 @@ class tile(py.sprite.Sprite):
                     c = (0, 255, 255)
                 elif self.layer == "top" and self.teleport != None:
                     c = (0, 255, 0)
+                elif self.layer == "top" and self.npc != None:
+                    c = (255, 255, 0)
+                    img = SpriteSheet(self.npc["Image"], 4, 3).images[1]
+                    img.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)
+                    img = py.transform.scale(img, (int(30 * scale), int(30 * scale)))
+                    map.blit(img, self.rect)
                 if c != None:
                     py.draw.rect(map, c, self.rect, 1)
             
@@ -95,7 +104,7 @@ class tile(py.sprite.Sprite):
                 global hoverData
                 hoverData = {"Teleport": self.teleport, "Skin": self.sheetNum, "Layer":self.layer, "Hitable":self.hitable}
                 if py.mouse.get_pressed()[0]:
-                    if not editHitable and not overPlayer and not makeTeleport:
+                    if not editHitable and not overPlayer and not makeTeleport and not makeNPC:
                         if eLayer == self.layer:
                             self.sheetNum = selected
                     elif not self.waiting:
@@ -107,11 +116,17 @@ class tile(py.sprite.Sprite):
                             self.waiting = True
                         if self.layer == "top" and makeTeleport:
                             tpid = textInput((300, 275), 40, 3)
+                            font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
+                            label = font.render("Teleport ID:", 1, (0, 0, 0))
                             while not tpid.done:
+                                screen.blit(label, (300, 200))
                                 tpid.update()
+                                py.display.flip()
                             self.teleport = outText
                             global makeTeleport
                             makeTeleport = False
+                        if self.layer == "top" and makeNPC:
+                            self.npc = selectedNpc
                 if py.mouse.get_pressed()[2]:
                     if eLayer == self.layer and self.layer == "top":
                         self.sheetNum = "-"
@@ -145,6 +160,32 @@ class image(py.sprite.Sprite):
                 if event.type == py.MOUSEBUTTONDOWN:
                     if py.mouse.get_pressed()[0]:
                         selected = self.slotNum
+
+class npcImage(py.sprite.Sprite):
+    
+    def __init__(self, num, image):
+        super().__init__()
+        self.image = py.transform.scale(SpriteSheet(image, 4, 3).images[1], (30, 30))
+        self.posx = (num % 3) * 30
+        self.posy = int((num / 3)) * 30
+        self.num = num
+        self.sheet = image
+    def update(self):
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (self.posx, self.posy)
+        pallet.blit(self.image, self.rect)
+        if self.rect.collidepoint((py.mouse.get_pos()[0] - 600, py.mouse.get_pos()[1])):
+            self.hovered = True
+        else:
+            self.hovered = False
+        if selectedNpc["Image"] == self.sheet:
+            py.draw.rect(pallet, (255, 0, 0), self.rect, 1)
+        if self.hovered:
+            for event in events:
+                if event.type == py.MOUSEBUTTONDOWN:
+                    if py.mouse.get_pressed()[0]:
+                        selectedNpc["Image"] = self.sheet
+                        createNPC()
         
 class textInput():
     
@@ -160,7 +201,7 @@ class textInput():
         self.done = False
     
     def draw(self):
-        py.draw.rect(screen, (255, 255, 255), self.rect)
+        #py.draw.rect(screen, (255, 255, 255), self.rect)
         py.draw.rect(screen, (0, 0, 0), self.rect, 5)
         x = self.pos[0] + 10
         y = self.pos[1] + 10
@@ -200,8 +241,9 @@ class textInput():
                 global outText
                 outText = "".join(self.string)
                 self.done = True
+                py.time.wait(100)
         
-        py.display.flip()
+        #py.display.flip()
 
 
 
@@ -266,6 +308,45 @@ def toolTip():
                 screen.blit(label, (py.mouse.get_pos()[0], py.mouse.get_pos()[1] + ymod))
                 ymod += font.size(str(k) + ": " + str(v))[1]
 
+
+def createNPC():
+    font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
+    label = font.render("NPC Name:", 1, (0, 0, 0))
+    inp = textInput((300, 275), 20, 16)
+    while not inp.done:
+        screen.blit(label, (300, 200))
+        inp.update()
+        py.display.flip()
+    selectedNpc["Name"] = outText
+    screen.fill((255, 255, 255))
+    
+    label = font.render("NPC Attack:", 1, (0, 0, 0))
+    inp = textInput((300, 275), 20, 2)
+    while not inp.done:
+        screen.blit(label, (300, 200))
+        inp.update()
+        py.display.flip()
+    selectedNpc["Attack"] = outText
+    screen.fill((255, 255, 255))
+    
+    label = font.render("NPC Health:", 1, (0, 0, 0))
+    inp = textInput((300, 275), 20, 2)
+    while not inp.done:
+        screen.blit(label, (300, 200))
+        inp.update()
+        py.display.flip()
+    selectedNpc["Health"] = outText
+    screen.fill((255, 255, 255))
+    
+    label = font.render("NPC Speed:", 1, (0, 0, 0))
+    inp = textInput((300, 275), 20, 2)
+    while not inp.done:
+        screen.blit(label, (300, 200))
+        inp.update()
+        py.display.flip()
+    selectedNpc["Speed"] = outText
+    screen.fill((255, 255, 255))
+
 py.init()
 
 screen = py.display.set_mode((920, 630), py.DOUBLEBUF)
@@ -279,6 +360,7 @@ scrollX = 0
 scrollY = 0
 scale = 2
 selected = 0
+selectedNpc = {"Image":None, "Name":None, "Health":None, "Attack":None, "Speed":None}
 editHitable = False
 eLayer = False
 layerBool = False
@@ -286,6 +368,7 @@ overPlayer = False
 hoverPos = None
 hoverData = None
 makeTeleport = False
+makeNPC = False
 
 baseTiles = py.sprite.Group()
 topTiles = py.sprite.Group()
@@ -300,6 +383,13 @@ tileImages = getGrid(tileset)
 for i in range(0, len(tileImages)):
     palletImages.add(image(i))
 
+npcImages = py.sprite.Group()
+num = 0
+for i in listdir("Resources\Images\EnemySkins"):
+    npcImages.add(npcImage(num, "Resources/Images/EnemySkins/" + i))
+    num += 1
+    
+
 clock = py.time.Clock()
 
 py.time.set_timer(py.USEREVENT, 1000) #1 sec delay
@@ -309,6 +399,7 @@ buttons.add(toggleButton("Hitable", "editHitable", (10, 20)))
 buttons.add(toggleButton("Edit Top Layer", "layerBool", (150, 20)))
 buttons.add(toggleButton("Over Player", "overPlayer", (380, 20)))
 buttons.add(toggleButton("Teleport", "makeTeleport", (10, 50)))
+buttons.add(toggleButton("Make NPC", "makeNPC", (170, 50)))
 
 textEdit = False
 outText = ""
@@ -324,8 +415,11 @@ while True:
     pallet.fill((255, 255, 255))
     options.fill((0, 255, 255))
     baseTiles.update()
-    topTiles.update() #TODO: Fix this with editing hitboxes
-    palletImages.update()
+    topTiles.update()
+    if not makeNPC:
+        palletImages.update()
+    if makeNPC:
+        npcImages.update()
     buttons.update()
     
     if layerBool:

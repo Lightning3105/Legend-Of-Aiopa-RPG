@@ -3,7 +3,10 @@ import Variables as v
 import math
 import time
 from random import randint
-import npcScripts
+try:
+    import npcScripts
+except:
+    pass
 
 class SpriteSheet(object):
     """ Class used to grab images out of a sprite sheet. """
@@ -355,7 +358,9 @@ class Enemy(py.sprite.Sprite):
                 "health": self.health,
                 "invulnLength": self.invulnLength,
                 "ID": self.ID,
-                "npcID": self.npcID
+                "npcID": self.npcID,
+                "speed": self.speed,
+                "attack": self.attack
                 }
         return data
     
@@ -369,13 +374,14 @@ class Enemy(py.sprite.Sprite):
         self.sheetImage = dic["sheetImage"]
         self.maxHealth = dic["maxHealth"]
         self.health = dic["health"]
+        self.speed = dic["speed"]
+        self.attack = dic["attack"]
         self.invulnLength = dic["invulnLength"]
         self.ID = dic["ID"]
         self.npcID = dic["npcID"]
         
         self.moving = False
         self.movFlip = True
-        self.speed = 1
         self.xp = 5
         self.invulnCooldown = 0
         self.knockback = 0
@@ -404,7 +410,8 @@ class Enemy(py.sprite.Sprite):
         self.sheetImage = sImage
         self.maxHealth = attributes["Health"]
         self.health = attributes["Health"]
-        self.speed = 1
+        self.speed = attributes["Speed"]
+        self.attack = attributes["Attack"]
         self.xp = 5
         self.invulnCooldown = 0
         self.invulnLength = 30
@@ -532,10 +539,6 @@ class Enemy(py.sprite.Sprite):
             self.title()
 
         self.death()
-        
-
-
-
 
         #self.move()
 
@@ -572,7 +575,7 @@ class Enemy(py.sprite.Sprite):
         if abs(self.posx - v.playerPosX) < 32:
             if abs(self.posy - v.playerPosY) < 32:
                 if self.attCount <= int(7.5 * v.scale) and self.damagedPlayer == False and self.attCount > int(-10 * v.scale):
-                    v.playerHealth -= self.attributes["Attack"]
+                    v.playerHealth -= self.attack
                     self.damagedPlayer = True
     def death(self):
         if self.dead:

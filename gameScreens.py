@@ -395,6 +395,12 @@ def classSelection():
     py.time.set_timer(py.USEREVENT + 1, 2000) #preview rotate speed
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
+    
+    nti = MenuItems.textInput((260/640 * v.screenX, 240/640 * v.screenX), int(50/640 * v.screenX), 8, (255, 178, 102), None)
+    nts = py.sprite.Group()
+    nts.add(MenuItems.textLabel("Name Your Character:", (260/640 * v.screenX, 180/640 * v.screenX), colour("black"), "Resources/Fonts/RPGSystem.ttf", int(40/640 * v.screenX), False))
+    nts.add(MenuItems.textLabel("(Max 8 Characters)", (260/640 * v.screenX, 220/640 * v.screenX), colour("grey"), "Resources/Fonts/RPGSystem.ttf", int(20/640 * v.screenX), False))
+    
     while True:
         py.event.pump()
         v.events = []
@@ -412,7 +418,7 @@ def classSelection():
             if button.ID == "back":
                 button.update()
             else:
-                if v.custimizationStage == "Attributes" or v.custimizationStage == "Customisation":
+                if v.custimizationStage == "Attributes" or v.custimizationStage == "Customisation" or v.custimizationStage == "Name":
                     button.update()
         
         if v.custimizationStage == "Attributes":
@@ -436,7 +442,11 @@ def classSelection():
                         v.appearancePrevNum = 7
                     else:
                         v.appearancePrevNum = 7
-            
+        if v.custimizationStage == "Name":
+            nti.update()
+            ap.draw()
+            nts.update()
+  
         for event in v.events:
             if event.type == py.QUIT:
                 sys.exit()
@@ -454,6 +464,9 @@ def classSelection():
                                 for ao in attOptions:
                                     ao.save()
                             elif v.custimizationStage == "Customisation":
+                                v.custimizationStage = "Name"
+                            elif v.custimizationStage == "Name":
+                                nti.outText
                                 return
                         
             

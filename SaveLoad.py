@@ -19,6 +19,7 @@ def Save():
             "xpMod": v.xpMod,
             "skillPoints": v.skillPoints,
             "appearance": v.appearance,
+            "playerName": v.playerName
             }
     
     pickle.dump(save, savefile)
@@ -67,6 +68,7 @@ def Load():
     v.xpMod = save["xpMod"]
     v.skillPoints = save["skillPoints"]
     v.appearance = save["appearance"]
+    v.playerName = save["playerName"]
     
     savefile = open("Saves/Entities.save", "rb")
     save = pickle.load(savefile)

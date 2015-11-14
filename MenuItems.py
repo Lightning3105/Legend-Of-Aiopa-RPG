@@ -606,3 +606,57 @@ class appearanceTab(py.sprite.Sprite):
         else:
             py.draw.rect(v.screen, (153, 76, 0), rect, 4)
 
+class textInput():
+    
+    def __init__(self, pos, fontSize, characters, background=(255, 255, 255), button="GO"):
+        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", fontSize)
+        self.rect = py.Rect(pos, self.font.size("W" * (characters + 1)))
+        self.rect.width += 20/640 * v.screenX
+        self.rect.height += 20/640 * v.screenX
+        self.string = []
+        self.pos = pos
+        self.characters = characters
+        self.shift = False
+        self.done = False
+        self.outText = ""
+        self.button = button
+        self.background = background
+    
+    def draw(self):
+        py.draw.rect(v.screen, self.background, self.rect)
+        py.draw.rect(v.screen, (0, 0, 0), self.rect, 5)
+        x = self.pos[0] + 10/640 * v.screenX
+        y = self.pos[1] + 10/640 * v.screenX
+        for letter in self.string:
+            ren = self.font.render(letter, 1, (0, 0, 0))
+            v.screen.blit(ren, (x, y))
+            x += self.font.size(letter)[0] + 5/640 * v.screenX
+    
+    def update(self):
+        for event in v.events:
+            if event.type == py.KEYDOWN:
+                if len(self.string) < self.characters:
+                    if py.key.name(event.key) in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0']:
+                        if py.key.get_mods() == py.KMOD_LSHIFT:
+                            let = py.key.name(event.key).upper()
+                        else:
+                            let = py.key.name(event.key)
+                        self.string.append(let)
+                    if event.key == py.K_SPACE:
+                        self.string.append(" ")
+                if event.key == py.K_BACKSPACE:
+                    if len(self.string) > 0:
+                        self.string.pop(-1)
+        self.draw()
+        
+        if self.button != None:
+            label = self.font.render("GO", 1, (0, 0, 0))
+            butRect = py.Rect(self.rect.topright, (self.rect.height, self.rect.height))
+            butRect.centerx += 5
+            py.draw.rect(v.screen, (255, 255, 255), butRect)
+            py.draw.rect(v.screen, (0, 0, 0), butRect, 5)
+            v.screen.blit(label, (butRect.centerx - self.font.size("GO")[0] / 2, butRect.centery - self.font.size("GO")[1] / 2))
+            for event in v.events:
+                if event.type == py.MOUSEBUTTONDOWN:
+                    self.done = True
+        self.outText = "".join(self.string)

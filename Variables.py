@@ -14,6 +14,7 @@ playerPosY = 0
 playerDirection = ""
 playerHealth = 20
 playerMana = 20
+playerName = "Bob"
 experience = {"XP": 0, "XPL": 1, "XPtoL": 10}
 xpGroup = None
 xpMod = 1.5

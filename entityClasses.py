@@ -337,10 +337,10 @@ def centre():
 
 class Enemy(py.sprite.Sprite):
 
-    def __init__(self, posx=None, posy=None, sImage=None, attributes={}, blank = False):
+    def __init__(self, posx=None, posy=None, posm=None, sImage=None, attributes={}, blank = False):
         super().__init__()
         if not blank:
-            self.newStats(posx, posy, sImage, attributes)
+            self.newStats(posx, posy, posm, sImage, attributes)
     
     def save(self):
         data = {
@@ -392,7 +392,7 @@ class Enemy(py.sprite.Sprite):
         self.image = py.Surface((0, 0))
         self.stopped = False
     
-    def newStats(self, posx=None, posy=None, sImage=None, attributes={}):
+    def newStats(self, posx=None, posy=None, posm=None, sImage=None, attributes={}):
         self.attributes = attributes
         self.name = attributes["Name"]
         self.posx = posx

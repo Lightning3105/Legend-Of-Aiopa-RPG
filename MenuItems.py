@@ -264,7 +264,7 @@ class optionSlate():
             py.draw.rect(v.screen, py.Color(153, 76, 0), self.outerRect)
             py.draw.rect(v.screen, py.Color(255, 178, 102), self.innerRect)
             if self.posx >= v.screenX * 0.6875:
-                self.posx -= v.screenX * 0.003125
+                self.posx -= 5/640 * v.screenX
             else:
                 v.custimizationStage = "Attributes"
         if v.custimizationStage == "Attributes" or v.custimizationStage == "Customisation":
@@ -276,6 +276,16 @@ class optionSlate():
             self.outerRect.center = self.posx, self.posy
             py.draw.rect(v.screen, py.Color(153, 76, 0), self.outerRect)
             py.draw.rect(v.screen, py.Color(255, 178, 102), self.innerRect)
+        
+        if v.custimizationStage == "Name":
+            self.innerRect = py.Rect(0, 0, self.width, self.height)
+            self.innerRect.center = self.posx, self.posy
+            self.outerRect = py.Rect(0, 0, self.width + 20, self.height + 20)
+            self.outerRect.center = self.posx, self.posy
+            py.draw.rect(v.screen, py.Color(153, 76, 0), self.outerRect)
+            py.draw.rect(v.screen, py.Color(255, 178, 102), self.innerRect)
+            if self.posx <= v.screenX * 1.5: # TODO
+                self.posx += 5/640 * v.screenX
 
 class optionAttribute(py.sprite.Sprite):
     

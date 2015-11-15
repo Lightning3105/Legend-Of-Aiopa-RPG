@@ -300,7 +300,7 @@ class loadingScreen():
     
     def update(self, stage=1):
         if stage == 0:
-            for i in range(7, 14):
+            for i in range(7, 14, 2):
                 self.image = self.wizSheet.images[i]
                 self.rect = (0, 0, v.screenX, v.screenY)
                 py.draw.rect(v.screen, (0, 0, 0), self.rect)
@@ -319,7 +319,7 @@ class loadingScreen():
             v.screen.blit(self.label, ((v.screenX / 2) - self.mod[0], (v.screenY / 2)  - self.mod[1] + 50/640 * v.screenX))
         if stage == 2:
             t = self.font.render("Load Time: " + str(clock() - self.time), 1, (255, 255, 255))
-            for i in range(28, 38):
+            for i in range(28, 38, 2):
                 py.time.delay(100)
                 self.image = self.wizSheet.images[i]
                 self.rect = (0, 0, v.screenX, v.screenY)

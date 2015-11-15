@@ -364,7 +364,7 @@ map = py.Surface((600, 550))
 pallet = py.Surface((400, 630))
 options = py.Surface((1000, 80))
 
-size = (5, 5)
+size = (10, 10)
 scrollX = 0
 scrollY = 0
 scale = 2

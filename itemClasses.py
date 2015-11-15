@@ -1,12 +1,11 @@
-import entityClasses
 import spellClasses
-import weaponClasses
 import Variables as v
 import pygame as py
 
 class weapon():
     
     def __init__(self, name, icon, attType, image, attributes = {}):
+        import weaponClasses
         self.name = name
         self.attType = attType
         self.attributes = {"Damage": 0, "Knockback": 1, "InvulnMod": 1}

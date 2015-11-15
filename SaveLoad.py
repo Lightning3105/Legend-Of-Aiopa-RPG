@@ -4,6 +4,8 @@ import entityClasses
 import itemClasses
 import pygame as py
 import guiClasses
+import Map
+import os
 
 def Save():
     savefile = open("Saves/Variables.save", "wb")
@@ -54,6 +56,38 @@ def Save():
     save["aSave"] = aSave
     pickle.dump(save, savefile)
     
+    for k, v in Map.Maps.items():
+        saveMap(k)
+
+def saveMap(mapNum=v.mapNum):
+    if not v.savedMap == None:
+        current = pickle.loads(v.savedMap)
+    else:
+        current = {}
+     
+    current[mapNum] = []
+    
+    for thing in v.droppedItems:
+        current[mapNum].append(thing.save())
+    
+    v.savedMap = pickle.dumps(current)
+
+def loadMap(mapNum):
+    if not v.savedMap == None:
+        save = pickle.loads(v.savedMap)
+        print(mapNum)
+        print(v.mapNum)
+        if mapNum in save:
+            save = save[mapNum]
+            print(save)
+            
+            for thing in save:
+                if thing["ID"] == "npc":
+                    ne = entityClasses.NPC(blank=True)
+                    ne.load(thing)
+                if thing["ID"] == "dropped":
+                    ne = entityClasses.droppedItem(blank=True)
+                    ne.load(thing)
 
 def Load():
     savefile = open("Saves/Variables.save", "rb")

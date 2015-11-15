@@ -3,6 +3,9 @@ import Variables as v
 import math
 import time
 from random import randint
+import gameScreens
+import SaveLoad
+
 try:
     import npcScripts
 except:
@@ -319,7 +322,12 @@ class Tile(py.sprite.Sprite):
         
         if self.teleport != None:
             if self.rect.colliderect(v.p_class.rect):
-                print(self.teleport)
+                SaveLoad.saveMap(v.mapNum)
+                tp = v.teleports[str(self.teleport)]
+                v.mapNum = tp[0]
+                v.playerPosX = tp[1]
+                v.playerPosY = tp[2]
+                gameScreens.game()
 
 def rot_center(image, angle):
     """rotate an image while keeping its center and size"""
@@ -777,8 +785,12 @@ class xp(py.sprite.Sprite):
 
 class droppedItem(py.sprite.Sprite):
     
-    def __init__(self, item, pos):
+    def __init__(self, item=None, pos=None, blank=False):
         super().__init__()
+        if not blank:
+            self.newStats(item, pos)
+    
+    def newStats(self, item, pos):
         self.item = item
         self.posx = pos[0]
         self.posy = pos[1]
@@ -817,7 +829,26 @@ class droppedItem(py.sprite.Sprite):
                     self.justNear = False
             except:
                     pass
-
+    
+    def save(self):
+        save = {"posx": self.posx,
+                "posy": self.posy,
+                "item": self.item.save(),
+                "ID": "dropped"}
+        return save
+    
+    def load(self, dic):
+        import itemClasses
+        self.posx = dic["posx"]
+        self.posy = dic["posy"]
+        self.item = dic["item"]
+        if dic["item"]["equipType"] == "Item":
+            self.item = itemClasses.item(dic["item"]["name"], dic["item"]["icon"])
+        if dic["item"]["equipType"] == "Weapon":
+            self.item = itemClasses.weapon(dic["item"]["name"], dic["item"]["icon"], dic["item"]["attType"], dic["item"]["image"], dic["item"]["attributes"])
+        v.droppedItems.add(self)
+        self.justNear = False
+        
 class NPC(py.sprite.Sprite):
     
     def __init__(self, pos=None, image=None, attributes={}, blank=False):

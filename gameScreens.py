@@ -5,10 +5,11 @@ import entityClasses
 import guiClasses 
 from functools import reduce
 from os import listdir
+from os import remove
 
 import Map
 import spellClasses
-import weaponClasses
+
 import itemClasses
 from pygame.color import Color as colour
 import sys
@@ -153,13 +154,14 @@ def windowUpdate():
         v.screenScale = 4.3"""
 
 def game():
+    import weaponClasses
     load = guiClasses.loadingScreen()
     load.update(0)
     load.update(1)
     py.init()
     v.music.fadeout(2000)
     v.music = py.mixer.Sound("Resources/Music/Ambient 1.ogg")
-    v.music.play(loops=-1)
+    #v.music.play(loops=-1)
     v.PAUSED = False
     
     """if v.fullScreen:
@@ -172,12 +174,18 @@ def game():
     py.time.set_timer(py.USEREVENT, 200) # walking
     py.time.set_timer(py.USEREVENT + 1, 50) # Spell animation
     py.time.set_timer(py.USEREVENT + 2, 1000) #One second
-    
-    
 
-    tileset = entityClasses.SpriteSheet("Resources/Images/Main_Tileset.png", 63, 32)
     
-    Map.generateMap(Map.Maps, tileset)
+    
+    
+    v.allTiles = py.sprite.Group()
+    v.topTiles = py.sprite.Group()
+    v.allNpc = py.sprite.Group()
+    v.droppedItems = py.sprite.Group()
+    Map.generateMap() #TODO: xp
+    SaveLoad.loadMap(v.mapNum)
+    #v.playerPosX = 0
+    #v.playerPosY = 0
     
     v.hits = py.sprite.Group()
     v.hits.add(entityClasses.HitBox("Right"))
@@ -191,15 +199,16 @@ def game():
 
     pause = guiClasses.pauseScreen()
     
-    map = guiClasses.miniMap()
+    #map = guiClasses.miniMap()
 
     if v.newGame:
         setupScripts.newGame()
+        v.newGame = False
     load.update(2)
     while True:
         if not v.PAUSED:
             v.ticks += 1
-            v.screen.fill(colour("Dark Green"))
+            v.screen.fill((0, 0, 0))
             py.event.pump()
             v.actionsDone = []
             v.events = []

@@ -311,7 +311,7 @@ class Tile(py.sprite.Sprite):
 
     def update(self): #TODO: Make more efficient
         self.rect = py.Rect(0, 0, int(30 * v.scale), int(30 * v.scale))
-        self.rect.centerx = v.screen.get_rect()[2] / 2 + ((-v.playerPosX + (30 * self.tilePosX)) * v.scale)
+        self.rect.centerx = v.screenX / 2 + ((-v.playerPosX + (30 * self.tilePosX)) * v.scale)
         self.rect.centery = v.screenY / 2 + ((v.playerPosY + (30 * self.tilePosY)) * v.scale)
         
         if self.top:
@@ -360,7 +360,7 @@ class Enemy(py.sprite.Sprite):
                 "ID": self.ID,
                 "npcID": self.npcID,
                 "speed": self.speed,
-                "attack": self.attack
+                "att": self.att
                 }
         return data
     
@@ -375,7 +375,7 @@ class Enemy(py.sprite.Sprite):
         self.maxHealth = dic["maxHealth"]
         self.health = dic["health"]
         self.speed = dic["speed"]
-        self.attack = dic["attack"]
+        self.att = dic["att"]
         self.invulnLength = dic["invulnLength"]
         self.ID = dic["ID"]
         self.npcID = dic["npcID"]
@@ -411,7 +411,7 @@ class Enemy(py.sprite.Sprite):
         self.maxHealth = attributes["Health"]
         self.health = attributes["Health"]
         self.speed = attributes["Speed"]
-        self.attack = attributes["Attack"]
+        self.att = attributes["Attack"]
         self.xp = 5
         self.invulnCooldown = 0
         self.invulnLength = 30
@@ -575,7 +575,7 @@ class Enemy(py.sprite.Sprite):
         if abs(self.posx - v.playerPosX) < 32:
             if abs(self.posy - v.playerPosY) < 32:
                 if self.attCount <= int(7.5 * v.scale) and self.damagedPlayer == False and self.attCount > int(-10 * v.scale):
-                    v.playerHealth -= self.attack
+                    v.playerHealth -= self.att
                     self.damagedPlayer = True
     def death(self):
         if self.dead:

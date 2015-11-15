@@ -84,6 +84,7 @@ class tile(py.sprite.Sprite):
                     img.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)
                     img = py.transform.scale(img, (int(30 * scale), int(30 * scale)))
                     map.blit(img, self.rect)
+                    
                 if c != None:
                     py.draw.rect(map, c, self.rect, 1)
             
@@ -125,8 +126,13 @@ class tile(py.sprite.Sprite):
                             self.teleport = outText
                             global makeTeleport
                             makeTeleport = False
+                            self.waiting = True
                         if self.layer == "top" and makeNPC:
-                            self.npc = selectedNpc
+                            global selectedNpc
+                            if selectedNpc != self.npc:
+                                self.npc = selectedNpc.copy()
+                                self.waiting = True
+                            
                 if py.mouse.get_pressed()[2]:
                     if eLayer == self.layer and self.layer == "top":
                         self.sheetNum = "-"
@@ -186,6 +192,7 @@ class npcImage(py.sprite.Sprite):
                     if py.mouse.get_pressed()[0]:
                         selectedNpc["Image"] = self.sheet
                         createNPC()
+                        
         
 class textInput():
     
@@ -287,6 +294,8 @@ def save():
             h = "+"
         elif tile.teleport != None:
             h = "&" + str(tile.teleport) + "|"
+        elif tile.npc != None:
+            h = "%" + str(tile.npc) + "|"
         else:
             h = ""
         outMap[tile.posy][tile.posx] = h + str(tile.sheetNum)

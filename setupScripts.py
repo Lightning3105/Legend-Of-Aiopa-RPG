@@ -10,7 +10,7 @@ import inventoryScreen
 def newGame():
     v.playerHealth = v.Attributes["Max Health"]
     v.playerMana = v.Attributes["Max Mana"]
-    entityClasses.Enemy(-100, -100, 1, "Resources/Images/Generic Goblin.png", {"Name": "Groblin Lvl. 1", "Health":5, "Attack":5, "Speed":2})
+    #entityClasses.Enemy(0, -60, 1, "Resources/Images/EnemySkins/Generic Goblin.png", {"Name": "Groblin Lvl. 1", "Health":5, "Attack":5, "Speed":1.5})
     cn = [{"Message": "Greetings. Why not press a button? Who knows, you might win a prize!", "B1": {"Text": "Button 1", "ID": 1}, "B2": {"Text": "Button 2", "ID": 2}, "B3": {"Text": "Button 3", "ID": 3}, "B4": {"Text": "Button 4", "ID": 4}, "ID":0}, {"Message": "You pressed Button 1", "Goto":5, "ID": 1}, {"Message": "You pressed Button 2", "Goto":5, "ID": 2}, {"Message": "You pressed Button 3", "Goto":5, "ID": 3}, {"Message": "You pressed Button 4", "Goto":5, "ID": 4}, {"Message": "Congratulations. You won.", "ID": 5, "End":True}]
     entityClasses.NPC((0, 30, "Down", 1), "Resources/Images/NpcSkins/Spritesheets/Male_Basic.png", {"Name":"Fred", "Conversation":cn})
     fb = itemClasses.spell("Fire Beam", "beam", "Resources/Images/fireBeam.png", "Resources/Images/redCastCircle.png", {"Damage": 0.2, "Knockback": "S", "Cooldown": 5, "Mana": 10, "InvulnMod": 0})

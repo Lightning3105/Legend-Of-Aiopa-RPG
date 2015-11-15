@@ -1,8 +1,10 @@
 import pygame as py
 import entityClasses
 import Variables as v
+from ast import literal_eval
 
 def generateMap(map, sheet):
+    #import Variables as v
     print(map)
     map = map[str(v.mapNum)]
     allMap = map
@@ -41,21 +43,31 @@ def generateMap(map, sheet):
         for tile in range(len(map[row])):
             if map[row][tile] != "-":
                 teleport = None
+                over = False
+                draw = True
+                create = True
                 if list(map[row][tile])[0] == "+":
                     over = True
-                    create = True
                 if list(map[row][tile])[0] == "&":
                     teleport = (int(map[row][tile].replace('&', "").split("|")[0]))
                     map[row][tile] = map[row][tile].replace('&', "").split("|")[1]
-                    create = True
-                    over = False
+                if list(map[row][tile])[0] == "%":
+                    npc = literal_eval(map[row][tile].replace('%', "").split("|")[0])
+                    for k, va in npc.items():
+                        try:
+                            npc[k] = int(va)
+                        except:
+                            pass
+                    entityClasses.Enemy((tile - modx) * 30, (row - mody) * 30, v.mapNum, npc["Image"], npc)
+                    draw = False
                 else:
                     over = False
                     create = False
-                image = sheet.images[int(map[row][tile].replace('+', ""))]
-                posx = (tile * 30)# - (modx * 30)
-                posy = (row * 30)# - (mody * 30)
-                baseMap.blit(image, (posx, posy))
+                if draw:
+                    image = sheet.images[int(map[row][tile].replace('+', ""))]
+                    posx = (tile * 30)# - (modx * 30)
+                    posy = (row * 30)# - (mody * 30)
+                    baseMap.blit(image, (posx, posy))
                 if create:
                     entityClasses.Tile((tile - modx, row - mody), 0, False, over, image, teleport) 
     
@@ -87,16 +99,16 @@ class BaseMap():
         v.screen.blit(self.image, self.rect)
 
 Maps = {"1":[[
+['326', '326', '77', '326', '326'],
 ['326', '326', '326', '326', '326'],
+['77', '326', '186', '326', '77'],
 ['326', '326', '326', '326', '326'],
-['326', '326', '326', '326', '326'],
-['326', '326', '326', '326', '326'],
-['326', '326', '326', '326', '326'],
+['326', '326', '77', '326', '326'],
 ], 
 [
+['-', '-', "%{'Health': '10', 'Speed': '2', 'Name': 'Stanly', 'Attack': '4', 'Image': 'Resources/Images/EnemySkins/GuardSheet.png'}|-", '-', '-'],
 ['-', '-', '-', '-', '-'],
+["%{'Health': '10', 'Speed': '2', 'Name': 'Stanly', 'Attack': '4', 'Image': 'Resources/Images/EnemySkins/GuardSheet.png'}|-", '-', '-', '-', "%{'Health': '10', 'Speed': '2', 'Name': 'Stanly', 'Attack': '4', 'Image': 'Resources/Images/EnemySkins/GuardSheet.png'}|-"],
 ['-', '-', '-', '-', '-'],
-['&2|1947', '-', '1613', '-', '&3|1947'],
-['-', '-', '-', '-', '-'],
-['-', '-', '&4|1947', '-', '-'],
+['-', '-', "%{'Health': '10', 'Speed': '2', 'Name': 'Stanly', 'Attack': '4', 'Image': 'Resources/Images/EnemySkins/GuardSheet.png'}|-", '-', '-'],
 ]]}

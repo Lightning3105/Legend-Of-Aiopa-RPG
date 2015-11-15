@@ -239,8 +239,9 @@ def game():
             v.abilityButtons.update()
             #map.update()
             guiClasses.fps()
-    
+            
             py.display.flip()
+            py.time.wait(1000)
             for event in v.events:
                 if event.type == py.QUIT:
                     sys.exit()

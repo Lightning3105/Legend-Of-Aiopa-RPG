@@ -3,6 +3,7 @@ import Variables as v
 import entityClasses
 import MenuItems
 from time import sleep
+from time import clock
 from pygame.color import Color as colour 
 import gameScreens
 
@@ -295,6 +296,7 @@ class loadingScreen():
         self.label = self.font.render("Loading...", 1, (255, 255, 255))
         self.mod = self.font.size("Loading...")
         self.mod = (self.mod[0] / 2, self.mod[1] / 2)
+        
     
     def update(self, stage=1):
         if stage == 0:
@@ -308,6 +310,7 @@ class loadingScreen():
                 self.fade.opacity -= 40
                 py.display.flip()
                 py.time.delay(100)
+            self.time = clock()
         if stage == 1:
             self.image = self.wizSheet.images[14]
             self.rect = (0, 0, v.screenX, v.screenY)
@@ -315,6 +318,7 @@ class loadingScreen():
             v.screen.blit(self.image, ((v.screenX / 2) - self.image.get_rect().width / 2, (v.screenY / 2)  - self.image.get_rect().height / 2))
             v.screen.blit(self.label, ((v.screenX / 2) - self.mod[0], (v.screenY / 2)  - self.mod[1] + 50/640 * v.screenX))
         if stage == 2:
+            t = self.font.render("Load Time: " + str(clock() - self.time), 1, (255, 255, 255))
             for i in range(28, 38):
                 py.time.delay(100)
                 self.image = self.wizSheet.images[i]
@@ -322,10 +326,7 @@ class loadingScreen():
                 py.draw.rect(v.screen, (0, 0, 0), self.rect)
                 v.screen.blit(self.image, ((v.screenX / 2) - self.image.get_rect().width / 2, (v.screenY / 2)  - self.image.get_rect().height / 2))
                 v.screen.blit(self.label, ((v.screenX / 2) - self.mod[0], (v.screenY / 2)  - self.mod[1] + 50/640 * v.screenX))
+                v.screen.blit(t, (200/640 * v.screenX, 300/640 * v.screenX))
                 self.fade.draw()
                 self.fade.opacity += 40
                 py.display.flip()
-
-def upLoad():
-    while True:
-        v.load.update()

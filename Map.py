@@ -108,7 +108,7 @@ Maps = {"1":[[
 [
 ['-', '-', '-', '-', '-'],
 ['-', '-', '-', '-', '-'],
-["%{'Attack': '1', 'Image': 'Resources/Images/EnemySkins/Generic Goblin.png', 'Health': '5', 'Speed': '1', 'Name': 'Borris'}|-", '-', '-', '-', "%{'Attack': '5', 'Image': 'Resources/Images/EnemySkins/GuardSheet.png', 'Health': '10', 'Speed': '2', 'Name': 'Stan'}|-"],
+["-", '-', '-', '-', "-"],
 ['-', '-', '-', '-', '-'],
 ['-', '-', '-', '-', '-'],
 ]]}

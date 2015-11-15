@@ -156,4 +156,4 @@ class conversation():
                         
 def summon(npcType, pos):
     if npcType == "Guard":
-        entityClasses.Enemy(pos[0], pos[1], "Resources/Images/GuardSheet.png", {"Name": "Guard Lvl. 100", "Health":100, "Attack":5})            
+        entityClasses.Enemy(pos[0], pos[1], 1, "Resources/Images/EnemySkins/GuardSheet.png", {"Name": "Guard Lvl. 100", "Health":100, "Attack":5, "Speed":1.5})            

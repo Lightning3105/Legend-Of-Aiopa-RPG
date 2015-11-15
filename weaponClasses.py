@@ -194,7 +194,7 @@ class shooter(py.sprite.Sprite):
         def __init__(self, image, weapon, shooter):
             super().__init__()
             self.attacking = True
-            self.attSpeed = 8
+            self.attSpeed = 4
             self.attCyclePos = 0
             self.posx = v.playerPosX
             self.posy = v.playerPosY - int(5 * v.scale)

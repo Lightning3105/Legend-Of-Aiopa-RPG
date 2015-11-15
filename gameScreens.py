@@ -38,6 +38,9 @@ def mainMenu():
     fade.fadeIn = True
     
     setupScripts.initSound()
+    f = open("log.txt", "w")
+    f.write(str(listdir("Resources/Music")))
+    f.close()
     v.music = py.mixer.Sound("Resources/Music/Title 1.ogg")
     v.music.play(loops=-1)
     while True:
@@ -152,6 +155,9 @@ def windowUpdate():
         v.screenScale = 2.5
     if v.screenX == 1024:
         v.screenScale = 4.3"""
+        
+
+    
 
 def game():
     import weaponClasses
@@ -170,6 +176,7 @@ def game():
         v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)"""
 
     v.p_class = entityClasses.Player()
+    mask = entityClasses.mask()
     v.clock = py.time.Clock()
     py.time.set_timer(py.USEREVENT, 200) # walking
     py.time.set_timer(py.USEREVENT + 1, 50) # Spell animation
@@ -182,6 +189,7 @@ def game():
     v.topTiles = py.sprite.Group()
     v.allNpc = py.sprite.Group()
     v.droppedItems = py.sprite.Group()
+    v.hitList = py.sprite.Group()
     Map.generateMap() #TODO: xp
     SaveLoad.loadMap(v.mapNum)
     #v.playerPosX = 0
@@ -196,6 +204,8 @@ def game():
     weaponSlot = guiClasses.weaponSlot()
     
     xp = guiClasses.XP()
+    loclab = guiClasses.locationTitle()
+    
 
     pause = guiClasses.pauseScreen()
     
@@ -230,6 +240,7 @@ def game():
             v.allNpc.update()
             v.allNpc.draw(v.screen)
             v.p_class.update()
+            
             v.xpGroup.update()
             v.xpGroup.draw(v.screen)
             v.playerStopped = False
@@ -239,6 +250,9 @@ def game():
             v.particles.update()
             #v.hits.draw(v.screen)
             v.topTiles.draw(v.screen)
+            mask.update()
+            mask.draw()
+            v.mask = False
             
             guiClasses.update_health()
             guiClasses.update_mana()
@@ -246,6 +260,7 @@ def game():
             xp.update()
             weaponSlot.draw()
             v.abilityButtons.update()
+            loclab.update()
             #map.update()
             guiClasses.fps()
             

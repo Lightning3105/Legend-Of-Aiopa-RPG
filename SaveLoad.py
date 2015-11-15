@@ -59,7 +59,7 @@ def Save():
     for k, v in Map.Maps.items():
         saveMap(k)
 
-def saveMap(mapNum=v.mapNum):
+def saveMap(mapNum):
     if not v.savedMap == None:
         current = pickle.loads(v.savedMap)
     else:
@@ -75,8 +75,6 @@ def saveMap(mapNum=v.mapNum):
 def loadMap(mapNum):
     if not v.savedMap == None:
         save = pickle.loads(v.savedMap)
-        print(mapNum)
-        print(v.mapNum)
         if mapNum in save:
             save = save[mapNum]
             print(save)

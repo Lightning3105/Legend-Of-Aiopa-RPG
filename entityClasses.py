@@ -113,6 +113,7 @@ class Player(py.sprite.Sprite):
         self.damage_animation()
         self.damage_knockback()
         v.screen.blit(self.image, self.rect)
+        
 
     def damage_knockback(self):
         if self.damage_fade and self.damaged and not self.dead:
@@ -237,6 +238,145 @@ class Player(py.sprite.Sprite):
             v.playerPosY += self.velY
             v.playerDirection = self.direction
 
+class mask:
+    
+    def __init__(self):
+        super().__init__()
+        self.posx = v.screen.get_rect()[2] / 2
+        self.posy = v.screenY / 2
+        self.direction = "Down"
+        v.playerDirection = self.direction
+        self.moving = False
+        self.movFlip = True
+        self.view = "DownC"
+        self.sheetImage = "Resources\Images"
+        self.damaged = False
+        self.damage_alpha = 0
+        self.damage_fade = True
+        self.prevHealth = v.Attributes["Max Health"]
+        self.dead = False
+        self.invulnLength = 30
+        self.combineImages()
+        self.rect = py.Rect(0, 0, 0, 0)
+
+
+    def initSheet(self):
+        self.sheet = SpriteSheet(self.sheetImage, 4, 3)
+        self.sheet.getGrid()
+        self.views = {"UpL": self.sheet.images[0],
+                      "UpC": self.sheet.images[1],
+                      "UpR": self.sheet.images[2],
+                      "RightL": self.sheet.images[3],
+                      "RightC": self.sheet.images[4],
+                      "RightR": self.sheet.images[5],
+                      "DownL": self.sheet.images[6],
+                      "DownC": self.sheet.images[7],
+                      "DownR": self.sheet.images[8],
+                      "LeftL": self.sheet.images[9],
+                      "LeftC": self.sheet.images[10],
+                      "LeftR": self.sheet.images[11]}
+    def combineImages(self):
+        self.sheetImage = py.image.load(v.appearance["Body"])
+        self.sheetImage.blit(py.image.load(v.appearance["Face"]), (0, 0))
+        self.sheetImage.blit(py.image.load(v.appearance["Dress"]), (0, 0))
+        self.sheetImage.blit(py.image.load(v.appearance["Hair"]), (0, 0))
+        #v.screen.blit(self.sheetImage, (0, 0))
+        self.initSheet()
+    def draw(self):
+        if v.mask:
+            self.set_rect()
+            self.get_view()
+            skin = self.views[v.p_class.view]
+            size = skin.get_rect()
+            self.image = py.transform.scale(skin, (int(size.width * v.scale), int(size.height * v.scale)))
+            self.rect.centerx = self.posx
+            self.rect.centery = self.posy
+            self.damage_animation()
+            self.damage_knockback()
+            self.image.fill((200, 200, 200, 80), special_flags=py.BLEND_RGBA_MULT)
+            v.screen.blit(self.image, self.rect)
+        
+
+    def damage_knockback(self):
+        if self.damage_fade and self.damaged and not self.dead:
+            self.moving = False
+            v.playerStopped = True
+            if v.attackerDirection == "Up":
+                v.playerPosY += 2
+            if v.attackerDirection == "Down":
+                v.playerPosY += -2
+            if v.attackerDirection == "Right":
+                v.playerPosX += 2
+            if v.attackerDirection == "Left":
+                v.playerPosX + -2
+
+    def damage_animation(self): #TODO: Finish
+        if self.damaged and not self.dead:
+            damage_image = self.image
+            damage_image.fill((255, 0, 0, self.damage_alpha), special_flags=py.BLEND_RGBA_MULT)
+            self.image.blit(damage_image, (0,0))
+            if self.damage_fade:
+                self.damage_alpha += 255 / (self.invulnLength / 2)
+                if self.damage_alpha >= 255:
+                    self.damage_fade = False
+                    self.damage_alpha = 255
+            elif not self.damage_fade:
+                self.damage_alpha -= 255 / (self.invulnLength / 2)
+                if self.damage_alpha <= 0:
+                    self.damage_alpha = 0
+                    self.damaged = False
+                    self.damage_fade = True
+
+    def get_view(self):
+        for event in v.events:
+            if event.type == py.USEREVENT:
+                if self.view == self.direction + "C":
+                    if self.movFlip:
+                        self.view = self.direction + "R"
+                        self.movFlip = not self.movFlip
+                    else:
+                        self.view = self.direction + "L"
+                        self.movFlip = not self.movFlip
+                elif self.view == self.direction + "R":
+                    self.view = self.direction + "C"
+                elif self.view == self.direction + "L":
+                    self.view = self.direction + "C"
+                else:
+                    self.view = self.direction + "C"
+        if self.moving == False:
+            self.view = self.direction + "C"
+
+
+    def set_rect(self):
+        self.rend = self.sheet.images[0]
+        self.rect = self.rend.get_rect()
+        self.rect.centerx = self.posx
+        self.rect.centery = self.posy
+        self.rect.width = self.rend.get_rect().width * v.scale
+        self.rect.height = self.rend.get_rect().height * v.scale
+
+    def update(self):
+        if v.playerHealth < self.prevHealth:
+            self.damaged = True
+            self.prevHealth = v.playerHealth
+        
+        keys_pressed = py.key.get_pressed()
+        if keys_pressed[py.K_s]:
+            self.direction = "Down"
+            self.moving = True
+        elif keys_pressed[py.K_w]:
+            self.direction = "Up"
+            self.moving = True
+        elif keys_pressed[py.K_a]:
+            self.direction = "Left"
+            self.moving = True
+        elif keys_pressed[py.K_d]:
+            self.direction = "Right"
+            self.moving = True
+        else:
+            self.moving = False
+        
+
 
 class HitBox(py.sprite.Sprite):
 
@@ -286,6 +426,10 @@ class HitBox(py.sprite.Sprite):
         else:
             velX = 0
             velY = 0
+        
+        for tile in v.topTiles:
+            if self.rect.colliderect(tile.rect):
+                v.mask = True
         
         return velX, velY
 
@@ -507,18 +651,22 @@ class Enemy(py.sprite.Sprite):
                     if bottom.colliderect(thing.rect) == True or bottom.colliderect(v.p_class.rect) == True:
                         self.posy = self.prevY
                         yStopped = True
+                        print("1")
                         
                     if top.colliderect(thing.rect) == True or top.colliderect(v.p_class.rect) == True:
                         self.posy = self.prevY
                         yStopped = True
+                        print("2")
                         
                     if left.colliderect(thing.rect) == True or left.colliderect(v.p_class.rect) == True:
                         self.posx = self.prevX
                         xStopped = True
+                        print("3")
                         
                     if right.colliderect(thing.rect) == True or right.colliderect(v.p_class.rect) == True:
                         self.posx = self.prevX
                         xStopped = True
+                        print(thing)
                         
                     if xStopped and yStopped:
                         self.view = self.direction + "C"
@@ -690,38 +838,11 @@ class Enemy(py.sprite.Sprite):
             self.moving = True
     
     
-    
             if abs(self.posx - v.playerPosX) < 20:
                 if abs(self.posy - v.playerPosY) < 20:
                     self.posx = self.prevX
                     self.posy = self.prevY
                     self.moving = False
-    def move(self):
-        try:
-            distance = 2 * v.fpsAdjuster
-            surrounding = []
-            surrounding.append((self.posx + distance, self.posy + -distance))
-            surrounding.append((self.posx + distance, self.posy + 0))
-            surrounding.append((self.posx + distance, self.posy + distance))
-            surrounding.append((self.posx + 0, self.posy + -distance))
-            surrounding.append((self.posx + distance, self.posy + distance))
-            surrounding.append((self.posx + -distance, self.posy + -distance))
-            surrounding.append((self.posx + -distance, self.posy + 0))
-            surrounding.append((self.posx + -distance, self.posy + distance))
-            best = None
-            bestDist = float("inf")
-            for pos in surrounding:
-                dist = math.sqrt((pos[0] - self.pf_route[0][0])**2 + (pos[1] - self.pf_route[0][1])**2)
-                if dist < bestDist:
-                    best = pos
-                    bestDist = dist
-
-            self.posx = best[0]
-            self.posy = best[1]
-            if math.sqrt((self.posx - self.pf_route[0][0])**2 + (self.posy - self.pf_route[0][1])**2) < 2:
-                self.pf_route.pop(0)
-        except:
-            self.pathfind()
 
 class Particle(py.sprite.Sprite):
 

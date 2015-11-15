@@ -330,3 +330,34 @@ class loadingScreen():
                 self.fade.draw()
                 self.fade.opacity += 40
                 py.display.flip()
+
+class locationTitle():
+    
+    def __init__(self):
+        self.text = v.mapMeta[str(v.mapNum)]["Name"]
+        self.font = py.font.Font("Resources/Fonts/Vecna.otf", int(60/640 * v.screenX))
+        self.label = self.font.render(self.text, 1, (100, 100, 100))
+        #self.label = py.Surface(self.font.size(self.text))
+        #self.label.blit(ren, (0, 0))
+        self.cycle = 1
+        self.up = True
+    
+    def update(self):
+        if self.up:
+            self.cycle += 2
+            if self.cycle >= 255:
+                self.up = False
+                self.cycle = 255
+        if not self.up:
+            self.cycle -= 1
+            if self.cycle <= 0:
+                return
+        
+        l = self.label.copy()
+        l.fill((255, 255, 255, self.cycle), special_flags=py.BLEND_RGBA_MULT)
+        #l.set_alpha(self.cycle)
+        pos = ((v.screenX/2) - self.font.size(self.text)[0]/2, 50/640 * v.screenX)
+        
+        v.screen.blit(l, pos)
+            
+            

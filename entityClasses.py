@@ -575,7 +575,7 @@ class Enemy(py.sprite.Sprite):
         if abs(self.posx - v.playerPosX) < 32:
             if abs(self.posy - v.playerPosY) < 32:
                 if self.attCount <= int(7.5 * v.scale) and self.damagedPlayer == False and self.attCount > int(-10 * v.scale):
-                    v.playerHealth -= self.att
+                    v.playerHealth -= int(self.att)
                     self.damagedPlayer = True
     def death(self):
         if self.dead:

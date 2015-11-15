@@ -241,7 +241,6 @@ def game():
             guiClasses.fps()
             
             py.display.flip()
-            py.time.wait(1000)
             for event in v.events:
                 if event.type == py.QUIT:
                     sys.exit()

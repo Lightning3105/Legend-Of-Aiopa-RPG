@@ -99,16 +99,16 @@ class BaseMap():
         v.screen.blit(self.image, self.rect)
 
 Maps = {"1":[[
-['326', '326', '77', '326', '326'],
 ['326', '326', '326', '326', '326'],
-['77', '326', '186', '326', '77'],
 ['326', '326', '326', '326', '326'],
-['326', '326', '77', '326', '326'],
+['27', '326', '23', '326', '27'],
+['326', '326', '326', '326', '326'],
+['326', '326', '326', '326', '326'],
 ], 
 [
-['-', '-', "%{'Health': '10', 'Speed': '2', 'Name': 'Stanly', 'Attack': '4', 'Image': 'Resources/Images/EnemySkins/GuardSheet.png'}|-", '-', '-'],
 ['-', '-', '-', '-', '-'],
-["%{'Health': '10', 'Speed': '2', 'Name': 'Stanly', 'Attack': '4', 'Image': 'Resources/Images/EnemySkins/GuardSheet.png'}|-", '-', '-', '-', "%{'Health': '10', 'Speed': '2', 'Name': 'Stanly', 'Attack': '4', 'Image': 'Resources/Images/EnemySkins/GuardSheet.png'}|-"],
 ['-', '-', '-', '-', '-'],
-['-', '-', "%{'Health': '10', 'Speed': '2', 'Name': 'Stanly', 'Attack': '4', 'Image': 'Resources/Images/EnemySkins/GuardSheet.png'}|-", '-', '-'],
+["%{'Attack': '1', 'Image': 'Resources/Images/EnemySkins/Generic Goblin.png', 'Health': '5', 'Speed': '1', 'Name': 'Borris'}|-", '-', '-', '-', "%{'Attack': '5', 'Image': 'Resources/Images/EnemySkins/GuardSheet.png', 'Health': '10', 'Speed': '2', 'Name': 'Stan'}|-"],
+['-', '-', '-', '-', '-'],
+['-', '-', '-', '-', '-'],
 ]]}

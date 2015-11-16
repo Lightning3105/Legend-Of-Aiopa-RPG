@@ -160,7 +160,7 @@ class characterSelector(py.sprite.Sprite):
         self.hovered = False
         self.hoveredCycle = 0
         self.greyedCycle = 0
-        self.movingCycle = 200
+        self.movingCycle = 100
         self.movDistance = abs(self.pos[0] - 130)
         self.opacity = 255
         
@@ -217,19 +217,23 @@ class characterSelector(py.sprite.Sprite):
             font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(10 * sMod)) #TODO: Scale
             label = font.render(self.name, 1, (cMod, cMod, cMod))
             v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.bottom  + (2 * sMod)))
-        elif v.custimizationStage == "To Attributes":
+        elif v.custimizationStage == "To Attributes" or v.custimizationStage == "Attributes":
             if self.name == v.playerClass:
                 for event in v.events:
                     if event.type == py.USEREVENT:
-                        sMod = 6 + ((200 - self.movingCycle) / 40)
+                        sMod = 6 + ((100 - self.movingCycle) / 40)
                         size = self.skin.get_rect()
                         size.width = (size.width / 640) * v.screenX
                         size.height = (size.height / 480) * v.screenY
                         self.image = py.transform.scale(self.skin, (int(size.width * sMod), int(size.height * sMod)))
                         self.rect = self.image.get_rect()
+                        
+                        
                         newpos = list(self.pos)
-                        newpos[0] = self.pos[0] - (self.movDistance - (self.movingCycle * (self.movDistance / 200)))  # TODO: Make this work
-                        newpos[1] = self.pos[1] - (40 - (self.movingCycle * (40 / 200)))
+                        newpos[0] = self.pos[0] - (self.movDistance - (self.movDistance/100)*self.movingCycle)  # TODO: Make this work
+                        newpos[1] = self.pos[1] - (40 - (self.movingCycle * (40 / 100)))
+                        print(self.movingCycle)
+                        
                         if self.movingCycle > 0:
                             self.movingCycle -= 1
                         self.rect.center = newpos
@@ -264,7 +268,7 @@ class optionSlate():
             py.draw.rect(v.screen, py.Color(153, 76, 0), self.outerRect)
             py.draw.rect(v.screen, py.Color(255, 178, 102), self.innerRect)
             if self.posx >= v.screenX * 0.6875:
-                self.posx -= 5/640 * v.screenX
+                self.posx -= 3/640 * v.screenX
             else:
                 v.custimizationStage = "Attributes"
         if v.custimizationStage == "Attributes" or v.custimizationStage == "Customisation":

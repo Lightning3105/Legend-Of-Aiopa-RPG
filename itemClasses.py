@@ -46,6 +46,9 @@ class spell():
         if self.spellType == "beam":
             self.object = spellClasses.beam(self.spellImage, self.castImage, self)
             v.equippedSpells.add(self.object)
+        if self.spellType == "lightning":
+            self.object = spellClasses.lightning(self.spellImage, self.castImage, self)
+            v.equippedSpells.add(self.object)
     
     def save(self):
         save = {}

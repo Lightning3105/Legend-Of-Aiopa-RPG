@@ -8,6 +8,7 @@ import Map
 import os
 
 def Save():
+    global v
     savefile = open("Saves/Variables.save", "wb")
     
     save = {
@@ -56,8 +57,8 @@ def Save():
     save["aSave"] = aSave
     pickle.dump(save, savefile)
     
-    for k, v in Map.Maps.items():
-        saveMap(k)
+    """for k, v in Map.Maps.items():
+        saveMap(k)"""
 
 def saveMap(mapNum):
     if not v.savedMap == None:

@@ -122,12 +122,12 @@ class XP:
             segRect = seg.get_rect()
             deg = 0
             
-            for i in range(90):
+            for i in range(90): 
                 deg += 8
                 if deg <= xpSegment * v.experience["XP"]:
                     #rend = entityClasses.rot_center(seg, deg)
                     rend = py.transform.rotate(seg, deg)
-                    segRect.center = entityClasses.arc((self.posx, self.posy), 30, -deg - 180)
+                    segRect.center = entityClasses.arc((self.posx, self.posy), 30, -deg - 180) #30
                     v.screen.blit(rend, segRect)
         font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(30 / 640 * v.screenX))
         label = font.render(str(v.experience["XPL"]), 1, (0, 255, 255))
@@ -169,7 +169,12 @@ class ability(py.sprite.Sprite):
         py.draw.rect(v.screen, border, self.rect, 2)
         
         keys_pressed = py.key.get_pressed()
-        if keys_pressed[py.K_1] and not v.playerActing:
+        key = None
+        if self.saveNum == 0:
+            key = py.K_1
+        if self.saveNum == 1:
+            key = py.K_2
+        if keys_pressed[key] and not v.playerActing:
             if cooldown == maxCooldown:
                 if v.playerMana >= self.ability.attributes["Mana"]:
                     self.ability.object.attacking = True

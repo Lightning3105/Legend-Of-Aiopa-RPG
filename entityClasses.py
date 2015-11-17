@@ -474,7 +474,7 @@ class Tile(py.sprite.Sprite):
                 gameScreens.game()
 
 def rot_center(image, angle):
-    """rotate an image while keeping its center and size"""
+    """rotate an image while keeping its centre and size"""
     orig_rect = image.get_rect()
     rot_image = py.transform.rotate(image, angle)
     rot_rect = orig_rect.copy()

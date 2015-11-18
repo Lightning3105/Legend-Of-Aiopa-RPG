@@ -100,6 +100,13 @@ class weaponSlot:
         rect = image.get_rect()
         rect.center = (44, v.screen.get_rect().bottom - 45)
         v.screen.blit(image, rect)
+        
+        image = v.equipped["Weapon"].icon
+        image = py.transform.scale(image, (int(image.get_rect().width * v.scale * 0.8), int(image.get_rect().height * v.scale * 0.8)))
+        rect.width *= 0.8
+        rect.height *= 0.8
+        rect.center = (44, v.screen.get_rect().bottom - 45)
+        v.screen.blit(image, rect)
 
 class XP:
     
@@ -139,7 +146,7 @@ class ability(py.sprite.Sprite):
     def __init__(self, ability, image, num):
         super().__init__()
         self.ability = ability
-        self.posx = (20 + (30 * num)) / 640 * v.screenX
+        self.posx = (20 + (40 * num)) / 640 * v.screenX
         self.posy = 20 / 640 * v.screenX
         self.icon = py.image.load(image).convert_alpha()
         self.saveIcon = image

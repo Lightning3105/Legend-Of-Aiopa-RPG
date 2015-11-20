@@ -25,6 +25,11 @@ def initSound():
     py.mixer.init()
 
 def setAttributes():
+    if not v.playerClass in v.classAttributes:
+        from MenuItems import notImplimented
+        notImplimented()
+        import gameScreens
+        gameScreens.mainMenu()
     v.Attributes = v.classAttributes[v.playerClass]
     if v.playerClass == "Mage":
         v.equipped["Weapon"] = itemClasses.weapon("Magic Orb", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[56], "manaOrb", "Resources/Images/castOrbPurple.png", {"Damage":2, "Knockback": 10})

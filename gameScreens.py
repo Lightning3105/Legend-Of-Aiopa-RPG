@@ -362,9 +362,13 @@ def game():
 def classSelection():
     py.init()
     classes = py.sprite.Group()
-    classes.add(MenuItems.characterSelector("Resources/Images/PaladinClass.png", (v.screenX/2, v.screen.get_rect()[3]/2), "Paladin"))
-    classes.add(MenuItems.characterSelector("Resources/Images/MageClass.png", (v.screenX/4, v.screen.get_rect()[3]/2), "Mage"))
-    classes.add(MenuItems.characterSelector("Resources/Images/RangerClass.png", (v.screenX/1.3, v.screen.get_rect()[3]/2), "Ranger"))
+    classes.add(MenuItems.characterSelector("Resources/Images/PaladinClass.png", (v.screenX / 8 * 1, v.screen.get_rect()[3]/1.5), "Paladin"))
+    classes.add(MenuItems.characterSelector("Resources/Images/MageClass.png", (v.screenX / 8 * 2, v.screen.get_rect()[3]/3), "Mage"))
+    classes.add(MenuItems.characterSelector("Resources/Images/RangerClass.png", (v.screenX / 8 * 3, v.screen.get_rect()[3]/1.5), "Ranger"))
+    classes.add(MenuItems.characterSelector("Resources/Images/RogueClass.png", (v.screenX / 8 * 4, v.screen.get_rect()[3]/3), "Rogue"))
+    classes.add(MenuItems.characterSelector("Resources/Images/BarbarianClass.png", (v.screenX / 8 * 5, v.screen.get_rect()[3]/1.5), "Barbarian"))
+    classes.add(MenuItems.characterSelector("Resources/Images/NecromancerClass.png", (v.screenX / 8 * 6, v.screen.get_rect()[3]/3), "Necromancer"))
+    classes.add(MenuItems.characterSelector("Resources/Images/VoyantClass.png", (v.screenX / 8 * 7, v.screen.get_rect()[3]/1.5), "Voyant"))
     py.time.set_timer(py.USEREVENT, 10) # moving and growing animation speed
     
     v.custimizationStage = "Class Selection"
@@ -501,5 +505,99 @@ def classSelection():
 
         py.display.flip()
 
-def centre(screen):
-    return screen.get_rect()[2] / 2, screen.get_rect()[3] / 2
+
+def story():
+    py.init()
+    windowUpdate()
+    LS1 = py.transform.scale(py.image.load("Resources/Images/Story/LS1.png"), (v.screenX, v.screenY))
+    _LS1 = py.transform.scale(py.image.load("Resources/Images/Story/LS1.png"), (v.screenX, v.screenY))
+    LS2 = py.transform.scale(py.image.load("Resources/Images/Story/LS2.png"), (v.screenX, v.screenY))
+    LS3 = py.transform.scale(py.image.load("Resources/Images/Story/LS3.png"), (v.screenX, v.screenY))
+    LS4 = py.transform.scale(py.image.load("Resources/Images/Story/LS4.png"), (v.screenX, v.screenY))
+    LS4Ani = entityClasses.SpriteSheet("Resources/Images/Story/LS4 Ani.png", 10, 1)
+    LS3Ani = entityClasses.SpriteSheet("Resources/Images/Story/LS3 Ani.png", 2, 1)
+    P1 = py.transform.scale(py.image.load("Resources/Images/Story/Ground Images/Person 1.png"), (int(22/640 * v.screenX), int(28/640 * v.screenX)))
+    P2 = py.transform.scale(py.image.load("Resources/Images/Story/Ground Images/Person 2.png"), (int(22/640 * v.screenX), int(28/640 * v.screenX)))
+    lsY = 1400
+    zoom = 1
+    v.clock = py.time.Clock()
+    ani1 = py.Surface((0, 0))
+    ani2 = py.Surface((0, 0))
+    ani3 = py.Surface((0, 0))
+    ani4 = py.Surface((0, 0))
+    WB = py.Surface((v.screenX, v.screenY))
+    WB.set_alpha(100)
+    WB.fill((255, 255, 255))
+    WBAlpha = 0
+    STAGE = 2
+    
+    TM = py.transform.scale(py.image.load("Resources/Images/Story/Tall Mountain.png"), (v.screenX, v.screenY))
+    TMZoom = 1
+    
+    while True:
+        if STAGE == 1:
+            v.clock.tick(60)
+            v.screen.fill((0, 255, 255))
+            if zoom > 1:
+                LS1 = py.transform.scale(_LS1, (int(v.screenX * zoom), int(v.screenY * zoom)))
+                v.screen.blit(LS1, ((v.screenX/2) - int(v.screenX * zoom)/2, ((v.screenY/4) - int(v.screenY * zoom)/4)))
+            else:
+                v.screen.blit(LS1, (0, v.screenY * -3 + lsY))
+            v.screen.blit(LS2, (0, v.screenY * -2 + lsY))
+            v.screen.blit(LS3, (0, v.screenY * -1 + lsY))
+            v.screen.blit(LS4, (0, v.screenY * 0 + lsY))
+            if lsY < 180:
+                ani1 = py.transform.scale(LS4Ani.images[int(lsY/18)], (v.screenX, v.screenY))
+            v.screen.blit(ani1, (0, v.screenY * 0 + lsY))
+            
+            ani2 = py.transform.scale(LS3Ani.images[lsY % 2], (v.screenX, v.screenY))
+            v.screen.blit(ani2, (-v.screenX * 1.4 + lsY, v.screenY * -0.5 + lsY))
+            
+            ani2 = py.transform.scale(LS3Ani.images[(lsY + 1) % 2], (v.screenX, v.screenY))
+            ani2 = py.transform.flip(ani2, True, False)
+            v.screen.blit(ani2, (v.screenX * 1.6 - lsY, v.screenY * -1.1 + lsY))
+            
+            if lsY % 4 == 0:
+                ani3 = py.transform.rotate(P1, randint(-5, 5))
+                ani4 = py.transform.rotate(P2, randint(-5, 5))
+            if zoom == 1:
+                pos = (v.screenX * 2.6 - lsY, v.screenY * -2.55 + lsY * 1.1)
+                v.screen.blit(ani3, pos)
+                pos = (v.screenX * 2.65 - lsY, v.screenY * -2.55 + lsY * 1.1)
+                v.screen.blit(ani4, pos)
+            
+            if lsY < 1440:
+                lsY += 1
+            elif zoom < 5:
+                zoom *= 1.01
+            if zoom >= 3:
+                WB.set_alpha(WBAlpha)
+                v.screen.blit(WB, (0, 0))
+                WBAlpha += 5
+            if WBAlpha >= 255:
+                STAGE = 2
+            py.display.flip()
+        if STAGE == 2:
+            v.clock.tick(60)
+            v.screen.fill((0, 255, 255))
+            
+            tm = py.transform.scale(TM, (int(v.screenX * TMZoom), int(v.screenY * TMZoom)))
+            v.screen.blit(tm, ((v.screenX/2) - int(v.screenX * TMZoom)/2, ((v.screenY/4) - int(v.screenY * TMZoom)/4)))
+            
+            if WBAlpha > 0:
+                WBAlpha -= 3
+                WB.set_alpha(WBAlpha)
+                v.screen.blit(WB, (0, 0))
+            if TMZoom < 5:
+                TMZoom *= 1.01
+            if TMZoom > 1.5:
+                WB.set_alpha(WBAlpha)
+                WB.fill((0, 0, 0))
+                v.screen.blit(WB, (0, 0))
+                WBAlpha += 5
+            
+            
+            py.display.flip()
+        
+        
+        

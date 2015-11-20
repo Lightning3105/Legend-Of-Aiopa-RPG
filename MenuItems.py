@@ -674,3 +674,13 @@ class textInput():
                 if event.type == py.MOUSEBUTTONDOWN:
                     self.done = True
         self.outText = "".join(self.string)
+        
+
+def notImplimented():
+    font = py.font.SysFont("Comic Sans", 60, True)
+    for k, colour in py.color.THECOLORS.items():
+        label = font.render("NOT YET IMPLEMENTED!", 1, colour, (255, 255, 255))
+        size = font.size("NOT YET IMPLEMENTED!")
+        v.screen.blit(label, (v.screenX/2 - size[0]/2, v.screenY/2 - size[1]/2))
+        py.time.delay(1)
+        py.display.flip()

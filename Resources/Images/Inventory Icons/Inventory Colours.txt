@@ -1,0 +1,2 @@
+foreground: #d2c0c0
+background: #fbf8f8

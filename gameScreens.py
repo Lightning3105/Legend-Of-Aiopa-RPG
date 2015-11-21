@@ -19,6 +19,7 @@ from random import randint
 import npcScripts
 import setupScripts
 import SaveLoad
+import random
 
 #TODO: Change projectiles so they work with lag
 def mainMenu():
@@ -529,7 +530,7 @@ def story():
     WB.set_alpha(255)
     WB.fill((255, 255, 255))
     WBAlpha = 0
-    STAGE = 2
+    STAGE = 3
     ST3 = 0
     
     Characters = []
@@ -542,6 +543,7 @@ def story():
     Characters.append(py.image.load("Resources/Images/VoyantClass.png"))
     IM1 = py.transform.scale(py.image.load("Resources/Images/Story/IB1.png"), (v.screenX, v.screenY))
     IMEvil = entityClasses.SpriteSheet("Resources/Images/Story/DarkLord.png", 4, 3)
+    IMSpells = py.sprite.Group()
     
     TM = py.transform.scale(py.image.load("Resources/Images/Story/Tall Mountain.png"), (v.screenX, v.screenY))
     TMZoom = 1
@@ -624,7 +626,7 @@ def story():
                 v.screen.blit(WB, (0, 0))
             
             posx = 50
-            posy = v.screenY * 0.55 #65
+            posy = v.screenY * 0.55
             for i in Characters:
                 size = i.get_rect()
                 size.width = ((size.width * 3) / 640) * v.screenX
@@ -633,12 +635,18 @@ def story():
                 pos = (posx, posy)
                 posx += 80
                 if posx < 320:
-                    posy -= 15 #30
+                    posy -= 15
                 else:
                     posy += 15
                 
                 v.screen.blit(ren, pos)
+                
+                if randint(0, 100) == 1:
+                    x, y = pos
+                    pos = x, y
+                    IMSpells.add(MenuItems.storySpells(pos))
             
+            IMSpells.update()
             size = IMEvil.images[1].get_rect().size
             ev = py.transform.scale(IMEvil.images[1], (int(size[0] * 4/640 * v.screenX), int(size[1] * 4/640 * v.screenX)))
             v.screen.blit(ev, (v.screenX * 0.4 - int(size[0] * 4/640 * v.screenX)/2, v.screenY * 0.7))

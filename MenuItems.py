@@ -684,3 +684,35 @@ def notImplimented():
         v.screen.blit(label, (v.screenX/2 - size[0]/2, v.screenY/2 - size[1]/2))
         py.time.delay(1)
         py.display.flip()
+
+class storySpells(py.sprite.Sprite):
+    
+    def __init__(self, start):
+        super().__init__()
+        self.active = True
+        self.image = entityClasses.SpriteSheet("Resources/Images/castOrbPurple.png", 1, 10).images[9]
+        self.image.fill((0, 255, 255), special_flags=py.BLEND_MULT)
+        self.shield = py.transform.scale(py.image.load("Resources/Images/Story/Shield.png"), (int((30 * 4.5)/640 * v.screenX), int((40 * 4.5)/640 * v.screenX)))
+        self.end = (v.screenX * 0.4, v.screenY * 0.9)
+        self.start = (start[0] + ((24 * 3)/640 * v.screenX)/2, start[1] + ((32 * 3)/640 * v.screenX)/2)
+        self.posx = self.start[0]
+        self.posy = self.start[1]
+        xDiff = self.end[0] - self.start[0]
+        yDiff = self.end[1] - self.start[1]
+        self.xStep = xDiff / 100
+        self.yStep = yDiff / 100
+        self.cycle = 0
+        from math import sqrt
+        self.cycleStep = sqrt((xDiff ** 2) + (yDiff ** 2)) / 100
+    
+    def update(self):
+        img = py.transform.scale(self.image, (int(30/640 * v.screenX), int(30/640 * v.screenX)))
+        v.screen.blit(img, (self.posx, self.posy))
+        self.posx += self.xStep
+        self.posy += self.yStep
+        self.cycle += self.cycleStep
+        if self.cycle >= 80:
+            pos = (v.screenX * 0.3, v.screenY * 0.7)
+            v.screen.blit(self.shield, pos)
+        if self.cycle >= 90:
+            self.kill()

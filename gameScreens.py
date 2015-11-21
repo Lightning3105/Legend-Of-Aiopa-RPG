@@ -526,10 +526,22 @@ def story():
     ani3 = py.Surface((0, 0))
     ani4 = py.Surface((0, 0))
     WB = py.Surface((v.screenX, v.screenY))
-    WB.set_alpha(100)
+    WB.set_alpha(255)
     WB.fill((255, 255, 255))
     WBAlpha = 0
     STAGE = 2
+    ST3 = 0
+    
+    Characters = []
+    Characters.append(py.image.load("Resources/Images/PaladinClass.png"))
+    Characters.append(py.image.load("Resources/Images/MageClass.png"))
+    Characters.append(py.image.load("Resources/Images/RangerClass.png"))
+    Characters.append(py.image.load("Resources/Images/RogueClass.png"))
+    Characters.append(py.image.load("Resources/Images/BarbarianClass.png"))
+    Characters.append(py.image.load("Resources/Images/NecromancerClass.png"))
+    Characters.append(py.image.load("Resources/Images/VoyantClass.png"))
+    IM1 = py.transform.scale(py.image.load("Resources/Images/Story/IB1.png"), (v.screenX, v.screenY))
+    IMEvil = entityClasses.SpriteSheet("Resources/Images/Story/DarkLord.png", 4, 3)
     
     TM = py.transform.scale(py.image.load("Resources/Images/Story/Tall Mountain.png"), (v.screenX, v.screenY))
     TMZoom = 1
@@ -595,9 +607,45 @@ def story():
                 WB.fill((0, 0, 0))
                 v.screen.blit(WB, (0, 0))
                 WBAlpha += 5
-            
-            
+            if WBAlpha >= 255:
+                STAGE = 3
             py.display.flip()
         
+        
+        if STAGE == 3:
+            v.clock.tick(60)
+            v.screen.fill((0, 0, 0))
+            v.screen.blit(IM1, (0, 0))
+            
+            ST3 += 1
+            if WBAlpha > 0:
+                WBAlpha -= 3
+                WB.set_alpha(WBAlpha)
+                v.screen.blit(WB, (0, 0))
+            
+            posx = 50
+            posy = v.screenY * 0.55 #65
+            for i in Characters:
+                size = i.get_rect()
+                size.width = ((size.width * 3) / 640) * v.screenX
+                size.height = ((size.height * 3) / 480) * v.screenY
+                ren = py.transform.scale(i, (size.width, size.height))
+                pos = (posx, posy)
+                posx += 80
+                if posx < 320:
+                    posy -= 15 #30
+                else:
+                    posy += 15
+                
+                v.screen.blit(ren, pos)
+            
+            size = IMEvil.images[1].get_rect().size
+            ev = py.transform.scale(IMEvil.images[1], (int(size[0] * 4/640 * v.screenX), int(size[1] * 4/640 * v.screenX)))
+            v.screen.blit(ev, (v.screenX * 0.4 - int(size[0] * 4/640 * v.screenX)/2, v.screenY * 0.7))
+            
+                
+            py.display.flip()
+            
+            
         
         

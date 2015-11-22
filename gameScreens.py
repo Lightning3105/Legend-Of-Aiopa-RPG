@@ -519,10 +519,10 @@ def story():
     LS3Ani = entityClasses.SpriteSheet("Resources/Images/Story/LS3 Ani.png", 2, 1)
     P1 = py.transform.scale(py.image.load("Resources/Images/Story/Ground Images/Person 1.png"), (int(22/640 * v.screenX), int(28/640 * v.screenX)))
     P2 = py.transform.scale(py.image.load("Resources/Images/Story/Ground Images/Person 2.png"), (int(22/640 * v.screenX), int(28/640 * v.screenX)))
-    lsY = 1400
+    lsY = -480
     zoom = 1
     v.clock = py.time.Clock()
-    ani1 = py.Surface((0, 0))
+    ani1 = py.transform.scale(LS4Ani.images[0], (v.screenX, v.screenY))
     ani2 = py.Surface((0, 0))
     ani3 = py.Surface((0, 0))
     ani4 = py.Surface((0, 0))
@@ -530,7 +530,7 @@ def story():
     WB.set_alpha(255)
     WB.fill((255, 255, 255))
     WBAlpha = 0
-    STAGE = 3
+    STAGE = 1
     ST3 = 0
     
     Characters = []
@@ -548,10 +548,14 @@ def story():
     TM = py.transform.scale(py.image.load("Resources/Images/Story/Tall Mountain.png"), (v.screenX, v.screenY))
     TMZoom = 1
     
+    font = py.font.Font("Resources/Fonts/MorrisRoman.ttf", 40)
+    #FONT OPACITY:
+    #255 - abs(((VARIABLE + MIDPOINT) * (HALF OF RANGE/100))
+    
     while True:
         if STAGE == 1:
             v.clock.tick(60)
-            v.screen.fill((0, 255, 255))
+            v.screen.fill((0, 0, 0))
             if zoom > 1:
                 LS1 = py.transform.scale(_LS1, (int(v.screenX * zoom), int(v.screenY * zoom)))
                 v.screen.blit(LS1, ((v.screenX/2) - int(v.screenX * zoom)/2, ((v.screenY/4) - int(v.screenY * zoom)/4)))
@@ -560,8 +564,8 @@ def story():
             v.screen.blit(LS2, (0, v.screenY * -2 + lsY))
             v.screen.blit(LS3, (0, v.screenY * -1 + lsY))
             v.screen.blit(LS4, (0, v.screenY * 0 + lsY))
-            if lsY < 180:
-                ani1 = py.transform.scale(LS4Ani.images[int(lsY/18)], (v.screenX, v.screenY))
+            if lsY < 200 and lsY > -300:
+                ani1 = py.transform.scale(LS4Ani.images[int((lsY + 300)/50)], (v.screenX, v.screenY))
             v.screen.blit(ani1, (0, v.screenY * 0 + lsY))
             
             ani2 = py.transform.scale(LS3Ani.images[lsY % 2], (v.screenX, v.screenY))
@@ -584,10 +588,40 @@ def story():
                 lsY += 1
             elif zoom < 5:
                 zoom *= 1.01
+                
+            if lsY > -480 and lsY < -200:
+                label = font.render("Once Upon a time...", 1, (255, 255, 255))
+                op = 255 - abs(((lsY + 340) * 1.8))
+                print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.5, v.screenY * 0.75))
+            
+            if lsY > -280 and lsY < 0:
+                label = font.render("There was a perfect land...", 1, (255, 255, 255))
+                op = 255 - abs(((lsY + 140) * 1.8))
+                print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (0, v.screenY * 0.25))
+            if lsY > -80 and lsY < 200:
+                label = font.render("A land of RICHES...", 1, (255, 255, 255))
+                op = 255 - abs(((lsY + 140) * 1.8))
+                print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX / 2, v.screenY * 0.5))
+            if lsY > -120 and lsY < 360:
+                label = font.render("A land of RICHES...", 1, (255, 255, 255))
+                op = 255 - abs(((lsY + 140) * 1.8))
+                print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX / 2, v.screenY * 0.5))
+            
+            
+            
             if zoom >= 3:
                 WB.set_alpha(WBAlpha)
                 v.screen.blit(WB, (0, 0))
                 WBAlpha += 5
+                fadeIn = True
             if WBAlpha >= 255:
                 STAGE = 2
             py.display.flip()
@@ -598,17 +632,19 @@ def story():
             tm = py.transform.scale(TM, (int(v.screenX * TMZoom), int(v.screenY * TMZoom)))
             v.screen.blit(tm, ((v.screenX/2) - int(v.screenX * TMZoom)/2, ((v.screenY/4) - int(v.screenY * TMZoom)/4)))
             
-            if WBAlpha > 0:
+            if WBAlpha > 0 and fadeIn:
                 WBAlpha -= 3
                 WB.set_alpha(WBAlpha)
                 v.screen.blit(WB, (0, 0))
+            if WBAlpha <= 0:
+                fadeIn = False
             if TMZoom < 5:
                 TMZoom *= 1.01
-            if TMZoom > 1.5:
+            if TMZoom > 1.5 and fadeIn == False:
                 WB.set_alpha(WBAlpha)
                 WB.fill((0, 0, 0))
                 v.screen.blit(WB, (0, 0))
-                WBAlpha += 5
+                WBAlpha += 4
             if WBAlpha >= 255:
                 STAGE = 3
             py.display.flip()
@@ -641,16 +677,17 @@ def story():
                 
                 v.screen.blit(ren, pos)
                 
-                if randint(0, 100) == 1:
-                    x, y = pos
-                    pos = x, y
-                    IMSpells.add(MenuItems.storySpells(pos))
+                if ST3 < 200:
+                    if randint(0, 100) == 1:
+                        x, y = pos
+                        pos = x, y
+                        IMSpells.add(MenuItems.storySpells(pos))
             
             IMSpells.update()
             size = IMEvil.images[1].get_rect().size
             ev = py.transform.scale(IMEvil.images[1], (int(size[0] * 4/640 * v.screenX), int(size[1] * 4/640 * v.screenX)))
             v.screen.blit(ev, (v.screenX * 0.4 - int(size[0] * 4/640 * v.screenX)/2, v.screenY * 0.7))
-            
+            print(ST3)
                 
             py.display.flip()
             

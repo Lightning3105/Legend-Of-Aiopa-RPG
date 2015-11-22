@@ -519,7 +519,7 @@ def story():
     LS3Ani = entityClasses.SpriteSheet("Resources/Images/Story/LS3 Ani.png", 2, 1)
     P1 = py.transform.scale(py.image.load("Resources/Images/Story/Ground Images/Person 1.png"), (int(22/640 * v.screenX), int(28/640 * v.screenX)))
     P2 = py.transform.scale(py.image.load("Resources/Images/Story/Ground Images/Person 2.png"), (int(22/640 * v.screenX), int(28/640 * v.screenX)))
-    lsY = 1000 #-480
+    lsY = 1700 #-480
     zoom = 1
     v.clock = py.time.Clock()
     ani1 = py.transform.scale(LS4Ani.images[0], (v.screenX, v.screenY))
@@ -530,8 +530,9 @@ def story():
     WB.set_alpha(255)
     WB.fill((255, 255, 255))
     WBAlpha = 0
-    STAGE = 1
+    STAGE = 2
     ST3 = 0
+    ST2 = 0
     
     Characters = []
     Characters.append(py.image.load("Resources/Images/PaladinClass.png"))
@@ -679,14 +680,61 @@ def story():
             if WBAlpha <= 0:
                 fadeIn = False
             if TMZoom < 5:
-                TMZoom *= 1.01
-            if TMZoom > 1.5 and fadeIn == False:
+                TMZoom *= 1.001
+            if TMZoom > 2 and fadeIn == False:
+                if WBAlpha <= 255:
+                    WBAlpha += 4
                 WB.set_alpha(WBAlpha)
                 WB.fill((0, 0, 0))
                 v.screen.blit(WB, (0, 0))
-                WBAlpha += 4
+                
+            
+            if TMZoom > 1 and TMZoom < 2:
+                label = font.render("The world was protected...", 1, (0, 0, 0))
+                op = 255 - abs((TMZoom - 1.5) * 510)
+                #print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.4))
+            if TMZoom > 1.3 and TMZoom < 2.3:
+                label = font.render("...By the 7 most powerful", 1, (0, 0, 0))
+                op = 255 - abs(((TMZoom - 0.3) - 1.5) * 510)
+                #print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.0, v.screenY * 0.6))
+            if TMZoom > 1.4 and TMZoom < 2.3:
+                label = font.render("mages and fighters", 1, (0, 0, 0))
+                op = 255 - abs(((TMZoom - 0.3) - 1.5) * 510)
+                #print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.7))
+            if TMZoom > 1.5 and TMZoom < 2.3:
+                label = font.render("in the world", 1, (0, 0, 0))
+                op = 255 - abs(((TMZoom - 0.3) - 1.5) * 510)
+                #print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.7, v.screenY * 0.8))
             if WBAlpha >= 255:
-                STAGE = 3
+                ST2 += 1
+                if ST2 > 0 and ST2 < 200:
+                    label = font.render("But one day...", 1, (255, 255, 255))
+                    op = 255 - abs((ST2 - 100) * 2.55)
+                    #print(op)
+                    label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                    v.screen.blit(label, (v.screenX * 0.25, v.screenY * 0.2))
+                if ST2 > 150 and ST2 < 350:
+                    label = font.render("when it mattered most...", 1, (255, 255, 255))
+                    op = 255 - abs((ST2 - 250) * 2.55)
+                    #print(op)
+                    label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                    v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.4))
+                if ST2 > 300 and ST2 < 500:
+                    label = font.render("THEY FAILED", 1, (255, 0, 0))
+                    op = 255 - abs((ST2 - 400) * 2.55)
+                    #print(op)
+                    label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                    v.screen.blit(label, (v.screenX * 0.3, v.screenY * 0.6))
+                if ST2 > 500:
+                    STAGE = 3
             py.display.flip()
         
         
@@ -696,10 +744,6 @@ def story():
             v.screen.blit(IM1, (0, 0))
             
             ST3 += 1
-            if WBAlpha > 0:
-                WBAlpha -= 3
-                WB.set_alpha(WBAlpha)
-                v.screen.blit(WB, (0, 0))
             
             posx = 50
             posy = v.screenY * 0.55
@@ -727,7 +771,11 @@ def story():
             size = IMEvil.images[1].get_rect().size
             ev = py.transform.scale(IMEvil.images[1], (int(size[0] * 4/640 * v.screenX), int(size[1] * 4/640 * v.screenX)))
             v.screen.blit(ev, (v.screenX * 0.4 - int(size[0] * 4/640 * v.screenX)/2, v.screenY * 0.7))
-            print(ST3)
+            #print(ST3)
+            if WBAlpha > 0:
+                WBAlpha -= 2
+                WB.set_alpha(WBAlpha)
+                v.screen.blit(WB, (0, 0))
                 
             py.display.flip()
             

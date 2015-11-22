@@ -519,7 +519,7 @@ def story():
     LS3Ani = entityClasses.SpriteSheet("Resources/Images/Story/LS3 Ani.png", 2, 1)
     P1 = py.transform.scale(py.image.load("Resources/Images/Story/Ground Images/Person 1.png"), (int(22/640 * v.screenX), int(28/640 * v.screenX)))
     P2 = py.transform.scale(py.image.load("Resources/Images/Story/Ground Images/Person 2.png"), (int(22/640 * v.screenX), int(28/640 * v.screenX)))
-    lsY = -480
+    lsY = 1000 #-480
     zoom = 1
     v.clock = py.time.Clock()
     ani1 = py.transform.scale(LS4Ani.images[0], (v.screenX, v.screenY))
@@ -549,6 +549,7 @@ def story():
     TMZoom = 1
     
     font = py.font.Font("Resources/Fonts/MorrisRoman.ttf", 40)
+    aiopaMain = entityClasses.SpriteSheet("Resources/Images/Story/Aiopa Title.png", 7, 3)
     #FONT OPACITY:
     #255 - abs(((VARIABLE + MIDPOINT) * (HALF OF RANGE/100))
     
@@ -560,21 +561,26 @@ def story():
                 LS1 = py.transform.scale(_LS1, (int(v.screenX * zoom), int(v.screenY * zoom)))
                 v.screen.blit(LS1, ((v.screenX/2) - int(v.screenX * zoom)/2, ((v.screenY/4) - int(v.screenY * zoom)/4)))
             else:
-                v.screen.blit(LS1, (0, v.screenY * -3 + lsY))
-            v.screen.blit(LS2, (0, v.screenY * -2 + lsY))
-            v.screen.blit(LS3, (0, v.screenY * -1 + lsY))
-            v.screen.blit(LS4, (0, v.screenY * 0 + lsY))
-            if lsY < 200 and lsY > -300:
-                ani1 = py.transform.scale(LS4Ani.images[int((lsY + 300)/50)], (v.screenX, v.screenY))
-            v.screen.blit(ani1, (0, v.screenY * 0 + lsY))
-            
-            ani2 = py.transform.scale(LS3Ani.images[lsY % 2], (v.screenX, v.screenY))
-            v.screen.blit(ani2, (-v.screenX * 1.4 + lsY, v.screenY * -0.5 + lsY))
-            
-            ani2 = py.transform.scale(LS3Ani.images[(lsY + 1) % 2], (v.screenX, v.screenY))
-            ani2 = py.transform.flip(ani2, True, False)
-            v.screen.blit(ani2, (v.screenX * 1.6 - lsY, v.screenY * -1.1 + lsY))
-            
+                if lsY < 1440:
+                    v.screen.blit(LS1, (0, v.screenY * -3 + lsY))
+                else:
+                    v.screen.blit(LS1, (0, 0))
+                
+            if lsY < 1440:    
+                v.screen.blit(LS2, (0, v.screenY * -2 + lsY))
+                v.screen.blit(LS3, (0, v.screenY * -1 + lsY))
+                v.screen.blit(LS4, (0, v.screenY * 0 + lsY))
+                if lsY < 200 and lsY > -300:
+                    ani1 = py.transform.scale(LS4Ani.images[int((lsY + 300)/50)], (v.screenX, v.screenY))
+                v.screen.blit(ani1, (0, v.screenY * 0 + lsY))
+                
+                ani2 = py.transform.scale(LS3Ani.images[lsY % 2], (v.screenX, v.screenY))
+                v.screen.blit(ani2, (-v.screenX * 1.4 + lsY, v.screenY * -0.5 + lsY))
+                
+                ani2 = py.transform.scale(LS3Ani.images[(lsY + 1) % 2], (v.screenX, v.screenY))
+                ani2 = py.transform.flip(ani2, True, False)
+                v.screen.blit(ani2, (v.screenX * 1.6 - lsY, v.screenY * -1.1 + lsY))
+                
             if lsY % 4 == 0:
                 ani3 = py.transform.rotate(P1, randint(-5, 5))
                 ani4 = py.transform.rotate(P2, randint(-5, 5))
@@ -584,7 +590,7 @@ def story():
                 pos = (v.screenX * 2.65 - lsY, v.screenY * -2.55 + lsY * 1.1)
                 v.screen.blit(ani4, pos)
             
-            if lsY < 1440:
+            if lsY < 1700:
                 lsY += 1
             elif zoom < 5:
                 zoom *= 1.01
@@ -592,28 +598,62 @@ def story():
             if lsY > -480 and lsY < -200:
                 label = font.render("Once Upon a time...", 1, (255, 255, 255))
                 op = 255 - abs(((lsY + 340) * 1.8))
-                print(op)
+                #print(op)
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.5, v.screenY * 0.75))
             
             if lsY > -280 and lsY < 0:
                 label = font.render("There was a perfect land...", 1, (255, 255, 255))
                 op = 255 - abs(((lsY + 140) * 1.8))
-                print(op)
+                #print(op)
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (0, v.screenY * 0.25))
             if lsY > -80 and lsY < 200:
                 label = font.render("A land of RICHES...", 1, (255, 255, 255))
-                op = 255 - abs(((lsY + 140) * 1.8))
+                op = 255 - abs(((-1*lsY) + 60) * 1.8)
+                #print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.5))
+            if lsY > 220 and lsY < 500:
+                label = font.render("A land of NATURE...", 1, (255, 255, 255))
+                op = 255 - abs((((-1*(lsY - 300)) + 60) * 1.8))
                 print(op)
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX / 2, v.screenY * 0.5))
-            if lsY > -120 and lsY < 360:
-                label = font.render("A land of RICHES...", 1, (255, 255, 255))
-                op = 255 - abs(((lsY + 140) * 1.8))
-                print(op)
+                v.screen.blit(label, (v.screenX * 0.25, v.screenY * 0.2))
+            if lsY > 420 and lsY < 700:
+                label = font.render("A land of LIFE...", 1, (255, 255, 255))
+                op = 255 - abs((((-1*(lsY - 500)) + 60) * 1.8))
+                #print(op)
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX / 2, v.screenY * 0.5))
+                v.screen.blit(label, (v.screenX * 0.6, v.screenY * 0.7))
+            if lsY > 720 and lsY < 1000:
+                label = font.render("A land of MAGIC...", 1, (255, 255, 255))
+                op = 255 - abs((((-1*(lsY - 800)) + 60) * 1.8))
+                #print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.5))
+            if lsY > 920 and lsY < 1200:
+                label = font.render("A land of PEACE...", 1, (255, 255, 255))
+                op = 255 - abs((((-1*(lsY - 1000)) + 60) * 1.8))
+                #print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.5))
+            if lsY > 1120 and lsY < 1400:
+                label = font.render("A land named...", 1, (255, 255, 255))
+                op = 255 - abs((((-1*(lsY - 1200)) + 60) * 1.8))
+                #print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.3, v.screenY * 0.1))
+            if lsY > 1300 and lsY < 1700:
+                size = aiopaMain.images[lsY % 18].get_rect().size
+                label = py.transform.scale(aiopaMain.images[lsY % 18], (int((size[0] * ((lsY - 1300)/100))/640 * v.screenX), int((size[1] * ((lsY - 1300)/100))/640 * v.screenX)))
+                if lsY > 1550:
+                    alph = 255 - ((lsY - 1550) * 1.7)
+                    if alph > 0:
+                        label.fill((255, 255, 255, alph), special_flags=py.BLEND_RGBA_MULT)
+                
+                v.screen.blit(label, (v.screenX * 0.5 - (label.get_rect().width/2), v.screenY * 0.5 - (label.get_rect().height/2)))
+                
             
             
             

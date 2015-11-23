@@ -530,9 +530,10 @@ def story():
     WB.set_alpha(255)
     WB.fill((255, 255, 255))
     WBAlpha = 0
-    STAGE = 3
+    STAGE = 4
     ST3 = 0
     ST2 = 0
+    ST4 = 0
     
     Characters = []
     Characters.append(py.image.load("Resources/Images/PaladinClass.png"))
@@ -555,6 +556,8 @@ def story():
     
     TM = py.transform.scale(py.image.load("Resources/Images/Story/Tall Mountain.png"), (v.screenX, v.screenY))
     TMZoom = 1
+    
+    FI1 = py.transform.scale(py.image.load("Resources/Images/Story/FI1.png"), (int(1280/640 * v.screenX), int(533/640 * v.screenX)))
     
     font = py.font.Font("Resources/Fonts/MorrisRoman.ttf", 40)
     aiopaMain = entityClasses.SpriteSheet("Resources/Images/Story/Aiopa Title.png", 7, 3)
@@ -846,22 +849,52 @@ def story():
                     v.screen.blit(r, (v.screenX * (i * 0.06), ((v.screenY/400) * ((ST3 - 850) - ran[i] * 3))))
                     print(v.screenX * (i * 0.06))
             
-            
+            if ST3 > 1000:
+                WBAlpha += 2
+                WB.set_alpha(WBAlpha)
+                WB.fill((0, 0, 0))
+                v.screen.blit(WB, (0, 0))
+                if WBAlpha >= 255:
+                    STAGE = 4
+
             if ST3 > 450 and ST3 < 500:
                 if randint(0, 2) == 1:
                     v.screen.fill((255, 0, 200))
             if ST3 > 800 and ST3 < 850:
                 if randint(0, 2) == 1:
                     v.screen.fill((255, 0, 200))
-                
             
-            
-            if WBAlpha > 0:
+            if WBAlpha > 0 and ST3 < 1000:
                 WBAlpha -= 2
                 WB.set_alpha(WBAlpha)
                 v.screen.blit(WB, (0, 0))
                 
             py.display.flip()
+        if STAGE == 4:
+            v.clock.tick(60)
+            ST4 += 1
+            v.screen.fill((255, 255, 255))
+            print(ST4)
+            
+            if ST4 < 200:
+                _fi1 = py.transform.scale(FI1, (int(FI1.get_rect().width * (3 - (ST4/100))), int(FI1.get_rect().height * (3 - (ST4/100)))))
+                pos = (v.screenX/2 - (FI1.get_rect().width * (3 - (ST4/100))/2), v.screenY/2 - (FI1.get_rect().height * (3 - (ST4/100))/2))
+            v.screen.blit(_fi1, pos)
+            
+            if WBAlpha > 0:
+                WBAlpha -= 2
+                WB.set_alpha(WBAlpha)
+                v.screen.blit(WB, (0, 0))
+            
+            if ST4 > 0 and ST4 < 200:
+                label = font.render("The world was falling apart...", 1, (255, 255, 255))
+                op = 255 - abs((ST4 - 100) * 2.55)
+                #print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.4))
+            
+            py.display.flip()
+            
             
             
         

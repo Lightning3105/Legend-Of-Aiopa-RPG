@@ -543,12 +543,15 @@ def story():
     Characters.append(py.image.load("Resources/Images/NecromancerClass.png"))
     Characters.append(py.image.load("Resources/Images/VoyantClass.png"))
     IM1 = py.transform.scale(py.image.load("Resources/Images/Story/IB1.png"), (v.screenX, v.screenY))
+    IM2 = py.transform.scale(py.image.load("Resources/Images/Story/IB2.png"), (v.screenX, v.screenY))
     IMEvil = entityClasses.SpriteSheet("Resources/Images/Story/DarkLord.png", 4, 3)
     IMSpells = py.sprite.Group()
     NexusC = py.transform.scale(py.image.load("Resources/Images/Story/Nexus Beam C.png"), (int(145/640 * v.screenX), int(480/640 * v.screenX))).convert_alpha()
     NexusP = py.transform.scale(py.image.load("Resources/Images/Story/Nexus Beam P.png"), (int(145/640 * v.screenX), int(480/640 * v.screenX))).convert_alpha()
     NexusC.fill((255, 255, 255, 200), special_flags=py.BLEND_RGBA_MULT)
     NexusP.fill((255, 255, 255, 200), special_flags=py.BLEND_RGBA_MULT)
+    
+    rock = py.transform.scale(py.image.load("Resources/Images/Story/Rock.png"), (int(200/640 * v.screenX), int(150/640 * v.screenX)))
     
     TM = py.transform.scale(py.image.load("Resources/Images/Story/Tall Mountain.png"), (v.screenX, v.screenY))
     TMZoom = 1
@@ -558,10 +561,11 @@ def story():
     #FONT OPACITY:
     #255 - abs(((VARIABLE + MIDPOINT) * (HALF OF RANGE/100))
     rot = []
-    for i in range(0, 7):
+    ran = []
+    for i in range(0, 20):
         rot.append(randint(-45, 45))
-    print(len(rot))
-    print(rot)
+    for i in range(0, 20):
+        ran.append(randint(0, 200))
     
     while True:
         if STAGE == 1:
@@ -663,8 +667,6 @@ def story():
                         label.fill((255, 255, 255, alph), special_flags=py.BLEND_RGBA_MULT)
                 
                 v.screen.blit(label, (v.screenX * 0.5 - (label.get_rect().width/2), v.screenY * 0.5 - (label.get_rect().height/2)))
-                
-            
             
             
             if zoom >= 3:
@@ -750,7 +752,10 @@ def story():
         if STAGE == 3:
             v.clock.tick(60)
             v.screen.fill((0, 0, 0))
-            v.screen.blit(IM1, (0, 0))
+            if ST3 < 825:
+                v.screen.blit(IM1, (0, 0))
+            else:
+                v.screen.blit(IM2, (0, 0))
             
             ST3 += 1
             
@@ -769,60 +774,84 @@ def story():
                 else:
                     posy += 15
                 
-                if ST3 > 475:
-                    print(iNum)
-                    ren = py.transform.rotate(ren, rot[iNum])
+                if ST3 < 1000 + rot[iNum] * 2:
+                    if ST3 > 475:
+                        #print(iNum)
+                        ren = py.transform.rotate(ren, rot[iNum])
                 iNum += 1
                 
                 v.screen.blit(ren, pos)
                 
-                if ST3 < 200:
+                if ST3 < 300:
                     if randint(0, 100) == 1:
                         x, y = pos
                         pos = x, y
                         IMSpells.add(MenuItems.storySpells(pos))
             
-            v.screen.blit(NexusC, (v.screenX * 0.4, v.screenY * -0.08))
+            if ST3 < 825:
+                v.screen.blit(NexusC, (v.screenX * 0.4, v.screenY * -0.08))
+            if ST3 > 825:
+                v.screen.blit(NexusP, (v.screenX * 0.4, v.screenY * -0.08))
+                
             IMSpells.update()
             size = IMEvil.images[1].get_rect().size
             ev = py.transform.scale(IMEvil.images[1], (int(size[0] * 4/640 * v.screenX), int(size[1] * 4/640 * v.screenX)))
-            v.screen.blit(ev, (v.screenX * 0.4 - int(size[0] * 4/640 * v.screenX)/2, v.screenY * 0.7))
+            if ST3 < 650:
+                v.screen.blit(ev, (v.screenX * 0.4 - int(size[0] * 4/640 * v.screenX)/2, v.screenY * 0.7))
+            else:
+                if ST3 > 650 and ST3 < 750:
+                    v.screen.blit(ev, ((v.screenX * 0.4 - int(size[0] * 4/640 * v.screenX)/2) + (ST3 - 650)/2, (v.screenY * 0.7) - (ST3 - 650)/2))
             #print(ST3)
             
             if ST3 > 0 and ST3 < 200:
-                label = font.render("Thanatos was the physical embodiment", 1, (255, 255, 255))
+                label = font.render("Thanatos was the physical embodiment", 1, (255, 255, 0))
                 op = 255 - abs((ST3 - 100) * 2.55)
                 #print(op)
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.0, v.screenY * 0.2))
             if ST3 > 10 and ST3 < 200:
-                label = font.render("of death and destruction...", 1, (255, 255, 255))
+                label = font.render("of death and destruction...", 1, (255, 255, 0))
                 op = 255 - abs((ST3 - 100) * 2.55)
                 #print(op)
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.3))
             if ST3 > 150 and ST3 < 400:
-                label = font.render("He fought his way into the ", 1, (255, 255, 255))
+                label = font.render("He fought his way into the ", 1, (255, 255, 0))
                 op = 255 - abs((ST3 - 275) * 2.04)
                 #print(op)
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.5))
             if ST3 > 160 and ST3 < 400:
-                label = font.render("mountain of the nexus,", 1, (255, 255, 255))
+                label = font.render("mountain of the nexus,", 1, (255, 255, 0))
                 op = 255 - abs((ST3 - 275) * 2.04)
                 #print(op)
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.3, v.screenY * 0.6))
             if ST3 > 170 and ST3 < 400:
-                label = font.render("the core that holds the world together", 1, (255, 255, 255))
+                label = font.render("the core that holds the world together", 1, (255, 255, 0))
                 op = 255 - abs((ST3 - 275) * 2.04)
                 #print(op)
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.7))
+            if ST3 > 550 and ST3 < 750:
+                label = font.render("AND DESTORYED IT", 1, (255, 0, 0))
+                op = 255 - abs((ST3 - 650) * 2.04)
+                #print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.4))
+            
+            if ST3 > 850:
+                for i in range(15):
+                    r = py.transform.rotate(rock, rot[i] * 4)
+                    v.screen.blit(r, (v.screenX * (i * 0.06), ((v.screenY/400) * ((ST3 - 850) - ran[i] * 3))))
+                    print(v.screenX * (i * 0.06))
             
             
             if ST3 > 450 and ST3 < 500:
-                if randint(0, 4) == 1:
+                if randint(0, 2) == 1:
+                    v.screen.fill((255, 0, 200))
+            if ST3 > 800 and ST3 < 850:
+                if randint(0, 2) == 1:
                     v.screen.fill((255, 0, 200))
                 
             

@@ -529,11 +529,12 @@ def story():
     WB = py.Surface((v.screenX, v.screenY))
     WB.set_alpha(255)
     WB.fill((255, 255, 255))
-    WBAlpha = 0
-    STAGE = 4
+    WBAlpha = 255
+    STAGE = 5
     ST3 = 0
     ST2 = 0
     ST4 = 0
+    ST5 = 0
     
     Characters = []
     Characters.append(py.image.load("Resources/Images/PaladinClass.png"))
@@ -549,8 +550,10 @@ def story():
     IMSpells = py.sprite.Group()
     NexusC = py.transform.scale(py.image.load("Resources/Images/Story/Nexus Beam C.png"), (int(145/640 * v.screenX), int(480/640 * v.screenX))).convert_alpha()
     NexusP = py.transform.scale(py.image.load("Resources/Images/Story/Nexus Beam P.png"), (int(145/640 * v.screenX), int(480/640 * v.screenX))).convert_alpha()
+    NexusCP = py.transform.scale(py.image.load("Resources/Images/Story/Nexus Beam CP.png"), (int(145/640 * v.screenX), int(480/640 * v.screenX))).convert_alpha()
     NexusC.fill((255, 255, 255, 200), special_flags=py.BLEND_RGBA_MULT)
     NexusP.fill((255, 255, 255, 200), special_flags=py.BLEND_RGBA_MULT)
+    NexusCP.fill((255, 255, 255, 200), special_flags=py.BLEND_RGBA_MULT)
     
     rock = py.transform.scale(py.image.load("Resources/Images/Story/Rock.png"), (int(200/640 * v.screenX), int(150/640 * v.screenX)))
     
@@ -876,26 +879,143 @@ def story():
             v.screen.fill((255, 255, 255))
             print(ST4)
             
-            if ST4 < 200:
-                _fi1 = py.transform.scale(FI1, (int(FI1.get_rect().width * (3 - (ST4/100))), int(FI1.get_rect().height * (3 - (ST4/100)))))
-                pos = (v.screenX/2 - (FI1.get_rect().width * (3 - (ST4/100))/2), v.screenY/2 - (FI1.get_rect().height * (3 - (ST4/100))/2))
+            if ST4 < 310:
+                _fi1 = py.transform.scale(FI1, (int(FI1.get_rect().width * (4 - (ST4/100))), int(FI1.get_rect().height * (4 - (ST4/100)))))
+                print((4 - (ST4/100)))
+                pos = (v.screenX/2 - (FI1.get_rect().width * (4 - (ST4/100))/2), v.screenY/2 - (FI1.get_rect().height * (4 - (ST4/100))/2))
+            if ST4 > 360:
+                _fi1 = py.transform.scale(FI1, (int(FI1.get_rect().width * ((ST4/100) - 2.6)), int(FI1.get_rect().height * ((ST4/100) - 2.6))))
+                pos = (v.screenX/2 - (FI1.get_rect().width * ((ST4/100) - 2.7)/(2 * ((ST4/100) - 2.7))), v.screenY/2 - (FI1.get_rect().height * ((ST4/100) - 2.7)/(2 * ((ST4/100) - 2.7))))
+                print(((ST4/100) - 3.6))
             v.screen.blit(_fi1, pos)
             
-            if WBAlpha > 0:
+            if WBAlpha > 0 and ST4 < 200:
                 WBAlpha -= 2
                 WB.set_alpha(WBAlpha)
                 v.screen.blit(WB, (0, 0))
             
+            if ST4 > 360:
+                WBAlpha += 2
+                WB.set_alpha(WBAlpha)
+                v.screen.blit(WB, (0, 0))
+                if WBAlpha >= 255:
+                    STAGE = 5
+            
             if ST4 > 0 and ST4 < 200:
-                label = font.render("The world was falling apart...", 1, (255, 255, 255))
+                label = font.render("The world was falling apart...", 1, (0, 0, 0))
                 op = 255 - abs((ST4 - 100) * 2.55)
                 #print(op)
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.4))
+            if ST4 > 150 and ST4 < 350:
+                label = font.render("Entire continents collapsing", 1, (0, 0, 0))
+                op = 255 - abs((ST4 - 250) * 2.55)
+                #print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.3, v.screenY * 0.2))
+            if ST4 > 150 and ST4 < 350:
+                label = font.render("into the void...", 1, (0, 0, 0))
+                op = 255 - abs((ST4 - 250) * 2.55)
+                #print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.3))
             
             py.display.flip()
             
+        if STAGE == 5:
+            v.clock.tick(60)
+            ST5 += 1
+            v.screen.blit(IM2, (0, 0))
+            
+            posx = 50
+            posy = v.screenY * 0.55
+            iNum = 0
+            for i in Characters:
+                size = i.get_rect()
+                size.width = ((size.width * 3) / 640) * v.screenX
+                size.height = ((size.height * 3) / 480) * v.screenY
+                ren = py.transform.scale(i, (size.width, size.height))
+                pos = (posx, posy)
+                posx += 80
+                if posx < 320:
+                    posy -= 15
+                else:
+                    posy += 15
+                
+                if ST5 > 200 + (560 - posx - 80):
+                    xDiff = v.screenX/2 - pos[0]
+                    yDiff = v.screenY/2 - pos[1]
+                    pos = list(pos)
+                    pos[0] += xDiff/100 * (ST5 - (200 + (560 - posx - 80)))
+                    pos[1] -= yDiff/100 * (ST5 - (200 + (560 - posx - 80)))
+                    #print(xDiff/100 * ST5 - (200 + (posx - 80)))
+                iNum += 1
+                
+                if ST5 < 300 + (560 - posx - 80):
+                    v.screen.blit(ren, pos)
+            
+            if ST5 < 750:
+                v.screen.blit(NexusP, (v.screenX * 0.4, v.screenY * -0.08))
+            else:
+                v.screen.blit(NexusCP, (v.screenX * 0.4, v.screenY * -0.08))
             
             
-        
+            if ST5 > 0 and ST5 < 200:
+                label = font.render("There was only one thing that the", 1, (255, 255, 0))
+                op = 255 - abs((ST5 - 100) * 2.55)
+                #print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.3))
+            if ST5 > 0 and ST5 < 200:
+                label = font.render("guardians could do...", 1, (255, 255, 0))
+                op = 255 - abs((ST5 - 100) * 2.55)
+                #print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.4))
+            if ST5 > 150 and ST5 < 350:
+                label = font.render("One by one...", 1, (255, 255, 0))
+                op = 255 - abs((ST5 - 250) * 2.55)
+                #print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.5))
+            if ST5 > 300 and ST5 < 500:
+                label = font.render("They cast themselves into the nexus...", 1, (255, 255, 0))
+                op = 255 - abs((ST5 - 400) * 2.55)
+                #print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.6))
+            if ST5 > 450 and ST5 < 750:
+                label = font.render("It killed them, but the energy", 1, (255, 255, 0))
+                op = 255 - abs((ST5 - 600) * 1.7)
+                #print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.3))
+            if ST5 > 450 and ST5 < 750:
+                label = font.render("they released offset that of Thanatos...", 1, (255, 255, 0))
+                op = 255 - abs((ST5 - 600) * 1.7)
+                #print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.0, v.screenY * 0.4))
+            if ST5 > 700 and ST5 < 900:
+                label = font.render("and halted the chaos.", 1, (255, 255, 0))
+                op = 255 - abs((ST5 - 800) * 2.55)
+                #print(op)
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.3, v.screenY * 0.5))
+            
+            if WBAlpha > 0 and ST5 < 200:
+                WBAlpha -= 2
+                WB.set_alpha(WBAlpha)
+                v.screen.blit(WB, (0, 0))
+            if ST5 > 800:
+                WBAlpha += 2
+                WB.set_alpha(WBAlpha)
+                v.screen.blit(WB, (0, 0))
+                if WBAlpha > 255:
+                    STAGE = 6
+            
+            py.display.flip()
+            
+        if STAGE == 6:
+            v.clock.tick(60)
         

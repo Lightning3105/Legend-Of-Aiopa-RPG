@@ -62,11 +62,12 @@ def mainMenu():
                         id = button.ID
                         if id == "play":
                             setupScripts.createGroups()
-                            classSelection()
                             setupScripts.defaultVariables()
+                            classSelection()
                             #v.playerClass = "Mage"
                             setupScripts.setAttributes()
                             v.newGame = True
+                            story()
                             game()
                             return
                         if id == "options":
@@ -519,7 +520,7 @@ def story():
     LS3Ani = entityClasses.SpriteSheet("Resources/Images/Story/LS3 Ani.png", 2, 1)
     P1 = py.transform.scale(py.image.load("Resources/Images/Story/Ground Images/Person 1.png"), (int(22/640 * v.screenX), int(28/640 * v.screenX)))
     P2 = py.transform.scale(py.image.load("Resources/Images/Story/Ground Images/Person 2.png"), (int(22/640 * v.screenX), int(28/640 * v.screenX)))
-    lsY = 1700 #-480
+    lsY = -480
     zoom = 1
     v.clock = py.time.Clock()
     ani1 = py.transform.scale(LS4Ani.images[0], (v.screenX, v.screenY))
@@ -530,11 +531,12 @@ def story():
     WB.set_alpha(255)
     WB.fill((255, 255, 255))
     WBAlpha = 255
-    STAGE = 5
+    STAGE = 1
     ST3 = 0
     ST2 = 0
     ST4 = 0
     ST5 = 0
+    ST6 = 0
     
     Characters = []
     Characters.append(py.image.load("Resources/Images/PaladinClass.png"))
@@ -563,7 +565,13 @@ def story():
     FI1 = py.transform.scale(py.image.load("Resources/Images/Story/FI1.png"), (int(1280/640 * v.screenX), int(533/640 * v.screenX)))
     
     font = py.font.Font("Resources/Fonts/MorrisRoman.ttf", 40)
+    font2 = py.font.Font("Resources/Fonts/MorrisRoman.ttf", 15)
     aiopaMain = entityClasses.SpriteSheet("Resources/Images/Story/Aiopa Title.png", 7, 3)
+    
+    MP = py.transform.scale(py.image.load("Resources/Images/Story/MP1.png"), (v.screenX, v.screenY))
+    
+    skp = 0
+    
     #FONT OPACITY:
     #255 - abs(((VARIABLE + MIDPOINT) * (HALF OF RANGE/100))
     rot = []
@@ -574,6 +582,7 @@ def story():
         ran.append(randint(0, 200))
     
     while True:
+        py.event.pump()
         if STAGE == 1:
             v.clock.tick(60)
             v.screen.fill((0, 0, 0))
@@ -618,50 +627,50 @@ def story():
             if lsY > -480 and lsY < -200:
                 label = font.render("Once Upon a time...", 1, (255, 255, 255))
                 op = 255 - abs(((lsY + 340) * 1.8))
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.5, v.screenY * 0.75))
             
             if lsY > -280 and lsY < 0:
                 label = font.render("There was a perfect land...", 1, (255, 255, 255))
                 op = 255 - abs(((lsY + 140) * 1.8))
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (0, v.screenY * 0.25))
             if lsY > -80 and lsY < 200:
                 label = font.render("A land of RICHES...", 1, (255, 255, 255))
                 op = 255 - abs(((-1*lsY) + 60) * 1.8)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.5))
             if lsY > 220 and lsY < 500:
                 label = font.render("A land of NATURE...", 1, (255, 255, 255))
                 op = 255 - abs((((-1*(lsY - 300)) + 60) * 1.8))
-                print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.25, v.screenY * 0.2))
             if lsY > 420 and lsY < 700:
                 label = font.render("A land of LIFE...", 1, (255, 255, 255))
                 op = 255 - abs((((-1*(lsY - 500)) + 60) * 1.8))
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.6, v.screenY * 0.7))
             if lsY > 720 and lsY < 1000:
                 label = font.render("A land of MAGIC...", 1, (255, 255, 255))
                 op = 255 - abs((((-1*(lsY - 800)) + 60) * 1.8))
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.5))
             if lsY > 920 and lsY < 1200:
                 label = font.render("A land of PEACE...", 1, (255, 255, 255))
                 op = 255 - abs((((-1*(lsY - 1000)) + 60) * 1.8))
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.5))
             if lsY > 1120 and lsY < 1400:
                 label = font.render("A land named...", 1, (255, 255, 255))
                 op = 255 - abs((((-1*(lsY - 1200)) + 60) * 1.8))
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.3, v.screenY * 0.1))
             if lsY > 1300 and lsY < 1700:
@@ -680,9 +689,9 @@ def story():
                 v.screen.blit(WB, (0, 0))
                 WBAlpha += 5
                 fadeIn = True
-            if WBAlpha >= 255:
+            if WBAlpha >= 255 and lsY > 1000:
                 STAGE = 2
-            py.display.flip()
+
         if STAGE == 2:
             v.clock.tick(60)
             v.screen.fill((0, 255, 255))
@@ -709,25 +718,25 @@ def story():
             if TMZoom > 1 and TMZoom < 2:
                 label = font.render("The world was protected...", 1, (0, 0, 0))
                 op = 255 - abs((TMZoom - 1.5) * 510)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.4))
             if TMZoom > 1.3 and TMZoom < 2.3:
                 label = font.render("...By the 7 most powerful", 1, (0, 0, 0))
                 op = 255 - abs(((TMZoom - 0.3) - 1.5) * 510)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.0, v.screenY * 0.6))
             if TMZoom > 1.4 and TMZoom < 2.3:
                 label = font.render("mages and fighters", 1, (0, 0, 0))
                 op = 255 - abs(((TMZoom - 0.3) - 1.5) * 510)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.7))
             if TMZoom > 1.5 and TMZoom < 2.3:
                 label = font.render("in the land...", 1, (0, 0, 0))
                 op = 255 - abs(((TMZoom - 0.3) - 1.5) * 510)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.7, v.screenY * 0.8))
             if WBAlpha >= 255:
@@ -735,25 +744,23 @@ def story():
                 if ST2 > 0 and ST2 < 200:
                     label = font.render("But one day...", 1, (255, 255, 255))
                     op = 255 - abs((ST2 - 100) * 2.55)
-                    #print(op)
+                    
                     label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                     v.screen.blit(label, (v.screenX * 0.25, v.screenY * 0.2))
                 if ST2 > 150 and ST2 < 350:
                     label = font.render("when it mattered most...", 1, (255, 255, 255))
                     op = 255 - abs((ST2 - 250) * 2.55)
-                    #print(op)
+                    
                     label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                     v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.4))
                 if ST2 > 300 and ST2 < 600:
                     label = font.render("THEY FAILED", 1, (255, 0, 0))
                     op = 255 - abs((ST2 - 450) * 1.7)
-                    #print(op)
+                    
                     label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                     v.screen.blit(label, (v.screenX * 0.3, v.screenY * 0.6))
                 if ST2 > 600:
                     STAGE = 3
-            py.display.flip()
-        
         
         if STAGE == 3:
             v.clock.tick(60)
@@ -812,37 +819,37 @@ def story():
             if ST3 > 0 and ST3 < 200:
                 label = font.render("Thanatos was the physical embodiment", 1, (255, 255, 0))
                 op = 255 - abs((ST3 - 100) * 2.55)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.0, v.screenY * 0.2))
             if ST3 > 10 and ST3 < 200:
                 label = font.render("of death and destruction...", 1, (255, 255, 0))
                 op = 255 - abs((ST3 - 100) * 2.55)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.3))
             if ST3 > 150 and ST3 < 400:
                 label = font.render("He fought his way into the ", 1, (255, 255, 0))
                 op = 255 - abs((ST3 - 275) * 2.04)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.5))
             if ST3 > 160 and ST3 < 400:
                 label = font.render("mountain of the nexus,", 1, (255, 255, 0))
                 op = 255 - abs((ST3 - 275) * 2.04)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.3, v.screenY * 0.6))
             if ST3 > 170 and ST3 < 400:
                 label = font.render("the core that holds the world together", 1, (255, 255, 0))
                 op = 255 - abs((ST3 - 275) * 2.04)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.7))
             if ST3 > 550 and ST3 < 750:
                 label = font.render("AND DESTORYED IT", 1, (255, 0, 0))
                 op = 255 - abs((ST3 - 650) * 2.04)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.4))
             
@@ -871,8 +878,7 @@ def story():
                 WBAlpha -= 2
                 WB.set_alpha(WBAlpha)
                 v.screen.blit(WB, (0, 0))
-                
-            py.display.flip()
+
         if STAGE == 4:
             v.clock.tick(60)
             ST4 += 1
@@ -904,23 +910,21 @@ def story():
             if ST4 > 0 and ST4 < 200:
                 label = font.render("The world was falling apart...", 1, (0, 0, 0))
                 op = 255 - abs((ST4 - 100) * 2.55)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.4))
             if ST4 > 150 and ST4 < 350:
                 label = font.render("Entire continents collapsing", 1, (0, 0, 0))
                 op = 255 - abs((ST4 - 250) * 2.55)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.3, v.screenY * 0.2))
             if ST4 > 150 and ST4 < 350:
                 label = font.render("into the void...", 1, (0, 0, 0))
                 op = 255 - abs((ST4 - 250) * 2.55)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.3))
-            
-            py.display.flip()
             
         if STAGE == 5:
             v.clock.tick(60)
@@ -963,43 +967,43 @@ def story():
             if ST5 > 0 and ST5 < 200:
                 label = font.render("There was only one thing that the", 1, (255, 255, 0))
                 op = 255 - abs((ST5 - 100) * 2.55)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.3))
             if ST5 > 0 and ST5 < 200:
                 label = font.render("guardians could do...", 1, (255, 255, 0))
                 op = 255 - abs((ST5 - 100) * 2.55)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.4))
             if ST5 > 150 and ST5 < 350:
                 label = font.render("One by one...", 1, (255, 255, 0))
                 op = 255 - abs((ST5 - 250) * 2.55)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.5))
             if ST5 > 300 and ST5 < 500:
                 label = font.render("They cast themselves into the nexus...", 1, (255, 255, 0))
                 op = 255 - abs((ST5 - 400) * 2.55)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.6))
             if ST5 > 450 and ST5 < 750:
                 label = font.render("It killed them, but the energy", 1, (255, 255, 0))
                 op = 255 - abs((ST5 - 600) * 1.7)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.3))
             if ST5 > 450 and ST5 < 750:
                 label = font.render("they released offset that of Thanatos...", 1, (255, 255, 0))
                 op = 255 - abs((ST5 - 600) * 1.7)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.0, v.screenY * 0.4))
             if ST5 > 700 and ST5 < 900:
                 label = font.render("and halted the chaos.", 1, (255, 255, 0))
                 op = 255 - abs((ST5 - 800) * 2.55)
-                #print(op)
+                
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.3, v.screenY * 0.5))
             
@@ -1014,8 +1018,88 @@ def story():
                 if WBAlpha > 255:
                     STAGE = 6
             
-            py.display.flip()
-            
         if STAGE == 6:
             v.clock.tick(60)
-        
+            v.screen.blit(MP, (0, 0))
+            ST6 += 1
+            
+            if ST6 > 0 and ST6 < 200:
+                label = font.render("The destruction had ceased...", 1, (255, 0, 0))
+                op = 255 - abs((ST6 - 100) * 2.55)
+                
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.2))
+            
+            if ST6 > 150 and ST6 < 350:
+                label = font.render("But the effects of it remained...", 1, (255, 0, 0))
+                op = 255 - abs((ST6 - 250) * 2.55)
+                
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.3))
+            
+            if ST6 > 300 and ST6 < 500:
+                label = font.render("7 major islands,", 1, (255, 0, 0))
+                op = 255 - abs((ST6 - 400) * 2.55)
+                
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.3, v.screenY * 0.4))
+            if ST6 > 300 and ST6 < 500:
+                label = font.render("floating above the endless void...", 1, (255, 0, 0))
+                op = 255 - abs((ST6 - 400) * 2.55)
+                
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.5))
+            
+            if ST6 > 450 and ST6 < 650:
+                label = font.render("The only way between them were", 1, (255, 0, 0))
+                op = 255 - abs((ST6 - 550) * 2.55)
+                
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.6))
+            if ST6 > 450 and ST6 < 650:
+                label = font.render("teleport pads scattered across the world...", 1, (255, 0, 0))
+                op = 255 - abs((ST6 - 550) * 2.55)
+                
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.0, v.screenY * 0.7))
+   
+            
+            if WBAlpha > 0 and ST6 < 200:
+                WBAlpha -= 2
+                WB.set_alpha(WBAlpha)
+                v.screen.blit(WB, (0, 0))
+            
+            if ST6 > 700:
+                WBAlpha += 2
+                WB.set_alpha(WBAlpha)
+                WB.fill((0, 0, 0))
+                v.screen.blit(WB, (0, 0))
+            
+            if ST6 > 750 and ST6 < 950:
+                label = font.render("But that was 200 years ago...", 1, (255, 255, 255))
+                op = 255 - abs((ST6 - 850) * 2.55)
+                
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.4))
+            
+            if ST6 > 900 and ST6 < 1100:
+                label = font.render("And now a new story has begun", 1, (255, 255, 255))
+                op = 255 - abs((ST6 - 1000) * 2.55)
+                
+                label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+                v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.5))
+            
+        label = font2.render("(space to skip)", 1, (255, 255, 255))
+        op = 255 - abs((((skp % 400) - 200) * 1.275))
+        label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
+        v.screen.blit(label, (v.screenX * 0.45, v.screenY * 0.95))
+        skp += 1
+        v.events = []
+        v.events = py.event.get()
+        for event in v.events:
+            if event.type == py.KEYDOWN:
+                if event.key == py.K_SPACE:
+                    return
+            if event.type == py.QUIT:
+                sys.exit()
+        py.display.flip()

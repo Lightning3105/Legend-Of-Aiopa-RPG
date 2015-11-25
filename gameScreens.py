@@ -509,6 +509,7 @@ def classSelection():
 
 
 def story():
+    sTime = time.clock()
     py.init()
     windowUpdate()
     LS1 = py.transform.scale(py.image.load("Resources/Images/Story/LS1.png"), (v.screenX, v.screenY))
@@ -530,7 +531,7 @@ def story():
     WB = py.Surface((v.screenX, v.screenY))
     WB.set_alpha(255)
     WB.fill((255, 255, 255))
-    WBAlpha = 255
+    WBAlpha = 0
     STAGE = 1
     ST3 = 0
     ST2 = 0
@@ -580,6 +581,8 @@ def story():
         rot.append(randint(-45, 45))
     for i in range(0, 20):
         ran.append(randint(0, 200))
+    
+    fadeIn = False
     
     while True:
         py.event.pump()
@@ -666,7 +669,7 @@ def story():
                 op = 255 - abs((((-1*(lsY - 1000)) + 60) * 1.8))
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.5))
+                v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.3))
             if lsY > 1120 and lsY < 1400:
                 label = font.render("A land named...", 1, (255, 255, 255))
                 op = 255 - abs((((-1*(lsY - 1200)) + 60) * 1.8))
@@ -689,7 +692,7 @@ def story():
                 v.screen.blit(WB, (0, 0))
                 WBAlpha += 5
                 fadeIn = True
-            if WBAlpha >= 255 and lsY > 1000:
+            if WBAlpha >= 255 and lsY > 1600:
                 STAGE = 2
 
         if STAGE == 2:
@@ -789,7 +792,6 @@ def story():
                 
                 if ST3 < 1000 + rot[iNum] * 2:
                     if ST3 > 475:
-                        #print(iNum)
                         ren = py.transform.rotate(ren, rot[iNum])
                 iNum += 1
                 
@@ -814,7 +816,6 @@ def story():
             else:
                 if ST3 > 650 and ST3 < 750:
                     v.screen.blit(ev, ((v.screenX * 0.4 - int(size[0] * 4/640 * v.screenX)/2) + (ST3 - 650)/2, (v.screenY * 0.7) - (ST3 - 650)/2))
-            #print(ST3)
             
             if ST3 > 0 and ST3 < 200:
                 label = font.render("Thanatos was the physical embodiment", 1, (255, 255, 0))
@@ -857,7 +858,6 @@ def story():
                 for i in range(15):
                     r = py.transform.rotate(rock, rot[i] * 4)
                     v.screen.blit(r, (v.screenX * (i * 0.06), ((v.screenY/400) * ((ST3 - 850) - ran[i] * 3))))
-                    print(v.screenX * (i * 0.06))
             
             if ST3 > 1000:
                 WBAlpha += 2
@@ -883,16 +883,13 @@ def story():
             v.clock.tick(60)
             ST4 += 1
             v.screen.fill((255, 255, 255))
-            print(ST4)
             
             if ST4 < 310:
                 _fi1 = py.transform.scale(FI1, (int(FI1.get_rect().width * (4 - (ST4/100))), int(FI1.get_rect().height * (4 - (ST4/100)))))
-                print((4 - (ST4/100)))
                 pos = (v.screenX/2 - (FI1.get_rect().width * (4 - (ST4/100))/2), v.screenY/2 - (FI1.get_rect().height * (4 - (ST4/100))/2))
             if ST4 > 360:
                 _fi1 = py.transform.scale(FI1, (int(FI1.get_rect().width * ((ST4/100) - 2.6)), int(FI1.get_rect().height * ((ST4/100) - 2.6))))
                 pos = (v.screenX/2 - (FI1.get_rect().width * ((ST4/100) - 2.7)/(2 * ((ST4/100) - 2.7))), v.screenY/2 - (FI1.get_rect().height * ((ST4/100) - 2.7)/(2 * ((ST4/100) - 2.7))))
-                print(((ST4/100) - 3.6))
             v.screen.blit(_fi1, pos)
             
             if WBAlpha > 0 and ST4 < 200:
@@ -952,7 +949,6 @@ def story():
                     pos = list(pos)
                     pos[0] += xDiff/100 * (ST5 - (200 + (560 - posx - 80)))
                     pos[1] -= yDiff/100 * (ST5 - (200 + (560 - posx - 80)))
-                    #print(xDiff/100 * ST5 - (200 + (posx - 80)))
                 iNum += 1
                 
                 if ST5 < 300 + (560 - posx - 80):
@@ -1088,6 +1084,9 @@ def story():
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.5))
+            if ST6 > 1100:
+                print(time.clock() - sTime)
+                return
             
         label = font2.render("(space to skip)", 1, (255, 255, 255))
         op = 255 - abs((((skp % 400) - 200) * 1.275))

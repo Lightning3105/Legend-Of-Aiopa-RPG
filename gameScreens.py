@@ -1079,7 +1079,7 @@ def story():
                 v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.4))
             
             if ST6 > 900 and ST6 < 1100:
-                label = font.render("And now a new story has begun", 1, (255, 255, 255))
+                label = font.render("And now, a new story has begun...", 1, (255, 255, 255))
                 op = 255 - abs((ST6 - 1000) * 2.55)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)

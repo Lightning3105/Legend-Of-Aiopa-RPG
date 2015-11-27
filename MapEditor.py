@@ -208,7 +208,7 @@ class textInput():
         self.done = False
     
     def draw(self):
-        #py.draw.rect(screen, (255, 255, 255), self.rect)
+        py.draw.rect(screen, (255, 255, 255), self.rect)
         py.draw.rect(screen, (0, 0, 0), self.rect, 5)
         x = self.pos[0] + 10
         y = self.pos[1] + 10
@@ -245,12 +245,13 @@ class textInput():
         screen.blit(label, (butRect.centerx - self.font.size("GO")[0] / 2, butRect.centery - self.font.size("GO")[1] / 2))
         for event in events:
             if event.type == py.MOUSEBUTTONDOWN:
-                global outText
-                outText = "".join(self.string)
-                self.done = True
-                py.time.wait(100)
+                if butRect.collidepoint(py.mouse.get_pos()):
+                    global outText
+                    outText = "".join(self.string)
+                    self.done = True
+                    py.time.wait(100)
         
-        #py.display.flip()
+        py.display.flip()
 
 
 

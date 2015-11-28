@@ -2,6 +2,7 @@ import pygame as py
 import entityClasses
 import Variables as v
 from ast import literal_eval
+import npcScripts
 
 def generateMap():
     #import Variables as v
@@ -66,7 +67,6 @@ def generateMap():
                     for thing in v.allNpc:
                         if thing.name == npc["Name"]:
                             exists = True
-                            print("Exists")
                     if not exists:        
                         entityClasses.NPC(((tile - modx) * 30, 30, (row - mody) * 30, npc["Direction"]), npc["Image"], {"Name":npc["Name"], "Conversation":npc["Conversation"]})
                     draw = False
@@ -116,6 +116,7 @@ class BaseMap():
         
     def draw(self):
         v.screen.blit(self.image, self.rect)
+
 
 Maps = {"1":[[
 ['#18', '326', '326', '326', '#18', '#18', '#18', '#18', '#18', '#18'],
@@ -191,9 +192,18 @@ Maps = {"1":[[
 ]]}
 
 NPCs = [{'Image': 'Resources/Images/NpcSkins/Spritesheets/Male_Basic.png', 'Name': 'Fred', "Direction": "Down", 
-         "Conversation": [{"Message": "Greetings. Why not press a button? Who knows, you might win a prize!", "B1": {"Text": "Button 1", "ID": 1}, "B2": {"Text": "Button 2", "ID": 2}, "B3": {"Text": "Button 3", "ID": 3}, "B4": {"Text": "Button 4", "ID": 4}, "ID":0}, {"Message": "You pressed Button 1", "Goto":5, "ID": 1}, {"Message": "You pressed Button 2", "Goto":5, "ID": 2}, {"Message": "You pressed Button 3", "Goto":5, "ID": 3}, {"Message": "You pressed Button 4", "Goto":5, "ID": 4}, {"Message": "Congratulations. You won.", "ID": 5, "End":True}]}
-        
-        
-        
-        
+            "Conversation": [{"Message": "Greetings child. Could you spare the time to run an errand for me?", "B1":{"Text": "Yes", "ID": 1}, "B2":{"Text": "No", "ID": 2}, "ID":0},
+                             {"Message": "Why, that is wonderful!", "Goto":3, "ID": 1},
+                             {"Message": "Fine. Suit yourself.", "Goto":0, "End": True, "ID": 2},
+                             {"Message": "Groblins have been a real nuisance lately. Could you go and a few for me?", "Quest":("Hunting Groblins", "Kill", {"Name": "Groblin", "Amount": 3}), "Goto": 4, "End":True, "ID":3},
+                             {"Message": "Go kill those Groblins!", "ID":4, "End": True}
+                             ]},
         ]
+
+
+
+
+#NPC Conversations:
+#{"Message":****, "B1":{"Text":****, "ID":**}, "Goto":**, "ID":**}
+#Add "End" key to signify the end of a conversation
+#

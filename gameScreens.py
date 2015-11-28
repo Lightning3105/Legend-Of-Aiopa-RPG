@@ -233,6 +233,7 @@ def game():
             except:
                 v.fpsAdjuster = 1
             
+            v.quests.update()
             v.MAP.update()
             v.allTiles.update()
             #v.allTiles.draw(v.screen)

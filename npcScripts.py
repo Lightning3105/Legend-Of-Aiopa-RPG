@@ -72,6 +72,8 @@ class conversation():
                     if xmod >= 420 / 640 * v.screenX:
                         xmod = 0
                         ymod += 50 / 640 * v.screenX
+                if key == "Quest":
+                    quest(value[0], value[1], value[2])
             
             self.buts = True
             if len([k for k, v in self.master.place.items() if k[0] == "B"]) == 0:
@@ -154,6 +156,31 @@ class conversation():
                             self.master.searchTree(id, self.master.material)
                             self.master.say()
                         
+class quest(py.sprite.Sprite):
+    
+    def __init__(self, name, type, data={}):
+        super().__init__()
+        self.name = name
+        self.type = type
+        self.data = data
+        self.counted = []
+        self.progress = 0
+        self.completed = False
+        v.quests.add(self)
+    
+    def update(self):
+        if self.type == "Kill":
+            for enemy in v.dyingEnemies:
+                if enemy.name == self.data["Name"]:
+                    if not enemy.npcID in self.counted:
+                        self.progress += 1
+                        self.counted.append(enemy.npcID)
+            if self.progress >= self.data["Amount"]:
+                self.completed = True
+        print("Amount:", self.progress)
+        print("Completed?:", self.completed)
+
+
 def summon(npcType, pos):
     if npcType == "Guard":
         entityClasses.Enemy(pos[0], pos[1], 1, "Resources/Images/EnemySkins/GuardSheet.png", {"Name": "Guard Lvl. 100", "Health":100, "Attack":5, "Speed":1.5})            

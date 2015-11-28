@@ -232,7 +232,6 @@ class characterSelector(py.sprite.Sprite):
                         newpos = list(self.pos)
                         newpos[0] = self.pos[0] - (self.movDistance - (self.movDistance/100)*self.movingCycle)  # TODO: Make this work
                         newpos[1] = self.pos[1] - (40 - (self.movingCycle * (40 / 100)))
-                        print(self.movingCycle)
                         
                         if self.movingCycle > 0:
                             self.movingCycle -= 1

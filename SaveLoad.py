@@ -80,7 +80,6 @@ def loadMap(mapNum):
         save = pickle.loads(v.savedMap)
         if mapNum in save:
             save = save[mapNum]
-            print(save)
             
             for thing in save:
                 if thing["ID"] == "npc":

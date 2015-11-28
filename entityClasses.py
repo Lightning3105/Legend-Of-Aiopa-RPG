@@ -651,22 +651,18 @@ class Enemy(py.sprite.Sprite):
                     if bottom.colliderect(thing.rect) == True or bottom.colliderect(v.p_class.rect) == True:
                         self.posy = self.prevY
                         yStopped = True
-                        print("1")
                         
                     if top.colliderect(thing.rect) == True or top.colliderect(v.p_class.rect) == True:
                         self.posy = self.prevY
                         yStopped = True
-                        print("2")
                         
                     if left.colliderect(thing.rect) == True or left.colliderect(v.p_class.rect) == True:
                         self.posx = self.prevX
                         xStopped = True
-                        print("3")
                         
                     if right.colliderect(thing.rect) == True or right.colliderect(v.p_class.rect) == True:
                         self.posx = self.prevX
                         xStopped = True
-                        print(thing)
                         
                     if xStopped and yStopped:
                         self.view = self.direction + "C"
@@ -735,6 +731,7 @@ class Enemy(py.sprite.Sprite):
                     self.damagedPlayer = True
     def death(self):
         if self.dead:
+            v.dyingEnemies.add(self)
             self.rect.centerx = v.screen.get_rect()[2] / 2 + int((-v.playerPosX + (1 * self.posx)) * v.scale)
             self.rect.centery = v.screenY / 2 - int((-v.playerPosY + (1 * self.posy)) * v.scale)
             if self.firstDeath:
@@ -748,6 +745,7 @@ class Enemy(py.sprite.Sprite):
             self.damage_alpha -= 10
             if self.damage_alpha <= 0:
                 v.allNpc.remove(self)
+                v.dyingEnemies.remove(self)
                 orbs = randint(2, 7)
                 amount = self.xp / orbs
                 for i in range(orbs):

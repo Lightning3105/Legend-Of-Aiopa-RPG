@@ -190,10 +190,12 @@ def game():
     v.allTiles = py.sprite.Group()
     v.topTiles = py.sprite.Group()
     v.allNpc = py.sprite.Group()
+    v.NPCs = py.sprite.Group()
     v.droppedItems = py.sprite.Group()
     v.hitList = py.sprite.Group()
-    Map.generateMap() #TODO: xp
     SaveLoad.loadMap(v.mapNum)
+    Map.generateMap() #TODO: xp
+    
     #v.playerPosX = 0
     #v.playerPosY = 0
     

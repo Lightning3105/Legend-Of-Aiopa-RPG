@@ -987,6 +987,7 @@ class NPC(py.sprite.Sprite):
         self.ID = "npc"
         self.npcID = v.npcID
         v.allNpc.add(self)
+        v.NPCs.add(self)
         self.initSheet()
         self.justNear = False
         self.icon = py.image.load("Resources/Images/NpcSkins/Faces/Basic_Man.png")
@@ -1005,6 +1006,7 @@ class NPC(py.sprite.Sprite):
         self.npcID = dic["npcID"]
         
         v.allNpc.add(self)
+        v.NPCs.add(self)
         self.initSheet()
         self.justNear = False
         self.icon = py.image.load("Resources/Images/NpcSkins/Faces/Basic_Man.png")
@@ -1114,4 +1116,5 @@ class NPC(py.sprite.Sprite):
         return False
     
     def talk(self):
+        v.justPaused = True
         self.conversation.say()

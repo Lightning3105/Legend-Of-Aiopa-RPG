@@ -70,6 +70,8 @@ def saveMap(mapNum):
     
     for thing in v.droppedItems:
         current[mapNum].append(thing.save())
+    for thing in v.NPCs:
+        current[mapNum].append(thing.save())
     
     v.savedMap = pickle.dumps(current)
 

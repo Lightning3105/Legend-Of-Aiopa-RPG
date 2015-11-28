@@ -21,6 +21,7 @@ xpMod = 1.5
 hitList = None
 allTiles = None
 allNpc = None
+NPCs = None
 npcID = 1
 conversationClass = None
 damagesNPCs = None

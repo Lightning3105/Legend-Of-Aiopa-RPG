@@ -44,6 +44,7 @@ def createGroups():
     v.allTiles = py.sprite.Group()
     v.topTiles = py.sprite.Group()
     v.allNpc = py.sprite.Group()
+    v.NPCs = py.sprite.Group()
     v.particles = py.sprite.Group()
     v.currentSpells = py.sprite.Group()
     v.equippedSpells = py.sprite.Group()

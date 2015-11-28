@@ -54,6 +54,22 @@ def generateMap():
                 elif list(mrt)[0] == "&":
                     teleport = (int(mrt.replace('&', "").split("|")[0]))
                     mrt = mrt.replace('&', "").split("|")[1]
+                elif list(mrt)[0] == "$":
+                    exists = False
+                    npc = literal_eval(mrt.replace('$', "").split("|")[0])
+                    npc = NPCs[npc]
+                    for k, va in npc.items():
+                        try:
+                            npc[k] = int(va)
+                        except:
+                            pass
+                    for thing in v.allNpc:
+                        if thing.name == npc["Name"]:
+                            exists = True
+                            print("Exists")
+                    if not exists:        
+                        entityClasses.NPC(((tile - modx) * 30, 30, (row - mody) * 30, npc["Direction"]), npc["Image"], {"Name":npc["Name"], "Conversation":npc["Conversation"]})
+                    draw = False
                 elif list(mrt)[0] == "%":
                     npc = literal_eval(mrt.replace('%', "").split("|")[0])
                     for k, va in npc.items():
@@ -139,7 +155,7 @@ Maps = {"1":[[
 ], 
 [
 ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-'],
-['-', '-', '-', '-', '-', '-', '-', '-', '-', '-'],
+['-', '-', '-', '$0|-', '-', '-', '-', '-', '-', '-'],
 ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-'],
 ['-', '-', '-', '-', '-', '+1538', '+1539', '-', '-', '-'],
 ['-', '-', '-', '-', '-', '+1570', '+1571', '-', '-', '-'],
@@ -173,3 +189,11 @@ Maps = {"1":[[
 ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-'],
 ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-'],
 ]]}
+
+NPCs = [{'Image': 'Resources/Images/NpcSkins/Spritesheets/Male_Basic.png', 'Name': 'Fred', "Direction": "Down", 
+         "Conversation": [{"Message": "Greetings. Why not press a button? Who knows, you might win a prize!", "B1": {"Text": "Button 1", "ID": 1}, "B2": {"Text": "Button 2", "ID": 2}, "B3": {"Text": "Button 3", "ID": 3}, "B4": {"Text": "Button 4", "ID": 4}, "ID":0}, {"Message": "You pressed Button 1", "Goto":5, "ID": 1}, {"Message": "You pressed Button 2", "Goto":5, "ID": 2}, {"Message": "You pressed Button 3", "Goto":5, "ID": 3}, {"Message": "You pressed Button 4", "Goto":5, "ID": 4}, {"Message": "Congratulations. You won.", "ID": 5, "End":True}]}
+        
+        
+        
+        
+        ]

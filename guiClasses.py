@@ -143,55 +143,59 @@ class XP:
         
 class ability(py.sprite.Sprite):
     
-    def __init__(self, ability, image, num):
+    def __init__(self, num):
         super().__init__()
-        self.ability = ability
-        self.posx = (20 + (40 * num)) / 640 * v.screenX
+        self.posx = (20 + (40 * (num - 1))) / 640 * v.screenX
         self.posy = 20 / 640 * v.screenX
-        self.icon = py.image.load(image).convert_alpha()
-        self.saveIcon = image
-        self.saveNum = num
+        self.num = num
     
     def update(self):
-        maxCooldown = self.ability.attributes["Cooldown"]
-        cooldown = self.ability.object.coolDown
-        self.image = py.transform.scale(self.icon, (int(32 / 640 * v.screenX), int(32 / 640 * v.screenX)))
         try:
-            self.image.fill((255, 255, 255, int((cooldown / maxCooldown) * 255)), special_flags=py.BLEND_RGBA_MULT)
-        except TypeError as detail:
-            print("INVALID COLOUR:", (255, 255, 255, int((cooldown / maxCooldown) * 255)))
-            print(detail)
-        self.rect = self.image.get_rect()
-        self.rect.center = (self.posx, self.posy)
-        py.draw.rect(v.screen, (0, 0, 0), self.rect)
-        v.screen.blit(self.image, self.rect)
-        
-        if self.ability.object.attacking:
-            border = (255, 255, 0)
-        else:
-            border = (153, 76, 0)
-        self.rect.width += 2
-        self.rect.height += 2
-        self.rect.center = (self.posx, self.posy)
-        py.draw.rect(v.screen, border, self.rect, 2)
-        
-        keys_pressed = py.key.get_pressed()
-        key = None
-        if self.saveNum == 0:
-            key = py.K_1
-        if self.saveNum == 1:
-            key = py.K_2
-        if keys_pressed[key] and not v.playerActing:
-            if cooldown == maxCooldown:
-                if v.playerMana >= self.ability.attributes["Mana"]:
-                    self.ability.object.attacking = True
-    
-    def save(self):
-        save = {}
-        save["icon"] = self.saveIcon
-        save["num"] = self.saveNum
-        save["ability"] = self.ability.save()
-        return save
+            self.ability = v.abilities[str(self.num)]
+        except KeyError:
+            self.ability = None
+        if not self.ability == None:
+            self.icon = py.image.load(self.ability.icon).convert_alpha()
+            maxCooldown = self.ability.attributes["Cooldown"]
+            cooldown = self.ability.object.coolDown
+            self.image = py.transform.scale(self.icon, (int(32 / 640 * v.screenX), int(32 / 640 * v.screenX)))
+            try:
+                self.image.fill((255, 255, 255, int((cooldown / maxCooldown) * 255)), special_flags=py.BLEND_RGBA_MULT)
+            except TypeError as detail:
+                print("INVALID COLOUR:", (255, 255, 255, int((cooldown / maxCooldown) * 255)))
+                print(detail)
+            self.rect = self.image.get_rect()
+            self.rect.center = (self.posx, self.posy)
+            py.draw.rect(v.screen, (0, 0, 0), self.rect)
+            v.screen.blit(self.image, self.rect)
+            
+            if self.ability.object.attacking:
+                border = (255, 255, 0)
+            else:
+                border = (153, 76, 0)
+            self.rect.width += 2
+            self.rect.height += 2
+            self.rect.center = (self.posx, self.posy)
+            py.draw.rect(v.screen, border, self.rect, 2)
+            
+            keys_pressed = py.key.get_pressed()
+            key = None
+            if self.num == 1:
+                key = py.K_1
+            if self.num == 2:
+                key = py.K_2
+            if self.num == 3:
+                key = py.K_3
+            if self.num == 4:
+                key = py.K_4
+            if self.num == 5:
+                key = py.K_5
+            if self.num == 6:
+                key = py.K_6
+            if keys_pressed[key] and not v.playerActing:
+                if cooldown == maxCooldown:
+                    if v.playerMana >= self.ability.attributes["Mana"]:
+                        self.ability.object.attacking = True
         
 
 class pauseScreen:

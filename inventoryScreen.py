@@ -34,6 +34,13 @@ class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
         self.inventorySlots.add(self.discardSlot(self))
         self.equippedSlots = py.sprite.Group()
         self.equippedSlots.add(self.equippedSlot("Weapon", self))
+        self.equippedSlots.add(self.equippedSlot("Helmet", self))
+        self.equippedSlots.add(self.equippedSlot("Armour", self))
+        self.equippedSlots.add(self.equippedSlot("Greaves", self))
+        self.equippedSlots.add(self.equippedSlot("Boots", self))
+        self.spellSlots = py.sprite.Group()
+        for i in range(1, 7):
+            self.spellSlots.add(self.spellSlot(i, self))
     
     def update(self):
         self.hovering = None
@@ -42,12 +49,25 @@ class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
         self.player()
         self.inventorySlots.update()
         self.equippedSlots.update()
+        self.spellSlots.update()
         self.drag()
+        if not self.hovering == None:
+            if not self.hovering.item == None:
+                if not self.grabbed == self.hovering.item:
+                    font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 15)
+                    text = self.hovering.item.name
+                    label = font.render(text, 1, (0, 0, 0))
+                    Hrect = py.Rect(py.mouse.get_pos(), font.size(text))
+                    py.draw.rect(v.screen, py.Color(153, 76, 0), Hrect, 2)
+                    py.draw.rect(v.screen, py.Color(255, 178, 102), Hrect)
+                    v.screen.blit(label, Hrect)
     
     def save(self):
             for thing in self.inventorySlots:
                 thing.save()
             for thing in self.equippedSlots:
+                thing.save()
+            for thing in self.spellSlots:
                 thing.save()
         
         
@@ -93,8 +113,20 @@ class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
         
         def update(self):
             if self.slot == "Weapon":
-                self.pos = (70, 100)
+                self.pos = (65, 100)
                 self.image = py.image.load("Resources/Images/Inventory Icons/Weapon.png").convert_alpha()
+            if self.slot == "Helmet":
+                self.pos = (215, 100)
+                self.image = py.image.load("Resources/Images/Inventory Icons/Helmet.png").convert_alpha()
+            if self.slot == "Armour":
+                self.pos = (215, 155)
+                self.image = py.image.load("Resources/Images/Inventory Icons/Breastplate.png").convert_alpha()
+            if self.slot == "Greaves":
+                self.pos = (215, 210)
+                self.image = py.image.load("Resources/Images/Inventory Icons/Trousers.png").convert_alpha()
+            if self.slot == "Boots":
+                self.pos = (215, 265)
+                self.image = py.image.load("Resources/Images/Inventory Icons/Boots.png").convert_alpha()
             image = py.transform.scale(self.image, self.size)
             rect = py.Rect(self.pos, self.size)
             py.draw.rect(v.screen, (255, 255, 255), rect, 2)
@@ -117,8 +149,67 @@ class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
                             self.master.grabbed = self.item
                             self.master.grabbedOrigin = self
         
+    class spellSlot(py.sprite.Sprite):
         
+        def __init__(self, num, master):
+            super().__init__()
+            self.size = (50, 50)
+            self.hovered = False
+            self.master = master
+            try:
+                self.item = v.abilities[str(num)]
+            except KeyError:
+                self.item = None
+            self.equipType = "Spell"
+            self.slotNum = num - 1
         
+        def save(self):
+            v.abilities[str(self.slotNum + 1)] = self.item
+        
+        def update(self):
+            if self.item == None:
+                image = py.image.load("Resources/Images/Inventory Icons/EmptySpell.png").convert_alpha()
+            else:
+                image = py.Surface(self.size).convert_alpha()
+                image.fill((255, 255, 255))
+            posx = 65 + (self.slotNum % 3) * 50
+            posy = (int(self.slotNum / 3) * 50) + 320
+            
+            pos = (posx, posy)
+            
+            image = py.transform.scale(image, self.size)
+            
+            
+            rect = py.Rect(pos, self.size)
+            py.draw.rect(v.screen, (255, 255, 255), rect, 2)
+            
+            if rect.collidepoint(py.mouse.get_pos()):
+                self.hovered = True
+                self.master.hovering = self
+            else:
+                self.hovered = False
+                image.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)
+            v.screen.blit(image, pos)
+            
+            try:
+                icon = py.transform.scale(py.image.load(self.item.icon), (self.size[0] - 4, self.size[1] - 4))
+                icon.convert_alpha()
+                if self.master.grabbed == self.item:
+                    icon.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)
+                pos = (pos[0] + 2, pos[1] + 2)
+                v.screen.blit(icon, pos)
+                if self.hovered:
+                    for event in v.events:
+                        if event.type == py.MOUSEBUTTONDOWN:
+                            self.master.grabbed = self.item
+                            self.master.grabbedOrigin = self
+            except:
+                pass
+            
+            font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
+            label = font.render(str(self.slotNum + 1), 1, (0, 0, 0))
+            v.screen.blit(label, (pos[0] + 20, pos[1] + 10))
+    
     
     class inventorySlot(py.sprite.Sprite):
         
@@ -144,7 +235,7 @@ class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
                 image = py.Surface(self.size).convert_alpha()
                 image.fill((255, 255, 255))
             posx = 280 + (self.slotNum % 6) * 50
-            posy = (int(self.slotNum / 6) * 50) + 200
+            posy = (int(self.slotNum / 6) * 50) + 220
             
             pos = (posx, posy)
             
@@ -193,7 +284,7 @@ class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
             image = py.image.load("Resources/Images/Inventory Icons/Discard.png").convert_alpha()
             
             posx = 229
-            posy = 350
+            posy = 370
             
             pos = (posx, posy)
             image = py.transform.scale(image, self.size)
@@ -217,7 +308,7 @@ class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
     def drag(self):
         if not self.grabbed == None:
             size = (50, 50)
-            image = self.grabbed.icon
+            image = py.image.load(self.grabbed.icon)
             image = py.transform.scale(image, size)
             pos = py.mouse.get_pos()
             v.screen.blit(image, pos)
@@ -226,7 +317,7 @@ class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
             for event in v.events:
                 if event.type == py.MOUSEBUTTONUP:
                     if not self.hovering == None:
-                        if self.grabbed.equipType == self.hovering.equipType or self.hovering.equipType == "Item":
+                        if self.grabbed.equipType == self.hovering.equipType or self.hovering.equipType == "Item" and self.grabbed.equipType != "Spell":
                             old = self.grabbed
                             self.grabbedOrigin.item = self.hovering.item
                             self.hovering.item = old

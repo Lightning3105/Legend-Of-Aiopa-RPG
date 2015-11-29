@@ -12,15 +12,19 @@ def newGame():
     #entityClasses.Enemy(0, -60, 1, "Resources/Images/EnemySkins/Generic Goblin.png", {"Name": "Groblin Lvl. 1", "Health":5, "Attack":5, "Speed":1.5})
     cn = [{"Message": "Greetings. Why not press a button? Who knows, you might win a prize!", "B1": {"Text": "Button 1", "ID": 1}, "B2": {"Text": "Button 2", "ID": 2}, "B3": {"Text": "Button 3", "ID": 3}, "B4": {"Text": "Button 4", "ID": 4}, "ID":0}, {"Message": "You pressed Button 1", "Goto":5, "ID": 1}, {"Message": "You pressed Button 2", "Goto":5, "ID": 2}, {"Message": "You pressed Button 3", "Goto":5, "ID": 3}, {"Message": "You pressed Button 4", "Goto":5, "ID": 4}, {"Message": "Congratulations. You won.", "ID": 5, "End":True}]
     #entityClasses.NPC((0, 30, "Down", 1), "Resources/Images/NpcSkins/Spritesheets/Male_Basic.png", {"Name":"Fred", "Conversation":cn})
-    fb = itemClasses.spell("Fire Beam", "beam", "Resources/Images/fireBeam.png", "Resources/Images/redCastCircle.png", {"Damage": 0.2, "Knockback": "S", "Cooldown": 5, "Mana": 10, "InvulnMod": 0})
-    v.abilityButtons.add(guiClasses.ability(fb, "Resources/Images/Spell Icons/fireBeam.png", 0))  
+    
     v.inventory.add(itemClasses.item("Thing", py.image.load("Resources/Images/XPOrb.png")))
     v.inventory.add(itemClasses.weapon("Magic Orb", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[56], "manaOrb", "Resources/Images/castOrbPurple.png", {"Damage":2, "Knockback": 10}))
     v.inventory.add(itemClasses.weapon("Broken Sword", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[0], "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10}))
     v.inventory.add(itemClasses.weapon("Short Bow", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[72], "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10})) 
     entityClasses.droppedItem(itemClasses.item("Thing", py.image.load("Resources/Images/XPOrb.png")), (0, 0))
-    ls = itemClasses.spell("Lightning Storm", "lightning", "Resources/Images/lightningStorm.png", "Resources/Images/blueCastCircle.png", {"Damage": 0.4, "Knockback": 1, "Cooldown": 5, "Mana": 10, "InvulnMod": 0})
-    v.abilityButtons.add(guiClasses.ability(ls, "Resources/Images/Spell Icons/chainLightning.png", 1))
+    
+    fb = itemClasses.spell("Fire Beam", "beam", "Resources/Images/fireBeam.png", "Resources/Images/redCastCircle.png", "Resources/Images/Spell Icons/fireBeam.png", {"Damage": 0.2, "Knockback": "S", "Cooldown": 5, "Mana": 10, "InvulnMod": 0})
+    ls = itemClasses.spell("Lightning Storm", "lightning", "Resources/Images/lightningStorm.png", "Resources/Images/blueCastCircle.png", "Resources/Images/Spell Icons/chainLightning.png", {"Damage": 0.4, "Knockback": 1, "Cooldown": 5, "Mana": 10, "InvulnMod": 0})
+    v.abilities["1"] = fb
+    v.abilities["2"] = ls
+    for i in range(1, 7):
+        v.abilityButtons.add(guiClasses.ability(i))
 def initSound():
     py.mixer.init()
 
@@ -66,7 +70,7 @@ def defaultVariables():
     v.npcID = 1
     v.scale = v.screenScale
     v.skillPoints = 5
-    v.equipped = {"Weapon": None}
+    v.equipped = {"Weapon": None, "Helmet": None, "Armour": None, "Greaves": None, "Boots": None}
     v.appearance = {"Body": "Resources/Images/Character Customisation/Body/white.png",
                   "Face": "Resources/Images/Character Customisation/Face/whiteNormal.png",
                   "Dress": "Resources/Images/Character Customisation/Dress/cloakBrown.png",

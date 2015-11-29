@@ -36,11 +36,13 @@ class weapon():
 
 class spell():
     
-    def __init__(self, name, spellType, spellImage, castImage, attributes = {}): #TODO: icon
+    def __init__(self, name, spellType, spellImage, castImage, icon, attributes = {}): #TODO: icon
         self.name = name
         self.spellType = spellType
         self.spellImage = spellImage
         self.castImage = castImage
+        self.icon = icon
+        self.equipType = "Spell"
         self.attributes = {"Damage": 0, "Knockback": 1, "InvulnMod": 1}
         self.attributes.update(attributes)
         if self.spellType == "beam":
@@ -56,6 +58,7 @@ class spell():
         save["spellType"] = self.spellType
         save["spellImage"] = self.spellImage
         save["castImage"] = self.castImage
+        save["icon"] = self.icon
         save["attributes"] = self.attributes
         return save
 

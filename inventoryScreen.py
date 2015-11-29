@@ -2,6 +2,7 @@ import Variables as v
 import pygame as py
 import entityClasses
 from random import randint
+import MenuItems
 
 
 class inventory():
@@ -22,7 +23,7 @@ class inventory():
             self.contents.remove(item)
 
 
-class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
+class inventoryScreen():
     
     def __init__(self):
         self.grabbed = None
@@ -41,13 +42,28 @@ class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
         self.spellSlots = py.sprite.Group()
         for i in range(1, 7):
             self.spellSlots.add(self.spellSlot(i, self))
+        self.attOptions = py.sprite.Group()
+        AoX = v.screenY * 0.25
+        for attribute in v.Attributes:
+            self.attOptions.add(MenuItems.optionAttribute(AoX, attribute, 280))
+            AoX += v.screenX * 0.05
+        
+        self.attOptions.add(MenuItems.textLabel("Skill Points Remaining:", (v.screenX * 0.45, v.screenY * 0.18), (100, 100, 100), "Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.05)))
+        self.attOptions.add(MenuItems.textLabel("skillPoints", (v.screenX * 0.85, v.screenY * 0.18), (0, 255, 0), "Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.05), True))
+        
+        self.tab = "Inventory"
     
     def update(self):
         self.hovering = None
         self.grey()
         self.background()
         self.player()
-        self.inventorySlots.update()
+        if self.tab == "Inventory":
+            self.inventorySlots.update()
+        if self.tab == "Attributes":
+            self.attOptions.update()
+        
+        self.tabs()
         self.equippedSlots.update()
         self.spellSlots.update()
         self.drag()
@@ -71,6 +87,42 @@ class inventoryScreen(): #TODO: Split into inventory and inventoryScreen
                 thing.save()
         
         
+    def tabs(self):
+        rect = py.Rect(280, 50, 80, 25)
+        if rect.collidepoint(py.mouse.get_pos()):
+            c = (255, 255, 0)
+            if py.mouse.get_pressed()[0]:
+                self.tab = "Inventory"
+        else:
+            c = (255, 178, 102)
+        if self.tab == "Inventory":
+            o = (0, 0, 255)
+        else:
+            o = (153, 76, 0)
+        py.draw.rect(v.screen, c, rect)
+        py.draw.rect(v.screen, o, rect, 2)
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
+        label = font.render("Inventory", 1, (0, 0, 0))
+        v.screen.blit(label, (rect[0] + 5, rect[1] + 2))
+        
+        
+        rect = py.Rect(362, 50, 80, 25)
+        if rect.collidepoint(py.mouse.get_pos()):
+            c = (255, 255, 0)
+            if py.mouse.get_pressed()[0]:
+                self.tab = "Attributes"
+        else:
+            c = (255, 178, 102)
+        if self.tab == "Attributes":
+            o = (0, 0, 255)
+        else:
+            o = (153, 76, 0)
+        py.draw.rect(v.screen, c, rect)
+        py.draw.rect(v.screen, o, rect, 2)
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
+        label = font.render("Attributes", 1, (0, 0, 0))
+        v.screen.blit(label, (rect[0] + 5, rect[1] + 2))
+    
     def grey(self):
         grey = py.Surface((v.screen.get_rect()[2], v.screen.get_rect()[3])).convert_alpha()
         grey.fill((20, 20, 20, 200))

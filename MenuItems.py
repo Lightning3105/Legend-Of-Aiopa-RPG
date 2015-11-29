@@ -292,9 +292,9 @@ class optionSlate():
 
 class optionAttribute(py.sprite.Sprite):
     
-    def __init__(self, posy, attribute):
+    def __init__(self, posy, attribute, posx=v.screenX * 0.375):
         super().__init__()
-        self.posx = v.screenX * 0.375
+        self.posx = posx
         self.posy = posy
         self.attribute = attribute
         self.baseValue = v.Attributes[attribute]
@@ -305,50 +305,49 @@ class optionAttribute(py.sprite.Sprite):
         self.addedValue = 0
     
     def update(self):
-        if v.custimizationStage == "Attributes":
-            self.baseValue = v.Attributes[self.attribute]
-            arrow = py.image.load("Resources/Images/AttributeArrow.png")
-            arrow = py.transform.scale(arrow, (int(arrow.get_rect().width * v.screenX * 0.00234375), int(arrow.get_rect().height * v.screenX * 0.00234375)))
-            
-            arrowL = py.transform.rotate(arrow, 180)
-            v.screen.blit(arrowL, (self.posx, self.posy))
-            self.minusRect = py.Rect(self.posx, self.posy, arrow.get_rect().width, arrow.get_rect().height)
-            
-            font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.046875))
-            
-            label = font.render(str(self.attribute) + ":", 1, (255,255,255))
-            lx = v.screenX * 0.40625
-            v.screen.blit(label, (lx, self.posy - 6))
-            
-            textLength = font.size(str(self.attribute) + ":")[0] + 5
-            
-            label = font.render(str(self.baseValue), 1, (255,255,255))
-            lx = (v.screenX * 0.40625) + textLength
-            v.screen.blit(label, (lx, self.posy - 6))
-            
-            textLength += font.size(str(self.baseValue))[0] + 5
-            
-            label = font.render("+" + str(self.addedValue), 1, (0,255,0))
-            lx = (v.screenX * 0.40625) + textLength
-            v.screen.blit(label, (lx, self.posy - 6))
-            
-            textLength += font.size("+" + str(self.addedValue))[0] + 25
-            
-            
-            v.screen.blit(arrow, (self.posx + textLength, self.posy))
-            self.plusRect = py.Rect(self.posx + textLength, self.posy, arrow.get_rect().width, arrow.get_rect().height)
-            
+        self.baseValue = v.Attributes[self.attribute]
+        arrow = py.image.load("Resources/Images/AttributeArrow.png")
+        arrow = py.transform.scale(arrow, (int(arrow.get_rect().width * v.screenX * 0.00234375), int(arrow.get_rect().height * v.screenX * 0.00234375)))
+        
+        arrowL = py.transform.rotate(arrow, 180)
+        v.screen.blit(arrowL, (self.posx, self.posy))
+        self.minusRect = py.Rect(self.posx, self.posy, arrow.get_rect().width, arrow.get_rect().height)
+        
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.046875))
+        
+        label = font.render(str(self.attribute) + ":", 1, (255,255,255))
+        lx = self.posx + (20/640 * v.screenX)
+        v.screen.blit(label, (lx, self.posy - 6))
+        
+        textLength = font.size(str(self.attribute) + ":")[0] + 5
+        
+        label = font.render(str(self.baseValue), 1, (255,255,255))
+        lx = ((self.posx + (20/640 * v.screenX))) + textLength
+        v.screen.blit(label, (lx, self.posy - 6))
+        
+        textLength += font.size(str(self.baseValue))[0] + 5
+        
+        label = font.render("+" + str(self.addedValue), 1, (0,255,0))
+        lx = ((self.posx + (20/640 * v.screenX))) + textLength
+        v.screen.blit(label, (lx, self.posy - 6))
+        
+        textLength += font.size("+" + str(self.addedValue))[0] + 25
+        
+        
+        v.screen.blit(arrow, (self.posx + textLength, self.posy))
+        self.plusRect = py.Rect(self.posx + textLength, self.posy, arrow.get_rect().width, arrow.get_rect().height)
+        
 
-            for event in v.events:
-                if event.type == py.MOUSEBUTTONDOWN:
-                    if self.minusRect.collidepoint(py.mouse.get_pos()):
-                        if self.addedValue > 0:
-                            self.addedValue -= 1
-                            v.skillPoints += 1
-                    if self.plusRect.collidepoint(py.mouse.get_pos()):
-                        if v.skillPoints > 0:
-                            self.addedValue += 1
-                            v.skillPoints -= 1
+        for event in v.events:
+            if event.type == py.MOUSEBUTTONDOWN:
+                if self.minusRect.collidepoint(py.mouse.get_pos()):
+                    if self.addedValue > 0:
+                        self.addedValue -= 1
+                        v.skillPoints += 1
+                if self.plusRect.collidepoint(py.mouse.get_pos()):
+                    if v.skillPoints > 0:
+                        self.addedValue += 1
+                        v.skillPoints -= 1
 
 class textLabel(py.sprite.Sprite):
     

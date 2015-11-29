@@ -445,7 +445,8 @@ def classSelection():
         classes.draw(v.screen)
         
         os.update()
-        attOptions.update()
+        if v.custimizationStage == "Attributes":
+            attOptions.update()
         
         for button in buttons:
             if button.ID == "back":

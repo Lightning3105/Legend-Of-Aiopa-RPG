@@ -4,6 +4,7 @@ import entityClasses
 import pygame as py
 import guiClasses
 import inventoryScreen
+import npcScripts
 
 def newGame():
     v.playerHealth = v.Attributes["Max Health"]
@@ -25,6 +26,8 @@ def newGame():
     v.abilities["2"] = ls
     for i in range(1, 7):
         v.abilityButtons.add(guiClasses.ability(i))
+    
+    v.quests.add(npcScripts.quest("Kill the Groblins", "Kill", {"Name": "Groblin", "Amount": 3}))
 def initSound():
     py.mixer.init()
 

@@ -53,8 +53,10 @@ class inventoryScreen():
         self.attOptions.add(MenuItems.textLabel("skillPoints", (v.screenX * 0.85, v.screenY * 0.18), (0, 255, 0), "Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.05), True))
         
         self.quests = py.sprite.Group()
-        for i in range(len(v.quests)):
-            self.quests.add(self.quest(i))
+        n = 0
+        for i in v.quests:
+            self.quests.add(self.quest(n, i))
+            n += 1
         
         self.tab = "Inventory"
     
@@ -95,25 +97,43 @@ class inventoryScreen():
     
     class quest(py.sprite.Sprite):
         
-        def __init__(self, num):
+        def __init__(self, num, quest):
             super().__init__()
             self.num = num
-            self.quest = v.quests[num]
+            self.quest = quest
             if self.quest.type == "Kill":
                 self.image = py.image.load("Resources/Images/Inventory Icons/KillQuest.png")
             
-            self.image = py.transform.scale(self.image, (15, 15))
+            self.image = py.transform.scale(self.image, (30, 30))
             font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
             self.titleLabel = font.render(self.quest.name, 1, (0, 0, 0))
             font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
             self.progressLabel = font.render("Progress: " + str(self.quest.progress) + "/" + str(self.quest.data["Amount"]), 1, (0, 0, 0))
+            self.open = False
+            self.wait = False
         
         def update(self):
-            rect = py.Rect(280, v.screenY * 0.25, 50, 340)
-            py.draw.rect(v.screen, (255, 178, 102), rect)
+            rect = py.Rect(280, v.screenY * 0.25, 300, 50)
+            if self.open:
+                rect.height += 50
+            if rect.collidepoint(py.mouse.get_pos()):
+                c = (255, 255, 0)
+                if py.mouse.get_pressed()[0] and not self.wait:
+                    self.open = not self.open
+                    self.wait = True
+            else:
+                c = (255, 178, 102)
+            if not py.mouse.get_pressed()[0]:
+                self.wait = False
+            
+            py.draw.rect(v.screen, c, rect)
             py.draw.rect(v.screen, (153, 76, 0), rect, 2)
-            v.screen.blit(self.image, (rect[0] + 5, rect[1]))
-            v.screen.blit(self.titleLabel, (rect[0] + 20, rect[1]))
+            v.screen.blit(self.image, (rect[0] + 5, rect[1] + 10))
+            py.draw.rect(v.screen, (0, 0, 0), ((rect[0] + 5, rect[1] + 10), self.image.get_rect().size), 2)
+            v.screen.blit(self.titleLabel, (rect[0] + 45, rect[1] + 10))
+            if self.open:
+                v.screen.blit(self.progressLabel, (rect[0] + 45, rect[1] + 50))
+            
             
         
         

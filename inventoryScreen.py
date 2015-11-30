@@ -3,6 +3,7 @@ import pygame as py
 import entityClasses
 from random import randint
 import MenuItems
+from _ast import Num
 
 
 class inventory():
@@ -51,6 +52,10 @@ class inventoryScreen():
         self.attOptions.add(MenuItems.textLabel("Skill Points Remaining:", (v.screenX * 0.45, v.screenY * 0.18), (100, 100, 100), "Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.05)))
         self.attOptions.add(MenuItems.textLabel("skillPoints", (v.screenX * 0.85, v.screenY * 0.18), (0, 255, 0), "Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.05), True))
         
+        self.quests = py.sprite.Group()
+        for i in range(len(v.quests)):
+            self.quests.add(self.quest(i))
+        
         self.tab = "Inventory"
     
     def update(self):
@@ -62,6 +67,8 @@ class inventoryScreen():
             self.inventorySlots.update()
         if self.tab == "Attributes":
             self.attOptions.update()
+        if self.tab == "Quests":
+            self.quests.update()
         
         self.tabs()
         self.equippedSlots.update()
@@ -85,6 +92,29 @@ class inventoryScreen():
                 thing.save()
             for thing in self.spellSlots:
                 thing.save()
+    
+    class quest(py.sprite.Sprite):
+        
+        def __init__(self, num):
+            super().__init__()
+            self.num = num
+            self.quest = v.quests[num]
+            if self.quest.type == "Kill":
+                self.image = py.image.load("Resources/Images/Inventory Icons/KillQuest.png")
+            
+            self.image = py.transform.scale(self.image, (15, 15))
+            font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
+            self.titleLabel = font.render(self.quest.name, 1, (0, 0, 0))
+            font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
+            self.progressLabel = font.render("Progress: " + str(self.quest.progress) + "/" + str(self.quest.data["Amount"]), 1, (0, 0, 0))
+        
+        def update(self):
+            rect = py.Rect(280, v.screenY * 0.25, 50, 340)
+            py.draw.rect(v.screen, (255, 178, 102), rect)
+            py.draw.rect(v.screen, (153, 76, 0), rect, 2)
+            v.screen.blit(self.image, (rect[0] + 5, rect[1]))
+            v.screen.blit(self.titleLabel, (rect[0] + 20, rect[1]))
+            
         
         
     def tabs(self):
@@ -121,6 +151,23 @@ class inventoryScreen():
         py.draw.rect(v.screen, o, rect, 2)
         font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
         label = font.render("Attributes", 1, (0, 0, 0))
+        v.screen.blit(label, (rect[0] + 5, rect[1] + 2))
+        
+        rect = py.Rect(444, 50, 80, 25)
+        if rect.collidepoint(py.mouse.get_pos()):
+            c = (255, 255, 0)
+            if py.mouse.get_pressed()[0]:
+                self.tab = "Quests"
+        else:
+            c = (255, 178, 102)
+        if self.tab == "Quests":
+            o = (0, 0, 255)
+        else:
+            o = (153, 76, 0)
+        py.draw.rect(v.screen, c, rect)
+        py.draw.rect(v.screen, o, rect, 2)
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
+        label = font.render("Quests", 1, (0, 0, 0))
         v.screen.blit(label, (rect[0] + 5, rect[1] + 2))
     
     def grey(self):

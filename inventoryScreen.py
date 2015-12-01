@@ -61,6 +61,8 @@ class inventoryScreen():
         self.openQuests = []
         
         self.tab = "Inventory"
+        
+        self.questScroll = 0
     
     def update(self):
         self.hovering = None
@@ -77,6 +79,7 @@ class inventoryScreen():
                 for i in self.quests:
                     if i.num == n:
                         i.update()
+            self.scrollBar()
         
         self.tabs()
         self.equippedSlots.update()
@@ -121,34 +124,77 @@ class inventoryScreen():
         
         def update(self):
             ymod = 0
-            for i in self.master.openQuests:
-                if i < self.num:
-                    ymod += 30
-            rect = py.Rect(280, v.screenY * 0.25 + (self.num * 60) + ymod, 300, 50)
-            if self.open:
-                rect.height += 30
+            num = self.num + self.master.questScroll
+            if num > -1 and num < 5:
+                for i in self.master.openQuests:
+                    if i < num:
+                        ymod += 30
+                rect = py.Rect(280, v.screenY * 0.25 + (num * 60) + ymod, 250, 50)
+                if self.open:
+                    rect.height += 30
+                if rect.collidepoint(py.mouse.get_pos()):
+                    c = (255, 255, 0)
+                    if py.mouse.get_pressed()[0] and not self.wait:
+                        self.open = not self.open
+                        self.wait = True
+                else:
+                    c = (255, 178, 102)
+                if not py.mouse.get_pressed()[0]:
+                    self.wait = False
+                
+                py.draw.rect(v.screen, c, rect)
+                py.draw.rect(v.screen, (153, 76, 0), rect, 2)
+                v.screen.blit(self.image, (rect[0] + 5, rect[1] + 10))
+                py.draw.rect(v.screen, (0, 0, 0), ((rect[0] + 5, rect[1] + 10), self.image.get_rect().size), 2)
+                v.screen.blit(self.titleLabel, (rect[0] + 45, rect[1] + 10))
+                if self.open:
+                    v.screen.blit(self.progressLabel, (rect[0] + 45, rect[1] + 50))
+                    self.master.openQuests.append(self.num)
+            
+    def scrollBar(self):
+        print(self.questScroll)
+        image = py.image.load("Resources/Images/Inventory Icons/Arrow.png")
+        image = py.transform.rotate(image, 180)
+        rect = py.Rect(550, 90, 30, 30)
+        image = py.transform.scale(image, rect.size)
+        if self.questScroll > 0:
             if rect.collidepoint(py.mouse.get_pos()):
-                c = (255, 255, 0)
-                if py.mouse.get_pressed()[0] and not self.wait:
-                    self.open = not self.open
-                    self.wait = True
-            else:
-                c = (255, 178, 102)
-            if not py.mouse.get_pressed()[0]:
-                self.wait = False
-            
-            py.draw.rect(v.screen, c, rect)
-            py.draw.rect(v.screen, (153, 76, 0), rect, 2)
-            v.screen.blit(self.image, (rect[0] + 5, rect[1] + 10))
-            py.draw.rect(v.screen, (0, 0, 0), ((rect[0] + 5, rect[1] + 10), self.image.get_rect().size), 2)
-            v.screen.blit(self.titleLabel, (rect[0] + 45, rect[1] + 10))
-            if self.open:
-                v.screen.blit(self.progressLabel, (rect[0] + 45, rect[1] + 50))
-                self.master.openQuests.append(self.num)
-            
-            
+                image.fill((255, 255, 0), special_flags=py.BLEND_RGB_MULT)
+                image = py.transform.scale(image, (rect.width + 4, rect.height + 4))
+                rect.height += 4
+                rect.width += 4
+                rect.centerx -= 2
+                rect.centery -= 2
+                for event in v.events:
+                    if event.type == py.MOUSEBUTTONDOWN:
+                        self.questScroll -= 1
+                                       
+        if self.questScroll <= 0:
+            image.fill((100, 100, 100), special_flags=py.BLEND_RGB_MULT)
+        v.screen.blit(image, rect)
+        py.draw.rect(v.screen, (153, 76, 0), rect, 2)
         
+        image = py.transform.rotate(image, 180)
+        rect = py.Rect(550, 390, 30, 30)
+        image = py.transform.scale(image, rect.size)
+        if self.questScroll < len(v.quests) - 5:
+            if rect.collidepoint(py.mouse.get_pos()):
+                image.fill((255, 255, 0), special_flags=py.BLEND_RGB_MULT)
+                image = py.transform.scale(image, (rect.width + 4, rect.height + 4))
+                rect.height += 4
+                rect.width += 4
+                rect.centerx -= 2
+                rect.centery -= 2
+                for event in v.events:
+                    if event.type == py.MOUSEBUTTONDOWN:
+                        self.questScroll += 1
         
+        if self.questScroll > len(v.quests) - 5:
+            image.fill((100, 100, 100), special_flags=py.BLEND_RGB_MULT)
+        v.screen.blit(image, rect)
+        py.draw.rect(v.screen, (153, 76, 0), rect, 2)
+        
+                
     def tabs(self):
         rect = py.Rect(280, 50, 80, 25)
         if rect.collidepoint(py.mouse.get_pos()):

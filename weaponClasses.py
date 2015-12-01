@@ -17,39 +17,49 @@ class Sword(py.sprite.Sprite):
         v.damagesNPCs.add(self)
         self.rect = py.Rect(0, 0, 0, 0)
         self.master = weapon
+        self.coolDown = 0
 
     def get_rend(self):
         self.rend = py.image.load(self.image)
         self.rend = py.transform.scale(self.rend, (int(20 * v.scale), int(20 * v.scale)))
 
     def update(self):
+        maxcooldown = 30
         self.get_rend()
-        if self.attacking:
-            v.playerActing = True
-            v.playerStopped = True
-            if v.playerDirection == "Up":
-                angleMod = -90
-            elif v.playerDirection == "Down":
-                angleMod = 90
-            elif v.playerDirection == "Left":
-                angleMod = 0
-            elif v.playerDirection == "Right":
-                angleMod = 180
-            if self.attCyclePos == 0:
-                self.rect = self.rend.get_rect()
-                self.rect.center = (self.posX, self.posY)
-                self.rend = rot_center(self.rend, angleMod + 180)
-                self.rect.center = arc((centre()[0], centre()[1]), 20 * v.scale, angleMod)
-                self.attCyclePos += self.attSpeed
+        if self.coolDown <= 0:
+            if self.attacking:
+                v.playerActing = True
+                v.playerStopped = True
+                if v.playerDirection == "Up":
+                    angleMod = -90
+                elif v.playerDirection == "Down":
+                    angleMod = 90
+                elif v.playerDirection == "Left":
+                    angleMod = 0
+                elif v.playerDirection == "Right":
+                    angleMod = 180
+                if self.attCyclePos == 0:
+                    self.rect = self.rend.get_rect()
+                    self.rect.center = (self.posX, self.posY)
+                    self.rend = rot_center(self.rend, angleMod + 180)
+                    self.rect.center = arc((centre()[0], centre()[1]), 20 * v.scale, angleMod)
+                    self.attCyclePos += self.attSpeed
+                else:
+                    self.rend = rot_center(self.rend, angleMod + 180 - self.attCyclePos)
+                    self.rect.center = arc((centre()[0], centre()[1]), 20 * v.scale, angleMod - self.attCyclePos)
+                    self.attCyclePos += self.attSpeed
+                    if self.attCyclePos > 180:
+                        self.attacking = False
+                        self.attCyclePos = 0
+                        self.coolDown = maxcooldown
             else:
-                self.rend = rot_center(self.rend, angleMod + 180 - self.attCyclePos)
-                self.rect.center = arc((centre()[0], centre()[1]), 20 * v.scale, angleMod - self.attCyclePos)
-                self.attCyclePos += self.attSpeed
-                if self.attCyclePos > 180:
-                    self.attacking = False
-                    self.attCyclePos = 0
+                self.rect = py.Rect(0, 0, 0, 0)
         else:
             self.rect = py.Rect(0, 0, 0, 0)
+        
+        if self.coolDown > 0:
+            self.coolDown -= 1
+        v.weaponCooldown = self.coolDown / maxcooldown
 
     def draw(self):
         #self.update()
@@ -70,13 +80,15 @@ class manaOrb(py.sprite.Sprite):
         self.coolDown = 0
     
     def update(self):
+        maxcooldown = 60
         if self.attacking:
             if self.coolDown <= 0:
                 self.projectiles.add(self.projectile(self.image, self.master, self))
-                self.coolDown = 20
+                self.coolDown = maxcooldown #TODO: make this variable
             self.attacking = False
         if self.coolDown > 0:
             self.coolDown -= 1
+        v.weaponCooldown = self.coolDown / maxcooldown
     
     def draw(self):
         for thing in self.projectiles:
@@ -176,13 +188,15 @@ class shooter(py.sprite.Sprite):
         self.coolDown = 0
     
     def update(self):
+        maxcooldown = 20
         if self.attacking:
             if self.coolDown <= 0:
                 self.projectiles.add(self.projectile(self.image, self.master, self))
-                self.coolDown = 20
+                self.coolDown = maxcooldown
             self.attacking = False
         if self.coolDown > 0:
             self.coolDown -= 1
+        v.weaponCooldown = self.coolDown / maxcooldown
     
     def draw(self):
         for thing in self.projectiles:

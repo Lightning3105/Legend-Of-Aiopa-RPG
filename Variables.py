@@ -50,6 +50,7 @@ clock = None
 events = []
 actionQueue = []
 actionsDone = []
+weaponCooldown = 1
 particles = None
 currentSpells = None
 attackerDirection = "Down"

@@ -73,14 +73,10 @@ class inventoryScreen():
             self.attOptions.update()
         if self.tab == "Quests":
             self.openQuests = []
-            #n = 0
             for n in range(len(self.quests)):
                 for i in self.quests:
                     if i.num == n:
                         i.update()
-                    print(n)
-            #self.quests.update()
-            print(self.openQuests)
         
         self.tabs()
         self.equippedSlots.update()
@@ -443,7 +439,8 @@ class inventoryScreen():
     def drag(self):
         if not self.grabbed == None:
             size = (50, 50)
-            image = py.image.load(self.grabbed.icon)
+            print(self.grabbed.icon)
+            image = self.grabbed.icon
             image = py.transform.scale(image, size)
             pos = py.mouse.get_pos()
             v.screen.blit(image, pos)

@@ -95,10 +95,17 @@ class weaponSlot:
 
     def draw(self):
         image = "Resources/Images/Empty_Weapon_Slot.png"
-        image = py.image.load(image)
+        image = py.image.load(image).convert_alpha()
         image = py.transform.scale(image, (int(80 / 640 * v.screenX), int(80 / 640 * v.screenX)))
         rect = image.get_rect()
         rect.center = (44, v.screen.get_rect().bottom - 45)
+        
+        #red = py.Surface(rect.size).convert_alpha()
+        
+        posy = rect.height - (rect.height * v.weaponCooldown)
+        image.fill((255, 0, 0, 200), rect=((0, posy), rect.size), special_flags=py.BLEND_RGBA_MULT)
+        #image.blit(red, (0, posy))
+        
         v.screen.blit(image, rect)
         
         image = v.equipped["Weapon"].icon

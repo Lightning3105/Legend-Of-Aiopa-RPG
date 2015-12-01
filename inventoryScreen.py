@@ -115,7 +115,7 @@ class inventoryScreen():
         def update(self):
             rect = py.Rect(280, v.screenY * 0.25, 300, 50)
             if self.open:
-                rect.height += 50
+                rect.height += 30
             if rect.collidepoint(py.mouse.get_pos()):
                 c = (255, 255, 0)
                 if py.mouse.get_pressed()[0] and not self.wait:

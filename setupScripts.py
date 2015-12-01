@@ -28,6 +28,7 @@ def newGame():
         v.abilityButtons.add(guiClasses.ability(i))
     
     v.quests.add(npcScripts.quest("Kill the Groblins", "Kill", {"Name": "Groblin", "Amount": 3}))
+    v.quests.add(npcScripts.quest("Kill the Children", "Kill", {"Name": "Children", "Amount": 2}))
 def initSound():
     py.mixer.init()
 

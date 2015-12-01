@@ -177,8 +177,8 @@ class quest(py.sprite.Sprite):
                         self.counted.append(enemy.npcID)
             if self.progress >= self.data["Amount"]:
                 self.completed = True
-        print("Amount:", self.progress)
-        print("Completed?:", self.completed)
+        #print("Amount:", self.progress)
+        #print("Completed?:", self.completed)
 
 
 def summon(npcType, pos):

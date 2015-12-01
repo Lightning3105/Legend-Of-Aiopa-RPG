@@ -72,8 +72,15 @@ class inventoryScreen():
         if self.tab == "Attributes":
             self.attOptions.update()
         if self.tab == "Quests":
-        	self.openQuests = []
-            self.quests.update()
+            self.openQuests = []
+            #n = 0
+            for n in range(len(self.quests)):
+                for i in self.quests:
+                    if i.num == n:
+                        i.update()
+                    print(n)
+            #self.quests.update()
+            print(self.openQuests)
         
         self.tabs()
         self.equippedSlots.update()
@@ -117,11 +124,11 @@ class inventoryScreen():
             self.wait = False
         
         def update(self):
-        	ymod = 0
-        	for i in self.master.openQuests:
-        		if i < self.num:
-        			ymod += 100
-            rect = py.Rect(280, v.screenY * 0.25 + (self.num * 60), 300, 50)
+            ymod = 0
+            for i in self.master.openQuests:
+                if i < self.num:
+                    ymod += 30
+            rect = py.Rect(280, v.screenY * 0.25 + (self.num * 60) + ymod, 300, 50)
             if self.open:
                 rect.height += 30
             if rect.collidepoint(py.mouse.get_pos()):
@@ -141,6 +148,7 @@ class inventoryScreen():
             v.screen.blit(self.titleLabel, (rect[0] + 45, rect[1] + 10))
             if self.open:
                 v.screen.blit(self.progressLabel, (rect[0] + 45, rect[1] + 50))
+                self.master.openQuests.append(self.num)
             
             
         

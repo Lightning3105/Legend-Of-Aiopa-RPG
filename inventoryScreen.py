@@ -439,7 +439,6 @@ class inventoryScreen():
     def drag(self):
         if not self.grabbed == None:
             size = (50, 50)
-            print(self.grabbed.icon)
             image = self.grabbed.icon
             image = py.transform.scale(image, size)
             pos = py.mouse.get_pos()

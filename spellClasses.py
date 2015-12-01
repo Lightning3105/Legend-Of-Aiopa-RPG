@@ -172,14 +172,10 @@ class lightning(py.sprite.Sprite):
             self.image = py.transform.scale(self.image, (int(self.image.get_rect().width * v.scale/1.5), int(self.image.get_rect().height * v.scale/1.5)))
             if self.aniCyclePos <= 23:
                 self.rotcyc += random.randint(0, 5)
-                print("pre rot")
                 print(self.rotcyc)
                 self.image = py.transform.rotate(self.image, self.rotcyc)
-                print("post rot")
             self.rect = self.image.get_rect()
-            print("get rect")
             self.rect.center = (v.screen.get_rect()[2]/2, v.screen.get_rect()[3]/2)
-            print("centre")
             """if self.direction == "Up" or self.direction == "Down":
                 self.rect.centery = (self.rect.centery + (mod * (self.rect.height / 2)))
             if self.direction == "Left" or self.direction == "Right":

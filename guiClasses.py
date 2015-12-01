@@ -39,6 +39,12 @@ class health:
         image = py.transform.scale(self.image, (int(30 / 640 * v.screenX), int(30 / 640 * v.screenX)))
         pos = ((65 + (31 * self.number)) / 640 * v.screenX, 410 / 640 * v.screenX)
         rect.center = pos
+        background = self.Q4
+        brect = background.get_rect()
+        brect.center = pos
+        background.fill((50, 50, 50, 200), special_flags=py.BLEND_RGB_MULT)
+        background = py.transform.scale(background, (int(30 / 640 * v.screenX), int(30 / 640 * v.screenX)))
+        v.screen.blit(background, brect)
         v.screen.blit(image, rect)
 
 def update_health():
@@ -78,6 +84,12 @@ class mana:
         image = py.transform.scale(self.image, (int(30 / 640 * v.screenX), int(30 / 640 * v.screenX)))
         pos = ((65 + (31 * self.number)) / 640 * v.screenX, 450 / 640 * v.screenX)
         rect.center = pos
+        background = self.Q4
+        brect = background.get_rect()
+        brect.center = pos
+        background.fill((50, 50, 50, 200), special_flags=py.BLEND_RGB_MULT)
+        background = py.transform.scale(background, (int(30 / 640 * v.screenX), int(30 / 640 * v.screenX)))
+        v.screen.blit(background, brect)
         v.screen.blit(image, rect)
 
 def update_mana():
@@ -203,6 +215,12 @@ class ability(py.sprite.Sprite):
                 if cooldown == maxCooldown:
                     if v.playerMana >= self.ability.attributes["Mana"]:
                         self.ability.object.attacking = True
+            for event in v.events:
+                if event.type == py.MOUSEBUTTONDOWN:
+                    if self.rect.collidepoint(py.mouse.get_pos()):
+                        if cooldown == maxCooldown:
+                            if v.playerMana >= self.ability.attributes["Mana"]:
+                                self.ability.object.attacking = True
         
 
 class pauseScreen:

@@ -151,8 +151,7 @@ class inventoryScreen():
                     v.screen.blit(self.progressLabel, (rect[0] + 45, rect[1] + 50))
                     self.master.openQuests.append(self.num)
             
-    def scrollBar(self):
-        print(self.questScroll)
+    def scrollBar(self): #TODO: Add bar
         image = py.image.load("Resources/Images/Inventory Icons/Arrow.png")
         image = py.transform.rotate(image, 180)
         rect = py.Rect(550, 90, 30, 30)

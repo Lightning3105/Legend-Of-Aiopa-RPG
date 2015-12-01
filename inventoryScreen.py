@@ -55,8 +55,10 @@ class inventoryScreen():
         self.quests = py.sprite.Group()
         n = 0
         for i in v.quests:
-            self.quests.add(self.quest(n, i))
+            self.quests.add(self.quest(n, i, self))
             n += 1
+        
+        self.openQuests = []
         
         self.tab = "Inventory"
     
@@ -70,6 +72,7 @@ class inventoryScreen():
         if self.tab == "Attributes":
             self.attOptions.update()
         if self.tab == "Quests":
+        	self.openQuests = []
             self.quests.update()
         
         self.tabs()
@@ -97,10 +100,11 @@ class inventoryScreen():
     
     class quest(py.sprite.Sprite):
         
-        def __init__(self, num, quest):
+        def __init__(self, num, quest, master):
             super().__init__()
             self.num = num
             self.quest = quest
+            self.master = master
             if self.quest.type == "Kill":
                 self.image = py.image.load("Resources/Images/Inventory Icons/KillQuest.png")
             
@@ -113,7 +117,11 @@ class inventoryScreen():
             self.wait = False
         
         def update(self):
-            rect = py.Rect(280, v.screenY * 0.25, 300, 50)
+        	ymod = 0
+        	for i in self.master.openQuests:
+        		if i < self.num:
+        			ymod += 100
+            rect = py.Rect(280, v.screenY * 0.25 + (self.num * 60), 300, 50)
             if self.open:
                 rect.height += 50
             if rect.collidepoint(py.mouse.get_pos()):

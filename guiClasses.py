@@ -50,6 +50,13 @@ class health:
 def update_health():
     for n in range(1, 6):
         health(n).draw()
+    
+    #Mana text TODO: make text appear on hover
+    font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 15)
+    r = py.Rect((145, 410), font.size(str(int(v.playerHealth)) + "/" + str(v.Attributes["Max Health"])))
+    label = font.render(str(int(v.playerHealth)) + "/" + str(v.Attributes["Max Health"]), 1, (0, 0, 0))
+    v.screen.blit(label, r)
+    py.draw.rect(v.screen, (100, 100, 100), r, 1)
 
 class mana:
 
@@ -102,6 +109,14 @@ def update_mana():
     if v.playerMana > v.Attributes["Max Mana"]:
         v.playerMana = v.Attributes["Max Mana"]
     v.playerMana = round(v.playerMana, 3)
+    
+    #Mana text TODO: make text appear on hover
+    font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 15)
+    r = py.Rect((145, 450), font.size(str(int(v.playerMana)) + "/" + str(v.Attributes["Max Mana"])))
+    label = font.render(str(int(v.playerMana)) + "/" + str(v.Attributes["Max Mana"]), 1, (0, 0, 0))
+    v.screen.blit(label, r)
+    py.draw.rect(v.screen, (100, 100, 100), r, 1)
+    
 
 class weaponSlot:
 

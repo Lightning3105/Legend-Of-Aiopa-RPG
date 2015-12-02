@@ -54,7 +54,7 @@ def update_health():
     #Mana text TODO: make text appear on hover
     font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 15)
     r = py.Rect((145, 410), font.size(str(int(v.playerHealth)) + "/" + str(v.Attributes["Max Health"])))
-    label = font.render(str(int(v.playerHealth)) + "/" + str(v.Attributes["Max Health"]), 1, (0, 0, 0))
+    label = font.render(str(int(v.playerHealth)) + "/" + str(v.Attributes["Max Health"]), 1, (200, 200, 200))
     v.screen.blit(label, r)
     py.draw.rect(v.screen, (100, 100, 100), r, 1)
 

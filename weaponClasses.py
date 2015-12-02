@@ -53,9 +53,9 @@ class Sword(py.sprite.Sprite):
                         self.attCyclePos = 0
                         self.coolDown = maxcooldown
             else:
-                self.rect = py.Rect(0, 0, 0, 0)
+                self.rect = py.Rect(-110, -110, 0, 0)
         else:
-            self.rect = py.Rect(0, 0, 0, 0)
+            self.rect = py.Rect(-110, -110, 0, 0)
         
         if self.coolDown > 0:
             self.coolDown -= 1

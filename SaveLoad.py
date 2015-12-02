@@ -41,16 +41,18 @@ def Save():
     save = {}
     eSave = {}
     iSave = []
-    aSave = []
+    aSave = {}
     
     for k, va in v.equipped.items():
-        eSave[k] = va.save()
+        if va != None:
+            eSave[k] = va.save()
     
     for item in v.inventory.contents:
         iSave.append(item.save())
     
-    for item in v.abilityButtons:
-        aSave.append(item.save())
+    for k, item in v.abilities.items():
+        if item != None:
+            aSave[k] = item.save()
     
     save["eSave"] = eSave
     save["iSave"] = iSave
@@ -128,8 +130,8 @@ def Load():
         if item["equipType"] == "Weapon":
             v.inventory.contents.append(itemClasses.weapon(item["name"], item["icon"], item["attType"], item["image"], item["attributes"]))
 
-    for item in save["aSave"]:
-        spell = itemClasses.spell(item["ability"]["name"], item["ability"]["spellType"], item["ability"]["spellImage"], item["ability"]["castImage"], item["ability"]["attributes"])
-        v.abilityButtons.add(guiClasses.ability(spell, item["icon"], item["num"]))
+    print(save["aSave"])
+    for k, item in save["aSave"].items():
+        v.abilities[k] = itemClasses.spell(item["name"], item["spellType"], item["spellImage"], item["castImage"], item["icon"], item["attributes"])
 #Save()
 #Load()

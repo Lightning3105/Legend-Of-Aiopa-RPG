@@ -24,8 +24,6 @@ def newGame():
     ls = itemClasses.spell("Lightning Storm", "lightning", "Resources/Images/lightningStorm.png", "Resources/Images/blueCastCircle.png", "Resources/Images/Spell Icons/chainLightning.png", {"Damage": 0.4, "Knockback": 1, "Cooldown": 5, "Mana": 10, "InvulnMod": 0})
     v.abilities["1"] = fb
     v.abilities["2"] = ls
-    for i in range(1, 7):
-        v.abilityButtons.add(guiClasses.ability(i))
     
     v.quests.add(npcScripts.quest("Kill the Groblins", "Kill", {"Name": "Groblin", "Amount": 3}))
     v.quests.add(npcScripts.quest("Kill the Children", "Kill", {"Name": "Children", "Amount": 2}))
@@ -62,6 +60,8 @@ def createGroups():
     v.xpGroup = py.sprite.Group()
     v.droppedItems = py.sprite.Group()
     v.inventory = inventoryScreen.inventory()
+    for i in range(1, 7):
+        v.abilityButtons.add(guiClasses.ability(i))
 
 def defaultVariables():
     v.playerPosX = 0

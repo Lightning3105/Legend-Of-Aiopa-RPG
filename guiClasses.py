@@ -53,10 +53,15 @@ def update_health():
     
     #Mana text TODO: make text appear on hover
     font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 15)
-    r = py.Rect((145, 410), font.size(str(int(v.playerHealth)) + "/" + str(v.Attributes["Max Health"])))
+    size = font.size(str(int(v.playerHealth)) + "/" + str(v.Attributes["Max Health"]))
+    r = py.Rect((166 - size[0]/2, 405), size)
     label = font.render(str(int(v.playerHealth)) + "/" + str(v.Attributes["Max Health"]), 1, (200, 200, 200))
+    s = py.Surface(r.size)
+    s.fill((255, 0, 0, 200))
+    v.screen.blit(s, r)
     v.screen.blit(label, r)
-    py.draw.rect(v.screen, (100, 100, 100), r, 1)
+    py.draw.rect(v.screen, (0, 0, 0), r, 2)
+    
 
 class mana:
 
@@ -112,10 +117,15 @@ def update_mana():
     
     #Mana text TODO: make text appear on hover
     font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 15)
-    r = py.Rect((145, 450), font.size(str(int(v.playerMana)) + "/" + str(v.Attributes["Max Mana"])))
+    size = font.size(str(int(v.playerMana)) + "/" + str(v.Attributes["Max Mana"]))
+    r = py.Rect((166 - size[0]/2, 450), size)
     label = font.render(str(int(v.playerMana)) + "/" + str(v.Attributes["Max Mana"]), 1, (0, 0, 0))
+    s = py.Surface(r.size)
+    s.fill((0, 255, 255, 200))
+    v.screen.blit(s, r)
     v.screen.blit(label, r)
-    py.draw.rect(v.screen, (100, 100, 100), r, 1)
+    py.draw.rect(v.screen, (0, 0, 0), r, 2)
+    
     
 
 class weaponSlot:

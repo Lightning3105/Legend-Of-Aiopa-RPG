@@ -7,7 +7,6 @@ import inventoryScreen
 import npcScripts
 
 def newGame():
-    print("HI THER THIS IS A MISSPELLED TEST!")
     v.playerHealth = v.Attributes["Max Health"]
     v.p_class.prevHealth = v.playerHealth
     v.playerMana = v.Attributes["Max Mana"]

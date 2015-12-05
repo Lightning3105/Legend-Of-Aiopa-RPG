@@ -6,6 +6,7 @@ import pygame as py
 import guiClasses
 import Map
 import os
+import npcScripts
 
 def Save():
     global v
@@ -22,7 +23,9 @@ def Save():
             "xpMod": v.xpMod,
             "skillPoints": v.skillPoints,
             "appearance": v.appearance,
-            "playerName": v.playerName
+            "playerName": v.playerName,
+            "mapNum" : v.mapNum,
+            
             }
     
     pickle.dump(save, savefile)
@@ -42,6 +45,7 @@ def Save():
     eSave = {}
     iSave = []
     aSave = {}
+    qSave = []
     
     for k, va in v.equipped.items():
         if va != None:
@@ -54,9 +58,13 @@ def Save():
         if item != None:
             aSave[k] = item.save()
     
+    for item in v.quests:
+        qSave.append(item.save())
+    
     save["eSave"] = eSave
     save["iSave"] = iSave
     save["aSave"] = aSave
+    save["qSave"] = qSave
     pickle.dump(save, savefile)
     
     """for k, v in Map.Maps.items():
@@ -105,6 +113,7 @@ def Load():
     v.skillPoints = save["skillPoints"]
     v.appearance = save["appearance"]
     v.playerName = save["playerName"]
+    v.mapNum = save["mapNum"]
     
     savefile = open("Saves/Entities.save", "rb")
     save = pickle.load(savefile)
@@ -133,5 +142,9 @@ def Load():
     print(save["aSave"])
     for k, item in save["aSave"].items():
         v.abilities[k] = itemClasses.spell(item["name"], item["spellType"], item["spellImage"], item["castImage"], item["icon"], item["attributes"])
+
+    for item in save["qSave"]:
+        npcScripts.quest(item["Name"], item["Type"], item["Data"])
+
 #Save()
 #Load()

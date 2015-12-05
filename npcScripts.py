@@ -158,15 +158,30 @@ class conversation():
                         
 class quest(py.sprite.Sprite):
     
-    def __init__(self, name, type, data={}):
+    def __init__(self, name, Type, data={}):
         super().__init__()
         self.name = name
-        self.type = type
+        self.type = Type
         self.data = data
         self.counted = []
         self.progress = 0
         self.completed = False
         v.quests.add(self)
+        if "Progress" in data:
+            self.progress = int(data["Progress"])
+        if "Counted" in data:
+            self.counted = data["Counted"]
+    
+    def save(self):
+        self.data["Progress"] = self.progress
+        self.data["Counted"] = self.counted
+        save = {"Name": self.name,
+                "Type": self.type,
+                "Data": self.data,
+                "Counted": self.counted
+                }
+        
+        return save
     
     def update(self):
         if self.type == "Kill":

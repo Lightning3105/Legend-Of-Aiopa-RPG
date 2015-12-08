@@ -1,6 +1,8 @@
 # server.py 
 import socket                                         
-import time
+import pickle
+
+devID = 1
 
 # create a socket object
 serversocket = socket.socket(
@@ -15,13 +17,19 @@ port = 9999
 serversocket.bind((host, port))                                  
 
 # queue up to 5 requests
-serversocket.listen(5)                                           
+serversocket.listen(2)
+
+clients = {}
+positions = {}
+while devID <= 2:
+    # establish a connection
+    clients[devID],addr = serversocket.accept()      
+    print("Got a connection from %s" % str(addr))
+    clients[devID].send(str(devID).encode('ascii'))
+    devID += 1
 
 while True:
-    # establish a connection
-    clientsocket,addr = serversocket.accept()      
-
-    print("Got a connection from %s" % str(addr))
-    currentTime = time.ctime(time.time()) + "\r\n"
-    clientsocket.send(currentTime.encode('ascii'))
-    clientsocket.close()
+    for key, value in clients.items():
+        data = pickle.loads(value.recv(1024))
+        positions[key] = data
+        value.send(pickle.dumps(positions))

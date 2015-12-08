@@ -3,20 +3,15 @@ import Variables as v
 import MenuItems 
 import entityClasses 
 import guiClasses 
-from functools import reduce
 from os import listdir
-from os import remove
 
 import Map
-import spellClasses
 
-import itemClasses
 from pygame.color import Color as colour
 import sys
 import inventoryScreen
 import time
 from random import randint
-import npcScripts
 import setupScripts
 import SaveLoad
 import random
@@ -183,10 +178,7 @@ def game():
     py.time.set_timer(py.USEREVENT, 200) # walking
     py.time.set_timer(py.USEREVENT + 1, 50) # Spell animation
     py.time.set_timer(py.USEREVENT + 2, 1000) #One second
-
-    
-    
-    
+ 
     v.allTiles = py.sprite.Group()
     v.topTiles = py.sprite.Group()
     v.allNpc = py.sprite.Group()

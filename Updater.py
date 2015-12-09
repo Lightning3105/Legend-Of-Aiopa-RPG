@@ -34,6 +34,23 @@ def reporthook(count, blockSize, totalSize):
     #sys.stdout.write("\r" + "...%d%%" % percent)
     #sys.stdout.flush()
 
+def recursive_overwrite(src, dest, ignore=None):
+    import os, shutil
+    if os.path.isdir(src):
+        if not os.path.isdir(dest):
+            os.makedirs(dest)
+        files = os.listdir(src)
+        if ignore is not None:
+            ignored = ignore(src, files)
+        else:
+            ignored = set()
+        for f in files:
+            if f not in ignored:
+                recursive_overwrite(os.path.join(src, f), 
+                                    os.path.join(dest, f), 
+                                    ignore)
+    else:
+        shutil.copyfile(src, dest)
 
 def updateCheck():
     global latest
@@ -110,7 +127,5 @@ def unzip():
     textLabel("Updating Files...", (320, 240), (255, 255, 255), theFont, 50, False, True).update()
     py.display.flip()
     
-    #from shutil import copytree
     from os import getcwd
-    from distutils.dir_util import copy_tree
-    copy_tree("Update/Legend-Of-Aiopa-RPG-master", getcwd())
+    recursive_overwrite("Update/Legend-Of-Aiopa-RPG-master", getcwd())

@@ -93,9 +93,16 @@ def download():
     unzip()
 
 def unzip():
+    v.screen.fill((20, 20, 20))
+    textLabel("Extracting Data...", (320, 240), (255, 255, 255), "Resources/Fonts/Vecna.otf", 50, False, True).update()
+    py.display.flip()
     import zipfile
     with zipfile.ZipFile('Update/download.zip', "r") as z:
         z.extractall("Update/")
+    
+    v.screen.fill((20, 20, 20))
+    textLabel("Updating Files...", (320, 240), (255, 255, 255), "Resources/Fonts/Vecna.otf", 50, False, True).update()
+    py.display.flip()
     
     #from shutil import copytree
     from os import getcwd

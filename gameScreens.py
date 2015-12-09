@@ -18,7 +18,6 @@ import random
 
 #TODO: Change projectiles so they work with lag
 def mainMenu():
-    print("THIS IS A TEST")
     py.init()
     windowUpdate()
     MenuItems.screen = v.screen

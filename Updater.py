@@ -5,10 +5,11 @@ import Variables as v
 
 import pygame as py
 from MenuItems import Button, textLabel
+theFont = "Update/Vecna.otf"
 py.init()
 v.screen = py.display.set_mode((640, 480))
 v.screen.fill((20, 20, 20))
-textLabel("Checking For Updates...", (320, 240), (255, 255, 255), "Resources/Fonts/Vecna.otf", 50, False, True).update()
+textLabel("Checking For Updates...", (320, 240), (255, 255, 255), theFont, 50, False, True).update()
 py.display.flip()
 
 def reporthook(count, blockSize, totalSize):
@@ -20,13 +21,13 @@ def reporthook(count, blockSize, totalSize):
     py.draw.rect(v.screen, (255, 0, 0), rect)
     py.draw.rect(v.screen, (0, 0, 0), rect, 2)
     py.draw.rect(v.screen, (0, 0, 0), (100, 240, 440, 30), 2)
-    #font = py.font.Font("Resources/Fonts/Vecna.otf", 25)
+    #font = py.font.Font(theFont, 25)
     #title = font.render("Downloading...", 1, (255, 255, 255))
     #progress = font.render(str(percent) + "%", 1, (255, 255, 255))
     #v.screen.blit(title, (200, 200))
     #v.screen.blit(progress, (200, 250))
-    textLabel("Downloading...", (320, 150), (255, 255, 255), "Resources/Fonts/Vecna.otf", 50, False, True).update()
-    textLabel(str(percent) + "%", (320, 255), (255, 255, 255), "Resources/Fonts/Vecna.otf", 20, False, True).update()
+    textLabel("Downloading...", (320, 150), (255, 255, 255), theFont, 50, False, True).update()
+    textLabel(str(percent) + "%", (320, 255), (255, 255, 255), theFont, 20, False, True).update()
     py.display.flip()
     
     
@@ -56,13 +57,19 @@ def updateCheck():
         f.close()
     print(current, "vs", latest)
     if current != latest:
+        from os import remove
+        try:
+            remove("Update/download.zip")
+        except:
+            pass
+         
         print("downloading latest")
         buttons = py.sprite.Group()
-        buttons.add(Button("Update", (220, 240), 60, (100, 100, 100), (255, 255, 255), "Resources/Fonts/Vecna.otf", "Y", centred=True))
-        buttons.add(Button("Ignore", (420, 240), 60, (100, 100, 100), (255, 255, 255), "Resources/Fonts/Vecna.otf", "N", centred=True))
+        buttons.add(Button("Update", (220, 240), 60, (100, 100, 100), (255, 255, 255), theFont, "Y", centred=True))
+        buttons.add(Button("Ignore", (420, 240), 60, (100, 100, 100), (255, 255, 255), theFont, "N", centred=True))
         labels = py.sprite.Group()
-        labels.add(textLabel("An Update Is Available:", (320, 150), (255, 255, 255), "Resources/Fonts/Vecna.otf", 50, False, True))
-        labels.add(textLabel(str(str(current) + " ==> " + str(latest)), (320, 180), (255, 255, 255), "Resources/Fonts/Vecna.otf", 20, False, True))
+        labels.add(textLabel("An Update Is Available:", (320, 150), (255, 255, 255), theFont, 50, False, True))
+        labels.add(textLabel(str(str(current) + " ==> " + str(latest)), (320, 180), (255, 255, 255), theFont, 20, False, True))
         
         while True:
             py.event.pump()
@@ -93,14 +100,14 @@ def download():
 
 def unzip():
     v.screen.fill((20, 20, 20))
-    textLabel("Extracting Data...", (320, 240), (255, 255, 255), "Resources/Fonts/Vecna.otf", 50, False, True).update()
+    textLabel("Extracting Data...", (320, 240), (255, 255, 255), theFont, 50, False, True).update()
     py.display.flip()
     import zipfile
     with zipfile.ZipFile('Update/download.zip', "r") as z:
         z.extractall("Update/")
     
     v.screen.fill((20, 20, 20))
-    textLabel("Updating Files...", (320, 240), (255, 255, 255), "Resources/Fonts/Vecna.otf", 50, False, True).update()
+    textLabel("Updating Files...", (320, 240), (255, 255, 255), theFont, 50, False, True).update()
     py.display.flip()
     
     #from shutil import copytree

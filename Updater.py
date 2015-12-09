@@ -54,7 +54,6 @@ def updateCheck():
         current = 0000
         pickle.dump(current, f)
         f.close()
-    current = 0 #TEMP TEST
     print(current, "vs", latest)
     if current != latest:
         print("downloading latest")
@@ -108,5 +107,3 @@ def unzip():
     from os import getcwd
     from distutils.dir_util import copy_tree
     copy_tree("Update/Legend-Of-Aiopa-RPG-master", getcwd())
-
-unzip()   

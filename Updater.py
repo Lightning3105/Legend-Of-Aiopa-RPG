@@ -5,6 +5,9 @@ import Variables as v
 
 import pygame as py
 from MenuItems import Button, textLabel
+import os, shutil
+
+shutil.copyfile("Resources/Fonts/Vecna.otf", "Update/Vecna.otf")
 theFont = "Update/Vecna.otf"
 py.init()
 v.screen = py.display.set_mode((640, 480))
@@ -39,7 +42,6 @@ def reporthook(count, blockSize, totalSize):
     #sys.stdout.flush()
 
 def recursive_overwrite(src, dest, ignore=None):
-    import os, shutil
     if os.path.isdir(src):
         if not os.path.isdir(dest):
             os.makedirs(dest)

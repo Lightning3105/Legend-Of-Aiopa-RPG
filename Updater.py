@@ -13,6 +13,9 @@ textLabel("Checking For Updates...", (320, 240), (255, 255, 255), theFont, 50, F
 py.display.flip()
 
 def reporthook(count, blockSize, totalSize):
+    if totalSize == -1:
+        print("FAILED TOTALSIZE")
+        return False
     #Shows percentage of download
     py.event.pump()
     percent = int(count*blockSize*100/totalSize)

@@ -4,3 +4,6 @@
 /build/
 /Saves/
 /log.txt
+/Update/
+/.project
+/.pydevproject

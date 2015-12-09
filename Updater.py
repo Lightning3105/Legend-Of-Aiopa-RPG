@@ -15,7 +15,7 @@ py.display.flip()
 def reporthook(count, blockSize, totalSize):
     if totalSize == -1:
         print("FAILED TOTALSIZE")
-        return False
+        raise Exception()
     #Shows percentage of download
     py.event.pump()
     percent = int(count*blockSize*100/totalSize)
@@ -111,13 +111,16 @@ def updateCheck():
                                 return 
             py.display.flip()
         
-def download():        
-    urllib.request.urlretrieve("https://github.com/Lightning3105/Legend-Of-Aiopa-RPG/archive/master.zip", "Update/download.zip", reporthook)
-    f = open("Saves/current.version", "wb")
-    current = latest
-    pickle.dump(current, f)
-    f.close()
-    unzip()
+def download():
+    try:     
+        urllib.request.urlretrieve("https://github.com/Lightning3105/Legend-Of-Aiopa-RPG/archive/master.zip", "Update/download.zip", reporthook)
+        f = open("Saves/current.version", "wb")
+        current = latest
+        pickle.dump(current, f)
+        f.close()
+        unzip()
+    except:
+        download()
 
 def unzip():
     v.screen.fill((20, 20, 20))

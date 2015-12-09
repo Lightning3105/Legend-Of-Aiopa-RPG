@@ -17,6 +17,7 @@ def reporthook(count, blockSize, totalSize):
     py.event.pump()
     percent = int(count*blockSize*100/totalSize)
     rect = py.Rect(100, 240, percent*4.4, 30)
+    print(count, blockSize, totalSize)
     v.screen.fill((20, 20, 20))
     py.draw.rect(v.screen, (255, 0, 0), rect)
     py.draw.rect(v.screen, (0, 0, 0), rect, 2)

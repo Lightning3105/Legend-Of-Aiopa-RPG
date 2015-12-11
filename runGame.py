@@ -1,6 +1,9 @@
 if __name__ == "__main__":
     import Updater
-    Updater.updateCheck()
+    try:
+        Updater.updateCheck()
+    except:
+        pass
     
     import gameScreens
     import setupScripts

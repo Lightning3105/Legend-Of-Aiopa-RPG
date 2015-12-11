@@ -107,15 +107,19 @@ v.screen.fill((20, 20, 20))
 textLabel("Checking For Updates...", (320, 240), (255, 255, 255), theFont, 50, False, True).update()
 py.display.flip()
 
+tries = 0
+
 def reporthook(count, blockSize, totalSize):
     if totalSize == -1:
         print("FAILED TOTALSIZE")
         raise Exception()
     #Shows percentage of download
     py.event.pump()
+    for event in py.event.get():
+        if event.type == py.QUIT:
+            sys.exit()
     percent = int(count*blockSize*100/totalSize)
     rect = py.Rect(100, 240, percent*4.4, 30)
-    print(count, blockSize, totalSize)
     v.screen.fill((20, 20, 20))
     py.draw.rect(v.screen, (255, 0, 0), rect)
     py.draw.rect(v.screen, (0, 0, 0), rect, 2)
@@ -128,7 +132,6 @@ def reporthook(count, blockSize, totalSize):
     textLabel("Downloading...", (320, 150), (255, 255, 255), theFont, 50, False, True).update()
     textLabel(str(percent) + "%", (320, 255), (255, 255, 255), theFont, 20, False, True).update()
     py.display.flip()
-    
     
     #sys.stdout.write("\r" + "...%d%%" % percent)
     #sys.stdout.flush()
@@ -186,6 +189,7 @@ def updateCheck():
         buttons = py.sprite.Group()
         buttons.add(Button("Update", (220, 240), 60, (100, 100, 100), (255, 255, 255), theFont, "Y", centred=True))
         buttons.add(Button("Ignore", (420, 240), 60, (100, 100, 100), (255, 255, 255), theFont, "N", centred=True))
+        buttons.add(Button("Skip Update", (320, 300), 40, (100, 100, 100), (255, 255, 255), theFont, "S", centred=True))
         labels = py.sprite.Group()
         labels.add(textLabel("An Update Is Available:", (320, 150), (255, 255, 255), theFont, 50, False, True))
         labels.add(textLabel(str(str(current) + " ==> " + str(latest)), (320, 180), (255, 255, 255), theFont, 20, False, True))
@@ -207,6 +211,12 @@ def updateCheck():
                                 return
                             if id == "N":
                                 return 
+                            if id == "S":
+                                f = open("Saves/current.version", "wb")
+                                current = latest
+                                pickle.dump(current, f)
+                                f.close()
+                                return
             py.display.flip()
         
 def download():
@@ -222,6 +232,13 @@ def download():
         f.close()
         unzip()
     except:
+        tries += 1
+        
+        v.screen.fill((20, 20, 20))
+        textLabel("Download Error. Retry " + str(tries) + "/8", (320, 240), (255, 255, 255), theFont, 50, False, True).update()
+        py.display.flip()
+        if tries > 8:
+            return
         download()
 
 def unzip():

@@ -166,7 +166,10 @@ def updateCheck():
         f.close()
     except:
         print("create new file")
-        os.mkdir("Saves")
+        try:
+            os.mkdir("Saves")
+        except:
+            pass
         f = open("Saves/current.version", "wb")
         current = 0000
         pickle.dump(current, f)

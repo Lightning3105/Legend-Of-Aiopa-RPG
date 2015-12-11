@@ -208,7 +208,10 @@ def updateCheck():
         
 def download():
     try:
-        os.mkdir("Update")     
+        try:
+            os.mkdir("Update")
+        except:
+            pass
         urllib.request.urlretrieve("https://github.com/Lightning3105/Legend-Of-Aiopa-RPG/archive/master.zip", "Update/download.zip", reporthook)
         f = open("Saves/current.version", "wb")
         current = latest

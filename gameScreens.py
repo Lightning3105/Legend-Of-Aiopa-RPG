@@ -279,6 +279,8 @@ def game():
                 v.scale -= 0.1
                 v.scale = round(v.scale, 1)
                 print(v.scale)
+            if keys_pressed[py.K_p]:
+                v.playerHealth = 0
             for event in v.events:
                 if event.type == py.KEYDOWN:
                     if event.key == py.K_ESCAPE:
@@ -353,7 +355,27 @@ def game():
             
             for event in v.events:
                 if event.type == py.QUIT:
-                    sys.exit()    
+                    sys.exit()
+        
+        if v.PAUSED and v.pauseType == "Death":
+            if v.justPaused:
+                background = py.image.tostring(v.screen, "RGBA")
+                v.justPaused = False
+                deathScreen = guiClasses.deathScreen()
+            py.event.pump()
+            v.clock.tick(30)
+            v.events = []
+            v.events = py.event.get()
+            
+            deathScreen.update()
+            py.display.flip()
+            
+            for event in v.events:
+                if event.type == py.KEYDOWN:
+                    if event.key == py.K_ESCAPE:
+                        v.PAUSED = False
+                if event.type == py.QUIT:
+                    sys.exit()
         
 
 def classSelection():

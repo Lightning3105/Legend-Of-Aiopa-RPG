@@ -46,6 +46,7 @@ mask = False
 cur_weapon = None
 playerActing = False
 playerStopped = False
+playerDead = False
 clock = None
 events = []
 actionQueue = []

@@ -62,6 +62,11 @@ def update_health():
     v.screen.blit(label, r)
     py.draw.rect(v.screen, (0, 0, 0), r, 2)
     
+    if v.playerHealth <= 0:
+        v.playerDead = True
+        v.PAUSED = True
+        v.pauseType = "Death"
+    
 
 class mana:
 
@@ -426,4 +431,33 @@ class locationTitle():
         
         v.screen.blit(l, pos)
             
-            
+
+class deathScreen():
+    
+    def __init__(self):
+        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 60)
+        self.label = self.font.render("You Died!", 1, (255, 255, 255))
+        v.PAUSED = True
+        v.pauseType = "Death"
+        v.playerDead = True
+        self.back = py.image.tostring(v.screen, "RGBA")
+        self.back = py.image.fromstring(self.back, (v.screenX, v.screenY), "RGBA")
+        self.cycle = 100
+        self.red = py.Surface((v.screenX, v.screenY)).convert_alpha()
+        self.ghost = entityClasses.playerGhost()
+        v.p_class.direction = "Down"
+        v.p_class.draw()
+        self.pimg = v.p_class.image
+    
+    def update(self):
+        if v.playerDead:
+            ren = py.transform.scale(self.back, (int(v.screenX * (self.cycle / 100)), int(v.screenY * (self.cycle / 100))))
+            rect = py.Rect(v.screenX/2 - (v.screenX * (self.cycle / 100))/2, v.screenY/2 - (v.screenY * (self.cycle / 100))/2, v.screenX * (self.cycle / 100), v.screenY * (self.cycle / 100))
+            v.screen.blit(ren, rect)
+            self.red.fill((self.cycle - 100, 0, 0, self.cycle - 100))
+            self.ghost.cycle = self.cycle
+            self.ghost.update()
+            v.screen.blit(self.red, (0, 0))
+            if self.cycle < 355:
+                self.cycle += 1
+                

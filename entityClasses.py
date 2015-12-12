@@ -376,7 +376,84 @@ class mask:
         else:
             self.moving = False
         
-
+class playerGhost():
+    def __init__(self):
+        self.posx = v.screen.get_rect()[2] / 2
+        self.posy = v.screenY / 2
+        self.direction = v.p_class.direction
+        v.playerDirection = self.direction
+        self.moving = False
+        self.movFlip = True
+        self.view = v.p_class.view
+        self.sheetImage = "Resources\Images"
+        self.combineImages()
+        self.rect = py.Rect(0, 0, 0, 0)
+        self.cycle = 100
+    
+    def initSheet(self):
+        self.sheet = SpriteSheet(self.sheetImage, 4, 3)
+        self.sheet.getGrid()
+        self.views = {"UpL": self.sheet.images[0],
+                      "UpC": self.sheet.images[1],
+                      "UpR": self.sheet.images[2],
+                      "RightL": self.sheet.images[3],
+                      "RightC": self.sheet.images[4],
+                      "RightR": self.sheet.images[5],
+                      "DownL": self.sheet.images[6],
+                      "DownC": self.sheet.images[7],
+                      "DownR": self.sheet.images[8],
+                      "LeftL": self.sheet.images[9],
+                      "LeftC": self.sheet.images[10],
+                      "LeftR": self.sheet.images[11]}
+    def combineImages(self):
+        #self.sheetImage = py.image.load(v.appearance["Body"])
+        self.sheetImage = py.image.load("Resources/Images/ghostSheet.png")
+        self.sheetImage.blit(py.image.load(v.appearance["Face"]), (0, 0))
+        #self.sheetImage.blit(py.image.load(v.appearance["Dress"]), (0, 0))
+        self.sheetImage.blit(py.image.load(v.appearance["Hair"]), (0, 0))
+        #v.screen.blit(self.sheetImage, (0, 0))
+        self.initSheet()
+    def update(self):
+        if v.playerDead:
+            self.set_rect()
+            self.get_view()
+            skin = self.views[v.p_class.view]
+            size = skin.get_rect()
+            self.image = py.transform.scale(skin, (int(size.width * v.scale * (self.cycle/100)), int(size.height * v.scale * (self.cycle/100))))
+            self.rect.centerx = self.posx + randint(-1, 1)
+            self.rect.centery = self.posy - self.cycle + 100
+            #self.image = self.image.set_alpha(255 - self.cycle + 100)
+            #self.damage_animation()
+            #self.damage_knockback()
+            #self.image.fill((200, 200, 200, 80), special_flags=py.BLEND_RGBA_MULT)
+            v.screen.blit(self.image, self.rect)
+    
+    def get_view(self):
+        for event in v.events:
+            if event.type == py.USEREVENT:
+                if self.view == self.direction + "C":
+                    if self.movFlip:
+                        self.view = self.direction + "R"
+                        self.movFlip = not self.movFlip
+                    else:
+                        self.view = self.direction + "L"
+                        self.movFlip = not self.movFlip
+                elif self.view == self.direction + "R":
+                    self.view = self.direction + "C"
+                elif self.view == self.direction + "L":
+                    self.view = self.direction + "C"
+                else:
+                    self.view = self.direction + "C"
+        if self.moving == False:
+            self.view = self.direction + "C"
+    
+    def set_rect(self):
+        self.rend = self.sheet.images[0]
+        self.rect = self.rend.get_rect()
+        self.rect.centerx = self.posx
+        self.rect.centery = self.posy
+        self.rect.width = self.rend.get_rect().width * v.scale * (self.cycle / 100)
+        self.rect.height = self.rend.get_rect().height * v.scale * (self.cycle / 100)
 
 class HitBox(py.sprite.Sprite):
 

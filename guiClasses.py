@@ -435,8 +435,6 @@ class locationTitle():
 class deathScreen():
     
     def __init__(self):
-        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 60)
-        self.label = self.font.render("You Died!", 1, (255, 255, 255))
         v.PAUSED = True
         v.pauseType = "Death"
         v.playerDead = True
@@ -448,6 +446,14 @@ class deathScreen():
         v.p_class.direction = "Down"
         v.p_class.draw()
         self.pimg = v.p_class.image
+        self.buttons = py.sprite.Group()
+        self.buttons.add(MenuItems.Button("Respawn", (200, 250), 60, (200, 200, 200), (200, 0, 0),  "Resources/Fonts/Vecna.otf", "rs", True))
+        self.buttons.add(MenuItems.Button("Load Save", (440, 250), 60, (200, 200, 200), (200, 0, 0), "Resources/Fonts/Vecna.otf", "ls", True))
+        self.buttons.add(MenuItems.Button("Quit", (320, 320), 60, (200, 200, 200), (200, 0, 0), "Resources/Fonts/Vecna.otf", "qt", True))
+        self.text = py.sprite.Group()
+        self.text.add(MenuItems.textLabel("You Died!", (320, 170), (240, 240, 240), "Resources/Fonts/Vecna.otf", 80, centred=True))
+        
+        
     
     def update(self):
         if v.playerDead:
@@ -458,6 +464,24 @@ class deathScreen():
             self.ghost.cycle = self.cycle
             self.ghost.update()
             v.screen.blit(self.red, (0, 0))
+            if self.cycle > 250:
+                self.buttons.update()
+                self.text.update()
+                for event in v.events:
+                    if event.type == py.MOUSEBUTTONDOWN:
+                        for b in self.buttons:
+                            if b.pressed():
+                                if b.ID == "qt":
+                                    pass
+                                if b.ID == "rs":
+                                    pass
+                                if b.ID == "ls":
+                                    import setupScripts, SaveLoad
+                                    setupScripts.createGroups()
+                                    setupScripts.defaultVariables()
+                                    SaveLoad.Load()
+                                    v.newGame = False
+                                    gameScreens.game()
             if self.cycle < 355:
                 self.cycle += 1
                 

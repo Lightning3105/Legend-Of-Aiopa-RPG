@@ -2,7 +2,13 @@ import pygame as py
 import sys
 from os import listdir
 from entityClasses import SpriteSheet
-import mapMakerVariables as v
+#import mapMakerVariables as v
+
+class vars:
+    def __init__(self):
+        pass
+
+v = vars()
 
 """class toggleButton(py.sprite.Sprite):
     
@@ -45,7 +51,7 @@ class tile(py.sprite.Sprite):
             self.sheetNum = 326
         else:
             self.sheetNum = "-"
-        tiles.add(self)
+        v.tiles.add(self)
         self.overP = False
         self.teleport = None
         self.npc = None
@@ -60,7 +66,7 @@ class tile(py.sprite.Sprite):
                 self.image.fill((100, 0, 255))
             else:
                 if not self.sheetNum == "-":
-                    self.image = tileImages[self.sheetNum]
+                    self.image = v.tileImages[self.sheetNum]
                 else:
                     self.image = py.Surface((0, 0))
             if not self.sheetNum == "-":
@@ -141,7 +147,7 @@ class image(py.sprite.Sprite):
     
     def __init__(self, slotNum):
         super().__init__()
-        self.image = py.transform.scale(tileImages[slotNum], (10, 10))
+        self.image = py.transform.scale(v.tileImages[slotNum], (10, 10))
         self.posx = (slotNum % 32) * 10
         self.posy = int((slotNum / 32)) * 10
         self.slotNum = slotNum
@@ -357,76 +363,76 @@ py.init()
 
 v.screen = py.display.set_mode((920, 630), py.DOUBLEBUF)
 
-v.map = py.Surface((600, 550))
-v.pallet = py.Surface((400, 630))
-v.options = py.Surface((1000, 80))
 
-v.size = (10, 10)
-v.scrollX = 0
-v.scrollY = 0
-v.scale = 2
-v.selected = 0
-v.selectedNpc = {"Image":None, "Name":None, "Health":None, "Attack":None, "Speed":None}
-v.editHitable = False
-v.eLayer = False
-v.layerBool = False
-v.overPlayer = False
-v.hoverPos = None
-v.hoverData = None
-v.makeTeleport = False
-v.makeNPC = False
-
-baseTiles = py.sprite.Group()
-topTiles = py.sprite.Group()
-tiles = py.sprite.Group()
-for x in range(v.size[0]):
-    for y in range(v.size[1]):
-        baseTiles.add(tile(x, y, "base"))
-        topTiles.add(tile(x, y, "top"))
-
-palletImages = py.sprite.Group()
-tileImages = getGrid(tileset)
-for i in range(0, len(tileImages)):
-    palletImages.add(image(i))
-
-npcImages = py.sprite.Group()
-num = 0
-for i in listdir("..\Resources\Images\EnemySkins"):
-    npcImages.add(npcImage(num, "../Resources/Images/EnemySkins/" + i))
-    num += 1
-    
-
-clock = py.time.Clock()
-
-py.time.set_timer(py.USEREVENT, 1000) #1 sec delay
-
-buttons = py.sprite.Group()
-#buttons.add(toggleButton("Hitable", "v.editHitable", (10, 20)))
-#buttons.add(toggleButton("Edit Top Layer", "v.layerBool", (150, 20)))
-#buttons.add(toggleButton("Over Player", "v.overPlayer", (380, 20)))
-#buttons.add(toggleButton("Teleport", "v.makeTeleport", (10, 50)))
-#buttons.add(toggleButton("Make NPC", "v.makeNPC", (170, 50)))
-
-textEdit = False
-outText = ""
 
 def mapEditor():
+    v.map = py.Surface((600, 550))
+    v.pallet = py.Surface((400, 630))
+    v.options = py.Surface((1000, 80))
+    
+    v.size = (10, 10)
+    v.scrollX = 0
+    v.scrollY = 0
+    v.scale = 2
+    v.selected = 0
+    v.selectedNpc = {"Image":None, "Name":None, "Health":None, "Attack":None, "Speed":None}
+    v.editHitable = False
+    v.eLayer = False
+    v.layerBool = False
+    v.overPlayer = False
+    v.hoverPos = None
+    v.hoverData = None
+    v.makeTeleport = False
+    v.makeNPC = False
+    
+    v.baseTiles = py.sprite.Group()
+    v.topTiles = py.sprite.Group()
+    v.tiles = py.sprite.Group()
+    for x in range(v.size[0]):
+        for y in range(v.size[1]):
+            v.baseTiles.add(tile(x, y, "base"))
+            v.topTiles.add(tile(x, y, "top"))
+    
+    v.palletImages = py.sprite.Group()
+    v.tileImages = getGrid(tileset)
+    for i in range(0, len(v.tileImages)):
+        v.palletImages.add(image(i))
+    
+    v.npcImages = py.sprite.Group()
+    num = 0
+    for i in listdir("..\Resources\Images\EnemySkins"):
+        v.npcImages.add(npcImage(num, "../Resources/Images/EnemySkins/" + i))
+        num += 1
+        
+    v.clock = py.time.Clock()
+    
+    py.time.set_timer(py.USEREVENT, 1000) #1 sec delay
+    
+    buttons = py.sprite.Group()
+    #buttons.add(toggleButton("Hitable", "v.editHitable", (10, 20)))
+    #buttons.add(toggleButton("Edit Top Layer", "v.layerBool", (150, 20)))
+    #buttons.add(toggleButton("Over Player", "v.overPlayer", (380, 20)))
+    #buttons.add(toggleButton("Teleport", "v.makeTeleport", (10, 50)))
+    #buttons.add(toggleButton("Make NPC", "v.makeNPC", (170, 50)))
+    
+    textEdit = False
+    outText = ""
     while True:
         py.event.pump()
         v.hoverPos = None
         v.events = []
         v.events = py.event.get()
-        clock.tick(30)
+        v.clock.tick(30)
         v.screen.fill((255, 255, 255))
         v.map.fill((0, 0, 255))
         v.pallet.fill((255, 255, 255))
         v.options.fill((0, 255, 255))
-        baseTiles.update()
-        topTiles.update()
+        v.baseTiles.update()
+        v.topTiles.update()
         if not v.makeNPC:
-            palletImages.update()
+            v.palletImages.update()
         if v.makeNPC:
-            npcImages.update()
+            v.npcImages.update()
         buttons.update()
         
         if v.layerBool:
@@ -466,5 +472,9 @@ def mapEditor():
         toolTip()
         py.display.flip()
 
-mapEditor()
+def startMenu():
+    pass
+
+if __name__ == "__main__":
+    mapEditor()
     

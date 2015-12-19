@@ -148,19 +148,21 @@ class textLabel(py.sprite.Sprite):
         
 class textInput(py.sprite.Sprite):
     
-    def __init__(self, pos, fontSize, characters, num, button="GO"):
+    def __init__(self, pos, fontSize, characters, num, button="GO", default=[], type="str"):
         super().__init__()
         self.font = py.font.Font("../Resources/Fonts/RPGSystem.ttf", fontSize)
         self.rect = py.Rect(pos, self.font.size("W" * characters))
         self.rect.width += 20
         self.rect.height += 20
-        self.string = []
+        self.string = default
         self.pos = pos
         self.characters = characters
         self.shift = False
         self.done = False
         self.button = button
         self.num = num
+        self.type = type
+        self.outText = ""
     
     def draw(self):
         if self.num == v.textNum:
@@ -179,6 +181,7 @@ class textInput(py.sprite.Sprite):
     def update(self):
         global textEdit
         textEdit = True
+        self.outText = "".join(self.string)
         if self.num == v.textNum:
             for event in v.events:
                 if event.type == py.KEYDOWN:
@@ -188,7 +191,15 @@ class textInput(py.sprite.Sprite):
                                 let = py.key.name(event.key).upper()
                             else:
                                 let = py.key.name(event.key)
-                            self.string.append(let)
+                            allow = True
+                            if self.type == "int":
+                                try:
+                                    int(let)
+                                    allow = True
+                                except:
+                                    allow = False
+                            if allow:        
+                                self.string.append(let)
                         if event.key == py.K_SPACE:
                             self.string.append(" ")
                     if event.key == py.K_BACKSPACE:
@@ -215,3 +226,36 @@ class textInput(py.sprite.Sprite):
                 v.textNum = self.num
         
         #py.display.flip()
+
+class toggleButton(py.sprite.Sprite):
+    
+    def __init__(self, type, num):
+        super().__init__()
+        self.type = type
+        self.num = num
+        if self.type == "layer":
+            self.image1 = py.image.load("Resources/Bottom Layer.png")
+            self.image1 = py.transform.scale(self.image1, (50, 50))
+            
+            self.image2 = py.image.load("Resources/Top Layer.png")
+            self.image2 = py.transform.scale(self.image2, (50, 50))
+            size = (50, 50)
+        self.rect = py.Rect((20 + 100 * num, 10), size)
+    
+    def update(self):
+        if self.type == "layer":
+            if v.eLayer == "base":
+                self.image = self.image1
+            else:
+                self.image = self.image2
+            if self.rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1] - 550)):
+                for event in v.events:
+                    if event.type == py.MOUSEBUTTONDOWN:
+                        if v.eLayer == "base":
+                            v.eLayer = "top"
+                        else:
+                            v.eLayer = "base"
+        
+        py.draw.rect(v.options, (0, 0, 255), self.rect)
+        py.draw.rect(v.options, (0, 0, 0), self.rect, 2)
+        v.options.blit(self.image, self.rect)

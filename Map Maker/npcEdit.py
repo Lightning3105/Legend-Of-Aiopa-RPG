@@ -33,7 +33,7 @@ class npcImage(py.sprite.Sprite):
 def createNPC():
     font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
     label = font.render("NPC Name:", 1, (0, 0, 0))
-    inp = textInput((300, 275), 20, 16)
+    inp = mapMenuItems.textInput((300, 275), 20, 16)
     while not inp.done:
         v.screen.blit(label, (300, 200))
         inp.update()
@@ -42,7 +42,7 @@ def createNPC():
     v.screen.fill((255, 255, 255))
     
     label = font.render("NPC Attack:", 1, (0, 0, 0))
-    inp = textInput((300, 275), 20, 2)
+    inp = mapMenuItems.textInput((300, 275), 20, 2)
     while not inp.done:
         v.screen.blit(label, (300, 200))
         inp.update()
@@ -51,7 +51,7 @@ def createNPC():
     v.screen.fill((255, 255, 255))
     
     label = font.render("NPC Health:", 1, (0, 0, 0))
-    inp = textInput((300, 275), 20, 2)
+    inp = mapMenuItems.textInput((300, 275), 20, 2)
     while not inp.done:
         v.screen.blit(label, (300, 200))
         inp.update()
@@ -60,7 +60,7 @@ def createNPC():
     v.screen.fill((255, 255, 255))
     
     label = font.render("NPC Speed:", 1, (0, 0, 0))
-    inp = textInput((300, 275), 20, 2)
+    inp = mapMenuItems.textInput((300, 275), 20, 2)
     while not inp.done:
         v.screen.blit(label, (300, 200))
         inp.update()

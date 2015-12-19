@@ -74,7 +74,6 @@ def mapEditor():
     v.pallet = py.Surface((400, 630))
     v.options = py.Surface((1000, 80))
     
-    v.size = (10, 10)
     v.scrollX = 0
     v.scrollY = 0
     v.scale = 2
@@ -118,9 +117,8 @@ def mapEditor():
     #buttons.add(toggleButton("Over Player", "v.overPlayer", (380, 20)))
     #buttons.add(toggleButton("Teleport", "v.makeTeleport", (10, 50)))
     #buttons.add(toggleButton("Make NPC", "v.makeNPC", (170, 50)))
+    buttons.add(mapMenuItems.toggleButton("layer", 0))
     
-    textEdit = False
-    outText = ""
     while True:
         py.event.pump()
         v.hoverPos = None
@@ -128,7 +126,7 @@ def mapEditor():
         v.events = py.event.get()
         v.clock.tick(30)
         v.screen.fill((255, 255, 255))
-        v.map.fill((0, 0, 255))
+        v.map.fill((0, 255, 255))
         v.pallet.fill((255, 255, 255))
         v.options.fill((0, 255, 255))
         v.baseTiles.update()
@@ -138,11 +136,6 @@ def mapEditor():
         if v.makeNPC:
             v.npcImages.update()
         buttons.update()
-        
-        if v.layerBool:
-            v.eLayer = "top"
-        else:
-            v.eLayer = "base"
     
         keysPressed = py.key.get_pressed()
         speed = 20
@@ -195,16 +188,55 @@ def startMenu():
         v.screen.fill((0, 255, 255))
         texts.update()
         buttons.update()
-        ti.update()
+        py.display.flip()
+        
+        for event in v.events:
+            if event.type == py.MOUSEBUTTONDOWN:
+                for b in buttons:
+                    if b.pressed():
+                        if b.ID == "NM":
+                            setup()
+                        if b.ID == "LM":
+                            pass
+
+def setup():
+    tinps = py.sprite.Group()
+    texts = py.sprite.Group()
+    tinps.add(mapMenuItems.textInput((500, 100), 60, 2, 1, button=None, default=['1', '0'], type="int"))
+    texts.add(mapMenuItems.textLabel("Map Width:", (240, 110), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 60))
+    
+    tinps.add(mapMenuItems.textInput((500, 180), 60, 2, 2, button=None, default=['1', '0'], type="int"))
+    texts.add(mapMenuItems.textLabel("Map Height:", (240, 190), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 60))
+    
+    buttons = py.sprite.Group()
+    buttons.add(mapMenuItems.button("Back", (10, 550),80, (255, 255, 255), (255, 0, 0), "../Resources/Fonts/RPGSystem.ttf", "B"))
+    buttons.add(mapMenuItems.button("Continue", (690, 550), 70, (255, 255, 255), (255, 0, 0), "../Resources/Fonts/RPGSystem.ttf", "C"))
+    
+    while True:
+        py.event.pump()
+        v.events = []
+        v.events = py.event.get()
+        v.screen.fill((0, 255, 0))
+        tinps.update()
+        texts.update()
+        buttons.update()
         py.display.flip()
         
         for b in buttons:
             if b.pressed():
-                if b.ID == "NM":
-                    pass
-                if b.ID == "LM":
-                    pass
-
+                if py.mouse.get_pressed()[0]:
+                    if b.ID == "B":
+                        startMenu()
+                        return
+                    if b.ID == "C":
+                        for i in tinps:
+                            if i.num == 1:
+                                x = int(i.outText)
+                            if i.num == 2:
+                                y = int(i.outText)
+                        v.size = (x, y)
+                        mapEditor()
+                        return
 if __name__ == "__main__":
     startMenu()
     

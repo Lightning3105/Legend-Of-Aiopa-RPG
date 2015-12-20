@@ -246,6 +246,13 @@ class toggleButton(py.sprite.Sprite):
             self.image1 = py.image.load("Resources/hitBox.png")
             self.image1 = py.transform.scale(self.image1, (50, 50))
             size = (50, 50)
+        if self.type == "over":
+            self.image1 = py.image.load("Resources/Over Player.png")
+            self.image1 = py.transform.scale(self.image1, (50, 50))
+            
+            self.image2 = py.image.load("Resources/Under Player.png")
+            self.image2 = py.transform.scale(self.image2, (50, 50))
+            size = (50, 50)
         self.rect = py.Rect((20 + 100 * num, 10), size)
         self.state = None
         self.labels = py.sprite.Group()
@@ -274,11 +281,25 @@ class toggleButton(py.sprite.Sprite):
                 self.image.fill((100, 100, 100), special_flags=py.BLEND_RGBA_MULT)
             else:
                 self.image = self.image1
-            if self.rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1] - 550)):
-                for event in v.events:
-                    if event.type == py.MOUSEBUTTONDOWN:
-                        v.editHitable = not v.editHitable
+            if v.eLayer == "base":
+                if self.rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1] - 550)):
+                    for event in v.events:
+                        if event.type == py.MOUSEBUTTONDOWN:
+                            v.editHitable = not v.editHitable
         
+        if self.type == "over":
+            self.state = v.overPlayer
+            if v.overPlayer:
+                self.image = self.image1.copy()
+            else:
+                self.image = self.image2.copy()
+            if v.eLayer == "top":
+                if self.rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1] - 550)):
+                    for event in v.events:
+                        if event.type == py.MOUSEBUTTONDOWN:
+                            v.overPlayer = not v.overPlayer
+            else:
+                self.image.fill((100, 100, 100), special_flags=py.BLEND_RGBA_MULT)
         
         
         if self.rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1] - 550)):

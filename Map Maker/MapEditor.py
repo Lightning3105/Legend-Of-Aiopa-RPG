@@ -118,6 +118,7 @@ def mapEditor():
     #buttons.add(toggleButton("Make NPC", "v.makeNPC", (170, 50)))
     buttons.add(mapMenuItems.toggleButton("layer", 0))
     buttons.add(mapMenuItems.toggleButton("hitbox", 1))
+    buttons.add(mapMenuItems.toggleButton("over", 2))
     
     while True:
         py.event.pump()

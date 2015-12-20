@@ -1,5 +1,6 @@
 import mapMakerVariables as v
 import pygame as py
+import mapMenuItems
 
 class tile(py.sprite.Sprite):
     
@@ -54,9 +55,9 @@ class tile(py.sprite.Sprite):
                     c = (0, 255, 0)
                 elif self.layer == "top" and self.npc != None:
                     c = (255, 255, 0)
-                    img = SpriteSheet(self.npc["Image"], 4, 3).images[1]
+                    img = mapMenuItems.SpriteSheet(self.npc["Image"], 4, 3).images[1]
                     img.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)
-                    img = py.transform.v.scale(img, (int(30 * v.scale), int(30 * v.scale)))
+                    img = py.transform.scale(img, (int(30 * v.scale), int(30 * v.scale)))
                     v.map.blit(img, self.rect)
                     
                 if c != None:
@@ -88,7 +89,7 @@ class tile(py.sprite.Sprite):
                             self.overP = not self.overP
                             self.waiting = True
                         if self.layer == "top" and v.makeTeleport:
-                            tpid = textInput((300, 275), 40, 3)
+                            tpid = mapMenuItems.textInput((300, 275), 40, 3)
                             font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
                             label = font.render("Teleport ID:", 1, (0, 0, 0))
                             while not tpid.done:

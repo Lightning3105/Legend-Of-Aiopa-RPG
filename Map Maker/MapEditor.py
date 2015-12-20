@@ -80,8 +80,7 @@ def mapEditor():
     v.selected = 0
     v.selectedNpc = {"Image":None, "Name":None, "Health":None, "Attack":None, "Speed":None}
     v.editHitable = False
-    v.eLayer = False
-    v.layerBool = False
+    v.eLayer = "base"
     v.overPlayer = False
     v.hoverPos = None
     v.hoverData = None
@@ -118,6 +117,7 @@ def mapEditor():
     #buttons.add(toggleButton("Teleport", "v.makeTeleport", (10, 50)))
     #buttons.add(toggleButton("Make NPC", "v.makeNPC", (170, 50)))
     buttons.add(mapMenuItems.toggleButton("layer", 0))
+    buttons.add(mapMenuItems.toggleButton("hitbox", 1))
     
     while True:
         py.event.pump()
@@ -128,7 +128,7 @@ def mapEditor():
         v.screen.fill((255, 255, 255))
         v.map.fill((0, 255, 255))
         v.pallet.fill((255, 255, 255))
-        v.options.fill((0, 255, 255))
+        v.options.fill((0, 0, 255))
         v.baseTiles.update()
         v.topTiles.update()
         if not v.makeNPC:

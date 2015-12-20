@@ -144,6 +144,8 @@ class textLabel(py.sprite.Sprite):
             pos[1] -= font.size(self.text)[1] / 2
             pos = tuple(pos)
     
+        self.image = label
+        self.rect = pos
         v.screen.blit(label, pos)
         
 class textInput(py.sprite.Sprite):
@@ -240,10 +242,19 @@ class toggleButton(py.sprite.Sprite):
             self.image2 = py.image.load("Resources/Top Layer.png")
             self.image2 = py.transform.scale(self.image2, (50, 50))
             size = (50, 50)
+        if self.type == "hitbox":
+            self.image1 = py.image.load("Resources/hitBox.png")
+            self.image1 = py.transform.scale(self.image1, (50, 50))
+            size = (50, 50)
         self.rect = py.Rect((20 + 100 * num, 10), size)
+        self.state = None
+        self.labels = py.sprite.Group()
+        self.labels.add(textLabel(self.type + ":", (self.rect.midbottom[0], self.rect.midbottom[1] + 10), (255, 255, 255), "../Resources/Fonts/RPGSystem.ttf", 30, variable=False, centred=True))
+        self.labels.add(textLabel("publicState", (self.rect.midbottom[0] + 40, self.rect.midbottom[1] - 5), (255, 255, 255), "../Resources/Fonts/RPGSystem.ttf", 30, variable=True, centred=False))
     
     def update(self):
         if self.type == "layer":
+            self.state = v.eLayer
             if v.eLayer == "base":
                 self.image = self.image1
             else:
@@ -256,6 +267,26 @@ class toggleButton(py.sprite.Sprite):
                         else:
                             v.eLayer = "base"
         
-        py.draw.rect(v.options, (0, 0, 255), self.rect)
+        if self.type == "hitbox":
+            self.state = v.editHitable
+            if v.editHitable == False:
+                self.image = self.image1.copy()
+                self.image.fill((100, 100, 100), special_flags=py.BLEND_RGBA_MULT)
+            else:
+                self.image = self.image1
+            if self.rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1] - 550)):
+                for event in v.events:
+                    if event.type == py.MOUSEBUTTONDOWN:
+                        v.editHitable = not v.editHitable
+        
+        
+        
+        if self.rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1] - 550)):
+            py.draw.rect(v.options, (200, 200, 0), self.rect)
+            v.publicState = self.state
+            self.labels.update()
+            self.labels.draw(v.options)
+        else:
+            py.draw.rect(v.options, (200, 200, 200), self.rect)
         py.draw.rect(v.options, (0, 0, 0), self.rect, 2)
         v.options.blit(self.image, self.rect)

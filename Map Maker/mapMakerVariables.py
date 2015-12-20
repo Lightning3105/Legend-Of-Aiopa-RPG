@@ -26,3 +26,4 @@ editHitable = False
 overPlayer = False
 makeTeleport = False
 publicState = None
+editTeleport = None

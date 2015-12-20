@@ -253,6 +253,10 @@ class toggleButton(py.sprite.Sprite):
             self.image2 = py.image.load("Resources/Under Player.png")
             self.image2 = py.transform.scale(self.image2, (50, 50))
             size = (50, 50)
+        if self.type == "teleport":
+            self.image1 = py.image.load("Resources/Teleport.png")
+            self.image1 = py.transform.scale(self.image1, (50, 50))
+            size = (50, 50)
         self.rect = py.Rect((20 + 100 * num, 10), size)
         self.state = None
         self.labels = py.sprite.Group()
@@ -301,6 +305,18 @@ class toggleButton(py.sprite.Sprite):
             else:
                 self.image.fill((100, 100, 100), special_flags=py.BLEND_RGBA_MULT)
         
+        if self.type == "teleport":
+            self.state = v.makeTeleport
+            if v.makeTeleport == False:
+                self.image = self.image1.copy()
+                self.image.fill((100, 100, 100), special_flags=py.BLEND_RGBA_MULT)
+            else:
+                self.image = self.image1
+            if v.eLayer == "top":
+                if self.rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1] - 550)):
+                    for event in v.events:
+                        if event.type == py.MOUSEBUTTONDOWN:
+                            v.makeTeleport = not v.makeTeleport
         
         if self.rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1] - 550)):
             py.draw.rect(v.options, (200, 200, 0), self.rect)
@@ -311,3 +327,19 @@ class toggleButton(py.sprite.Sprite):
             py.draw.rect(v.options, (200, 200, 200), self.rect)
         py.draw.rect(v.options, (0, 0, 0), self.rect, 2)
         v.options.blit(self.image, self.rect)
+
+class makeTeleport():
+    
+    def __init__(self):
+        self.back = py.Surface((200, 200))
+        self.back.fill((100, 100, 0))
+        v.textNum = 1
+        self.tinps = py.sprite.Group()
+        self.texts = py.sprite.Group()
+        self.tinps.add(textInput((100, 350), 30, 2, 1, button=None, default=[], type="int"))
+        self.texts.add(textLabel("Map ID:", (10, 360), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 30))
+    
+    def update(self):
+        v.screen.blit(self.back, (0, 330))
+        self.tinps.update()
+        self.texts.update()

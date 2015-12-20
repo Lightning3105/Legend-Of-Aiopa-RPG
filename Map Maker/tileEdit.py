@@ -89,14 +89,15 @@ class tile(py.sprite.Sprite):
                             self.overP = not self.overP
                             self.waiting = True
                         if self.layer == "top" and v.makeTeleport:
-                            tpid = mapMenuItems.textInput((300, 275), 40, 3)
+                            """tpid = mapMenuItems.textInput((300, 275), 40, 3)
                             font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
                             label = font.render("Teleport ID:", 1, (0, 0, 0))
                             while not tpid.done:
                                 v.screen.blit(label, (300, 200))
                                 tpid.update()
                                 py.display.flip()
-                            self.teleport = outText
+                            self.teleport = outText"""
+                            v.editTeleport = mapMenuItems.makeTeleport()
                             v.makeTeleport = False
                             self.waiting = True
                         if self.layer == "top" and v.makeNPC:

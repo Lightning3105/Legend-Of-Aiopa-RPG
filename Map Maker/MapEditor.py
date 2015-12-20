@@ -119,6 +119,7 @@ def mapEditor():
     buttons.add(mapMenuItems.toggleButton("layer", 0))
     buttons.add(mapMenuItems.toggleButton("hitbox", 1))
     buttons.add(mapMenuItems.toggleButton("over", 2))
+    buttons.add(mapMenuItems.toggleButton("teleport", 3))
     
     while True:
         py.event.pump()
@@ -163,10 +164,13 @@ def mapEditor():
             if event.type == py.QUIT:
                 save()
                 sys.exit()
-                    
+        
+        
         v.screen.blit(v.map, (0, 0))
         v.screen.blit(v.options, (0, 550))
         v.screen.blit(v.pallet, (600, 0))
+        if not v.editTeleport == None:
+            v.editTeleport.update()
         mapMenuItems.toolTip()
         py.display.flip()
 

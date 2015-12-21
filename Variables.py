@@ -37,7 +37,6 @@ map1 = []
 MAP = None
 mapNum = 1
 savedMap = None
-teleports = {"12":(1, -90, 110), "13": (1, -90, -80), "2":(2, -90, -80), "3":(3, -90, 110)}
 mapMeta = {"1": {"Biome": "Plains", "Name": "Arashi Plains"}, "2": {"Biome": "Plains", "Name": "Arashi Plains North"}, "3": {"Biome": "Plains", "Name": "Arashi Plains South"}}
 topTiles = None
 hits = None

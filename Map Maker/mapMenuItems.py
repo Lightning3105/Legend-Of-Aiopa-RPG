@@ -290,6 +290,8 @@ class toggleButton(py.sprite.Sprite):
                     for event in v.events:
                         if event.type == py.MOUSEBUTTONDOWN:
                             v.editHitable = not v.editHitable
+            else:
+                self.image.fill((50, 50, 50), special_flags=py.BLEND_RGBA_MULT)
         
         if self.type == "over":
             self.state = v.overPlayer
@@ -303,7 +305,7 @@ class toggleButton(py.sprite.Sprite):
                         if event.type == py.MOUSEBUTTONDOWN:
                             v.overPlayer = not v.overPlayer
             else:
-                self.image.fill((100, 100, 100), special_flags=py.BLEND_RGBA_MULT)
+                self.image.fill((50, 50, 50), special_flags=py.BLEND_RGBA_MULT)
         
         if self.type == "teleport":
             self.state = v.makeTeleport
@@ -317,7 +319,8 @@ class toggleButton(py.sprite.Sprite):
                     for event in v.events:
                         if event.type == py.MOUSEBUTTONDOWN:
                             v.makeTeleport = not v.makeTeleport
-        
+            else:
+                self.image.fill((50, 50, 50), special_flags=py.BLEND_RGBA_MULT)
         if self.rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1] - 550)):
             py.draw.rect(v.options, (200, 200, 0), self.rect)
             v.publicState = self.state
@@ -338,8 +341,28 @@ class makeTeleport():
         self.texts = py.sprite.Group()
         self.tinps.add(textInput((100, 350), 30, 2, 1, button=None, default=[], type="int"))
         self.texts.add(textLabel("Map ID:", (10, 360), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 30))
+        
+        self.tinps.add(textInput((100, 400), 30, 3, 2, button=None, default=[], type="int"))
+        self.texts.add(textLabel("X Pos:", (10, 410), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 30))
+        
+        self.tinps.add(textInput((100, 450), 30, 3, 3, button=None, default=[], type="int"))
+        self.texts.add(textLabel("Y Pos:", (10, 460), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 30))
+    
+        self.go = button("Enter", (160, 500), 30, (200, 200, 200), (200, 100, 0), "../Resources/Fonts/RPGSystem.ttf", "GO")
+        self.tpOut = []
     
     def update(self):
         v.screen.blit(self.back, (0, 330))
         self.tinps.update()
         self.texts.update()
+        self.go.update()
+        if self.go.pressed() and py.mouse.get_pressed()[0]:
+            self.tpOut = [0, 0, 0]
+            for i in self.tinps:
+                if i.num == 1:
+                    self.tpOut[0] = int(i.outText)
+                if i.num == 2:
+                    self.tpOut[1] = int(i.outText)
+                if i.num == 3:
+                    self.tpOut[2] = int(i.outText)
+            self.tpOut = tuple(self.tpOut)

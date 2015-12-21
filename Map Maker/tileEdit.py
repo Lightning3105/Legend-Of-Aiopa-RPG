@@ -23,6 +23,7 @@ class tile(py.sprite.Sprite):
         self.overP = False
         self.teleport = None
         self.npc = None
+        self.makingTeleport = False
     
     def update(self):
         self.rect = py.Rect(0, 0, 30 * v.scale, 30 * v.scale)
@@ -100,6 +101,7 @@ class tile(py.sprite.Sprite):
                             v.editTeleport = mapMenuItems.makeTeleport()
                             v.makeTeleport = False
                             self.waiting = True
+                            self.makingTeleport = True
                         if self.layer == "top" and v.makeNPC:
                             if v.selectedNpc != self.npc:
                                 self.npc = v.selectedNpc.copy()
@@ -110,6 +112,12 @@ class tile(py.sprite.Sprite):
                         self.sheetNum = "-"
             if not py.mouse.get_pressed()[0]:
                 self.waiting = False
+            
+            if self.makingTeleport:
+                if v.editTeleport.tpOut != []:
+                    self.teleport = v.editTeleport.tpOut
+                    v.editTeleport = None
+                    self.makingTeleport = False
         
         
 class image(py.sprite.Sprite):

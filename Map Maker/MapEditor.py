@@ -111,10 +111,6 @@ def mapEditor():
     py.time.set_timer(py.USEREVENT, 1000) #1 sec delay
     
     buttons = py.sprite.Group()
-    #buttons.add(toggleButton("Hitable", "v.editHitable", (10, 20)))
-    #buttons.add(toggleButton("Edit Top Layer", "v.layerBool", (150, 20)))
-    #buttons.add(toggleButton("Over Player", "v.overPlayer", (380, 20)))
-    #buttons.add(toggleButton("Teleport", "v.makeTeleport", (10, 50)))
     #buttons.add(toggleButton("Make NPC", "v.makeNPC", (170, 50)))
     buttons.add(mapMenuItems.toggleButton("layer", 0))
     buttons.add(mapMenuItems.toggleButton("hitbox", 1))

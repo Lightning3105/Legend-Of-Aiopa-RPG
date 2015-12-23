@@ -28,3 +28,5 @@ overPlayer = False
 makeTeleport = False
 publicState = None
 editTeleport = None
+totalMap = {}
+currentID = 0

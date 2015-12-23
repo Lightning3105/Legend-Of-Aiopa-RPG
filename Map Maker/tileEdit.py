@@ -4,25 +4,28 @@ import mapMenuItems
 
 class tile(py.sprite.Sprite):
     
-    def __init__(self, posx, posy, layer):
+    def __init__(self, posx, posy, layer, num=None, overP=False, teleport=None, npc=None, hit=False):
         super().__init__()
         self.posx = posx
         self.posy = posy
         self.image = py.Surface((30, 30))
         self.image.fill((100, 0, 255))
         self.tileNumber = -1
-        self.hitable = False
+        self.hitable = hit
         self.waiting = False
         self.layer = layer
         self.hovered = False
-        if self.layer == "base":
-            self.sheetNum = 326
+        if num == None:
+            if self.layer == "base":
+                self.sheetNum = 326
+            else:
+                self.sheetNum = "-"
         else:
-            self.sheetNum = "-"
+            self.sheetNum = num
         v.tiles.add(self)
-        self.overP = False
-        self.teleport = None
-        self.npc = None
+        self.overP = overP
+        self.teleport = teleport
+        self.npc = npc
         self.makingTeleport = False
     
     def update(self):
@@ -35,7 +38,7 @@ class tile(py.sprite.Sprite):
                 self.image.fill((100, 0, 255))
             else:
                 if not self.sheetNum == "-":
-                    self.image = v.tileImages[self.sheetNum]
+                    self.image = v.tileImages[int(self.sheetNum)]
                 else:
                     self.image = py.Surface((0, 0))
             if not self.sheetNum == "-":

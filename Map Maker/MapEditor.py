@@ -3,6 +3,7 @@ import sys
 from os import listdir
 import mapMenuItems, npcEdit, tileEdit
 import mapMakerVariables as v
+from ast import literal_eval
 
 class vars:
     def __init__(self):
@@ -69,6 +70,50 @@ def save():
         print(str(i) + ",")
     print("]]")
 
+def load():
+    print("LOAD")
+    from Resources import mapFile
+    themap = mapFile.map["1"][1]
+    v.topTiles = py.sprite.Group()
+    v.baseTiles = py.sprite.Group()
+    v.tiles = py.sprite.Group()
+    for x in range(len(themap[0])):
+        for y in range(len(themap[1])):
+            #print(themap[y][x])
+            tp = None
+            ep = False
+            nc = None
+            if "+" in themap[y][x]:
+                ep = True
+            if "&" in themap[y][x]:
+                tp = literal_eval(themap[y][x].replace('&', "").split("|")[0])
+            if "%" in themap[y][x]:
+                nc = literal_eval(themap[y][x].replace('%', "").split("|")[0])
+            
+            if "|" in themap[y][x]:
+                img = themap[y][x].split("|")[1]
+            else:
+                img = themap[y][x]
+            v.topTiles.add(tileEdit.tile(x, y, "base", img, ep, tp, nc))
+    
+    themap = mapFile.map["1"][0]
+    for x in range(len(themap[0])):
+        for y in range(len(themap[1])):
+            print(themap[y][x])
+            if "#" in themap[y][x]:
+                hb = True
+            else:
+                hb = False
+            
+            if "|" in themap[y][x]:
+                img = themap[y][x].split("|")[1]
+            else:
+                img = themap[y][x]
+            img = img.strip("#")
+            v.baseTiles.add(tileEdit.tile(x, y, "base", img, ep, tp, nc, hb))
+    
+    mapEditor()
+
 def mapEditor():
     v.map = py.Surface((600, 550))
     v.pallet = py.Surface((400, 630))
@@ -86,14 +131,6 @@ def mapEditor():
     v.hoverData = None
     v.makeTeleport = False
     v.makeNPC = False
-    
-    v.baseTiles = py.sprite.Group()
-    v.topTiles = py.sprite.Group()
-    v.tiles = py.sprite.Group()
-    for x in range(v.size[0]):
-        for y in range(v.size[1]):
-            v.baseTiles.add(tileEdit.tile(x, y, "base"))
-            v.topTiles.add(tileEdit.tile(x, y, "top"))
     
     v.palletImages = py.sprite.Group()
     v.tileImages = tileEdit.getGrid(tileset)
@@ -202,7 +239,7 @@ def startMenu():
                         if b.ID == "NM":
                             setup()
                         if b.ID == "LM":
-                            pass
+                            load()
 
 def setup():
     tinps = py.sprite.Group()
@@ -212,6 +249,9 @@ def setup():
     
     tinps.add(mapMenuItems.textInput((500, 180), 60, 2, 2, button=None, default=['1', '0'], type="int"))
     texts.add(mapMenuItems.textLabel("Map Height:", (240, 190), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 60))
+    
+    tinps.add(mapMenuItems.textInput((500, 260), 60, 2, 3, button=None, default=['1', '0'], type="int"))
+    texts.add(mapMenuItems.textLabel("Map ID:", (240, 270), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 60))
     
     buttons = py.sprite.Group()
     buttons.add(mapMenuItems.button("Back", (10, 550),80, (255, 255, 255), (255, 0, 0), "../Resources/Fonts/RPGSystem.ttf", "B"))
@@ -239,7 +279,16 @@ def setup():
                                 x = int(i.outText)
                             if i.num == 2:
                                 y = int(i.outText)
+                            if i.num == 3:
+                                v.currentID = int(i.outText)
                         v.size = (x, y)
+                        v.baseTiles = py.sprite.Group()
+                        v.topTiles = py.sprite.Group()
+                        v.tiles = py.sprite.Group()
+                        for x in range(v.size[0]):
+                            for y in range(v.size[1]):
+                                v.baseTiles.add(tileEdit.tile(x, y, "base"))
+                                v.topTiles.add(tileEdit.tile(x, y, "top"))
                         mapEditor()
                         return
 if __name__ == "__main__":

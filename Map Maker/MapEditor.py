@@ -134,17 +134,18 @@ def mapEditor():
         if v.makeNPC:
             v.npcImages.update()
         buttons.update()
-    
-        keysPressed = py.key.get_pressed()
-        speed = 20
-        if keysPressed[py.K_d]:
-            v.scrollX += speed
-        if keysPressed[py.K_a]:
-            v.scrollX -= speed
-        if keysPressed[py.K_w]:
-            v.scrollY += speed
-        if keysPressed[py.K_s]:
-            v.scrollY -= speed
+        
+        if not v.pauseEdit:
+            keysPressed = py.key.get_pressed()
+            speed = 20
+            if keysPressed[py.K_d]:
+                v.scrollX += speed
+            if keysPressed[py.K_a]:
+                v.scrollX -= speed
+            if keysPressed[py.K_w]:
+                v.scrollY += speed
+            if keysPressed[py.K_s]:
+                v.scrollY -= speed
         for event in v.events:
             if event.type == py.MOUSEBUTTONUP:
                 if event.button == 4:
@@ -167,6 +168,9 @@ def mapEditor():
         v.screen.blit(v.pallet, (600, 0))
         if not v.editTeleport == None:
             v.editTeleport.update()
+            v.pauseEdit = True
+        else:
+            v.pauseEdit = False
         mapMenuItems.toolTip()
         py.display.flip()
 

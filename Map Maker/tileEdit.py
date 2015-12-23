@@ -69,19 +69,21 @@ class tile(py.sprite.Sprite):
             if self.rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1])):
                 if v.map.get_rect().collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1])):
                     if v.eLayer == self.layer:
-                        self.hovered = True
-                        h = py.Surface((int(30 * v.scale), int(30 * v.scale))).convert_alpha()
-                        h.fill((255, 255, 255, 100))
-                        v.map.blit(h, self.rect)
+                        if not v.pauseEdit:
+                            self.hovered = True
+                            h = py.Surface((int(30 * v.scale), int(30 * v.scale))).convert_alpha()
+                            h.fill((255, 255, 255, 100))
+                            v.map.blit(h, self.rect)
             else:
                 self.hovered = False
             if self.hovered:
                 v.hoverPos = (int(self.posx - (v.size[0] / 2)), int(self.posy - (v.size[1] / 2)))
                 v.hoverData = {"Teleport": self.teleport, "Skin": self.sheetNum, "Layer":self.layer, "Hitable":self.hitable}
                 if py.mouse.get_pressed()[0]:
-                    if not v.editHitable and not v.overPlayer and not v.makeTeleport and not v.makeNPC:
+                    if not v.editHitable and not v.overPlayer and not v.makeTeleport and not v.makeNPC and not self.waiting:
                         if v.eLayer == self.layer:
                             self.sheetNum = v.selected
+                            print(v.makeTeleport)
                     elif not self.waiting:
                         if self.layer == "base" and v.editHitable:
                             self.hitable = not self.hitable

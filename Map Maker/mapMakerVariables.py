@@ -1,3 +1,4 @@
+pauseEdit = False
 textNum = 1
 size = (10, 10)
 baseTiles = None

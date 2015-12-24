@@ -1,5 +1,6 @@
 import mapMakerVariables as v
 import pygame as py
+import MapEditor
 
 def toolTip():
     if not v.hoverPos == None:
@@ -333,22 +334,23 @@ class toggleButton(py.sprite.Sprite):
 
 class makeTeleport():
     
-    def __init__(self):
+    def __init__(self, one='', two='', three=''):
         self.back = py.Surface((200, 200))
         self.back.fill((100, 100, 0))
         v.textNum = 1
         self.tinps = py.sprite.Group()
         self.texts = py.sprite.Group()
-        self.tinps.add(textInput((100, 350), 30, 2, 1, button=None, default=[], type="int"))
+        self.tinps.add(textInput((100, 350), 30, 2, 1, button=None, default=list(str(one)), type="int"))
         self.texts.add(textLabel("Map ID:", (10, 360), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 30))
         
-        self.tinps.add(textInput((100, 400), 30, 3, 2, button=None, default=[], type="int"))
+        self.tinps.add(textInput((100, 400), 30, 3, 2, button=None, default=list(str(two)), type="int"))
         self.texts.add(textLabel("X Pos:", (10, 410), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 30))
         
-        self.tinps.add(textInput((100, 450), 30, 3, 3, button=None, default=[], type="int"))
+        self.tinps.add(textInput((100, 450), 30, 3, 3, button=None, default=list(str(three)), type="int"))
         self.texts.add(textLabel("Y Pos:", (10, 460), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 30))
     
-        self.go = button("Enter", (160, 500), 30, (200, 200, 200), (200, 100, 0), "../Resources/Fonts/RPGSystem.ttf", "GO")
+        self.go = button("Enter", (140, 500), 30, (200, 200, 200), (200, 100, 0), "../Resources/Fonts/RPGSystem.ttf", "GO")
+        self.tp = button("Go to", (80, 500), 30, (200, 200, 200), (200, 100, 200), "../Resources/Fonts/RPGSystem.ttf", "TP")
         self.tpOut = []
     
     def update(self):
@@ -356,13 +358,26 @@ class makeTeleport():
         self.tinps.update()
         self.texts.update()
         self.go.update()
-        if self.go.pressed() and py.mouse.get_pressed()[0]:
-            self.tpOut = [0, 0, 0]
-            for i in self.tinps:
-                if i.num == 1:
-                    self.tpOut[0] = int(i.outText)
-                if i.num == 2:
-                    self.tpOut[1] = int(i.outText)
-                if i.num == 3:
-                    self.tpOut[2] = int(i.outText)
-            self.tpOut = tuple(self.tpOut)
+        self.tp.update()
+        if py.mouse.get_pressed()[0]:
+            if self.go.pressed() or self.tp.pressed():
+                self.tpOut = [0, 0, 0]
+                for i in self.tinps:
+                    if i.num == 1:
+                        self.tpOut[0] = int(i.outText)
+                    if i.num == 2:
+                        self.tpOut[1] = int(i.outText)
+                    if i.num == 3:
+                        self.tpOut[2] = int(i.outText)
+                self.tpOut = tuple(self.tpOut)
+            if self.tp.pressed():
+                MapEditor.save()
+                if str(self.tpOut[0]) in v.totalMap:
+                    v.currentID = self.tpOut[0]
+                    v.editTeleport = None
+                    MapEditor.load()
+                else:
+                    v.tempId = self.tpOut[0]
+                    v.editTeleport = None
+                    MapEditor.setup()
+                    

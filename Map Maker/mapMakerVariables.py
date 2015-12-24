@@ -29,4 +29,5 @@ makeTeleport = False
 publicState = None
 editTeleport = None
 totalMap = {}
-currentID = 0
+currentID = 1
+tempId = 0

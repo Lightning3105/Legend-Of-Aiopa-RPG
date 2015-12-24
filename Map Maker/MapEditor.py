@@ -37,22 +37,28 @@ class vars:
 tileset = py.image.load("../Resources/Images/Main_Tileset.png")
 
 def save():
-    outMap = []
+    outMap1 = []
     for y in range(v.size[1]):
-        outMap.append([])
+        outMap1.append([])
         for x in range(v.size[0]):
-            outMap[y].append("")
+            outMap1[y].append("")
     for tile in v.baseTiles:
         if tile.hitable:
             h = "#"
         else:
             h = ""
-        outMap[tile.posy][tile.posx] = h + str(tile.sheetNum)
+        outMap1[tile.posy][tile.posx] = h + str(tile.sheetNum)
     
-    print("[[")
-    for i in outMap:
+    """print("[[")
+    for i in outMap1:
         print(str(i) + ",")
-    print("], ")
+    print("], ")"""
+    
+    outMap2 = []
+    for y in range(v.size[1]):
+        outMap2.append([])
+        for x in range(v.size[0]):
+            outMap2[y].append("")
     
     for tile in v.topTiles:
         if tile.overP:
@@ -63,17 +69,31 @@ def save():
             h = "%" + str(tile.npc) + "|"
         else:
             h = ""
-        outMap[tile.posy][tile.posx] = h + str(tile.sheetNum)
+        outMap2[tile.posy][tile.posx] = h + str(tile.sheetNum)
     
-    print("[")
-    for i in outMap:
+    """print("[")
+    for i in outMap2:
         print(str(i) + ",")
-    print("]]")
+    print("]]")"""
+    
+    outTotal = [outMap1, outMap2]
+    v.totalMap[str(v.currentID)] = outTotal
+    print("{")
+    for k, va in v.totalMap.items():
+        print(str(k) + ":[")
+        for i in va:
+            print("[")
+            for j in i:
+                print(str(j) + ",")
+            print("], ")
+        print("]")
+    print("}")
+    
 
 def load():
     print("LOAD")
-    from Resources import mapFile
-    themap = mapFile.map["1"][1]
+    
+    themap = v.totalMap[str(v.currentID)][1]
     v.topTiles = py.sprite.Group()
     v.baseTiles = py.sprite.Group()
     v.tiles = py.sprite.Group()
@@ -96,7 +116,7 @@ def load():
                 img = themap[y][x]
             v.topTiles.add(tileEdit.tile(x, y, "top", img, ep, tp, nc))
     
-    themap = mapFile.map["1"][0]
+    themap = v.totalMap[str(v.currentID)][0]
     for x in range(len(themap[0])):
         for y in range(len(themap[1])):
             if "#" in themap[y][x]:
@@ -237,6 +257,8 @@ def startMenu():
                         if b.ID == "NM":
                             setup()
                         if b.ID == "LM":
+                            from Resources import mapFile
+                            v.totalMap = mapFile.map
                             load()
 
 def setup():
@@ -248,7 +270,11 @@ def setup():
     tinps.add(mapMenuItems.textInput((500, 180), 60, 2, 2, button=None, default=['1', '0'], type="int"))
     texts.add(mapMenuItems.textLabel("Map Height:", (240, 190), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 60))
     
-    tinps.add(mapMenuItems.textInput((500, 260), 60, 2, 3, button=None, default=['1', '0'], type="int"))
+    if v.tempId == None:
+        df = ['1']
+    else:
+        df = list(str(v.tempId))
+    tinps.add(mapMenuItems.textInput((500, 260), 60, 2, 3, button=None, default=df, type="int"))
     texts.add(mapMenuItems.textLabel("Map ID:", (240, 270), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 60))
     
     buttons = py.sprite.Group()

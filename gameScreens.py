@@ -41,7 +41,6 @@ def mainMenu():
     v.music.play(loops=-1)
     while True:
         py.event.pump()
-        
         MenuItems.fill_gradient(v.screen, colour("cyan"), colour("dark blue"))
         for text in texts:
             text.draw()
@@ -527,6 +526,7 @@ def classSelection():
 
 
 def story():
+    #2.05 minutes
     sTime = time.clock()
     py.init()
     windowUpdate()
@@ -1103,6 +1103,7 @@ def story():
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.5))
             if ST6 > 1100:
+                print("STORY TIME")
                 print(time.clock() - sTime)
                 return
             

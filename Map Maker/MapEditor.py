@@ -94,17 +94,15 @@ def load():
                 img = themap[y][x].split("|")[1]
             else:
                 img = themap[y][x]
-            v.topTiles.add(tileEdit.tile(x, y, "base", img, ep, tp, nc))
+            v.topTiles.add(tileEdit.tile(x, y, "top", img, ep, tp, nc))
     
     themap = mapFile.map["1"][0]
     for x in range(len(themap[0])):
         for y in range(len(themap[1])):
-            print(themap[y][x])
             if "#" in themap[y][x]:
                 hb = True
             else:
                 hb = False
-            
             if "|" in themap[y][x]:
                 img = themap[y][x].split("|")[1]
             else:

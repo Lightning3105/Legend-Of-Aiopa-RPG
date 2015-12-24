@@ -13,6 +13,7 @@ class tile(py.sprite.Sprite):
         self.tileNumber = -1
         self.hitable = hit
         self.waiting = False
+        self.waiting2 = False
         self.layer = layer
         self.hovered = False
         if num == None:
@@ -89,7 +90,7 @@ class tile(py.sprite.Sprite):
                             print(v.makeTeleport)
                     elif not self.waiting:
                         if self.layer == "base" and v.editHitable:
-                            self.hitable = not self.hitable
+                            self.hitable = True
                             self.waiting = True
                         if self.layer == "top" and v.overPlayer:
                             self.overP = not self.overP
@@ -113,10 +114,23 @@ class tile(py.sprite.Sprite):
                                 self.waiting = True
                             
                 if py.mouse.get_pressed()[2]:
-                    if v.eLayer == self.layer and self.layer == "top":
-                        self.sheetNum = "-"
+                    if not self.waiting2:
+                        if v.eLayer == self.layer and self.layer == "top" and self.sheetNum != "-":
+                            self.sheetNum = "-"
+                            self.waiting2 = True
+                    if v.eLayer == self.layer and self.layer == "top" and self.sheetNum == "-" and self.waiting2 == False:
+                            self.teleport = None
+                            self.overP = False
+                            self.npc = None
+                            self.waiting2 = True
+                    if v.eLayer == self.layer and self.layer == "base":
+                        self.hitable = False
+                        self.waiting2 = True
+
             if not py.mouse.get_pressed()[0]:
                 self.waiting = False
+            if not py.mouse.get_pressed()[2]:
+                self.waiting2 = False
             
             if self.makingTeleport:
                 if v.editTeleport.tpOut != []:

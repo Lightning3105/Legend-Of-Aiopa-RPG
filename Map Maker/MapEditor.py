@@ -77,23 +77,24 @@ def save():
     print("]]")"""
     
     outTotal = [outMap1, outMap2]
+    outTotal = ({"Biome": v.currentBiome, "Name": v.currentName}, outTotal)
     v.totalMap[str(v.currentID)] = outTotal
     print("{")
     for k, va in v.totalMap.items():
-        print(str(k) + ":[")
-        for i in va:
+        print('"' + str(k) + '"' +  ":(")
+        print(str(outTotal[0]) + ", [")
+        for i in va[1]:
             print("[")
             for j in i:
                 print(str(j) + ",")
             print("], ")
-        print("]")
+        print("])")
     print("}")
     
 
 def load():
     print("LOAD")
-    
-    themap = v.totalMap[str(v.currentID)][1]
+    themap = v.totalMap[str(v.currentID)][1][1]
     v.topTiles = py.sprite.Group()
     v.baseTiles = py.sprite.Group()
     v.tiles = py.sprite.Group()
@@ -116,7 +117,7 @@ def load():
                 img = themap[y][x]
             v.topTiles.add(tileEdit.tile(x, y, "top", img, ep, tp, nc))
     
-    themap = v.totalMap[str(v.currentID)][0]
+    themap = v.totalMap[str(v.currentID)][1][0]
     for x in range(len(themap[0])):
         for y in range(len(themap[1])):
             if "#" in themap[y][x]:
@@ -257,7 +258,7 @@ def startMenu():
                         if b.ID == "NM":
                             setup()
                         if b.ID == "LM":
-                            from Resources import mapFile
+                            from Resources import mapFile  # @UnresolvedImport
                             v.totalMap = mapFile.map
                             load()
 
@@ -276,6 +277,12 @@ def setup():
         df = list(str(v.tempId))
     tinps.add(mapMenuItems.textInput((500, 260), 60, 2, 3, button=None, default=df, type="int"))
     texts.add(mapMenuItems.textLabel("Map ID:", (240, 270), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 60))
+    
+    tinps.add(mapMenuItems.textInput((400, 350), 30, 24, 4, button=None, default=['P', 'l', 'a', 'c', 'e'], type="str"))
+    texts.add(mapMenuItems.textLabel("Location Name:", (40, 350), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 60))
+    
+    tinps.add(mapMenuItems.textInput((500, 430), 40, 10, 5, button=None, default=['P', 'l', 'a', 'i', 'n', 's'], type="str"))
+    texts.add(mapMenuItems.textLabel("Biome:", (240, 440), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 60))
     
     buttons = py.sprite.Group()
     buttons.add(mapMenuItems.button("Back", (10, 550),80, (255, 255, 255), (255, 0, 0), "../Resources/Fonts/RPGSystem.ttf", "B"))
@@ -305,6 +312,10 @@ def setup():
                                 y = int(i.outText)
                             if i.num == 3:
                                 v.currentID = int(i.outText)
+                            if i.num == 4:
+                                v.currentName = str(i.outText)
+                            if i.num == 5:
+                                v.currentBiome = str(i.outText)
                         v.size = (x, y)
                         v.baseTiles = py.sprite.Group()
                         v.topTiles = py.sprite.Group()

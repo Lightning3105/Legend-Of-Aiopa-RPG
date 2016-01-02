@@ -5,35 +5,6 @@ import mapMenuItems, npcEdit, tileEdit
 import mapMakerVariables as v
 from ast import literal_eval
 
-class vars:
-    def __init__(self):
-        pass
-
-#v = vars()
-
-"""class toggleButton(py.sprite.Sprite):
-    
-    def __init__(self, text, variable, pos):
-        super().__init__()
-        self.text = text
-        self.variable = variable
-        self.pos = pos
-    
-    def update(self):
-        text = self.text + ":" + str(globals()[self.variable])
-        font = py.font.Font("../Resources/Fonts/RPGSystem.ttf", 30)
-        label = font.render(text, 1, (255, 255, 255))
-        rect = label.get_rect()
-        rect.topleft = self.pos
-        py.draw.rect(v.options, (0, 0, 255), rect)
-        v.options.blit(label, self.pos)
-        if rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1] - 550)):
-            for event in v.events:
-                if event.type == py.MOUSEBUTTONDOWN:
-                    globals()[self.variable] = not globals()[self.variable]"""
-                
-
-
 tileset = py.image.load("../Resources/Images/Main_Tileset.png")
 
 def save():
@@ -172,6 +143,7 @@ def mapEditor():
     buttons.add(mapMenuItems.toggleButton("hitbox", 1))
     buttons.add(mapMenuItems.toggleButton("over", 2))
     buttons.add(mapMenuItems.toggleButton("teleport", 3))
+    buttons.add(mapMenuItems.toggleButton("npc", 4))
     
     while True:
         py.event.pump()
@@ -265,6 +237,7 @@ def startMenu():
 def setup():
     tinps = py.sprite.Group()
     texts = py.sprite.Group()
+    v.textNum = 1
     tinps.add(mapMenuItems.textInput((500, 100), 60, 2, 1, button=None, default=['1', '0'], type="int"))
     texts.add(mapMenuItems.textLabel("Map Width:", (240, 110), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 60))
     
@@ -326,6 +299,8 @@ def setup():
                                 v.topTiles.add(tileEdit.tile(x, y, "top"))
                         mapEditor()
                         return
+
+
 if __name__ == "__main__":
     startMenu()
     

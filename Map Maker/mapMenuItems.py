@@ -10,9 +10,16 @@ def toolTip():
         ymod = font.size(str(v.hoverPos))[1]
         for k, va in v.hoverData.items():
             if not va == None:
-                label = font.render(str(k) + ": " + str(va), 1, (255, 0, 0), (255, 255, 255, 100))
-                v.screen.blit(label, (py.mouse.get_pos()[0], py.mouse.get_pos()[1] + ymod))
-                ymod += font.size(str(k) + ": " + str(va))[1]
+                if not k == "Npc":
+                    label = font.render(str(k) + ": " + str(va), 1, (255, 0, 0), (255, 255, 255, 100))
+                    v.screen.blit(label, (py.mouse.get_pos()[0], py.mouse.get_pos()[1] + ymod))
+                    ymod += font.size(str(k) + ": " + str(va))[1]
+                else:
+                    vals = va.copy()
+                    vals.pop("Image", None)
+                    label = font.render(str(k) + ": " + str(vals), 1, (255, 0, 0), (255, 255, 255, 100))
+                    v.screen.blit(label, (py.mouse.get_pos()[0], py.mouse.get_pos()[1] + ymod))
+                    ymod += font.size(str(k) + ": " + str(vals))[1]
 
 class SpriteSheet(object):
     """ Class used to grab images out of a sprite sheet. """
@@ -258,6 +265,10 @@ class toggleButton(py.sprite.Sprite):
             self.image1 = py.image.load("Resources/Teleport.png")
             self.image1 = py.transform.scale(self.image1, (50, 50))
             size = (50, 50)
+        if self.type == "npc":
+            self.image1 = py.image.load("Resources/createNpc.png")
+            self.image1 = py.transform.scale(self.image1, (50, 50))
+            size = (50, 50)
         self.rect = py.Rect((20 + 100 * num, 10), size)
         self.state = None
         self.labels = py.sprite.Group()
@@ -322,6 +333,22 @@ class toggleButton(py.sprite.Sprite):
                             v.makeTeleport = not v.makeTeleport
             else:
                 self.image.fill((50, 50, 50), special_flags=py.BLEND_RGBA_MULT)
+        
+        if self.type == "npc":
+            self.state = v.makeNPC
+            if v.makeNPC == False:
+                self.image = self.image1.copy()
+                self.image.fill((100, 100, 100), special_flags=py.BLEND_RGBA_MULT)
+            else:
+                self.image = self.image1
+            if v.eLayer == "top":
+                if self.rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1] - 550)):
+                    for event in v.events:
+                        if event.type == py.MOUSEBUTTONDOWN:
+                            v.makeNPC = not v.makeNPC
+            else:
+                self.image.fill((50, 50, 50), special_flags=py.BLEND_RGBA_MULT)
+        
         if self.rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1] - 550)):
             py.draw.rect(v.options, (200, 200, 0), self.rect)
             v.publicState = self.state
@@ -380,4 +407,4 @@ class makeTeleport():
                     v.tempId = self.tpOut[0]
                     v.editTeleport = None
                     MapEditor.setup()
-                    
+                

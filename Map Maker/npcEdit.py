@@ -31,39 +31,42 @@ class npcImage(py.sprite.Sprite):
 
 
 def createNPC():
-    font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
-    label = font.render("NPC Name:", 1, (0, 0, 0))
-    inp = mapMenuItems.textInput((300, 275), 20, 16)
-    while not inp.done:
-        v.screen.blit(label, (300, 200))
-        inp.update()
-        py.display.flip()
-    v.selectedNpc["Name"] = outText
-    v.screen.fill((255, 255, 255))
+    tinps = py.sprite.Group()
+    texts = py.sprite.Group()
+    v.textNum = 1
     
-    label = font.render("NPC Attack:", 1, (0, 0, 0))
-    inp = mapMenuItems.textInput((300, 275), 20, 2)
-    while not inp.done:
-        v.screen.blit(label, (300, 200))
-        inp.update()
-        py.display.flip()
-    v.selectedNpc["Attack"] = outText
-    v.screen.fill((255, 255, 255))
+    tinps.add(mapMenuItems.textInput((400, 100), 40, 16, 1, button=None, default=[], type="str"))
+    texts.add(mapMenuItems.textLabel("Enemy Name:", (150, 110), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 40, variable=False, centred=False))
     
-    label = font.render("NPC Health:", 1, (0, 0, 0))
-    inp = mapMenuItems.textInput((300, 275), 20, 2)
-    while not inp.done:
-        v.screen.blit(label, (300, 200))
-        inp.update()
-        py.display.flip()
-    v.selectedNpc["Health"] = outText
-    v.screen.fill((255, 255, 255))
+    tinps.add(mapMenuItems.textInput((400, 200), 40, 2, 2, button=None, default=[], type="int"))
+    texts.add(mapMenuItems.textLabel("Attack:", (150, 210), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 40, variable=False, centred=False))
     
-    label = font.render("NPC Speed:", 1, (0, 0, 0))
-    inp = mapMenuItems.textInput((300, 275), 20, 2)
-    while not inp.done:
-        v.screen.blit(label, (300, 200))
-        inp.update()
+    tinps.add(mapMenuItems.textInput((400, 300), 40, 3, 3, button=None, default=[], type="int"))
+    texts.add(mapMenuItems.textLabel("Health:", (150, 310), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 40, variable=False, centred=False))
+    
+    tinps.add(mapMenuItems.textInput((400, 400), 40, 2, 4, button=None, default=[], type="int"))
+    texts.add(mapMenuItems.textLabel("Speed:", (150, 410), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 40, variable=False, centred=False))
+    
+    button = mapMenuItems.button("Done", (500, 500), 60, (200, 0, 0), (255, 0, 0), "../Resources/Fonts/RPGSystem.ttf", "GO")
+    while True:
+        py.event.pump()
+        v.events = []
+        v.events = py.event.get()
+        v.screen.fill((200, 200, 200))
+        tinps.update()
+        texts.update()
+        button.update()
+        for event in v.events:
+            if event.type == py.MOUSEBUTTONDOWN:
+                if button.pressed():
+                    for t in tinps:
+                        if t.num == 1:
+                            v.selectedNpc["Name"] = t.outText
+                        if t.num == 2:
+                            v.selectedNpc["Attack"] = t.outText
+                        if t.num == 3:
+                            v.selectedNpc["Health"] = t.outText
+                        if t.num == 4:
+                            v.selectedNpc["Speed"] = t.outText
+                    return
         py.display.flip()
-    v.selectedNpc["Speed"] = outText
-    v.screen.fill((255, 255, 255))

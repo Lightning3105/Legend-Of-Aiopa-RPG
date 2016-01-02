@@ -82,7 +82,7 @@ class tile(py.sprite.Sprite):
                 self.hovered = False
             if self.hovered:
                 v.hoverPos = (int(self.posx - (v.size[0] / 2)), int(self.posy - (v.size[1] / 2)))
-                v.hoverData = {"Teleport": self.teleport, "Skin": self.sheetNum, "Layer":self.layer, "Hitable":self.hitable}
+                v.hoverData = {"Teleport": self.teleport, "Skin": self.sheetNum, "Layer":self.layer, "Hitable":self.hitable, "Npc":self.npc}
                 if py.mouse.get_pressed()[0]:
                     if not v.editHitable and not v.overPlayer and not v.makeTeleport and not v.makeNPC and not self.waiting:
                         if v.eLayer == self.layer:
@@ -105,8 +105,10 @@ class tile(py.sprite.Sprite):
                             self.makingTeleport = True
                         if self.layer == "top" and v.makeNPC:
                             if v.selectedNpc != self.npc:
-                                self.npc = v.selectedNpc.copy()
-                                self.waiting = True
+                                if v.selectedNpc["Image"] != None:
+                                    print(v.selectedNpc)
+                                    self.npc = v.selectedNpc.copy()
+                                    self.waiting = True
                             
                 if py.mouse.get_pressed()[2]:
                     if not self.waiting2:

@@ -405,7 +405,7 @@ class loadingScreen():
 class locationTitle():
     
     def __init__(self):
-        self.text = v.mapMeta[str(v.mapNum)]["Name"]
+        self.text = str(v.mapMeta["Name"])
         self.font = py.font.Font("Resources/Fonts/Vecna.otf", int(60/640 * v.screenX))
         self.label = self.font.render(self.text, 1, (100, 100, 100))
         #self.label = py.Surface(self.font.size(self.text))

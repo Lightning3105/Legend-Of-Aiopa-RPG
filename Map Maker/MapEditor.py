@@ -59,7 +59,7 @@ def save():
             for j in i:
                 print(str(j) + ",")
             print("], ")
-        print("])")
+        print("]),")
     print("}")
     
 
@@ -71,7 +71,6 @@ def load():
     v.tiles = py.sprite.Group()
     for x in range(len(themap[0])):
         for y in range(len(themap[1])):
-            #print(themap[y][x])
             tp = None
             ep = False
             nc = None

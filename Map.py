@@ -8,9 +8,12 @@ def generateMap():
     #import Variables as v
     amap = dict(mapFile.map)
     sheet = entityClasses.SpriteSheet("Resources/Images/Main_Tileset.png", 63, 32)
+    
     map = amap[str(v.mapNum)]
     allMap = map
-    map = allMap[0]
+    v.mapMeta = allMap[0]
+    print(v.mapMeta)
+    map = allMap[1][0]
     mody = int(len(map) / 2)
     modx = int(len(map[0]) / 2)
     sheet.getGrid()
@@ -35,7 +38,7 @@ def generateMap():
                 baseMap.blit(image, (posx, posy))
     
     
-    map = allMap[1]
+    map = allMap[1][1]
     mody = int(len(map) / 2)
     modx = int(len(map[0]) / 2)
     outmap = py.sprite.Group()

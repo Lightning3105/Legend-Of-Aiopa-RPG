@@ -1,9 +1,12 @@
 if __name__ == "__main__":
     import Updater
-    try:
-        Updater.updateCheck()
-    except:
-        pass
+    from getpass import getuser
+    if not getuser() == "James Waters":
+        print(getuser() == "James Waters")
+        try:
+            Updater.updateCheck()
+        except:
+            pass
     
     import gameScreens
     import setupScripts

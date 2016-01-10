@@ -2,10 +2,12 @@
 /Resources/Images/3rd party unused/
 /Out.txt
 /build/
-/Saves
 /log.txt
 /Update/
 /.project
 /.pydevproject
-/Map Maker/__pycache__
-/Map Maker/Resources/__pycache__
+/Map Maker/__pycache__/
+/Map Maker/Resources/__pycache__/
+/Saves/current.version
+/Saves/__pycache__
+/Map Maker/Resources/desktop.ini

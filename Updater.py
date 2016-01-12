@@ -218,7 +218,16 @@ def updateCheck():
                                 f.close()
                                 return
             py.display.flip()
-        
+    else:
+        v.screen.fill((20, 20, 20))
+        t = textLabel("No Update!", (320, 250), (255, 0, 0), theFont, 70, False, True)
+        v.current = current
+        t2 = textLabel("current", (320, 300), (255, 200, 200), theFont, 50, True, True)
+        t.update()
+        t2.update()
+        py.display.update()
+        if __name__ == "__main__":
+            py.time.wait(2000)
 def download():
     try:
         try:

@@ -207,6 +207,8 @@ def updateCheck():
                         if button.pressed():
                             id = button.ID
                             if id == "Y":
+                                global tries
+                                tries = 0
                                 download()
                                 return
                             if id == "N":
@@ -218,6 +220,7 @@ def updateCheck():
                                 f.close()
                                 return
             py.display.flip()
+
     else:
         v.screen.fill((20, 20, 20))
         t = textLabel("No Update!", (320, 250), (255, 0, 0), theFont, 70, False, True)
@@ -228,7 +231,9 @@ def updateCheck():
         py.display.update()
         if __name__ == "__main__":
             py.time.wait(2000)
+        
 def download():
+    global tries
     try:
         try:
             os.mkdir("Update")

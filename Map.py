@@ -71,7 +71,7 @@ def generateMap():
                         if thing.name == npc["Name"]:
                             exists = True
                     if not exists:        
-                        entityClasses.NPC(((tile - modx) * 30, 30, (row - mody) * 30, npc["Direction"]), npc["Image"], {"Name":npc["Name"], "Conversation":npc["Conversation"], "Alignment": npc["Alignment"], "Base Friend": npc["Base Friend"]})
+                        entityClasses.NPC(((tile - modx) * 30, 30, (row - mody) * 30, npc["Direction"]), npc["Image"], {"Name":npc["Name"], "Conversation":npc["Conversation"], "Alignment": npc["Alignment"], "Base Like": npc["Base Like"]})
                     draw = False
                 elif list(mrt)[0] == "%":
                     npc = literal_eval(mrt.replace('%', "").split("|")[0])
@@ -120,19 +120,26 @@ class BaseMap():
     def draw(self):
         v.screen.blit(self.image, self.rect)
 
-NPCs = [{'Image': 'Resources/Images/NpcSkins/Spritesheets/Male_Basic.png', 'Name': 'Fred', "Direction": "Down", "Alignment": "Good", "Base Friend": 2,
+NPCs = [{'Image': 'Resources/Images/NpcSkins/Spritesheets/Male_Basic.png', 'Name': 'Fred', "Direction": "Down", "Alignment": "Good", "Base Like": 2,
             "Conversation": [{"Message": "Greetings child. Could you spare the time to run an errand for me?", "B1":{"Text": "Yes", "ID": 1}, "B2":{"Text": "No", "ID": 2}, "ID":0},
                              {"Message": "Why, that is wonderful!", "Goto":3, "ID": 1},
                              {"Message": "Fine. Suit yourself.", "Goto":0, "End": True, "ID": 2},
                              {"Message": "Groblins have been a real nuisance lately. Could you go and a few for me?", "Quest":("Hunting Groblins", "Kill", {"Name": "Groblin", "Amount": 3}), "Goto": 4, "End":True, "ID":3},
                              {"Message": "Go kill those Groblins!", "ID":4, "End": True}
                              ]},
+        {'Image': 'Resources/Images/NpcSkins/Spritesheets/Male_Basic.png', 'Name': 'Zanzibar', "Direction": "Right", "Alignment": "Good", "Base Like": 0,
+            "Conversation": [{"Message": "Hello, I like you!", "Charisma": 4, "ID":0, "B1":{"Text": "You look ugly", "ID": 1}, "B2":{"Text": "You look nice", "ID": 2}},
+                             {"Message": "Hello, I am indifferent towards you!", "Charisma": 2, "ID":0, "B1":{"Text": "You look ugly", "ID": 1}, "B2":{"Text": "You look nice", "ID": 2}},
+                             {"Message": "Hello, I hate you!", "ID":0, "B1":{"Text": "You look ugly", "ID": 1}, "B2":{"Text": "You look nice", "ID": 2}},
+                             {"Message": "Well that was a mean thing to say (-1 friendliness)", "ID":1, "ChangeLike":-1, "Goto":0, "End":True},
+                             {"Message": "Wow, thanks! (+1 friendliness)", "ID":2, "ChangeLike":1, "Goto":0, "End":True},
+                                 ]},
         ]
 
 
 
 
 #NPC Conversations:
-#{"Message":****, "B1":{"Text":****, "ID":**}, "Goto":**, "ID":**}
+#{"Message":****, "B1":{"Text":****, "ID":**}, "Goto":**, "ID":**, "Charisma":**}
 #Add "End" key to signify the end of a conversation
 #

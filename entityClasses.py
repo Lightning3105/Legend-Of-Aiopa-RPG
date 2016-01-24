@@ -1069,6 +1069,9 @@ class NPC(py.sprite.Sprite):
         self.icon = py.image.load("Resources/Images/NpcSkins/Faces/Basic_Man.png")
         self.conversation = npcScripts.conversation(self, attributes["Conversation"])
         self.summonedGuard = False
+        self.baseLike = attributes["Base Like"]
+        self.like = self.baseLike
+        self.alignment = attributes["Alignment"]
     
     def load(self, dic):
         
@@ -1080,6 +1083,9 @@ class NPC(py.sprite.Sprite):
         self.sheetImage = dic["sheetImage"]
         self.ID = dic["ID"]
         self.npcID = dic["npcID"]
+        self.baseLike = dic["Base Like"]
+        self.like = dic["Like"]
+        self.alignment = dic["Alignment"]
         
         v.allNpc.add(self)
         v.NPCs.add(self)
@@ -1101,7 +1107,10 @@ class NPC(py.sprite.Sprite):
                 "view": self.view,
                 "sheetImage": self.sheetImage,
                 "ID": self.ID,
-                "npcID": self.npcID
+                "npcID": self.npcID,
+                "baseLike": self.baseLike,
+                "like": self.like,
+                "alignment": self.alignment
                 }
         return data
     

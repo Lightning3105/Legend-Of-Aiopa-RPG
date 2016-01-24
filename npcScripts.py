@@ -18,13 +18,16 @@ class conversation():
         self.speechOutput = None
         self.searchDone = False
     
+    def getLike(self):
+        return self.npc.baseLike + self.npc.like + v.Attributes["Charisma"]
+    
     def say(self):
         v.PAUSED = True
         v.pauseType = "Conversation"
 
         if self.speechOutput == "Goto":
             self.searchDone = False
-            self.searchTree(self.place["Goto"], self.material)
+            self.searchTree(self.place["Goto"], self.getLike(), self.material)
             self.speechOutput = None
         if self.speechOutput == "End":
             v.PAUSED = False
@@ -32,16 +35,26 @@ class conversation():
         
         self.speech(self)
                 
-    def searchTree(self, target, tree={}):
+    def searchTree(self, target, like, tree={}):
+        bestChar = -1 * float("inf")
+        bestCharVal = None
         for value in tree:
             if value["ID"] == target:
-                self.place = value
-                return
+                if "Charisma" in list(value.keys()):
+                    if value["Charisma"] <= like and value["Charisma"] > bestChar:
+                        bestChar = value["Charisma"]
+                        bestCharVal = value
+                else:
+                    if bestChar == -1 * float("inf"):
+                        bestCharVal = value
+        self.place = bestCharVal
+        return bestCharVal
             
         
     
     class speech():
         def __init__(self, master):
+            print("Like:", master.getLike())
             #self.speechOutput = None
             self.message = master.place["Message"]
             self.master = master
@@ -139,6 +152,8 @@ class conversation():
                                 self.master.speechOutput = "Goto"
                             else:
                                 self.master.speechOutput = "End"
+                            if "ChangeLike" in self.master.place:
+                                self.master.npc.like += self.master.place["ChangeLike"]
                             if not "End" in self.master.place:
                                 self.master.say()
                             else:
@@ -153,7 +168,7 @@ class conversation():
                         
                         if not id == None:
                             self.searchDone = False
-                            self.master.searchTree(id, self.master.material)
+                            self.master.searchTree(id, self.master.getLike(), self.master.material)
                             self.master.say()
                         
 class quest(py.sprite.Sprite):

@@ -71,7 +71,7 @@ def generateMap():
                         if thing.name == npc["Name"]:
                             exists = True
                     if not exists:        
-                        entityClasses.NPC(((tile - modx) * 30, 30, (row - mody) * 30, npc["Direction"]), npc["Image"], {"Name":npc["Name"], "Conversation":npc["Conversation"]})
+                        entityClasses.NPC(((tile - modx) * 30, 30, (row - mody) * 30, npc["Direction"]), npc["Image"], {"Name":npc["Name"], "Conversation":npc["Conversation"], "Alignment": npc["Alignment"], "Base Friend": npc["Base Friend"]})
                     draw = False
                 elif list(mrt)[0] == "%":
                     npc = literal_eval(mrt.replace('%', "").split("|")[0])
@@ -120,7 +120,7 @@ class BaseMap():
     def draw(self):
         v.screen.blit(self.image, self.rect)
 
-NPCs = [{'Image': 'Resources/Images/NpcSkins/Spritesheets/Male_Basic.png', 'Name': 'Fred', "Direction": "Down", 
+NPCs = [{'Image': 'Resources/Images/NpcSkins/Spritesheets/Male_Basic.png', 'Name': 'Fred', "Direction": "Down", "Alignment": "Good", "Base Friend": 2,
             "Conversation": [{"Message": "Greetings child. Could you spare the time to run an errand for me?", "B1":{"Text": "Yes", "ID": 1}, "B2":{"Text": "No", "ID": 2}, "ID":0},
                              {"Message": "Why, that is wonderful!", "Goto":3, "ID": 1},
                              {"Message": "Fine. Suit yourself.", "Goto":0, "End": True, "ID": 2},

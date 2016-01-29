@@ -36,8 +36,8 @@ def save():
             h = "+"
         elif tile.teleport != None:
             h = "&" + str(tile.teleport) + "|"
-        elif tile.npc != None:
-            h = "%" + str(tile.npc) + "|"
+        elif tile.enemy != None:
+            h = "%" + str(tile.enemy) + "|"
         else:
             h = ""
         outMap2[tile.posy][tile.posx] = h + str(tile.sheetNum)
@@ -112,24 +112,24 @@ def mapEditor():
     v.scrollY = 0
     v.scale = 2
     v.selected = 0
-    v.selectedNpc = {"Image":None, "Name":None, "Health":None, "Attack":None, "Speed":None}
+    v.selectedEnemy = {"Image":None, "Name":None, "Health":None, "Attack":None, "Speed":None}
     v.editHitable = False
     v.eLayer = "base"
     v.overPlayer = False
     v.hoverPos = None
     v.hoverData = None
     v.makeTeleport = False
-    v.makeNPC = False
+    v.makeEnemy = False
     
     v.palletImages = py.sprite.Group()
     v.tileImages = tileEdit.getGrid(tileset)
     for i in range(0, len(v.tileImages)):
         v.palletImages.add(tileEdit.image(i))
     
-    v.npcImages = py.sprite.Group()
+    v.enemyImages = py.sprite.Group()
     num = 0
     for i in listdir("..\Resources\Images\EnemySkins"):
-        v.npcImages.add(npcEdit.npcImage(num, "../Resources/Images/EnemySkins/" + i))
+        v.enemyImages.add(npcEdit.enemyImage(num, "../Resources/Images/EnemySkins/" + i))
         num += 1
         
     v.clock = py.time.Clock()
@@ -137,12 +137,13 @@ def mapEditor():
     py.time.set_timer(py.USEREVENT, 1000) #1 sec delay
     
     buttons = py.sprite.Group()
-    #buttons.add(toggleButton("Make NPC", "v.makeNPC", (170, 50)))
+    #buttons.add(toggleButton("Make Enemy", "v.makeEnemy", (170, 50)))
     buttons.add(mapMenuItems.toggleButton("layer", 0))
     buttons.add(mapMenuItems.toggleButton("hitbox", 1))
     buttons.add(mapMenuItems.toggleButton("over", 2))
     buttons.add(mapMenuItems.toggleButton("teleport", 3))
-    buttons.add(mapMenuItems.toggleButton("npc", 4))
+    buttons.add(mapMenuItems.toggleButton("enemy", 4))
+    buttons.add(mapMenuItems.toggleButton("npc", 5))
     
     while True:
         py.event.pump()
@@ -156,10 +157,10 @@ def mapEditor():
         v.options.fill((0, 0, 255))
         v.baseTiles.update()
         v.topTiles.update()
-        if not v.makeNPC:
+        if not v.makeEnemy:
             v.palletImages.update()
-        if v.makeNPC:
-            v.npcImages.update()
+        if v.makeEnemy:
+            v.enemyImages.update()
         buttons.update()
         
         if not v.pauseEdit:
@@ -229,7 +230,9 @@ def startMenu():
                         if b.ID == "NM":
                             setup()
                         if b.ID == "LM":
-                            from Resources import mapFile  # @UnresolvedImport
+                            from sys import path
+                            path.append('../Saves')
+                            import mapFile  # @UnresolvedImport
                             v.totalMap = mapFile.map
                             load()
 

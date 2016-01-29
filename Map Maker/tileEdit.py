@@ -4,7 +4,7 @@ import mapMenuItems
 
 class tile(py.sprite.Sprite):
     
-    def __init__(self, posx, posy, layer, num=None, overP=False, teleport=None, npc=None, hit=False):
+    def __init__(self, posx, posy, layer, num=None, overP=False, teleport=None, enemy=None, hit=False, npc=None):
         super().__init__()
         self.posx = posx
         self.posy = posy
@@ -26,8 +26,9 @@ class tile(py.sprite.Sprite):
         v.tiles.add(self)
         self.overP = overP
         self.teleport = teleport
-        self.npc = npc
+        self.enemy = enemy
         self.makingTeleport = False
+        self.npc = npc
     
     def update(self):
         self.rect = py.Rect(0, 0, 30 * v.scale, 30 * v.scale)
@@ -58,9 +59,9 @@ class tile(py.sprite.Sprite):
                     c = (0, 255, 255)
                 elif self.layer == "top" and self.teleport != None:
                     c = (0, 255, 0)
-                elif self.layer == "top" and self.npc != None:
+                elif self.layer == "top" and self.enemy != None:
                     c = (255, 255, 0)
-                    img = mapMenuItems.SpriteSheet("../" + self.npc["Image"], 4, 3).images[1]
+                    img = mapMenuItems.SpriteSheet(self.enemy["Image"], 4, 3).images[1]
                     img.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)
                     img = py.transform.scale(img, (int(30 * v.scale), int(30 * v.scale)))
                     v.map.blit(img, self.rect)
@@ -82,9 +83,9 @@ class tile(py.sprite.Sprite):
                 self.hovered = False
             if self.hovered:
                 v.hoverPos = (int(self.posx - (v.size[0] / 2)), int(self.posy - (v.size[1] / 2)))
-                v.hoverData = {"Teleport": self.teleport, "Skin": self.sheetNum, "Layer":self.layer, "Hitable":self.hitable, "Npc":self.npc}
+                v.hoverData = {"Teleport": self.teleport, "Skin": self.sheetNum, "Layer":self.layer, "Hitable":self.hitable, "Enemy":self.enemy}
                 if py.mouse.get_pressed()[0]:
-                    if not v.editHitable and not v.overPlayer and not v.makeTeleport and not v.makeNPC and not self.waiting:
+                    if not v.editHitable and not v.overPlayer and not v.makeTeleport and not v.makeEnemy and not self.waiting:
                         if v.eLayer == self.layer:
                             self.sheetNum = v.selected
                             print(v.makeTeleport)
@@ -103,11 +104,11 @@ class tile(py.sprite.Sprite):
                             #v.makeTeleport = False
                             self.waiting = True
                             self.makingTeleport = True
-                        if self.layer == "top" and v.makeNPC:
-                            if v.selectedNpc != self.npc:
-                                if v.selectedNpc["Image"] != None:
-                                    print(v.selectedNpc)
-                                    self.npc = v.selectedNpc.copy()
+                        if self.layer == "top" and v.makeEnemy:
+                            if v.selectedEnemy != self.enemy:
+                                if v.selectedEnemy["Image"] != None:
+                                    print(v.selectedEnemy)
+                                    self.enemy = v.selectedEnemy.copy()
                                     self.waiting = True
                             
                 if py.mouse.get_pressed()[2]:
@@ -118,7 +119,7 @@ class tile(py.sprite.Sprite):
                     if v.eLayer == self.layer and self.layer == "top" and self.sheetNum == "-" and self.waiting2 == False:
                             self.teleport = None
                             self.overP = False
-                            self.npc = None
+                            self.enemy = None
                             self.waiting2 = True
                     if v.eLayer == self.layer and self.layer == "base":
                         self.hitable = False

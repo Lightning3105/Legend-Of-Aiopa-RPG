@@ -3,7 +3,7 @@ import mapMenuItems
 import pygame as py
 
 
-class npcImage(py.sprite.Sprite):
+class enemyImage(py.sprite.Sprite):
     
     def __init__(self, num, image):
         super().__init__()
@@ -20,17 +20,17 @@ class npcImage(py.sprite.Sprite):
             self.hovered = True
         else:
             self.hovered = False
-        if v.selectedNpc["Image"] == self.sheet:
+        if v.selectedEnemy["Image"] == self.sheet:
             py.draw.rect(v.pallet, (255, 0, 0), self.rect, 1)
         if self.hovered:
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
                     if py.mouse.get_pressed()[0]:
-                        v.selectedNpc["Image"] = self.sheet
-                        createNPC()
+                        v.selectedEnemy["Image"] = self.sheet
+                        createEnemy()
 
 
-def createNPC():
+def createEnemy():
     tinps = py.sprite.Group()
     texts = py.sprite.Group()
     v.textNum = 1
@@ -61,12 +61,13 @@ def createNPC():
                 if button.pressed():
                     for t in tinps:
                         if t.num == 1:
-                            v.selectedNpc["Name"] = t.outText
+                            v.selectedEnemy["Name"] = t.outText
                         if t.num == 2:
-                            v.selectedNpc["Attack"] = t.outText
+                            v.selectedEnemy["Attack"] = t.outText
                         if t.num == 3:
-                            v.selectedNpc["Health"] = t.outText
+                            v.selectedEnemy["Health"] = t.outText
                         if t.num == 4:
-                            v.selectedNpc["Speed"] = t.outText
+                            v.selectedEnemy["Speed"] = t.outText
+                    py.time.delay(200)
                     return
         py.display.flip()

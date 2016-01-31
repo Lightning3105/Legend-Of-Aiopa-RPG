@@ -1,6 +1,7 @@
 import mapMakerVariables as v
 import mapMenuItems
 import pygame as py
+from _ast import Num
 
 
 class enemyImage(py.sprite.Sprite):
@@ -91,7 +92,13 @@ class npcImageButton(py.sprite.Sprite):
         image = py.transform.scale(image, (96, 128))
         rect = image.get_rect()
         rect.center = (self.x, self.y)
-        py.draw.rect(v.screen, (255, 255, 255), rect)
+        if rect.collidepoint(py.mouse.get_pos()):
+            py.draw.rect(v.screen, (255, 255, 0), rect)
+            for event in v.events:
+                if event.type == py.MOUSEBUTTONDOWN:
+                    self.selected = changeNpcImage()
+        else:
+            py.draw.rect(v.screen, (255, 255, 255), rect)
         py.draw.rect(v.screen, (200, 100, 100), rect, 2)
         v.screen.blit(image, rect)
     
@@ -113,7 +120,9 @@ def createNPC():
     rb1 = mapMenuItems.radioButtons(350, 410, ["Good", "Evil"])
     texts.add(mapMenuItems.textLabel("Alignment:", (150, 410), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 40, variable=False, centred=False))
     
-    button = mapMenuItems.button("Done", (500, 500), 60, (200, 0, 0), (255, 0, 0), "../Resources/Fonts/RPGSystem.ttf", "GO")
+    buttons = py.sprite.Group()
+    buttons.add(mapMenuItems.button("Done", (800, 550), 60, (200, 0, 200), (255, 50, 255), "../Resources/Fonts/RPGSystem.ttf", "done"))
+    buttons.add(mapMenuItems.button("Add Conversation", (460, 500), 60, (200, 200, 100), (100, 200, 200), "../Resources/Fonts/RPGSystem.ttf", "convo", centred=True))
     
     while True:
         v.screen.fill((220, 220, 220))
@@ -124,5 +133,60 @@ def createNPC():
         tinps.update()
         texts.update()
         rb1.update()
+        buttons.update()
         
         py.display.flip()
+
+class npcImage(py.sprite.Sprite):
+    
+    def __init__(self, image, num):
+        super().__init__()
+        self.image = image
+        self.num = num
+        
+        if num % 5 == 1:
+            self.posx = 200
+        if num % 5 == 2:
+            self.posx = 300
+        if num % 5 == 3:
+            self.posx = 400
+        if num % 5 == 4:
+            self.posx = 500
+        if num % 5 == 0:
+            self.posx = 600
+        
+        self.posy = (int((num / 5)  - 0.1) * 70) + 50
+    
+    def update(self):
+        image = mapMenuItems.SpriteSheet(self.image, 4, 3).images[7]
+        image = py.transform.scale(image, (48, 64))
+        rect = image.get_rect()
+        rect.topleft = (self.posx, self.posy)
+        py.draw.rect(v.screen, (150, 150, 200), rect)
+        v.screen.blit(image, (self.posx, self.posy))
+        if rect.collidepoint(py.mouse.get_pos()):
+            py.draw.rect(v.screen, (255, 255, 0), rect, 3)
+            for event in v.events:
+                if event.type == py.MOUSEBUTTONDOWN:
+                    return self.image
+        else:
+            py.draw.rect(v.screen, (255, 165, 0), rect, 3)
+
+def changeNpcImage():
+    from os import listdir
+    images = py.sprite.Group()
+    num = 0
+    for i in listdir("../Resources/Images/NpcSkins/Spritesheets"):
+        images.add(npcImage("../Resources/Images/NpcSkins/Spritesheets/" + i, num))
+        num += 1
+    
+    while True:
+        v.screen.fill((220, 220, 220))
+        v.events = []
+        v.events = py.event.get()
+        for i in images:
+            r = i.update()
+            if r != None:
+                return r
+        py.display.flip()
+        

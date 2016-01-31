@@ -504,7 +504,7 @@ class radioButtons(py.sprite.Sprite):
                 py.draw.rect(v.screen, (255, 20, 0), rect)
             
             if self.master.selected == self:
-                py.draw.rect(v.screen, (0, 200, 200), rect, 2)
+                py.draw.rect(v.screen, (0, 100, 200), rect, 2)
             else:
                 py.draw.rect(v.screen, (200, 40, 20), rect, 2)
             

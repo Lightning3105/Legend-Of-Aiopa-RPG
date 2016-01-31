@@ -33,3 +33,4 @@ currentID = 1
 tempId = 0
 currentName = None
 currentBiome = None
+scrollBar = 0

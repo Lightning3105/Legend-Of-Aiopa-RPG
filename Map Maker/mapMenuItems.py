@@ -1,6 +1,7 @@
 import mapMakerVariables as v
 import pygame as py
 import MapEditor
+import npcEdit
 
 def toolTip():
     if not v.hoverPos == None:
@@ -361,9 +362,9 @@ class toggleButton(py.sprite.Sprite):
                 if self.rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1] - 550)):
                     for event in v.events:
                         if event.type == py.MOUSEBUTTONDOWN:
-                            pass #MakeEnemy
-                else:
-                    self.image.fill((50, 50, 50), special_flags=py.BLEND_RGBA_MULT)
+                            npcEdit.createNPC()
+            else:
+                self.image.fill((50, 50, 50), special_flags=py.BLEND_RGBA_MULT)
         
         if self.rect.collidepoint((py.mouse.get_pos()[0], py.mouse.get_pos()[1] - 550)):
             py.draw.rect(v.options, (200, 200, 0), self.rect)
@@ -423,4 +424,98 @@ class makeTeleport():
                     v.tempId = self.tpOut[0]
                     v.editTeleport = None
                     MapEditor.setup()
-                
+
+class scrollBar():
+    
+    def __init__(self, posx, posy, length):
+        self.posx = posx
+        self.posy = posy
+        self.length = length
+        self.bar = py.Surface((10, 40))
+        self.bar.fill((255, 150, 0))
+        self.moving = False
+    
+    def update(self):
+        linerect = (self.posx - 2, self.posy, 4, self.length)
+        py.draw.rect(v.screen, (50, 50, 50), linerect)
+        
+        barrect = self.bar.get_rect()
+        barrect.center = (self.posx, v.scrollBar + self.posy + 20)
+        v.screen.blit(self.bar, barrect)
+        
+        for event in v.events:
+            if event.type == py.MOUSEBUTTONDOWN:
+                if barrect.collidepoint(py.mouse.get_pos()):
+                    self.moving = True
+        if self.moving == True and not py.mouse.get_pressed()[0]:
+            self.moving = False
+        
+        if self.moving:
+            v.scrollBar = py.mouse.get_pos()[1] - self.posy - 20
+        
+        if v.scrollBar > (self.posy + self.length) - 50:
+            v.scrollBar = ((self.posy + self.length) - 50)
+        if v.scrollBar < 0:
+            v.scrollBar = 0
+        
+        print(v.scrollBar)
+
+class radioButtons(py.sprite.Sprite):
+    
+    def __init__(self, posx, posy, choices, fontsize=40):
+        super().__init__()
+        self.posx = posx
+        self.posy = posy
+        self.choices = py.sprite.Group()
+        self.fontsize = fontsize
+        self.selected = None
+        lengths = 0
+        font = py.font.Font("../Resources/Fonts/RPGSystem.ttf", self.fontsize)
+        for item in choices:
+            self.choices.add(self.button(self.posx + lengths, item, self))
+            lengths += font.size(str(item))[0] + 20
+    
+    def update(self):
+        self.choices.update()
+    
+    class button(py.sprite.Sprite):
+        
+        def __init__(self, posx, text, master):
+            super().__init__()
+            self.posx = posx
+            self.text = text
+            self.master = master
+            self.posy = self.master.posy
+    
+        def update(self):
+            font = py.font.Font("../Resources/Fonts/RPGSystem.ttf", self.master.fontsize)
+            rend = font.render(str(self.text), 1, (255, 255, 255))
+            rect = rend.get_rect()
+            rect.topleft = (self.posx, self.posy)
+            rect.height += 5
+            rect.width += 5
+            
+            if rect.collidepoint(py.mouse.get_pos()):
+                py.draw.rect(v.screen, (255, 200, 0), rect)
+                for event in v.events:
+                    if event.type == py.MOUSEBUTTONDOWN:
+                        self.master.selected = self
+            else:
+                py.draw.rect(v.screen, (255, 20, 0), rect)
+            
+            if self.master.selected == self:
+                py.draw.rect(v.screen, (0, 200, 200), rect, 2)
+            else:
+                py.draw.rect(v.screen, (200, 40, 20), rect, 2)
+            
+            rect.x += 2
+            rect.y += 2
+            v.screen.blit(rend, rect)
+
+
+def grid():
+    for x in range(0, 920, 10):
+        py.draw.line(v.screen, (255, 255, 0), (x, 0), (x, 630), 1)
+    
+    for y in range(0, 630, 10):
+        py.draw.line(v.screen, (255, 255, 0), (0, y), (920, y), 1)

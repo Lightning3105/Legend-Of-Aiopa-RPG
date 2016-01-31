@@ -1059,7 +1059,7 @@ class NPC(py.sprite.Sprite):
         self.direction = pos[2]
         self.name = attributes["Name"]
         self.sheetImage = image
-        self.view = "DownC"
+        self.view = "DownC" #TODO: Direction
         self.ID = "npc"
         self.npcID = v.npcID
         v.allNpc.add(self)

@@ -71,3 +71,58 @@ def createEnemy():
                     py.time.delay(200)
                     return
         py.display.flip()
+        
+        
+class npcImageButton(py.sprite.Sprite):
+    
+    def __init__(self):
+        super().__init__()
+        from os import listdir
+        self.images = []
+        for i in listdir("../Resources/Images/NpcSkins/Spritesheets"):
+            self.images.append("../Resources/Images/NpcSkins/Spritesheets/" + i)
+        
+        self.x = 460
+        self.y = 100
+        self.selected = self.images[0]
+        
+    def update(self):
+        image = mapMenuItems.SpriteSheet(self.selected, 4, 3).images[7]
+        image = py.transform.scale(image, (96, 128))
+        rect = image.get_rect()
+        rect.center = (self.x, self.y)
+        py.draw.rect(v.screen, (255, 255, 255), rect)
+        py.draw.rect(v.screen, (200, 100, 100), rect, 2)
+        v.screen.blit(image, rect)
+    
+
+
+def createNPC():
+    imageButton = npcImageButton()
+    bar = mapMenuItems.scrollBar(910, 10, 610)
+    
+    tinps = py.sprite.Group()
+    texts = py.sprite.Group()
+    
+    tinps.add(mapMenuItems.textInput((350, 200), 30, 16, 1, button=None, default=[], type="str"))
+    texts.add(mapMenuItems.textLabel("NPC Name:", (150, 210), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 40, variable=False, centred=False))
+    
+    tinps.add(mapMenuItems.textInput((450, 300), 30, 2, 2, button=None, default=[], type="int"))
+    texts.add(mapMenuItems.textLabel("Base Friendliness:", (150, 310), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 40, variable=False, centred=False))
+    
+    rb1 = mapMenuItems.radioButtons(350, 410, ["Good", "Evil"])
+    texts.add(mapMenuItems.textLabel("Alignment:", (150, 410), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 40, variable=False, centred=False))
+    
+    button = mapMenuItems.button("Done", (500, 500), 60, (200, 0, 0), (255, 0, 0), "../Resources/Fonts/RPGSystem.ttf", "GO")
+    
+    while True:
+        v.screen.fill((220, 220, 220))
+        v.events = []
+        v.events = py.event.get()
+        imageButton.update()
+        bar.update()
+        tinps.update()
+        texts.update()
+        rb1.update()
+        
+        py.display.flip()

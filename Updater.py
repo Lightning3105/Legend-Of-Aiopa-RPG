@@ -245,11 +245,12 @@ def download():
         pickle.dump(current, f)
         f.close()
         unzip()
-    except:
+    except Exception as e:
         tries += 1
-        
+        print("Error: " + str(e))
         v.screen.fill((20, 20, 20))
         textLabel("Download Error. Retry " + str(tries) + "/8", (320, 240), (255, 255, 255), theFont, 50, False, True).update()
+        textLabel("Error: " + str(e), (320, 240), (255, 255, 255), theFont, 50, False, True).update()
         py.display.flip()
         if tries > 8:
             return

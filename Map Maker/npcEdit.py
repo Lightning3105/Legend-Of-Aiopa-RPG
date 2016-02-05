@@ -108,17 +108,19 @@ def createNPC():
     imageButton = npcImageButton()
     bar = mapMenuItems.scrollBar(910, 10, 610)
     
-    tinps = py.sprite.Group()
     texts = py.sprite.Group()
     
-    tinps.add(mapMenuItems.textInput((350, 200), 30, 16, 1, button=None, default=[], type="str"))
+    ni = mapMenuItems.textInput((350, 200), 30, 16, 1, button=None, default=[], type="str")
     texts.add(mapMenuItems.textLabel("NPC Name:", (150, 210), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 40, variable=False, centred=False))
     
-    tinps.add(mapMenuItems.textInput((450, 300), 30, 2, 2, button=None, default=[], type="int"))
-    texts.add(mapMenuItems.textLabel("Base Friendliness:", (150, 310), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 40, variable=False, centred=False))
+    fi = mapMenuItems.textInput((450, 260), 30, 2, 2, button=None, default=[], type="int")
+    texts.add(mapMenuItems.textLabel("Base Friendliness:", (150, 270), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 40, variable=False, centred=False))
     
-    rb1 = mapMenuItems.radioButtons(350, 410, ["Good", "Evil"])
-    texts.add(mapMenuItems.textLabel("Alignment:", (150, 410), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 40, variable=False, centred=False))
+    arb = mapMenuItems.radioButtons(350, 330, ["Good", "Evil"])
+    texts.add(mapMenuItems.textLabel("Alignment:", (150, 330), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 40, variable=False, centred=False))
+    
+    drb = mapMenuItems.radioButtons(350, 390, ["Up", "Down", "Left", "Right"])
+    texts.add(mapMenuItems.textLabel("Direction:", (150, 390), (0, 0, 0), "../Resources/Fonts/RPGSystem.ttf", 40, variable=False, centred=False))
     
     buttons = py.sprite.Group()
     buttons.add(mapMenuItems.button("Done", (800, 550), 60, (200, 0, 200), (255, 50, 255), "../Resources/Fonts/RPGSystem.ttf", "done"))
@@ -130,10 +132,20 @@ def createNPC():
         v.events = py.event.get()
         imageButton.update()
         bar.update()
-        tinps.update()
         texts.update()
-        rb1.update()
+        arb.update()
+        drb.update()
+        ni.update()
+        fi.update()
         buttons.update()
+        for event in v.events:
+            if event.type == py.MOUSEBUTTONDOWN:
+                for button in buttons:
+                    if button.pressed():
+                        if button.ID == "done":
+                            v.selectedNPC = {"Image": imageButton.selected, "Name": ni.outText, "Alignment": arb.outText, "Base Like": fi.outText, "Direction": drb.outText}
+                            print(v.selectedNPC)
+                            return  
         
         py.display.flip()
 

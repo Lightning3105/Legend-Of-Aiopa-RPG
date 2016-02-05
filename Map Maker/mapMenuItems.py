@@ -469,6 +469,7 @@ class radioButtons(py.sprite.Sprite):
         self.choices = py.sprite.Group()
         self.fontsize = fontsize
         self.selected = None
+        self.outText = None
         lengths = 0
         font = py.font.Font("../Resources/Fonts/RPGSystem.ttf", self.fontsize)
         for item in choices:
@@ -500,6 +501,7 @@ class radioButtons(py.sprite.Sprite):
                 for event in v.events:
                     if event.type == py.MOUSEBUTTONDOWN:
                         self.master.selected = self
+                        self.master.outText = self.text
             else:
                 py.draw.rect(v.screen, (255, 20, 0), rect)
             

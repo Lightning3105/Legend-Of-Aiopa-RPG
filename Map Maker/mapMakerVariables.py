@@ -18,6 +18,7 @@ events = []
 scale = 2
 hoverPos = None
 selectedEnemy = None
+selectedNPC = None
 selected = None
 hoverData = None
 tiles = None

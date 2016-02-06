@@ -457,8 +457,6 @@ class scrollBar():
             v.scrollBar = ((self.posy + self.length) - 50)
         if v.scrollBar < 0:
             v.scrollBar = 0
-        
-        print(v.scrollBar)
 
 class radioButtons(py.sprite.Sprite):
     

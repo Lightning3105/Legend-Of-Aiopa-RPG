@@ -163,6 +163,7 @@ def createNPC():
 class npcImage(py.sprite.Sprite):
     
     def __init__(self, image, num):
+        print(num)
         super().__init__()
         self.image = image
         self.num = num
@@ -192,13 +193,14 @@ class npcImage(py.sprite.Sprite):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
                     return self.image
+            print(self.num)
         else:
             py.draw.rect(v.screen, (255, 165, 0), rect, 3)
 
 def changeNpcImage():
     from os import listdir
     images = py.sprite.Group()
-    num = 0
+    num = 1
     for i in listdir("../Resources/Images/NpcSkins/Spritesheets"):
         images.add(npcImage("../Resources/Images/NpcSkins/Spritesheets/" + i, num))
         num += 1

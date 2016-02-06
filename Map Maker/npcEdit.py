@@ -76,7 +76,7 @@ def createEnemy():
         
 class npcImageButton(py.sprite.Sprite):
     
-    def __init__(self):
+    def __init__(self, drb):
         super().__init__()
         from os import listdir
         self.images = []
@@ -86,9 +86,19 @@ class npcImageButton(py.sprite.Sprite):
         self.x = 460
         self.y = 100
         self.selected = self.images[0]
+        self.drb = drb
         
     def update(self):
-        image = mapMenuItems.SpriteSheet(self.selected, 4, 3).images[7]
+        direction = 7
+        if self.drb.outText == "Down":
+            direction = 7
+        if self.drb.outText == "Up":
+            direction = 1
+        if self.drb.outText == "Left":
+            direction = 10
+        if self.drb.outText == "Right":
+            direction = 4
+        image = mapMenuItems.SpriteSheet(self.selected, 4, 3).images[direction]
         image = py.transform.scale(image, (96, 128))
         rect = image.get_rect()
         rect.center = (self.x, self.y)
@@ -105,7 +115,7 @@ class npcImageButton(py.sprite.Sprite):
 
 
 def createNPC():
-    imageButton = npcImageButton()
+    
     bar = mapMenuItems.scrollBar(910, 10, 610)
     
     texts = py.sprite.Group()
@@ -126,6 +136,7 @@ def createNPC():
     buttons.add(mapMenuItems.button("Done", (800, 550), 60, (200, 0, 200), (255, 50, 255), "../Resources/Fonts/RPGSystem.ttf", "done"))
     buttons.add(mapMenuItems.button("Add Conversation", (460, 500), 60, (200, 200, 100), (100, 200, 200), "../Resources/Fonts/RPGSystem.ttf", "convo", centred=True))
     
+    imageButton = npcImageButton(drb)
     while True:
         v.screen.fill((220, 220, 220))
         v.events = []

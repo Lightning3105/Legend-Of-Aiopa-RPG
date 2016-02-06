@@ -159,12 +159,14 @@ class textLabel(py.sprite.Sprite):
         
 class textInput(py.sprite.Sprite):
     
-    def __init__(self, pos, fontSize, characters, num, button="GO", default=[], type="str"):
+    def __init__(self, pos, fontSize, characters, num, button="GO", default=[], type="str", fontfile="../Resources/Fonts/RPGSystem.ttf"):
         super().__init__()
-        self.font = py.font.Font("../Resources/Fonts/RPGSystem.ttf", fontSize)
+        self.font = py.font.Font(fontfile, fontSize)
+        self.thickness = int(fontSize / 4)
         self.rect = py.Rect(pos, self.font.size("W" * characters))
-        self.rect.width += 20
-        self.rect.height += 20
+        self.rect.width += fontSize / 1.5
+        self.rect.height += fontSize / 1.5
+        self.fontSize = fontSize
         self.string = default
         self.pos = pos
         self.characters = characters
@@ -181,13 +183,13 @@ class textInput(py.sprite.Sprite):
         else:
             c = (0, 0, 0,)
         py.draw.rect(v.screen, (255, 255, 255), self.rect)
-        py.draw.rect(v.screen, c, self.rect, 5)
-        x = self.pos[0] + 10
-        y = self.pos[1] + 10
+        py.draw.rect(v.screen, c, self.rect, self.thickness)
+        x = self.pos[0] + self.fontSize / 3
+        y = self.pos[1] + self.fontSize / 3
         for letter in self.string:
             ren = self.font.render(letter, 1, (0, 0, 0))
             v.screen.blit(ren, (x, y))
-            x += self.font.size(letter)[0] + 5
+            x += self.font.size(letter)[0] + self.fontSize / 6
     
     def update(self):
         global textEdit

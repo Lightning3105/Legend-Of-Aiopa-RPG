@@ -157,6 +157,8 @@ def createNPC():
                             v.selectedNPC = {"Image": imageButton.selected, "Name": ni.outText, "Alignment": arb.outText, "Base Like": fi.outText, "Direction": drb.outText}
                             print(v.selectedNPC)
                             return  
+                        if button.ID == "convo":
+                            chatEdit()
         
         py.display.flip()
 
@@ -214,4 +216,51 @@ def changeNpcImage():
             if r != None:
                 return r
         py.display.flip()
+
+class chatChunk(py.sprite.Sprite):
+    
+    def __init__(self, c_message=None, c_goto = None, c_id = None, c_charisma = None, c_buttons = None, c_changelike = None, c_end = None):
+        super().__init__()
+        self.created = False
+        if not c_message == None:
+            self.created = True
         
+        self.c_message = c_message
+        self.c_goto = c_goto
+        self.c_id = c_id
+        self.c_charisma = c_charisma
+        self.c_buttons = c_buttons
+        self.c_changelike = c_changelike
+        self.c_end = c_end
+        
+        if not self.created:
+            self.posx = 300
+            self.posy = 50
+        
+        self.rect = py.Rect(self.posx, self.posy, 300, 100)
+        
+        self.tinps = py.sprite.Group()
+        self.texts = py.sprite.Group()
+        
+        self.texts.add(mapMenuItems.textLabel("ID:", (self.posx + 20, self.posy + 20), (0, 0, 0), None, 25))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 40), 25, 2, 1, button=None, default=['0'], type="int", fontfile=None))
+    
+    def update(self):
+        if not self.created:
+            py.draw.rect(v.screen, (200, 200, 200), self.rect)
+            self.tinps.update()
+            self.texts.update()
+
+
+def chatEdit():
+    chunks = py.sprite.Group()
+    chunks.add(chatChunk())
+    
+    while True:
+        v.screen.fill((250, 250, 250))
+        v.events = []
+        v.events = py.event.get()
+        
+        chunks.update()
+        
+        py.display.flip()

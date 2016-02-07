@@ -234,17 +234,21 @@ class chatChunk(py.sprite.Sprite):
         self.c_end = c_end
         
         if not self.created:
-            self.posx = 300
+            self.posx = 200
             self.posy = 50
         
-        self.rect = py.Rect(self.posx, self.posy, 300, 100)
+        self.rect = py.Rect(self.posx, self.posy, 500, 200)
         
         self.tinps = py.sprite.Group()
         self.texts = py.sprite.Group()
         
         self.texts.add(mapMenuItems.textLabel("ID:", (self.posx + 20, self.posy + 20), (0, 0, 0), None, 25))
         self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 40), 25, 2, 1, button=None, default=['0'], type="int", fontfile=None))
-    
+        
+        self.texts.add(mapMenuItems.textLabel("Message:", (self.posx + 20, self.posy + 80), (0, 0, 0), None, 25))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 100), 15, 50, 2, button=None, default=[], type="str", fontfile=None))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 120), 15, 50, 3, button=None, default=[], type="str", fontfile=None))
+        
     def update(self):
         if not self.created:
             py.draw.rect(v.screen, (200, 200, 200), self.rect)

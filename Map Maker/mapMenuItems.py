@@ -199,9 +199,31 @@ class textInput(py.sprite.Sprite):
             for event in v.events:
                 if event.type == py.KEYDOWN:
                     if len(self.string) < self.characters:
-                        if py.key.name(event.key) in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0']:
+                        if py.key.name(event.key) in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ',', '.', "'", '/', '#', ';', '-']:
                             if py.key.get_mods() == py.KMOD_LSHIFT:
                                 let = py.key.name(event.key).upper()
+                                if py.key.name(event.key) == '1':
+                                    let = '!'
+                                if py.key.name(event.key) == '2':
+                                    let = '"'
+                                if py.key.name(event.key) == '3':
+                                    let = '£'
+                                if py.key.name(event.key) == '4':
+                                    let = '$'
+                                if py.key.name(event.key) == '5':
+                                    let = '%'
+                                if py.key.name(event.key) == '9':
+                                    let = '('
+                                if py.key.name(event.key) == '0':
+                                    let = ')'
+                                if py.key.name(event.key) == '/':
+                                    let = '?'
+                                if py.key.name(event.key) == ';':
+                                    let = ':'
+                                
+                                
+                                
+                                    
                             else:
                                 let = py.key.name(event.key)
                             allow = True

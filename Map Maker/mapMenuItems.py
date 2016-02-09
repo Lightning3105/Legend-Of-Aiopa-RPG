@@ -70,7 +70,7 @@ class SpriteSheet(object):
 
 class button(py.sprite.Sprite):
 
-    def __init__(self, text, pos, size, hovercolour, normalcolour, font, ID, centred = False, bsize=(0,0)):
+    def __init__(self, text, pos, size, hovercolour, normalcolour, font, ID, centred = False, bsize=(0,0), centretext=False):
         super().__init__()
         self.ID = ID
         self.hovered = False
@@ -82,12 +82,16 @@ class button(py.sprite.Sprite):
         self.font = py.font.Font(font, int(size))
         self.centred = centred
         self.size = bsize
+        self.centretext = centretext
         self.set_rect()
     
     def update(self):
         self.set_rend()
         py.draw.rect(v.screen, self.get_color(), self.rect)
-        v.screen.blit(self.rend, self.rect)
+        if self.centretext:
+            v.screen.blit(self.rend, (self.rect.centerx - self.rend.get_rect().size[0]/2, self.rect.centery - self.rend.get_rect().size[1]/2))
+        else:
+            v.screen.blit(self.rend, self.rect)
         if self.rect.collidepoint(py.mouse.get_pos()):
             self.hovered = True
         else:

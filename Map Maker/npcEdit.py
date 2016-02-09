@@ -249,6 +249,20 @@ class chatChunk(py.sprite.Sprite):
         self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 100), 15, 50, 2, button=None, default=[], type="str", fontfile=None))
         self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 120), 15, 50, 3, button=None, default=[], type="str", fontfile=None))
         
+        self.texts.add(mapMenuItems.textLabel("Goto:", (self.posx + 80, self.posy + 20), (0, 0, 0), None, 25))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 80, self.posy + 40), 25, 2, 4, button=None, default=[], type="int", fontfile=None))
+        
+        self.texts.add(mapMenuItems.textLabel("Charisma", (self.posx + 160, self.posy + 5), (0, 0, 0), None, 20))
+        self.texts.add(mapMenuItems.textLabel("Needed:", (self.posx + 160, self.posy + 20), (0, 0, 0), None, 20))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 160, self.posy + 40), 25, 2, 5, button=None, default=[], type="int", fontfile=None))
+        
+        self.texts.add(mapMenuItems.textLabel("Change", (self.posx + 240, self.posy + 5), (0, 0, 0), None, 20))
+        self.texts.add(mapMenuItems.textLabel("Friendliness:", (self.posx + 240, self.posy + 20), (0, 0, 0), None, 20))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 240, self.posy + 40), 25, 2, 6, button=None, default=[], type="int", fontfile=None))
+    
+        self.texts.add(mapMenuItems.textLabel("End:", (self.posx + 330, self.posy + 20), (0, 0, 0), None, 25))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 330, self.posy + 40), 25, 2, 7, button=None, default=[], type="int", fontfile=None))
+        
     def update(self):
         if not self.created:
             py.draw.rect(v.screen, (200, 200, 200), self.rect)

@@ -378,10 +378,9 @@ class textLabel(py.sprite.Sprite):
         
 class shiftingGradient():
     
-    def __init__(self, colour1, colour2):
+    def __init__(self, colour):
         self.colourMod = 255
-        self.colour1 = colour1
-        self.colour2 = colour2
+        self.colour = colour
         self.colourDirection = True
         self.colourModIncreasing = False
         self.colourForward = True
@@ -400,8 +399,13 @@ class shiftingGradient():
             self.colourDirection = not self.colourDirection
             if self.colourModIncreasing == False:
                 self.colourForward = not self.colourForward
-        colour1 = (255 - self.colourMod, 0, 0)
-        colour2 = (0 + self.colourMod, 0, 0)
+        
+        if self.colour == ('x', 0, 0):
+            colour1 = (255 - self.colourMod, 0, 0)
+            colour2 = (0 + self.colourMod, 0, 0)
+        if self.colour == (0, 0, 'x'):
+            colour1 = (0, 0, 255 - self.colourMod)
+            colour2 = (0, 0, 0 + self.colourMod)
         fill_gradient(v.screen, colour1, colour2, vertical=self.colourDirection, forward=self.colourForward)
 
 class apearanceSelector(py.sprite.Sprite):
@@ -618,60 +622,114 @@ class appearanceTab(py.sprite.Sprite):
         else:
             py.draw.rect(v.screen, (153, 76, 0), rect, 4)
 
-class textInput():
+class textInput(py.sprite.Sprite):
     
-    def __init__(self, pos, fontSize, characters, background=(255, 255, 255), button="GO"):
-        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", fontSize)
-        self.rect = py.Rect(pos, self.font.size("W" * (characters + 1)))
-        self.rect.width += 20/640 * v.screenX
-        self.rect.height += 20/640 * v.screenX
-        self.string = []
+    def __init__(self, pos, fontSize, characters, num, button="GO", default=[], type="str", fontfile="Resources/Fonts/RPGSystem.ttf", background=(255, 255, 255)):
+        super().__init__()
+        self.font = py.font.Font(fontfile, fontSize)
+        self.thickness = int(fontSize / 4)
+        biggest = "W "
+        if type =="pass":
+            biggest = "* "
+        self.rect = py.Rect(pos, self.font.size(biggest * characters))
+        self.rect.width += fontSize / 1.5
+        self.rect.height += fontSize / 1.5
+        self.fontSize = fontSize
+        self.string = default
         self.pos = pos
         self.characters = characters
         self.shift = False
         self.done = False
-        self.outText = ""
         self.button = button
+        self.num = num
+        self.type = type
+        self.outText = ""
         self.background = background
     
     def draw(self):
+        if self.num == v.textNum:
+            c = (255, 0, 0)
+        else:
+            c = (0, 0, 0,)
         py.draw.rect(v.screen, self.background, self.rect)
-        py.draw.rect(v.screen, (0, 0, 0), self.rect, 5)
-        x = self.pos[0] + 10/640 * v.screenX
-        y = self.pos[1] + 10/640 * v.screenX
+        py.draw.rect(v.screen, c, self.rect, self.thickness)
+        x = self.pos[0] + self.fontSize / 3
+        y = self.pos[1] + self.fontSize / 3
         for letter in self.string:
-            ren = self.font.render(letter, 1, (0, 0, 0))
+            char = letter
+            if self.type == "pass":
+                char = "*"
+            ren = self.font.render(char, 1, (0, 0, 0))
             v.screen.blit(ren, (x, y))
-            x += self.font.size(letter)[0] + 5/640 * v.screenX
+            x += self.font.size(char)[0] + self.fontSize / 6
     
     def update(self):
-        for event in v.events:
-            if event.type == py.KEYDOWN:
-                if len(self.string) < self.characters:
-                    if py.key.name(event.key) in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0']:
-                        if py.key.get_mods() == py.KMOD_LSHIFT:
-                            let = py.key.name(event.key).upper()
-                        else:
-                            let = py.key.name(event.key)
-                        self.string.append(let)
-                    if event.key == py.K_SPACE:
-                        self.string.append(" ")
-                if event.key == py.K_BACKSPACE:
-                    if len(self.string) > 0:
-                        self.string.pop(-1)
+        
+        global textEdit
+        textEdit = True
+        self.outText = "".join(self.string)
+        if self.num == v.textNum:
+            
+            for event in v.events:
+                if event.type == py.KEYDOWN:
+                    if len(self.string) < self.characters:
+                        if py.key.name(event.key) in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ',', '.', "'", '/', '#', ';', '-']:
+                            if py.key.get_mods() == py.KMOD_LSHIFT:
+                                let = py.key.name(event.key).upper()
+                                if py.key.name(event.key) == '1':
+                                    let = '!'
+                                if py.key.name(event.key) == '2':
+                                    let = '"'
+                                if py.key.name(event.key) == '3':
+                                    let = '£'
+                                if py.key.name(event.key) == '4':
+                                    let = '$'
+                                if py.key.name(event.key) == '5':
+                                    let = '%'
+                                if py.key.name(event.key) == '9':
+                                    let = '('
+                                if py.key.name(event.key) == '0':
+                                    let = ')'
+                                if py.key.name(event.key) == '/':
+                                    let = '?'
+                                if py.key.name(event.key) == ';':
+                                    let = ':'
+        
+                            else:
+                                let = py.key.name(event.key)
+                            allow = True
+                            if self.type == "int":
+                                try:
+                                    int(let)
+                                    allow = True
+                                except:
+                                    allow = False
+                            if allow:        
+                                self.string.append(let)
+                        if event.key == py.K_SPACE:
+                            self.string.append(" ")
+                    if event.key == py.K_BACKSPACE:
+                        if len(self.string) > 0:
+                            self.string.pop(-1)
         self.draw()
         
-        if self.button != None:
-            label = self.font.render("GO", 1, (0, 0, 0))
+        if not self.button == None:
+            label = self.font.render(self.button, 1, (0, 0, 0))
             butRect = py.Rect(self.rect.topright, (self.rect.height, self.rect.height))
             butRect.centerx += 5
             py.draw.rect(v.screen, (255, 255, 255), butRect)
             py.draw.rect(v.screen, (0, 0, 0), butRect, 5)
-            v.screen.blit(label, (butRect.centerx - self.font.size("GO")[0] / 2, butRect.centery - self.font.size("GO")[1] / 2))
+            v.screen.blit(label, (butRect.centerx - self.font.size(self.button)[0] / 2, butRect.centery - self.font.size(self.button)[1] / 2))
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
-                    self.done = True
-        self.outText = "".join(self.string)
+                    if butRect.collidepoint(py.mouse.get_pos()):
+                        global outText
+                        outText = "".join(self.string)
+                        self.done = True
+                        py.time.wait(100)
+        if self.rect.collidepoint(py.mouse.get_pos()):
+            if py.mouse.get_pressed()[0]:
+                v.textNum = self.num
         
 
 def notImplimented():

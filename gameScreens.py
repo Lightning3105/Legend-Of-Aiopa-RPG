@@ -23,12 +23,14 @@ def mainMenu():
     MenuItems.screen = v.screen
     buttons = py.sprite.Group()
     texts = []
-    buttons.add(MenuItems.Button("New Game", (v.screenX * 0.25, v.screenY * 0.625), int(v.screenX * 0.125), colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "play"))
-    buttons.add(MenuItems.Button("Options", (v.screenX * 0.25, v.screenY * 0.79), int(v.screenX * 0.09375), colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "options"))
-    buttons.add(MenuItems.Button("Load", (v.screenX * 0.5625, v.screenY * 0.79), int(v.screenX * 0.09375), colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "load"))
-    texts.append(MenuItems.Text("The Legend", (v.screenX * 0.140625, v.screenY * 0.125), int(v.screenX * 0.125), colour("red"), "Resources\Fonts\RunicClear.ttf"))
-    texts.append(MenuItems.Text("Of Aiopa", (v.screenX * 0.25, v.screenY * 0.29), int(v.screenX * 0.125), colour("red"), "Resources\Fonts\RunicClear.ttf"))
-    texts.append(MenuItems.Text("Created By James", (v.screenX * 0.25, v.screenY * 0.5), int(v.screenX * 0.0625), colour("black"), "Resources\Fonts\Vecna.otf"))
+    buttons.add(MenuItems.Button("New Game", (v.screenX * 0.5, v.screenY * 0.5), int(v.screenX * 0.09), colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "play", centred=True))
+    buttons.add(MenuItems.Button("Options", (v.screenX * 0.5, v.screenY * 0.63), int(v.screenX * 0.09), colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "options", centred=True))
+    buttons.add(MenuItems.Button("Load", (v.screenX * 0.5, v.screenY * 0.76), int(v.screenX * 0.09), colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "load", centred=True))
+    buttons.add(MenuItems.Button("Aiopa Online", (v.screenX * 0.5, v.screenY * 0.89), int(v.screenX * 0.09), colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "online", centred=True))
+    
+    texts.append(MenuItems.Text("The Legend", (v.screenX * 0.140625, v.screenY * 0.01), int(v.screenX * 0.125), colour("red"), "Resources\Fonts\RunicClear.ttf"))
+    texts.append(MenuItems.Text("Of Aiopa", (v.screenX * 0.25, v.screenY * 0.15), int(v.screenX * 0.125), colour("red"), "Resources\Fonts\RunicClear.ttf"))
+    texts.append(MenuItems.Text("Created By James", (v.screenX * 0.25, v.screenY * 0.32), int(v.screenX * 0.0625), colour("black"), "Resources\Fonts\Vecna.otf"))
     
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
@@ -73,9 +75,36 @@ def mainMenu():
                             SaveLoad.Load()
                             v.newGame = False
                             game()
+                        if id == "online":
+                            online()
         fade.draw()
         fade.opacity -= 1
         py.display.flip()
+
+def online():
+    py.init()
+    texts = py.sprite.Group()
+    tinps = py.sprite.Group()
+    
+    texts.add(MenuItems.textLabel("Username", (v.screenX * 0.2, v.screenX * 0.31), (220, 220, 220), "Resources\Fonts\MorrisRoman.ttf", 20, variable=False, centred=False))
+    texts.add(MenuItems.textLabel("Password", (v.screenX * 0.2, v.screenX * 0.51), (220, 220, 220), "Resources\Fonts\MorrisRoman.ttf", 20, variable=False, centred=False))
+    
+    v.textNum = 1
+    tinps.add(MenuItems.textInput((v.screenX * 0.4, v.screenX * 0.3), 20, 16, num=1, button=None, default=[], type="str", fontfile="Resources/Fonts/RPGSystem.ttf", background=(255, 255, 255)))
+    tinps.add(MenuItems.textInput((v.screenX * 0.4, v.screenX * 0.5), 20, 16, num=2, button=None, default=[], type="pass", fontfile="Resources/Fonts/RPGSystem.ttf", background=(255, 255, 255)))
+    
+    background = MenuItems.shiftingGradient((0, 0, 'x'))
+    while True:
+        py.event.pump()
+        v.events = []
+        v.events = py.event.get()
+        background.draw()
+        texts.update()
+        tinps.update()
+        py.display.flip()
+        
+        
+
 
 def options():
     py.init()
@@ -410,7 +439,7 @@ def classSelection():
     buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
     buttons.add(MenuItems.Button("Continue", (v.screenX * 0.859375, v.screenY * 0.86875), int(v.screenX * 0.03125), colour("brown"), (153, 76, 0), "Resources\Fonts\RunicSolid.ttf", "continue"))
 
-    background = MenuItems.shiftingGradient((50, 0, 0), (205, 0, 0))
+    background = MenuItems.shiftingGradient(('x', 0, 0))
     
     aps = py.sprite.Group()
     
@@ -442,7 +471,7 @@ def classSelection():
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
     
-    nti = MenuItems.textInput((260/640 * v.screenX, 240/640 * v.screenX), int(50/640 * v.screenX), 8, (255, 178, 102), None)
+    nti = MenuItems.textInput((260/640 * v.screenX, 260/640 * v.screenX), int(40/640 * v.screenX), 8, 1, background=(255, 178, 102), button=None, default=[], type="str")
     nts = py.sprite.Group()
     nts.add(MenuItems.textLabel("Name Your Character:", (260/640 * v.screenX, 180/640 * v.screenX), colour("black"), "Resources/Fonts/RPGSystem.ttf", int(40/640 * v.screenX), False))
     nts.add(MenuItems.textLabel("(Max 8 Characters)", (260/640 * v.screenX, 220/640 * v.screenX), colour("grey"), "Resources/Fonts/RPGSystem.ttf", int(20/640 * v.screenX), False))

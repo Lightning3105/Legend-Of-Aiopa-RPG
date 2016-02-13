@@ -25,6 +25,7 @@ NPCs = None
 dyingEnemies = None
 quests = None
 npcID = 1
+textNum = 0
 conversationClass = None
 damagesNPCs = None
 droppedItems = None

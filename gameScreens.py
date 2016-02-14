@@ -15,6 +15,7 @@ from random import randint
 import setupScripts
 import SaveLoad
 import random
+import hashlib
 
 #TODO: Change projectiles so they work with lag
 def mainMenu():
@@ -76,22 +77,111 @@ def mainMenu():
                             v.newGame = False
                             game()
                         if id == "online":
-                            online()
+                            onlineLogin()
         fade.draw()
         fade.opacity -= 1
         py.display.flip()
 
-def online():
+def onlineLogin():
     py.init()
     texts = py.sprite.Group()
     tinps = py.sprite.Group()
+    extraTexts = py.sprite.Group()
+    buttons = py.sprite.Group()
     
     texts.add(MenuItems.textLabel("Username", (v.screenX * 0.2, v.screenX * 0.31), (220, 220, 220), "Resources\Fonts\MorrisRoman.ttf", 20, variable=False, centred=False))
     texts.add(MenuItems.textLabel("Password", (v.screenX * 0.2, v.screenX * 0.51), (220, 220, 220), "Resources\Fonts\MorrisRoman.ttf", 20, variable=False, centred=False))
     
+    texts.add(MenuItems.textLabel("Login To", (v.screenX * 0.140625, v.screenY * 0.01), (255, 0, 255), "Resources\Fonts\RunicSolid.ttf", int(v.screenX * 0.1)))
+    texts.add(MenuItems.textLabel("Aiopa Online", (v.screenX * 0.25, v.screenY * 0.15), (255, 0, 255), "Resources\Fonts\RunicSolid.ttf", int(v.screenX * 0.1)))
+    
     v.textNum = 1
-    tinps.add(MenuItems.textInput((v.screenX * 0.4, v.screenX * 0.3), 20, 16, num=1, button=None, default=[], type="str", fontfile="Resources/Fonts/RPGSystem.ttf", background=(255, 255, 255)))
-    tinps.add(MenuItems.textInput((v.screenX * 0.4, v.screenX * 0.5), 20, 16, num=2, button=None, default=[], type="pass", fontfile="Resources/Fonts/RPGSystem.ttf", background=(255, 255, 255)))
+    tinps.add(MenuItems.textInput((v.screenX * 0.4, v.screenX * 0.3), 20, 16, num=1, button=None, default=['1'], type="str", fontfile="Resources/Fonts/RPGSystem.ttf", background=(255, 255, 255)))
+    tinps.add(MenuItems.textInput((v.screenX * 0.4, v.screenX * 0.5), 20, 16, num=2, button=None, default=['1'], type="pass", fontfile="Resources/Fonts/RPGSystem.ttf", background=(255, 255, 255)))
+    
+    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
+    buttons.add(MenuItems.Button("Continue", (v.screenX * 0.77, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "continue"))
+    
+    logintext = MenuItems.textLabel("Logging In", (v.screenX * 0.5, v.screenY * 0.5), (255, 255, 255), "Resources/Fonts/RPGSystem.ttf", int(30/640 * v.screenX), variable=False, centred=True)
+    background = MenuItems.shiftingGradient((0, 0, 'x'))
+    fade = MenuItems.fadeIn()
+    fade.fadeIn = True
+    py.time.set_timer(py.USEREVENT, 500) #dot dot dot
+    
+    phase = 1
+    loginTimer = 0
+    
+    while True:
+        py.event.pump()
+        v.events = []
+        v.events = py.event.get()
+        background.draw()
+        if phase == 1:
+            texts.update()
+            extraTexts.update()
+            tinps.update()
+            buttons.update()
+            for event in v.events:
+                if event.type == py.MOUSEBUTTONDOWN:
+                    for button in buttons:
+                        if button.pressed():
+                            if button.ID == "back":
+                                mainMenu()
+                                return
+                            if button.ID == "continue":
+                                phase = 2
+                                loginTimer = 0
+                                logintext.update()
+                                for inp in tinps:
+                                    if inp.num == 1:
+                                        user = inp.outText
+                                    if inp.num == 2:
+                                        passw = inp.outText
+        elif phase == 2:
+            for event in v.events:
+                if event.type == py.USEREVENT:
+                    if logintext.text == "Logging In":
+                        logintext.text = "Logging In."
+                    elif logintext.text == "Logging In.":
+                        logintext.text = "Logging In.."
+                    elif logintext.text == "Logging In..":
+                        logintext.text = "Logging In..."
+                    elif logintext.text == "Logging In...":
+                        logintext.text = "Logging In"
+            logintext.update()
+            loginTimer += 1
+            if loginTimer >= 20:
+                accOut = SaveLoad.getAccount(user, passw)
+                if accOut == "USERNAME":
+                    phase = 1
+                    extraTexts = MenuItems.textLabel("Username does not exist", (v.screenX * 0.4, v.screenX * 0.26), (255, 0, 0), "Resources\Fonts\MorrisRoman.ttf", 20, variable=False, centred=False)
+                elif accOut == "PASSWORD":
+                    phase = 1
+                    extraTexts = MenuItems.textLabel("Incorrect password", (v.screenX * 0.4, v.screenX * 0.46), (255, 0, 0), "Resources\Fonts\MorrisRoman.ttf", 20, variable=False, centred=False)
+                else:
+                    v.account = accOut
+                    v.username = user
+                    hash_object = hashlib.md5(passw.encode())
+                    hash = hash_object.hexdigest()
+                    v.password = hash
+                    onlineMenu()
+                    
+                    return
+        
+        
+        fade.draw()
+        fade.opacity -= 1                    
+        py.display.flip()
+        
+def onlineMenu():
+    py.init()
+    
+    buttons = py.sprite.Group()
+    
+    buttons.add(MenuItems.Button("Upload Save", (v.screenX * 0.2, v.screenY * 0.5), 40, (100, 200, 200), (0, 255, 255), "Resources\Fonts\MorrisRoman.ttf", "upload", centred=True))
+    buttons.add(MenuItems.Button("Download Save", (v.screenX * 0.8, v.screenY * 0.5), 40, (100, 200, 200), (0, 255, 255), "Resources\Fonts\MorrisRoman.ttf", "download", centred=True))
+    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
+
     
     background = MenuItems.shiftingGradient((0, 0, 'x'))
     while True:
@@ -99,12 +189,20 @@ def online():
         v.events = []
         v.events = py.event.get()
         background.draw()
-        texts.update()
-        tinps.update()
+        buttons.update()
+        for event in v.events:
+            if event.type == py.MOUSEBUTTONDOWN:
+                for button in buttons:
+                    if button.pressed():
+                        if button.ID == "upload":
+                            SaveLoad.uploadSave()
+                        if button.ID == "download":
+                            SaveLoad.downloadSave()
+                        if button.ID == "back":
+                            mainMenu()
+                            return
+        
         py.display.flip()
-        
-        
-
 
 def options():
     py.init()
@@ -121,7 +219,7 @@ def options():
     fade.fadeIn = True
     while True:
         py.event.pump()
-        MenuItems.fill_gradient(v.screen, colour("cyan"), colour("dark blue"))
+        MenuItems.fill_gradient(v.screen, colour("cyan"), colour("green"))
 
         buttons.update()
         v.events = []
@@ -438,7 +536,7 @@ def classSelection():
     buttons = py.sprite.Group()
     buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
     buttons.add(MenuItems.Button("Continue", (v.screenX * 0.859375, v.screenY * 0.86875), int(v.screenX * 0.03125), colour("brown"), (153, 76, 0), "Resources\Fonts\RunicSolid.ttf", "continue"))
-
+    
     background = MenuItems.shiftingGradient(('x', 0, 0))
     
     aps = py.sprite.Group()
@@ -476,6 +574,7 @@ def classSelection():
     nts.add(MenuItems.textLabel("Name Your Character:", (260/640 * v.screenX, 180/640 * v.screenX), colour("black"), "Resources/Fonts/RPGSystem.ttf", int(40/640 * v.screenX), False))
     nts.add(MenuItems.textLabel("(Max 8 Characters)", (260/640 * v.screenX, 220/640 * v.screenX), colour("grey"), "Resources/Fonts/RPGSystem.ttf", int(20/640 * v.screenX), False))
     
+    bigcont = MenuItems.Button("Continue", (v.screenX * 0.77, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "continue")
     while True:
         py.event.pump()
         v.events = []
@@ -494,8 +593,10 @@ def classSelection():
             if button.ID == "back":
                 button.update()
             else:
-                if v.custimizationStage == "Attributes" or v.custimizationStage == "Customisation" or v.custimizationStage == "Name":
+                if v.custimizationStage == "Attributes" or v.custimizationStage == "Customisation":
                     button.update()
+                if v.custimizationStage == "Name":
+                    bigcont.update()
         
         if v.custimizationStage == "Attributes":
             labels.update()
@@ -541,9 +642,9 @@ def classSelection():
                                     ao.save()
                             elif v.custimizationStage == "Customisation":
                                 v.custimizationStage = "Name"
-                            elif v.custimizationStage == "Name":
-                                nti.outText
-                                return
+                if v.custimizationStage == "Name" and bigcont.pressed():
+                    nti.outText
+                    return
                         
             
         

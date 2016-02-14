@@ -7,6 +7,9 @@ import guiClasses
 import Map
 import os
 import npcScripts
+import urllib
+import hashlib
+import requests
 
 def Save():
     global v
@@ -146,5 +149,76 @@ def Load():
     for item in save["qSave"]:
         npcScripts.quest(item["Name"], item["Type"], item["Data"])
 
-#Save()
-#Load()
+def getAccount(username, password):
+    page = urllib.request.urlopen(v.url + "accounts/")
+    accounts = page.read()
+    accounts = pickle.loads(accounts)
+    
+    for un, vals in accounts.items():
+        if un == username:
+            hash_object = hashlib.md5(password.encode())
+            hash = hash_object.hexdigest()
+            if hash == vals["password"]:
+                return vals
+            else:
+                return "PASSWORD"
+    return "USERNAME"
+
+def uploadSave():
+    import json
+    url = v.url + "senddata/"
+    save = {}
+    with open("Saves/Entities.save", "rb") as s:
+        d = s.read()
+        save["Entities"] = d
+    with open("Saves/Inventory.save", "rb") as s:
+        d = s.read()
+        save["Inventory"] = d
+    with open("Saves/Variables.save", "rb") as s:
+        d = s.read()
+        save["Variables"] = d
+    
+    print(save)
+    payload = {'username': v.username, 'password': v.password, 'save': save}
+
+    jpayload = json.dumps(str(payload))
+    print(jpayload)
+
+    # GET
+    #r = requests.get(url)
+
+    # GET with params in URL
+    #r = requests.get(url, params=payload)
+    
+    # POST with form-encoded data
+    #r = requests.post(url, data=payload)
+    
+    # POST with JSON 
+    
+    r = requests.post(url, data=jpayload)
+    
+    # Response, status etc
+    #print(r.text)
+    print(r.status_code)
+
+def downloadSave(): #TODO: test this
+    page = urllib.request.urlopen(v.url + "accounts/")
+    accounts = page.read()
+    accounts = pickle.loads(accounts)
+    
+    for un, vals in accounts.items():
+        if un == v.username:
+            hash_object = hashlib.md5(v.password.encode())
+            hash = hash_object.hexdigest()
+            if hash == vals["password"]:
+                if 'save' in vals.keys():
+                    save = vals['save']
+                    with open("Saves/Entities.save", "wb") as s:
+                        pickle.dump(save["Entities"], s)
+                    with open("Saves/Inventory.save", "wb") as s:
+                        pickle.dump(save["Inventory"], s)
+                    with open("Saves/Variables.save", "wb") as s:
+                        pickle.dump(save["Variables"], s)
+            else:
+                return "PASSWORD"
+    return "USERNAME"

@@ -217,13 +217,12 @@ def changeNpcImage():
                 return r
         py.display.flip()
 
-class chatChunk(py.sprite.Sprite):
+class editChunk(py.sprite.Sprite):
     
     def __init__(self, c_message=None, c_goto = None, c_id = None, c_charisma = None, c_buttons = None, c_changelike = None, c_end = None):
         super().__init__()
+        
         self.created = False
-        if not c_message == None:
-            self.created = True
         
         self.c_message = c_message
         self.c_goto = c_goto
@@ -233,51 +232,56 @@ class chatChunk(py.sprite.Sprite):
         self.c_changelike = c_changelike
         self.c_end = c_end
         
-        if not self.created:
-            self.posx = 150
-            self.posy = 50
-            self.rect = py.Rect(self.posx, self.posy, 500, 150)
+        self.posx = 150
+        self.posy = 50
+        self.rect = py.Rect(self.posx, self.posy, 500, 150)
+    
+        self.tinps = py.sprite.Group()
+        self.texts = py.sprite.Group()
         
-            self.tinps = py.sprite.Group()
-            self.texts = py.sprite.Group()
-            
-            self.texts.add(mapMenuItems.textLabel("ID:", (self.posx + 20, self.posy + 20), (0, 0, 0), None, 25))
-            self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 40), 25, 2, 1, button=None, default=['0'], type="int", fontfile=None))
-            
-            self.texts.add(mapMenuItems.textLabel("Message:", (self.posx + 20, self.posy + 80), (0, 0, 0), None, 25))
-            self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 100), 15, 50, 2, button=None, default=[], type="str", fontfile=None))
-            self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 120), 15, 50, 3, button=None, default=[], type="str", fontfile=None))
-            
-            self.texts.add(mapMenuItems.textLabel("Goto:", (self.posx + 80, self.posy + 20), (0, 0, 0), None, 25))
-            self.tinps.add(mapMenuItems.textInput((self.posx + 80, self.posy + 40), 25, 2, 4, button=None, default=[], type="int", fontfile=None))
-            
-            self.texts.add(mapMenuItems.textLabel("Charisma", (self.posx + 160, self.posy + 5), (0, 0, 0), None, 20))
-            self.texts.add(mapMenuItems.textLabel("Needed:", (self.posx + 160, self.posy + 20), (0, 0, 0), None, 20))
-            self.tinps.add(mapMenuItems.textInput((self.posx + 160, self.posy + 40), 25, 2, 5, button=None, default=[], type="int", fontfile=None))
-            
-            self.texts.add(mapMenuItems.textLabel("Change", (self.posx + 240, self.posy + 5), (0, 0, 0), None, 20))
-            self.texts.add(mapMenuItems.textLabel("Friendliness:", (self.posx + 240, self.posy + 20), (0, 0, 0), None, 20))
-            self.tinps.add(mapMenuItems.textInput((self.posx + 240, self.posy + 40), 25, 2, 6, button=None, default=[], type="int", fontfile=None))
+        self.texts.add(mapMenuItems.textLabel("ID:", (self.posx + 20, self.posy + 20), (0, 0, 0), None, 25))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 40), 25, 2, 1, button=None, default=[], type="int", fontfile=None))
         
-            self.texts.add(mapMenuItems.textLabel("End:", (self.posx + 330, self.posy + 20), (0, 0, 0), None, 25))
-            self.tinps.add(mapMenuItems.textInput((self.posx + 330, self.posy + 40), 25, 2, 7, button=None, default=[], type="int", fontfile=None))
+        self.texts.add(mapMenuItems.textLabel("Message:", (self.posx + 20, self.posy + 80), (0, 0, 0), None, 25))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 100), 15, 50, 2, button=None, default=[], type="str", fontfile=None))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 120), 15, 50, 3, button=None, default=[], type="str", fontfile=None))
+        
+        self.texts.add(mapMenuItems.textLabel("Goto:", (self.posx + 80, self.posy + 20), (0, 0, 0), None, 25))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 80, self.posy + 40), 25, 2, 4, button=None, default=[], type="int", fontfile=None))
+        
+        self.texts.add(mapMenuItems.textLabel("Charisma", (self.posx + 160, self.posy + 5), (0, 0, 0), None, 20))
+        self.texts.add(mapMenuItems.textLabel("Needed:", (self.posx + 160, self.posy + 20), (0, 0, 0), None, 20))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 160, self.posy + 40), 25, 2, 5, button=None, default=[], type="int", fontfile=None))
+        
+        self.texts.add(mapMenuItems.textLabel("Change", (self.posx + 240, self.posy + 5), (0, 0, 0), None, 20))
+        self.texts.add(mapMenuItems.textLabel("Friendliness:", (self.posx + 240, self.posy + 20), (0, 0, 0), None, 20))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 240, self.posy + 40), 25, 2, 6, button=None, default=[], type="int", fontfile=None))
+    
+        self.texts.add(mapMenuItems.textLabel("End:", (self.posx + 330, self.posy + 20), (0, 0, 0), None, 25))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 330, self.posy + 40), 25, 2, 7, button=None, default=[], type="int", fontfile=None))
     
     
     def update(self):
-        if not self.created:
-            self.posx = 150
-            self.posy = 50
-            self.rect = py.Rect(self.posx, self.posy, 500, 150)
-            
-            py.draw.rect(v.screen, (200, 200, 200), self.rect)
-            self.tinps.update()
-            self.texts.update()
-        if self.created:
-            self.posx = 20 + int(self.c_id) * 300
-            self.posy = 300
-            self.rect = py.Rect(self.posx, self.posy, 200, 50)
-            
-            py.draw.rect(v.screen, (200, 200, 200), self.rect)
+        self.posx = 150
+        self.posy = 50
+        self.rect = py.Rect(self.posx, self.posy, 500, 150)
+        
+        py.draw.rect(v.screen, (200, 200, 200), self.rect)
+        self.tinps.update()
+        self.texts.update()
+        
+        
+        done = 0
+        for inp in self.tinps:
+            if inp.num == 1:
+                if inp.outText != "":
+                    done += 1
+            if inp.num == 2:
+                if inp.outText != "":
+                    done += 1
+        if done >= 2:
+            self.created = True
+                
     
     def save(self):
         self.created = True
@@ -304,9 +308,40 @@ class chatChunk(py.sprite.Sprite):
             if inp.num == 7:
                 self.c_end = inp.outText
 
+class chatChunk(py.sprite.Sprite):
+    
+    def __init__(self, c_message=None, c_goto = None, c_id = None, c_charisma = None, c_buttons = None, c_changelike = None, c_end = None):
+        super().__init__()
+        
+        self.c_message = c_message
+        self.c_goto = c_goto
+        self.c_id = c_id
+        self.c_charisma = c_charisma
+        self.c_buttons = c_buttons
+        self.c_changelike = c_changelike
+        self.c_end = c_end
+        
+        self.posx = 20 + int(self.c_id) * 300
+        self.posy = 300
+        
+        self.texts = py.sprite.Group()
+        
+        self.texts.add(mapMenuItems.textLabel("ID", (self.posx + 15, self.posy + 2), (10, 10, 10), None, 20))
+        self.texts.add(mapMenuItems.textLabel(self.c_id, (self.posx + 10, self.posy + 13), (10, 10, 10), None, 60))
+        
+        
+    def update(self):
+        self.posx = 20 + int(self.c_id) * 300
+        self.posy = 300
+        self.rect = py.Rect(self.posx, self.posy, 200, 50)
+        py.draw.rect(v.screen, (200, 200, 200), self.rect)
+        self.texts.update()
+
+
 def chatEdit():
     chunks = py.sprite.Group()
-    chunks.add(chatChunk())
+    
+    edit = editChunk()
     buttons = py.sprite.Group()
     buttons.add(mapMenuItems.button("ADD", (650, 50), 100, (150, 150, 150), (200, 200, 200), None, "add", bsize=(150, 150), centretext=True))
     
@@ -316,14 +351,15 @@ def chatEdit():
         v.events = py.event.get()
         
         chunks.update()
+        edit.update()
         buttons.update()
         for event in v.events:
             if event.type == py.MOUSEBUTTONDOWN:
                 for button in buttons:
                     if button.pressed():
                         if button.ID == "add":
-                            for chunk in chunks:
-                                if chunk.created == False:
-                                    chunk.save()
-        
+                            if edit.created == True:
+                                edit.save()
+                                chunks.add(chatChunk(edit.c_message, edit.c_goto, edit.c_id, edit.c_charisma, edit.c_buttons, edit.c_changelike, edit.c_end))
+                                edit = editChunk()
         py.display.flip()

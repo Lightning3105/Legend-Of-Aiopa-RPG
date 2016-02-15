@@ -96,8 +96,8 @@ def onlineLogin():
     texts.add(MenuItems.textLabel("Aiopa Online", (v.screenX * 0.25, v.screenY * 0.15), (255, 0, 255), "Resources\Fonts\RunicSolid.ttf", int(v.screenX * 0.1)))
     
     v.textNum = 1
-    tinps.add(MenuItems.textInput((v.screenX * 0.4, v.screenX * 0.3), 20, 16, num=1, button=None, default=['1'], type="str", fontfile="Resources/Fonts/RPGSystem.ttf", background=(255, 255, 255)))
-    tinps.add(MenuItems.textInput((v.screenX * 0.4, v.screenX * 0.5), 20, 16, num=2, button=None, default=['1'], type="pass", fontfile="Resources/Fonts/RPGSystem.ttf", background=(255, 255, 255)))
+    tinps.add(MenuItems.textInput((v.screenX * 0.4, v.screenX * 0.3), 20, 16, num=1, button=None, default=[], type="str", fontfile="Resources/Fonts/RPGSystem.ttf", background=(255, 255, 255)))
+    tinps.add(MenuItems.textInput((v.screenX * 0.4, v.screenX * 0.5), 20, 16, num=2, button=None, default=[], type="pass", fontfile="Resources/Fonts/RPGSystem.ttf", background=(255, 255, 255)))
     
     buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
     buttons.add(MenuItems.Button("Log In", (v.screenX * 0.77, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "continue"))

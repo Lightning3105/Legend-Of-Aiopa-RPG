@@ -66,7 +66,7 @@ def defaultVariables():
     v.playerDirection = ""
     v.playerHealth = 20
     v.playerMana = 20
-    v.experience = {"XP": 0, "XPL": 1, "XPtoL": 10}
+    v.experience = {"XP": 0, "XPL": 1, "XPtoL": 10, "Total": 0}
     v.xpMod = 1.5
     v.npcID = 1
     v.scale = v.screenScale

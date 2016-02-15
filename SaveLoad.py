@@ -10,6 +10,7 @@ import npcScripts
 import urllib
 import hashlib
 import requests
+import MenuItems
 
 def Save():
     global v
@@ -105,6 +106,7 @@ def loadMap(mapNum):
 def Load():
     savefile = open("Saves/Variables.save", "rb")
     save = pickle.load(savefile)
+    print("LOADED:", save)
     v.Attributes = save["Attributes"]
     v.playerPosX = save["playerPosX"]
     v.playerPosY = save["playerPosY"]
@@ -165,6 +167,9 @@ def getAccount(username, password):
     return "USERNAME"
 
 def uploadSave():
+    MenuItems.shiftingGradient((0, 0, 'x')).draw()
+    MenuItems.textLabel("Uploading Save", (v.screenX * 0.5, v.screenY * 0.5), (255, 255, 255), "Resources/Fonts/RPGSystem.ttf", int(30/640 * v.screenX), variable=False, centred=True).update()  
+    py.display.flip()
     import json
     url = v.url + "senddata/"
     save = {}
@@ -177,12 +182,11 @@ def uploadSave():
     with open("Saves/Variables.save", "rb") as s:
         d = s.read()
         save["Variables"] = d
+        xp = pickle.loads(d)["experience"]["Total"]
     
-    print(save)
-    payload = {'username': v.username, 'password': v.password, 'save': save}
+    payload = {'username': v.username, 'password': v.password, 'save': "save", 'xp': xp}
 
     jpayload = json.dumps(str(payload))
-    print(jpayload)
 
     # GET
     #r = requests.get(url)
@@ -202,23 +206,30 @@ def uploadSave():
     print(r.status_code)
 
 def downloadSave(): #TODO: test this
+    MenuItems.shiftingGradient((0, 0, 'x')).draw()
+    MenuItems.textLabel("Downloading Save", (v.screenX * 0.5, v.screenY * 0.5), (255, 255, 255), "Resources/Fonts/RPGSystem.ttf", int(30/640 * v.screenX), variable=False, centred=True).update()  
+    py.display.flip()
+    
     page = urllib.request.urlopen(v.url + "accounts/")
     accounts = page.read()
     accounts = pickle.loads(accounts)
     
     for un, vals in accounts.items():
         if un == v.username:
-            hash_object = hashlib.md5(v.password.encode())
-            hash = hash_object.hexdigest()
-            if hash == vals["password"]:
+            if v.password == vals["password"]:
+                print(vals.keys())
+                print(vals["xp"])
                 if 'save' in vals.keys():
                     save = vals['save']
                     with open("Saves/Entities.save", "wb") as s:
-                        pickle.dump(save["Entities"], s)
+                        #pickle.dump(save["Entities"], s)
+                        s.write(save["Entities"])
                     with open("Saves/Inventory.save", "wb") as s:
-                        pickle.dump(save["Inventory"], s)
+                        #pickle.dump(save["Inventory"], s)
+                        s.write(save["Inventory"])
                     with open("Saves/Variables.save", "wb") as s:
-                        pickle.dump(save["Variables"], s)
+                        #pickle.dump(save["Variables"], s)
+                        s.write(save["Variables"])
             else:
                 return "PASSWORD"
     return "USERNAME"

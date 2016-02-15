@@ -100,7 +100,9 @@ def onlineLogin():
     tinps.add(MenuItems.textInput((v.screenX * 0.4, v.screenX * 0.5), 20, 16, num=2, button=None, default=['1'], type="pass", fontfile="Resources/Fonts/RPGSystem.ttf", background=(255, 255, 255)))
     
     buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
-    buttons.add(MenuItems.Button("Continue", (v.screenX * 0.77, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "continue"))
+    buttons.add(MenuItems.Button("Log In", (v.screenX * 0.77, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "continue"))
+    buttons.add(MenuItems.Button("Register Account", (v.screenX * 0.5, v.screenY * 0.93), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "register", centred=True))
+
     
     logintext = MenuItems.textLabel("Logging In", (v.screenX * 0.5, v.screenY * 0.5), (255, 255, 255), "Resources/Fonts/RPGSystem.ttf", int(30/640 * v.screenX), variable=False, centred=True)
     background = MenuItems.shiftingGradient((0, 0, 'x'))
@@ -128,6 +130,9 @@ def onlineLogin():
                             if button.ID == "back":
                                 mainMenu()
                                 return
+                            if button.ID == "register":
+                                import webbrowser
+                                webbrowser.open(v.url + "createaccount")
                             if button.ID == "continue":
                                 phase = 2
                                 loginTimer = 0

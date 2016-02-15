@@ -162,8 +162,12 @@ class XP:
     def __init__(self):
         self.posx = 320 / 640 * v.screenX
         self.posy = 440 / 640 * v.screenX
+        self.oldXP = 0
         
     def update(self):
+        if v.experience["XP"] > self.oldXP:
+            v.experience["Total"] += v.experience["XP"] - self.oldXP
+            self.oldXP = v.experience["XP"]
         if v.experience["XP"] >= v.experience["XPtoL"]:
             v.experience["XP"] -= v.experience["XPtoL"]
             v.experience["XPL"] += 1

@@ -371,7 +371,13 @@ class chatChunk(py.sprite.Sprite):
                         poy = chunk.posy
                         py.draw.line(v.screen, (255, 0, 0), (self.posx + (200 - line), self.posy + 25), (end, poy + 25), 4)
                         py.draw.circle(v.screen, (255, 0, 0), (end, poy + 25), 5)
-                        
+        
+        for chunk in v.chunks:
+            if chunk.hovered:
+                if chunk.c_id == self.c_goto:
+                    poy = chunk.posy
+                    py.draw.line(v.screen, (0, 0, 255), (self.posx + (200 - line), self.posy + 25), (end, poy + 25), 4)
+                    py.draw.circle(v.screen, (0, 0, 255), (self.posx + (200 - line), poy + 25), 5)
         py.draw.rect(v.screen, (200, 200, 200), self.rect)
         self.texts.update()
 

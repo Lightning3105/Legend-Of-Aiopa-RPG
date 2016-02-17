@@ -35,3 +35,5 @@ tempId = 0
 currentName = None
 currentBiome = None
 scrollBar = 0
+chunks = None
+chunkIDs = {}

@@ -1,2 +1,3 @@
 DEL /S /Q build
-python setupExe.py build
+"C:\Python34\python.exe" setupExe.py build
+pause

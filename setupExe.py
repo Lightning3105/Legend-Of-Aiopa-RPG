@@ -8,8 +8,9 @@ build_exe_options = {'include_files':includefiles}
 # GUI applications require a different base on Windows (the default is for a
 # console application).
 base = None
-if sys.platform == "win32":
+"""if sys.platform == "win32":
     base = "Win32GUI"
+    """
 
 target = Executable(
            # what to build

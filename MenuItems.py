@@ -55,16 +55,11 @@ class Button(py.sprite.Sprite):
             self.rect.height = self.size[1]
 
     def pressed(self):
-        mouse = py.mouse.get_pos()
-        if mouse[0] > self.rect.topleft[0]:
-            if mouse[1] > self.rect.topleft[1]:
-                if mouse[0] < self.rect.bottomright[0]:
-                    if mouse[1] < self.rect.bottomright[1]:
-                        return True
-                    else: return False
-                else: return False
-            else: return False
-        else: return False
+        if self.hovered:
+            for event in v.events:
+                if event.type == py.MOUSEBUTTONDOWN:
+                    return True
+        return False
 
 
 class Text:
@@ -139,12 +134,12 @@ class fadeIn:
     def __init__(self):
         self.opacity = 255
         self.speed = 3
+        self.black = py.Surface((v.screenX, v.screenY))
+        self.black.fill((0, 0, 0))
 
     def draw(self):
-        black = py.Surface((v.screenX, v.screenY))
-        black.fill((0, 0, 0))
-        black.set_alpha(self.opacity)
-        v.screen.blit(black, (0, 0))
+        self.black.set_alpha(self.opacity)
+        v.screen.blit(self.black, (0, 0))
         if self.opacity <= 0:
             self.opacity = 0
         if self.opacity >= 255:

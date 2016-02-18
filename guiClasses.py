@@ -275,19 +275,17 @@ class pauseScreen:
         self.text.update()
         self.buttons.update()
         
-        for event in v.events:
-            if event.type == py.MOUSEBUTTONDOWN:
-                for button in self.buttons:
-                    if button.pressed():
-                        id = button.ID
-                        if id == "mainMenu":
-                            gameScreens.mainMenu()
-                            continue
-                        if id == "quit":
-                            import SaveLoad
-                            SaveLoad.Save()
-                            from sys import exit
-                            exit()
+        for button in self.buttons:
+            if button.pressed():
+                id = button.ID
+                if id == "mainMenu":
+                    gameScreens.mainMenu()
+                    continue
+                if id == "quit":
+                    import SaveLoad
+                    SaveLoad.Save()
+                    from sys import exit
+                    exit()
 
 class miniMap: #TODO make this work with baseMap
     
@@ -471,21 +469,19 @@ class deathScreen():
             if self.cycle > 250:
                 self.buttons.update()
                 self.text.update()
-                for event in v.events:
-                    if event.type == py.MOUSEBUTTONDOWN:
-                        for b in self.buttons:
-                            if b.pressed():
-                                if b.ID == "qt":
-                                    pass
-                                if b.ID == "rs":
-                                    pass
-                                if b.ID == "ls":
-                                    import setupScripts, SaveLoad
-                                    setupScripts.createGroups()
-                                    setupScripts.defaultVariables()
-                                    SaveLoad.Load()
-                                    v.newGame = False
-                                    gameScreens.game()
+                for b in self.buttons:
+                    if b.pressed():
+                        if b.ID == "qt":
+                            pass
+                        if b.ID == "rs":
+                            pass
+                        if b.ID == "ls":
+                            import setupScripts, SaveLoad
+                            setupScripts.createGroups()
+                            setupScripts.defaultVariables()
+                            SaveLoad.Load()
+                            v.newGame = False
+                            gameScreens.game()
             if self.cycle < 355:
                 self.cycle += 1
                 

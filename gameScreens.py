@@ -53,31 +53,31 @@ def mainMenu():
         for event in v.events:
             if event.type == py.QUIT:
                 sys.exit()
-            elif event.type == py.MOUSEBUTTONDOWN:
-                for button in buttons:
-                    if button.pressed():
-                        id = button.ID
-                        if id == "play":
-                            setupScripts.createGroups()
-                            setupScripts.defaultVariables()
-                            classSelection()
-                            #v.playerClass = "Mage"
-                            setupScripts.setAttributes()
-                            v.newGame = True
-                            story()
-                            game()
-                            return
-                        if id == "options":
-                            options()
-                            return
-                        if id == "load":
-                            setupScripts.createGroups()
-                            setupScripts.defaultVariables()
-                            SaveLoad.Load()
-                            v.newGame = False
-                            game()
-                        if id == "online":
-                            onlineLogin()
+
+        for button in buttons:
+            if button.pressed():
+                id = button.ID
+                if id == "play":
+                    setupScripts.createGroups()
+                    setupScripts.defaultVariables()
+                    classSelection()
+                    #v.playerClass = "Mage"
+                    setupScripts.setAttributes()
+                    v.newGame = True
+                    story()
+                    game()
+                    return
+                if id == "options":
+                    options()
+                    return
+                if id == "load":
+                    setupScripts.createGroups()
+                    setupScripts.defaultVariables()
+                    SaveLoad.Load()
+                    v.newGame = False
+                    game()
+                if id == "online":
+                    onlineLogin()
         fade.draw()
         fade.opacity -= 1
         py.display.flip()
@@ -123,25 +123,23 @@ def onlineLogin():
             extraTexts.update()
             tinps.update()
             buttons.update()
-            for event in v.events:
-                if event.type == py.MOUSEBUTTONDOWN:
-                    for button in buttons:
-                        if button.pressed():
-                            if button.ID == "back":
-                                mainMenu()
-                                return
-                            if button.ID == "register":
-                                import webbrowser
-                                webbrowser.open(v.url + "createaccount")
-                            if button.ID == "continue":
-                                phase = 2
-                                loginTimer = 0
-                                logintext.update()
-                                for inp in tinps:
-                                    if inp.num == 1:
-                                        user = inp.outText
-                                    if inp.num == 2:
-                                        passw = inp.outText
+            for button in buttons:
+                if button.pressed():
+                    if button.ID == "back":
+                        mainMenu()
+                        return
+                    if button.ID == "register":
+                        import webbrowser
+                        webbrowser.open(v.url + "createaccount")
+                    if button.ID == "continue":
+                        phase = 2
+                        loginTimer = 0
+                        logintext.update()
+                        for inp in tinps:
+                            if inp.num == 1:
+                                user = inp.outText
+                            if inp.num == 2:
+                                passw = inp.outText
         elif phase == 2:
             for event in v.events:
                 if event.type == py.USEREVENT:
@@ -195,17 +193,15 @@ def onlineMenu():
         v.events = py.event.get()
         background.draw()
         buttons.update()
-        for event in v.events:
-            if event.type == py.MOUSEBUTTONDOWN:
-                for button in buttons:
-                    if button.pressed():
-                        if button.ID == "upload":
-                            SaveLoad.uploadSave()
-                        if button.ID == "download":
-                            SaveLoad.downloadSave()
-                        if button.ID == "back":
-                            mainMenu()
-                            return
+        for button in buttons:
+            if button.pressed():
+                if button.ID == "upload":
+                    SaveLoad.uploadSave()
+                if button.ID == "download":
+                    SaveLoad.downloadSave()
+                if button.ID == "back":
+                    mainMenu()
+                    return
         
         py.display.flip()
 
@@ -232,37 +228,37 @@ def options():
         for event in v.events:
             if event.type == py.QUIT:
                 sys.exit()
-            elif event.type == py.MOUSEBUTTONDOWN:
-                for button in buttons:
-                    if button.pressed():
-                        id = button.ID
-                        if id == "fullscreen":
-                            if v.fullScreen == False:
-                                v.fullScreen = True
-                            else:
-                                v.fullScreen = False
-                            
-                        if id == "back":
-                            mainMenu()
-                            return
-                        if id == "resolution":
-                            if v.screenX == 640:
-                                v.screenX = 800
-                                v.screenY = 600
-                            elif v.screenX == 800:
-                                #v.screenX = 1024
-                                #v.screenY = 768
-                                v.screenX = 933
-                                v.screenY = 700
-                            elif v.screenX == 933:
-                                v.screenX = 640
-                                v.screenY = 480
-                            elif v.screenX == 1024:
-                                v.screenX = 640
-                                v.screenY = 480
-                        windowUpdate()
-                        options()
-                        return
+
+        for button in buttons:
+            if button.pressed():
+                id = button.ID
+                if id == "fullscreen":
+                    if v.fullScreen == False:
+                        v.fullScreen = True
+                    else:
+                        v.fullScreen = False
+                    
+                if id == "back":
+                    mainMenu()
+                    return
+                if id == "resolution":
+                    if v.screenX == 640:
+                        v.screenX = 800
+                        v.screenY = 600
+                    elif v.screenX == 800:
+                        #v.screenX = 1024
+                        #v.screenY = 768
+                        v.screenX = 933
+                        v.screenY = 700
+                    elif v.screenX == 933:
+                        v.screenX = 640
+                        v.screenY = 480
+                    elif v.screenX == 1024:
+                        v.screenX = 640
+                        v.screenY = 480
+                windowUpdate()
+                options()
+                return
         fade.draw()
         fade.opacity -= 1
         py.display.flip()
@@ -632,24 +628,24 @@ def classSelection():
         for event in v.events:
             if event.type == py.QUIT:
                 sys.exit()
-            elif event.type == py.MOUSEBUTTONDOWN:
-                for button in buttons:
-                    if button.pressed():
-                        id = button.ID
-                        if id == "back":
-                            mainMenu()
-                            return
-                        if id == "continue":
-                            if v.custimizationStage == "Attributes":
-                                v.custimizationStage = "Customisation"
-                                v.appearanceTab = "Body"
-                                for ao in attOptions:
-                                    ao.save()
-                            elif v.custimizationStage == "Customisation":
-                                v.custimizationStage = "Name"
-                if v.custimizationStage == "Name" and bigcont.pressed():
-                    nti.outText
-                    return
+
+            for button in buttons:
+                if button.pressed():
+                    id = button.ID
+                    if id == "back":
+                        mainMenu()
+                        return
+                    if id == "continue":
+                        if v.custimizationStage == "Attributes":
+                            v.custimizationStage = "Customisation"
+                            v.appearanceTab = "Body"
+                            for ao in attOptions:
+                                ao.save()
+                        elif v.custimizationStage == "Customisation":
+                            v.custimizationStage = "Name"
+            if v.custimizationStage == "Name" and bigcont.pressed():
+                nti.outText
+                return
                         
             
         

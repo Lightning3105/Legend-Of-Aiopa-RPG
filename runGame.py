@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
 if __name__ == "__main__":
-    from sys import version
-    print(version)
     import Updater
     from getpass import getuser
     if not getuser() == "James Waters":

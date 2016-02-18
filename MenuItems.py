@@ -21,19 +21,16 @@ class Button(py.sprite.Sprite):
         self.font = py.font.Font(font, int(size))
         self.centred = centred
         self.size = bsize
+        self.rend = self.font.render(self.text, True, (0,0,0))
         self.set_rect()
     
     def update(self):
-        self.set_rend()
         py.draw.rect(v.screen, self.get_color(), self.rect)
         v.screen.blit(self.rend, self.rect)
         if self.rect.collidepoint(py.mouse.get_pos()):
             self.hovered = True
         else:
             self.hovered = False
-
-    def set_rend(self):
-        self.rend = self.font.render(self.text, True, (0,0,0))
 
     def get_color(self):
         if self.hovered:
@@ -42,7 +39,6 @@ class Button(py.sprite.Sprite):
             return self.ncolour
 
     def set_rect(self):
-        self.set_rend()
         self.rect = self.rend.get_rect()
         if not self.centred:
             self.rect.topleft = self.pos
@@ -60,31 +56,6 @@ class Button(py.sprite.Sprite):
                 if event.type == py.MOUSEBUTTONDOWN:
                     return True
         return False
-
-
-class Text:
-
-    def __init__(self, text, pos, size, colour, font):
-        self.text = text
-        self.pos = pos
-        self.size = size
-        self.colour = colour
-        self.font = font
-        self.font = py.font.Font(font, size)
-        self.set_rect()
-        self.draw()
-
-    def draw(self):
-        self.set_rend()
-        v.screen.blit(self.rend, self.rect)
-
-    def set_rend(self):
-        self.rend = self.font.render(self.text, True, self.colour)
-
-    def set_rect(self):
-        self.set_rend()
-        self.rect = self.rend.get_rect()
-        self.rect.topleft = self.pos
 
 def centre():
     return (v.screenX / 2, v.screenY / 2)

@@ -16,8 +16,9 @@ if __name__ == "__main__":
     import pstats
     print("START GAME")
     cProfile.run("gameScreens.mainMenu()", "Out.txt")
-    p = pstats.Stats("Out.txt")
-    p.strip_dirs().sort_stats("time").print_stats(20)
+    with open("Calltime Dump.txt", "w") as fc:
+        p = pstats.Stats("Out.txt", stream=fc)
+        p.strip_dirs().sort_stats("time").print_stats()
     #gameScreens.story()
     
     #gameScreens.game()

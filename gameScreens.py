@@ -23,15 +23,17 @@ def mainMenu():
     windowUpdate()
     MenuItems.screen = v.screen
     buttons = py.sprite.Group()
-    texts = []
+    texts = py.sprite.Group()
     buttons.add(MenuItems.Button("New Game", (v.screenX * 0.5, v.screenY * 0.5), int(v.screenX * 0.09), colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "play", centred=True))
     buttons.add(MenuItems.Button("Options", (v.screenX * 0.5, v.screenY * 0.63), int(v.screenX * 0.09), colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "options", centred=True))
     buttons.add(MenuItems.Button("Load", (v.screenX * 0.5, v.screenY * 0.76), int(v.screenX * 0.09), colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "load", centred=True))
     buttons.add(MenuItems.Button("Aiopa Online", (v.screenX * 0.5, v.screenY * 0.89), int(v.screenX * 0.09), colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "online", centred=True))
     
-    texts.append(MenuItems.Text("The Legend", (v.screenX * 0.140625, v.screenY * 0.01), int(v.screenX * 0.125), colour("red"), "Resources\Fonts\RunicClear.ttf"))
-    texts.append(MenuItems.Text("Of Aiopa", (v.screenX * 0.25, v.screenY * 0.15), int(v.screenX * 0.125), colour("red"), "Resources\Fonts\RunicClear.ttf"))
-    texts.append(MenuItems.Text("Created By James", (v.screenX * 0.25, v.screenY * 0.32), int(v.screenX * 0.0625), colour("black"), "Resources\Fonts\Vecna.otf"))
+    #text, pos, size, colour, font
+    #text, pos, colour, font, size
+    texts.add(MenuItems.textLabel("The Legend", (v.screenX * 0.140625, v.screenY * 0.01), colour("red"), "Resources\Fonts\RunicClear.ttf", int(v.screenX * 0.125)))
+    texts.add(MenuItems.textLabel("Of Aiopa", (v.screenX * 0.25, v.screenY * 0.15), colour("red"), "Resources\Fonts\RunicClear.ttf", int(v.screenX * 0.125)))
+    texts.add(MenuItems.textLabel("Created By James", (v.screenX * 0.25, v.screenY * 0.32), colour("black"), "Resources\Fonts\Vecna.otf", int(v.screenX * 0.0625)))
     
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
@@ -45,8 +47,7 @@ def mainMenu():
     while True:
         py.event.pump()
         MenuItems.fill_gradient(v.screen, colour("cyan"), colour("dark blue"))
-        for text in texts:
-            text.draw()
+        texts.update()
         buttons.update()
         v.events = []
         v.events = py.event.get()
@@ -329,6 +330,9 @@ def game():
     xp = guiClasses.XP()
     loclab = guiClasses.locationTitle()
     
+    fpsLabel = guiClasses.fps()
+    actionText = guiClasses.actionText()
+    
 
     pause = guiClasses.pauseScreen()
     
@@ -380,13 +384,13 @@ def game():
             
             guiClasses.update_health()
             guiClasses.update_mana()
-            guiClasses.actionText()
+            actionText.update()
             xp.update()
             weaponSlot.draw()
             v.abilityButtons.update()
             loclab.update()
             #map.update()
-            guiClasses.fps()
+            fpsLabel.update()
             
             py.display.flip()
             for event in v.events:

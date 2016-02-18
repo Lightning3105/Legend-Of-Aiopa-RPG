@@ -47,7 +47,7 @@ class health:
         v.screen.blit(background, brect)
         v.screen.blit(image, rect)
 
-def update_health():
+def update_health(): #TODO: Split label into separate class
     for n in range(1, 6):
         health(n).draw()
     
@@ -68,7 +68,7 @@ def update_health():
         v.pauseType = "Death"
     
 
-class mana:
+class mana: 
 
     def __init__(self, number):
         sheet = entityClasses.SpriteSheet("Resources/Images/Mana.png", 1, 4)
@@ -109,7 +109,7 @@ class mana:
         v.screen.blit(background, brect)
         v.screen.blit(image, rect)
 
-def update_mana():
+def update_mana(): #TODO: Split label into separate class
     for n in range(1, 6):
         mana(n).draw()
     for event in v.events:
@@ -134,28 +134,26 @@ def update_mana():
     
 
 class weaponSlot:
+    
+    def __init__(self):
+        self.image = "Resources/Images/Empty_Weapon_Slot.png"
+        self.image = py.image.load(self.image).convert_alpha()
+        self.image = py.transform.scale(self.image, (int(80 / 640 * v.screenX), int(80 / 640 * v.screenX)))
+        self.rect = self.image.get_rect()
+        self.rect.center = (44, v.screen.get_rect().bottom - 45)
 
     def draw(self):
-        image = "Resources/Images/Empty_Weapon_Slot.png"
-        image = py.image.load(image).convert_alpha()
-        image = py.transform.scale(image, (int(80 / 640 * v.screenX), int(80 / 640 * v.screenX)))
-        rect = image.get_rect()
-        rect.center = (44, v.screen.get_rect().bottom - 45)
+        posy = self.rect.height - (self.rect.height * v.weaponCooldown)
+        self.image.fill((255, 0, 0, 200), rect=((0, posy), self.rect.size), special_flags=py.BLEND_RGBA_MULT)
         
-        #red = py.Surface(rect.size).convert_alpha()
-        
-        posy = rect.height - (rect.height * v.weaponCooldown)
-        image.fill((255, 0, 0, 200), rect=((0, posy), rect.size), special_flags=py.BLEND_RGBA_MULT)
-        #image.blit(red, (0, posy))
-        
-        v.screen.blit(image, rect)
+        v.screen.blit(self.image, self.rect)
         
         image = v.equipped["Weapon"].icon
         image = py.transform.scale(image, (int(image.get_rect().width * v.scale * 0.8), int(image.get_rect().height * v.scale * 0.8)))
-        rect.width *= 0.8
-        rect.height *= 0.8
-        rect.center = (44, v.screen.get_rect().bottom - 45)
-        v.screen.blit(image, rect)
+        self.rect.width *= 0.8
+        self.rect.height *= 0.8
+        self.rect.center = (44, v.screen.get_rect().bottom - 45)
+        v.screen.blit(image, self.rect)
 
 class XP:
     
@@ -343,19 +341,27 @@ class miniMap: #TODO make this work with baseMap
                 if self.tileScale >= 7:
                     self.tileScale = 7
 
-def actionText():
-    if not v.actionQueue == []:
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(20 / 640 * v.screenX))
-        label = font.render(v.actionQueue[0], 1, (255, 255, 255))
-        posy = 380 / 640 * v.screenX
-        posx = ((v.screenX/2) - (font.size(v.actionQueue[0])[0] / 2)) / 640 * v.screenX
-        v.screen.blit(label, (posx, posy))
+class actionText(py.sprite.Sprite):
+    
+    def __init__(self):
+        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(20 / 640 * v.screenX))
+    
+    def update(self):
+        if not v.actionQueue == []:
+            label = self.font.render(v.actionQueue[0], 1, (255, 255, 255))
+            posy = 380 / 640 * v.screenX
+            posx = ((v.screenX/2) - (self.font.size(v.actionQueue[0])[0] / 2)) / 640 * v.screenX
+            v.screen.blit(label, (posx, posy))
 
-def fps():
-    pos = (v.screenX * 0.5, v.screenY * 0.021)
-    font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.03125))
-    label = font.render(str(int(v.clock.get_fps())), 1, (255, 0, 0))
-    v.screen.blit(label, pos)
+class fps(py.sprite.Sprite):
+    
+    def __init__(self):
+        super().__init__()
+        self.pos = (v.screenX * 0.5, v.screenY * 0.021)
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.03125))
+        self.label = font.render(str(int(v.clock.get_fps())), 1, (255, 0, 0))
+    def update(self):
+        v.screen.blit(self.label, self.pos)
 
 
 class loadingScreen():

@@ -544,8 +544,7 @@ class Tile(py.sprite.Sprite):
         if self.teleport != None:
             if self.rect.colliderect(v.p_class.rect):
                 SaveLoad.saveMap(v.mapNum)
-                #tp = v.teleports[str(self.teleport)]
-                tp= self.teleport
+                tp = self.teleport
                 v.mapNum = tp[0]
                 v.playerPosX = tp[1]
                 v.playerPosY = tp[2]

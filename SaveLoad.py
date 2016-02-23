@@ -184,7 +184,7 @@ def uploadSave():
         save["Variables"] = d
         xp = pickle.loads(d)["experience"]["Total"]
     
-    payload = {'username': v.username, 'password': v.password, 'save': "save", 'xp': xp}
+    payload = {'username': v.username, 'password': v.password, 'save': save, 'xp': xp}
 
     jpayload = json.dumps(str(payload))
 

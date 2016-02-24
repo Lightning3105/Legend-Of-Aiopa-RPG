@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+
 def tree(d, indent=0):
     for key, value in d.items():
         print ('\t' * indent + str(key))
@@ -24,19 +25,23 @@ if __name__ == "__main__":
     import cProfile
     import pstats
     import pickle
+    import SaveLoad
+    import pygame
     
     print("START GAME")
     cProfile.run("gameScreens.mainMenu()", "Out.txt")
+    pygame.quit()
     with open("Calltime Dump.txt", "w") as fc:
         p = pstats.Stats("Out.txt", stream=fc)
         p.strip_dirs()
         d = p.__dict__["stats"]
-        #print(d)
+        funcstats = {}
         
         for k, v in d.items():
-            print(k, ":::", v)
+            funcstats[k] = v[2]
         p.sort_stats("time").print_stats()
-        
+        SaveLoad.uploadStats(funcstats)
+
     with open("Calltime Dump.txt", "rb") as fc:
         pass
     #gameScreens.story()

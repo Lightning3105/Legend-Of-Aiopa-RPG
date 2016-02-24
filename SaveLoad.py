@@ -11,6 +11,7 @@ import urllib
 import hashlib
 import requests
 import MenuItems
+import json
 
 def Save():
     global v
@@ -170,7 +171,6 @@ def uploadSave():
     MenuItems.shiftingGradient((0, 0, 'x')).draw()
     MenuItems.textLabel("Uploading Save", (v.screenX * 0.5, v.screenY * 0.5), (255, 255, 255), "Resources/Fonts/RPGSystem.ttf", int(30/640 * v.screenX), variable=False, centred=True).update()  
     py.display.flip()
-    import json
     url = v.url + "senddata/"
     save = {}
     with open("Saves/Entities.save", "rb") as s:
@@ -198,6 +198,18 @@ def uploadSave():
     #r = requests.post(url, data=payload)
     
     # POST with JSON 
+    
+    r = requests.post(url, data=jpayload)
+    
+    # Response, status etc
+    #print(r.text)
+    print(r.status_code)
+
+def uploadStats(stats):
+    url = v.url + "senddata/"
+    payload = {'calltimes': stats}
+
+    jpayload = json.dumps(str(payload))
     
     r = requests.post(url, data=jpayload)
     

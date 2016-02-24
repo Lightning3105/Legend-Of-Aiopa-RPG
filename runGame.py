@@ -1,15 +1,4 @@
 #!/usr/bin/env python3
-
-
-def tree(d, indent=0):
-    for key, value in d.items():
-        print ('\t' * indent + str(key))
-        if isinstance(value, dict):
-            tree(value, indent+1)
-        else:
-            print ('\t' * (indent+1) + str(value))
-
-
 if __name__ == "__main__":
     import Updater
     from getpass import getuser

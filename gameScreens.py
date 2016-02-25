@@ -37,6 +37,7 @@ def mainMenu():
     
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
+    print(pig)
     
     setupScripts.initSound()
     f = open("log.txt", "w")
@@ -1256,3 +1257,35 @@ def story():
             if event.type == py.QUIT:
                 sys.exit()
         py.display.flip()
+
+def crashScreen(crash):
+    py.init()
+    windowUpdate()
+    texts = py.sprite.Group()
+    buttons = py.sprite.Group()
+    
+    buttons.add(MenuItems.Button("Copy to Clipboard", (20, 440), 30, (50, 255, 50), (0, 200, 0), None, "copy"))
+    buttons.add(MenuItems.Button("Upload Report", (220, 440), 30, (50, 255, 50), (0, 200, 0), None, "copy"))
+    
+    posy = 50
+    import os.path
+    parent = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+    parent = parent.replace("\\", "/")
+    for line in crash:
+        out = line.strip("\n")
+        out = out.replace("\\", "/")
+        out = out.split(parent)
+        out = "".join(out)
+        out = out.replace("  ", "    ")
+        texts.add(MenuItems.textLabel(out, (30, posy), (0, 0, 0), None, 20))
+        posy += 20
+    
+    while True:
+        py.event.pump()
+        v.screen.fill((50, 0, 255))
+        py.draw.rect(v.screen, (255, 255, 255), (20, 40, 600, 380))
+        py.draw.rect(v.screen, (0, 0, 0), (20, 40, 600, 380), 2)
+        texts.update()
+        buttons.update()
+        py.display.flip()
+        

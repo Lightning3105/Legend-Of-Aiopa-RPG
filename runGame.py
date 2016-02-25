@@ -16,9 +16,22 @@ if __name__ == "__main__":
     import pickle
     import SaveLoad
     import pygame
+    import traceback
+    import time
+    import os
     
     print("START GAME")
-    cProfile.run("gameScreens.mainMenu()", "Out.txt")
+    try:
+        cProfile.run("gameScreens.mainMenu()", "Out.txt")
+    except Exception as e:
+        print(e)
+        if not os.path.exists("Crash Reports"):
+            os.makedirs("Crash Reports")
+        name = "Crash Reports/Crash Report " + time.strftime("%Y-%m-%d_%H.%M.%S") + ".txt"
+        with open(name, "w") as crash:
+            a = traceback.print_exc(file=crash, limit=8)
+        with open(name, "r") as crash:
+            gameScreens.crashScreen(crash)
     pygame.quit()
     with open("Calltime Dump.txt", "w") as fc:
         p = pstats.Stats("Out.txt", stream=fc)

@@ -37,7 +37,6 @@ def mainMenu():
     
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
-    print(pig)
     
     setupScripts.initSound()
     f = open("log.txt", "w")

@@ -31,7 +31,7 @@ if __name__ == "__main__":
         with open(name, "w") as crash:
             a = traceback.print_exc(file=crash, limit=8)
         with open(name, "r") as crash:
-            gameScreens.crashScreen(crash)
+            gameScreens.crashScreen(crash.read())
     pygame.quit()
     with open("Calltime Dump.txt", "w") as fc:
         p = pstats.Stats("Out.txt", stream=fc)

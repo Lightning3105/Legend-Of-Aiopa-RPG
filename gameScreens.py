@@ -1265,13 +1265,14 @@ def crashScreen(crash):
     buttons = py.sprite.Group()
     
     buttons.add(MenuItems.Button("Copy to Clipboard", (20, 440), 30, (50, 255, 50), (0, 200, 0), None, "copy"))
-    buttons.add(MenuItems.Button("Upload Report", (220, 440), 30, (50, 255, 50), (0, 200, 0), None, "copy"))
-    
+    buttons.add(MenuItems.Button("Upload Report", (220, 440), 30, (50, 255, 50), (0, 200, 0), None, "upload"))
+    buttons.add(MenuItems.Button("Exit", (420, 440), 30, (50, 255, 50), (0, 200, 0), None, "quit"))
+
     posy = 50
     import os.path
     parent = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
     parent = parent.replace("\\", "/")
-    for line in crash:
+    for line in crash.split("\n"):
         out = line.strip("\n")
         out = out.replace("\\", "/")
         out = out.split(parent)
@@ -1280,12 +1281,27 @@ def crashScreen(crash):
         texts.add(MenuItems.textLabel(out, (30, posy), (0, 0, 0), None, 20))
         posy += 20
     
+    
     while True:
         py.event.pump()
+        v.events = []
+        v.events = py.event.get()
         v.screen.fill((50, 0, 255))
         py.draw.rect(v.screen, (255, 255, 255), (20, 40, 600, 380))
         py.draw.rect(v.screen, (0, 0, 0), (20, 40, 600, 380), 2)
         texts.update()
         buttons.update()
+        for button in buttons:
+            if button.pressed():
+                if button.ID == "upload":
+                    SaveLoad.uploadCrash(crash)
+                if button.ID == "copy":
+                    py.scrap.init()
+                    py.scrap.put(py.SCRAP_TEXT, str(crash).encode())
+                if button.ID == "quit":
+                    return
+        for event in v.events:
+            if event.type == py.QUIT:
+                return
         py.display.flip()
         

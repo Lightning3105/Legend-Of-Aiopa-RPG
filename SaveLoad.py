@@ -217,6 +217,18 @@ def uploadStats(stats):
     #print(r.text)
     print(r.status_code)
 
+def uploadCrash(crash):
+    url = v.url + "senddata/"
+    payload = {'crash': crash}
+
+    jpayload = json.dumps(str(payload))
+    
+    r = requests.post(url, data=jpayload)
+    
+    # Response, status etc
+    print(r.text)
+    print(r.status_code)
+
 def downloadSave(): #TODO: test this
     MenuItems.shiftingGradient((0, 0, 'x')).draw()
     MenuItems.textLabel("Downloading Save", (v.screenX * 0.5, v.screenY * 0.5), (255, 255, 255), "Resources/Fonts/RPGSystem.ttf", int(30/640 * v.screenX), variable=False, centred=True).update()  

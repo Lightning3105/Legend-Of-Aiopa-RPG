@@ -372,6 +372,9 @@ class shiftingGradient():
         if self.colour == (0, 0, 'x'):
             colour1 = (0, 0, 255 - self.colourMod)
             colour2 = (0, 0, 0 + self.colourMod)
+        if self.colour == (0, 'x', 0):
+            colour1 = (0, 255 - self.colourMod, 0)
+            colour2 = (0, 0 + self.colourMod, 0)
         fill_gradient(v.screen, colour1, colour2, vertical=self.colourDirection, forward=self.colourForward)
 
 class apearanceSelector(py.sprite.Sprite):

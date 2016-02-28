@@ -217,6 +217,20 @@ def uploadStats(stats):
     #print(r.text)
     print(r.status_code)
 
+def createServer(name, password):
+    url = v.url + "multiplayer/" + name
+    
+    hash_object = hashlib.md5(password.encode())
+    hash = hash_object.hexdigest()
+    
+    payload = {"start":True, "password": hash, "admin": v.username}
+    jpayload = json.dumps(str(payload))
+    r = requests.post(url, data=jpayload)
+    
+    # Response, status etc
+    #print(r.text)
+    print(r.status_code)
+
 def uploadCrash(crash):
     url = v.url + "senddata/"
     payload = {'crash': crash}

@@ -185,6 +185,7 @@ def onlineMenu():
     buttons.add(MenuItems.Button("Upload Save", (v.screenX * 0.2, v.screenY * 0.5), 40, (100, 200, 200), (0, 255, 255), "Resources\Fonts\MorrisRoman.ttf", "upload", centred=True))
     buttons.add(MenuItems.Button("Download Save", (v.screenX * 0.8, v.screenY * 0.5), 40, (100, 200, 200), (0, 255, 255), "Resources\Fonts\MorrisRoman.ttf", "download", centred=True))
     buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
+    buttons.add(MenuItems.Button("Multiplayer", (v.screenX * 0.5, v.screenY * 0.2), 40, (100, 200, 200), (0, 255, 255), "Resources\Fonts\MorrisRoman.ttf", "multiplayer", centred=True))
 
     
     background = MenuItems.shiftingGradient((0, 0, 'x'))
@@ -203,7 +204,51 @@ def onlineMenu():
                 if button.ID == "back":
                     mainMenu()
                     return
+                if button.ID == "multiplayer":
+                    createServer()
         
+        py.display.flip()
+
+def createServer():
+    py.init()
+    background = MenuItems.shiftingGradient((0, 0, 'x'))
+    texts = py.sprite.Group()
+    tinps = py.sprite.Group()
+    buttons = py.sprite.Group()
+    
+    texts.add(MenuItems.textLabel("Server Name:", (v.screenX * 0.1, v.screenY * 0.3), (255, 255, 255), "Resources\Fonts\MorrisRoman.ttf", 30))
+    tinps.add(MenuItems.textInput((v.screenX * 0.45, v.screenY * 0.28), 30, 8, 0, button=None, default=[], type="str"))
+    
+    texts.add(MenuItems.textLabel("Server Password:", (v.screenX * 0.1, v.screenY * 0.5), (255, 255, 255), "Resources\Fonts\MorrisRoman.ttf", 30))
+    tinps.add(MenuItems.textInput((v.screenX * 0.45, v.screenY * 0.48), 30, 8, 1, button=None, default=[], type="pass"))
+    
+    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
+    buttons.add(MenuItems.Button("Create", (v.screenX * 0.77, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "continue"))
+    
+    
+    v.textNum = 0
+    while True:
+        py.event.pump()
+        v.events = []
+        v.events = py.event.get()
+        background.draw()
+        texts.update()
+        tinps.update()
+        buttons.update()
+        for button in buttons:
+            if button.pressed():
+                if button.ID == "back":
+                    onlineMenu()
+                    return
+                if button.ID == "continue":
+                    for inp in tinps:
+                        if inp.num == 0:
+                            name = inp.outText
+                        if inp.num == 1:
+                            password = inp.outText
+                    SaveLoad.createServer(name, password)
+                    onlineMenu()
+                    return
         py.display.flip()
 
 def options():

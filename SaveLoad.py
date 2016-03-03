@@ -12,6 +12,10 @@ import hashlib
 import requests
 import MenuItems
 import json
+from ast import literal_eval
+from Multiplayer import MPgame
+from Multiplayer import MPvariables
+
 
 def Save():
     global v
@@ -217,15 +221,28 @@ def uploadStats(stats):
     #print(r.text)
     print(r.status_code)
 
-def createServer(name, password):
+def joinServer(name, password):
     url = v.url + "multiplayer/" + name
+    print("URL:", url)
     
     hash_object = hashlib.md5(password.encode())
     hash = hash_object.hexdigest()
     
-    payload = {"start":True, "password": hash, "admin": v.username}
-    jpayload = json.dumps(str(payload))
-    r = requests.post(url, data=jpayload)
+    #jpayload = json.dumps(str(payload))
+    #r = requests.post(url, data=jpayload)
+    r = requests.get(url)
+    print(r.status_code)
+    if r.status_code == 200:
+        server = literal_eval(r.text)
+        spw = hashlib.md5(server["password"].encode())
+        spw = spw.hexdigest()
+        if spw == hash:
+            payload = {"connect": True, "username": v.username}
+            jpayload = json.dumps(str(payload))
+            r = requests.post(url, data=jpayload)
+            print("START", r.text)
+            MPvariables.username = v.username
+            MPgame.start()
     
     # Response, status etc
     #print(r.text)

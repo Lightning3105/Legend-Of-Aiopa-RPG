@@ -109,7 +109,7 @@ def onlineLogin():
     background = MenuItems.shiftingGradient((0, 0, 'x'))
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
-    py.time.set_timer(py.USEREVENT, 500) #dot dot dot
+    py.time.set_timer(py.USEREVENT, 1000) #dot dot dot
     
     phase = 1
     loginTimer = 0
@@ -134,6 +134,8 @@ def onlineLogin():
                         webbrowser.open(v.url + "createaccount")
                     if button.ID == "continue":
                         phase = 2
+                        background.draw()
+                        py.display.flip()
                         loginTimer = 0
                         logintext.update()
                         for inp in tinps:
@@ -154,23 +156,33 @@ def onlineLogin():
                         logintext.text = "Logging In"
             logintext.update()
             loginTimer += 1
-            if loginTimer >= 20:
-                accOut = SaveLoad.getAccount(user, passw)
-                if accOut == "USERNAME":
-                    phase = 1
-                    extraTexts = MenuItems.textLabel("Username does not exist", (v.screenX * 0.4, v.screenX * 0.26), (255, 0, 0), "Resources\Fonts\MorrisRoman.ttf", 20, variable=False, centred=False)
-                elif accOut == "PASSWORD":
-                    phase = 1
-                    extraTexts = MenuItems.textLabel("Incorrect password", (v.screenX * 0.4, v.screenX * 0.46), (255, 0, 0), "Resources\Fonts\MorrisRoman.ttf", 20, variable=False, centred=False)
-                else:
-                    v.account = accOut
-                    v.username = user
-                    hash_object = hashlib.md5(passw.encode())
-                    hash = hash_object.hexdigest()
-                    v.password = hash
-                    onlineMenu()
-                    
-                    return
+            print(loginTimer)
+            if loginTimer <= 10:
+                try:
+                    accOut = SaveLoad.getAccount(user, passw)
+                    if accOut == "USERNAME":
+                        phase = 1
+                        extraTexts = MenuItems.textLabel("Username does not exist", (v.screenX * 0.4, v.screenX * 0.26), (255, 0, 0), "Resources\Fonts\MorrisRoman.ttf", 20, variable=False, centred=False)
+                    elif accOut == "PASSWORD":
+                        phase = 1
+                        extraTexts = MenuItems.textLabel("Incorrect password", (v.screenX * 0.4, v.screenX * 0.46), (255, 0, 0), "Resources\Fonts\MorrisRoman.ttf", 20, variable=False, centred=False)
+                    else:
+                        v.account = accOut
+                        v.username = user
+                        hash_object = hashlib.md5(passw.encode())
+                        hash = hash_object.hexdigest()
+                        v.password = hash
+                        onlineMenu()
+                        return
+                except:
+                    pass
+            if loginTimer >= 10:
+                background.draw()
+                logintext.text = "Connection Error"
+                logintext.update()
+                phase = 1
+                py.display.flip()
+                py.time.wait(2000)
         
         
         fade.draw()
@@ -205,11 +217,11 @@ def onlineMenu():
                     mainMenu()
                     return
                 if button.ID == "multiplayer":
-                    createServer()
+                    joinServer()
         
         py.display.flip()
 
-def createServer():
+def joinServer():
     py.init()
     background = MenuItems.shiftingGradient((0, 0, 'x'))
     texts = py.sprite.Group()
@@ -223,7 +235,7 @@ def createServer():
     tinps.add(MenuItems.textInput((v.screenX * 0.45, v.screenY * 0.48), 30, 8, 1, button=None, default=[], type="pass"))
     
     buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
-    buttons.add(MenuItems.Button("Create", (v.screenX * 0.77, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "continue"))
+    buttons.add(MenuItems.Button("Join", (v.screenX * 0.77, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "continue"))
     
     
     v.textNum = 0
@@ -246,7 +258,7 @@ def createServer():
                             name = inp.outText
                         if inp.num == 1:
                             password = inp.outText
-                    SaveLoad.createServer(name, password)
+                    SaveLoad.joinServer(name, password)
                     onlineMenu()
                     return
         py.display.flip()

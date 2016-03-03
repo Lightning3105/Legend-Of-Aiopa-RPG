@@ -47,19 +47,21 @@ def game():
             posy += 5
         for name, values in data["players"].items():
             if not name == username:
-                if fetched == False:
-                    if name in vectors.keys():
-                        values["position"] = (values["position"][0] + vectors[name][0], values["position"][1] + vectors[name][1])
-                else:
-                    if name in pastdata.keys():
-                        vectors[name] = ((values["position"][0] - pastdata[name][0]) / (30 * fetchTime), (values["position"][1] - pastdata[name][1]) / (30 * fetchTime))
-                        print(vectors[name])
-                    pastdata[name] = values["position"]
-                #print(values["position"])
-                py.draw.rect(screen, (255, 0, 0), (values["position"], (50, 50)))
-                if not name in pastdata.keys():
-                    pastdata[name] = []
-                fetched = False
+                if values["online"]:
+                    if fetched == False:
+                        if name in vectors.keys():
+                            values["position"] = (values["position"][0] + vectors[name][0], values["position"][1] + vectors[name][1])
+                    else:
+                        if not values["position"] == None:
+                            if name in pastdata.keys():
+                                vectors[name] = ((values["position"][0] - pastdata[name][0]) / (30 * fetchTime), (values["position"][1] - pastdata[name][1]) / (30 * fetchTime))
+                                print(vectors[name])
+                            pastdata[name] = values["position"]
+                    #print(values["position"])
+                    py.draw.rect(screen, (255, 0, 0), (values["position"], (50, 50)))
+                    if not name in pastdata.keys():
+                        pastdata[name] = []
+                    fetched = False
         
         py.display.flip()
 
@@ -69,13 +71,9 @@ def server():
     global fetchTime
     while True:
         t = time.clock()
-        if (posx, posy) != (oldposx, oldposy):
-            payload = {"username": username, "position": (posx, posy)}
-            jpayload = json.dumps(str(payload))
-            r = requests.post(url, data=jpayload)
-        else:
-            r = requests.get(url)
-        
+        payload = {"username": username, "position": (posx, posy)}
+        jpayload = json.dumps(str(payload))
+        r = requests.post(url, data=jpayload)
         # Response, status etc
         if r.status_code == 200:
             data = literal_eval(r.text)
@@ -89,7 +87,7 @@ def server():
         #print(fetchTime)
 
 if __name__ == "__main__":
-    payload = {"start":True}
+    payload = {"connect": True, "username": username}
     jpayload = json.dumps(str(payload))
     r = requests.post(url, data=jpayload)
     print("START", r.text)

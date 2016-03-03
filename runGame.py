@@ -24,7 +24,8 @@ if __name__ == "__main__":
     try:
         cProfile.run("gameScreens.mainMenu()", "Out.txt")
     except Exception as e:
-        print(e)
+        print("EXCEPTION:")
+        print(traceback.print_exc())
         if not os.path.exists("Crash Reports"):
             os.makedirs("Crash Reports")
         name = "Crash Reports/Crash Report " + time.strftime("%Y-%m-%d_%H.%M.%S") + ".txt"

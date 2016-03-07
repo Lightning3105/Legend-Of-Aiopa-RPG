@@ -6,8 +6,6 @@ import guiClasses
 from os import listdir
 
 import Map
-
-from pygame.color import Color as colour
 import sys
 import inventoryScreen
 import time
@@ -24,16 +22,16 @@ def mainMenu():
     MenuItems.screen = v.screen
     buttons = py.sprite.Group()
     texts = py.sprite.Group()
-    buttons.add(MenuItems.Button("New Game", (v.screenX * 0.5, v.screenY * 0.5), int(v.screenX * 0.09), colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "play", centred=True))
-    buttons.add(MenuItems.Button("Options", (v.screenX * 0.5, v.screenY * 0.63), int(v.screenX * 0.09), colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "options", centred=True))
-    buttons.add(MenuItems.Button("Load", (v.screenX * 0.5, v.screenY * 0.76), int(v.screenX * 0.09), colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "load", centred=True))
-    buttons.add(MenuItems.Button("Aiopa Online", (v.screenX * 0.5, v.screenY * 0.89), int(v.screenX * 0.09), colour("Light Green"), colour("Dark Green"), "Resources\Fonts\MorrisRoman.ttf", "online", centred=True))
+    buttons.add(MenuItems.Button("New Game", (v.screenX * 0.5, v.screenY * 0.5), int(v.screenX * 0.09), (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "play", centred=True))
+    buttons.add(MenuItems.Button("Options", (v.screenX * 0.5, v.screenY * 0.63), int(v.screenX * 0.09), (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "options", centred=True))
+    buttons.add(MenuItems.Button("Load", (v.screenX * 0.5, v.screenY * 0.76), int(v.screenX * 0.09), (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "load", centred=True))
+    buttons.add(MenuItems.Button("Aiopa Online", (v.screenX * 0.5, v.screenY * 0.89), int(v.screenX * 0.09), (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "online", centred=True))
     
     #text, pos, size, colour, font
     #text, pos, colour, font, size
-    texts.add(MenuItems.textLabel("The Legend", (v.screenX * 0.140625, v.screenY * 0.01), colour("red"), "Resources\Fonts\RunicClear.ttf", int(v.screenX * 0.125)))
-    texts.add(MenuItems.textLabel("Of Aiopa", (v.screenX * 0.25, v.screenY * 0.15), colour("red"), "Resources\Fonts\RunicClear.ttf", int(v.screenX * 0.125)))
-    texts.add(MenuItems.textLabel("Created By James", (v.screenX * 0.25, v.screenY * 0.32), colour("black"), "Resources\Fonts\Vecna.otf", int(v.screenX * 0.0625)))
+    texts.add(MenuItems.textLabel("The Legend", (v.screenX * 0.140625, v.screenY * 0.01), (255, 0, 0), "Resources\Fonts\RunicClear.ttf", int(v.screenX * 0.125)))
+    texts.add(MenuItems.textLabel("Of Aiopa", (v.screenX * 0.25, v.screenY * 0.15), (255, 0, 0), "Resources\Fonts\RunicClear.ttf", int(v.screenX * 0.125)))
+    texts.add(MenuItems.textLabel("Created By James", (v.screenX * 0.25, v.screenY * 0.32), (0, 0, 0), "Resources\Fonts\Vecna.otf", int(v.screenX * 0.0625)))
     
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
@@ -46,7 +44,7 @@ def mainMenu():
     v.music.play(loops=-1)
     while True:
         py.event.pump()
-        MenuItems.fill_gradient(v.screen, colour("cyan"), colour("dark blue"))
+        MenuItems.fill_gradient(v.screen, (102, 255, 255), (0, 102, 255))
         texts.update()
         buttons.update()
         v.events = []
@@ -100,9 +98,9 @@ def onlineLogin():
     tinps.add(MenuItems.textInput((v.screenX * 0.4, v.screenX * 0.3), 20, 16, num=1, button=None, default=[], type="str", fontfile="Resources/Fonts/RPGSystem.ttf", background=(255, 255, 255)))
     tinps.add(MenuItems.textInput((v.screenX * 0.4, v.screenX * 0.5), 20, 16, num=2, button=None, default=[], type="pass", fontfile="Resources/Fonts/RPGSystem.ttf", background=(255, 255, 255)))
     
-    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
-    buttons.add(MenuItems.Button("Log In", (v.screenX * 0.77, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "continue"))
-    buttons.add(MenuItems.Button("Register Account", (v.screenX * 0.5, v.screenY * 0.93), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "register", centred=True))
+    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
+    buttons.add(MenuItems.Button("Log In", (v.screenX * 0.77, v.screenY * 0.9), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "continue"))
+    buttons.add(MenuItems.Button("Register Account", (v.screenX * 0.5, v.screenY * 0.93), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "register", centred=True))
 
     
     logintext = MenuItems.textLabel("Logging In", (v.screenX * 0.5, v.screenY * 0.5), (255, 255, 255), "Resources/Fonts/RPGSystem.ttf", int(30/640 * v.screenX), variable=False, centred=True)
@@ -196,7 +194,7 @@ def onlineMenu():
     
     buttons.add(MenuItems.Button("Upload Save", (v.screenX * 0.2, v.screenY * 0.5), 40, (100, 200, 200), (0, 255, 255), "Resources\Fonts\MorrisRoman.ttf", "upload", centred=True))
     buttons.add(MenuItems.Button("Download Save", (v.screenX * 0.8, v.screenY * 0.5), 40, (100, 200, 200), (0, 255, 255), "Resources\Fonts\MorrisRoman.ttf", "download", centred=True))
-    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
+    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
     buttons.add(MenuItems.Button("Multiplayer", (v.screenX * 0.5, v.screenY * 0.2), 40, (100, 200, 200), (0, 255, 255), "Resources\Fonts\MorrisRoman.ttf", "multiplayer", centred=True))
 
     
@@ -234,8 +232,8 @@ def joinServer():
     texts.add(MenuItems.textLabel("Server Password:", (v.screenX * 0.1, v.screenY * 0.5), (255, 255, 255), "Resources\Fonts\MorrisRoman.ttf", 30))
     tinps.add(MenuItems.textInput((v.screenX * 0.45, v.screenY * 0.48), 30, 8, 1, button=None, default=[], type="pass"))
     
-    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
-    buttons.add(MenuItems.Button("Join", (v.screenX * 0.77, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "continue"))
+    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
+    buttons.add(MenuItems.Button("Join", (v.screenX * 0.77, v.screenY * 0.9), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "continue"))
     
     
     v.textNum = 0
@@ -270,15 +268,15 @@ def options():
     else:
         v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)"""
     buttons = py.sprite.Group()
-    buttons.add(MenuItems.Button("Toggle Fullscreen", (v.screenX * 0.03125, v.screenY * 0.04), int(v.screenX * 0.09375), colour("beige"), colour("grey"), "Resources\Fonts\MorrisRoman.ttf", "fullscreen"))
-    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY - v.screenY * 0.08), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
-    buttons.add(MenuItems.Button("Toggle Resolution", (v.screenX * 0.03125, v.screenY * 0.2), int(v.screenX * 0.09375), colour("beige"), colour("grey"), "Resources\Fonts\MorrisRoman.ttf", "resolution"))
+    buttons.add(MenuItems.Button("Toggle Fullscreen", (v.screenX * 0.03125, v.screenY * 0.04), int(v.screenX * 0.09375), (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "fullscreen"))
+    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY - v.screenY * 0.08), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
+    buttons.add(MenuItems.Button("Toggle Resolution", (v.screenX * 0.03125, v.screenY * 0.2), int(v.screenX * 0.09375), (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "resolution"))
     
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
     while True:
         py.event.pump()
-        MenuItems.fill_gradient(v.screen, colour("cyan"), colour("green"))
+        MenuItems.fill_gradient(v.screen, colour("cyan"), (0, 255, 0))
 
         buttons.update()
         v.events = []
@@ -591,13 +589,13 @@ def classSelection():
     #attOptions.add(MenuItems.optionAttribute(130, "Speed"))
     
     labels = py.sprite.Group()
-    labels.add(MenuItems.textLabel("Define Character Attributes", (v.screenX * 0.390625, v.screenY * 0.08), colour("Black"), "Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.0546875)))
-    labels.add(MenuItems.textLabel("Skill Points Remaining:", (v.screenX * 0.390625, v.screenY * 0.14), colour("grey"), "Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.046875)))
-    labels.add(MenuItems.textLabel("skillPoints", (v.screenX * 0.78125, v.screenY * 0.14), colour("green"), "Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.046875), True))
+    labels.add(MenuItems.textLabel("Define Character Attributes", (v.screenX * 0.390625, v.screenY * 0.08), (0, 0, 0), "Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.0546875)))
+    labels.add(MenuItems.textLabel("Skill Points Remaining:", (v.screenX * 0.390625, v.screenY * 0.14), (128,128,128), "Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.046875)))
+    labels.add(MenuItems.textLabel("skillPoints", (v.screenX * 0.78125, v.screenY * 0.14), (0, 255, 0), "Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.046875), True))
     
     buttons = py.sprite.Group()
-    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "back"))
-    buttons.add(MenuItems.Button("Continue", (v.screenX * 0.859375, v.screenY * 0.86875), int(v.screenX * 0.03125), colour("brown"), (153, 76, 0), "Resources\Fonts\RunicSolid.ttf", "continue"))
+    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
+    buttons.add(MenuItems.Button("Continue", (v.screenX * 0.859375, v.screenY * 0.86875), int(v.screenX * 0.03125), (165,42,42), (153, 76, 0), "Resources\Fonts\RunicSolid.ttf", "continue"))
     
     background = MenuItems.shiftingGradient(('x', 0, 0))
     
@@ -633,10 +631,10 @@ def classSelection():
     
     nti = MenuItems.textInput((260/640 * v.screenX, 260/640 * v.screenX), int(40/640 * v.screenX), 8, 1, background=(255, 178, 102), button=None, default=[], type="str")
     nts = py.sprite.Group()
-    nts.add(MenuItems.textLabel("Name Your Character:", (260/640 * v.screenX, 180/640 * v.screenX), colour("black"), "Resources/Fonts/RPGSystem.ttf", int(40/640 * v.screenX), False))
-    nts.add(MenuItems.textLabel("(Max 8 Characters)", (260/640 * v.screenX, 220/640 * v.screenX), colour("grey"), "Resources/Fonts/RPGSystem.ttf", int(20/640 * v.screenX), False))
+    nts.add(MenuItems.textLabel("Name Your Character:", (260/640 * v.screenX, 180/640 * v.screenX), (0, 0, 0), "Resources/Fonts/RPGSystem.ttf", int(40/640 * v.screenX), False))
+    nts.add(MenuItems.textLabel("(Max 8 Characters)", (260/640 * v.screenX, 220/640 * v.screenX), (128,128,128), "Resources/Fonts/RPGSystem.ttf", int(20/640 * v.screenX), False))
     
-    bigcont = MenuItems.Button("Continue", (v.screenX * 0.77, v.screenY * 0.9), int(v.screenX * 0.046875), colour("red"), colour("brown"), "Resources\Fonts\RunicSolid.ttf", "continue")
+    bigcont = MenuItems.Button("Continue", (v.screenX * 0.77, v.screenY * 0.9), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "continue")
     while True:
         py.event.pump()
         v.events = []

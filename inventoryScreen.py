@@ -92,8 +92,8 @@ class inventoryScreen():
                     text = self.hovering.item.name
                     label = font.render(text, 1, (0, 0, 0))
                     Hrect = py.Rect(py.mouse.get_pos(), font.size(text))
-                    py.draw.rect(v.screen, py.Color(153, 76, 0), Hrect, 2)
-                    py.draw.rect(v.screen, py.Color(255, 178, 102), Hrect)
+                    py.draw.rect(v.screen, (153, 76, 0), Hrect, 2)
+                    py.draw.rect(v.screen, (255, 178, 102), Hrect)
                     v.screen.blit(label, Hrect)
     
     def save(self):
@@ -257,8 +257,8 @@ class inventoryScreen():
         size = (size[0] - 100, size[1] - 100)
         innerRect = py.Rect(50, 50, size[0], size[1])
         outerRect = py.Rect(40, 40, size[0] + 20, size[1] + 20)
-        py.draw.rect(v.screen, py.Color(153, 76, 0), outerRect)
-        py.draw.rect(v.screen, py.Color(255, 178, 102), innerRect)
+        py.draw.rect(v.screen, (153, 76, 0), outerRect)
+        py.draw.rect(v.screen, (255, 178, 102), innerRect)
     
     def player(self):
         pos = (100, 100)

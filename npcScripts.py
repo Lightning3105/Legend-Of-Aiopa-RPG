@@ -97,8 +97,8 @@ class conversation():
         def update(self):
             innerRect = py.Rect(220 / 640 * v.screenX, 300 / 640 * v.screenX, 400 / 640 * v.screenX, 150 / 640 * v.screenX)
             outerRect = py.Rect(218 / 640 * v.screenX, 298 / 640 * v.screenX, 404 / 640 * v.screenX, 154 / 640 * v.screenX)
-            py.draw.rect(v.screen, py.Color(153, 76, 0), outerRect)
-            py.draw.rect(v.screen, py.Color(255, 178, 102), innerRect)
+            py.draw.rect(v.screen, (153, 76, 0), outerRect)
+            py.draw.rect(v.screen, (255, 178, 102), innerRect)
             py.draw.rect(v.screen, (255, 178, 102), (50 / 640 * v.screenX, 298 / 640 * v.screenX, 150 / 640 * v.screenX, 150 / 640 * v.screenX))
             v.screen.blit(self.master.npcIcon, (50 / 640 * v.screenX, 298 / 640 * v.screenX))
             py.draw.rect(v.screen, (153, 76, 0), (50 / 640 * v.screenX, 298 / 640 * v.screenX, 150 / 640 * v.screenX, 150 / 640 * v.screenX), 2)

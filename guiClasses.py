@@ -4,7 +4,6 @@ import entityClasses
 import MenuItems
 from time import sleep
 from time import clock
-from pygame.color import Color as colour 
 import gameScreens
 
 class health:
@@ -263,8 +262,8 @@ class pauseScreen:
         self.text = py.sprite.Group()
         self.text.add(MenuItems.textLabel("Paused", (v.screenX / 2, 100), (255, 255, 255), "Resources\Fonts\RunicClear.ttf", 80, centred=True))
         self.buttons = py.sprite.Group()
-        self.buttons.add(MenuItems.Button("Main Menu", (v.screenX / 2, 200), 40, colour("brown"), colour("white"), "Resources\Fonts\RunicSolid.ttf", "mainMenu", True))
-        self.buttons.add(MenuItems.Button("Exit Game", (v.screenX / 2, 300), 40, colour("brown"), colour("white"), "Resources\Fonts\RunicSolid.ttf", "quit", True))
+        self.buttons.add(MenuItems.Button("Main Menu", (v.screenX / 2, 200), 40, (165,42,42), (255, 255, 255), "Resources\Fonts\RunicSolid.ttf", "mainMenu", True))
+        self.buttons.add(MenuItems.Button("Exit Game", (v.screenX / 2, 300), 40, (165,42,42), (255, 255, 255), "Resources\Fonts\RunicSolid.ttf", "quit", True))
         
     def update(self):
         grey = py.Surface((v.screenX, v.screenY)).convert_alpha()

@@ -3,7 +3,10 @@ import entityClasses
 import Variables as v
 from ast import literal_eval
 import npcScripts
-from Saves import mapFile
+try:
+    from Saves import mapFile
+except ImportError:
+    import _saves_mapFile
 def generateMap():
     #import Variables as v
     amap = dict(mapFile.map)

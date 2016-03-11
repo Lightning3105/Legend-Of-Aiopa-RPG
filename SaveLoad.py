@@ -222,7 +222,7 @@ def uploadStats(stats):
     print(r.status_code)
 
 def joinServer(name, password):
-    url = v.url + "multiplayer/" + name
+    url = v.url + "mp/" + name
     print("URL:", url)
     
     hash_object = hashlib.md5(password.encode())
@@ -241,6 +241,7 @@ def joinServer(name, password):
             jpayload = json.dumps(str(payload))
             r = requests.post(url, data=jpayload)
             print("START", r.text)
+            MPvariables.url = url
             MPvariables.username = v.username
             MPgame.start()
     

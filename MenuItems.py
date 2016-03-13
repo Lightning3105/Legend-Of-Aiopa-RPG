@@ -682,6 +682,8 @@ class textInput(py.sprite.Sprite):
                         if event.key == py.K_SPACE:
                             self.string.append(" ")
                         if event.key == py.K_TAB:
+                            v.events.remove(event)
+                            print("PRESS TAB")
                             v.textNum += 1
                     if event.key == py.K_BACKSPACE:
                         if len(self.string) > 0:

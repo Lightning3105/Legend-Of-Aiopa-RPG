@@ -238,6 +238,7 @@ def joinServer():
     
     v.textNum = 0
     while True:
+        print(v.textNum)
         py.event.pump()
         v.events = []
         v.events = py.event.get()

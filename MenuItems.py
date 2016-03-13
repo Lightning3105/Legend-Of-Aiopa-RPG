@@ -51,10 +51,14 @@ class Button(py.sprite.Sprite):
             self.rect.height = self.size[1]
 
     def pressed(self):
-        if self.hovered:
-            for event in v.events:
+        for event in v.events:
+            if self.hovered:
                 if event.type == py.MOUSEBUTTONDOWN:
                     return True
+            if event.type == py.KEYDOWN:
+                if event.key == py.K_RETURN:
+                    if self.ID == "continue":
+                        return True
         return False
 
 def centre():
@@ -677,6 +681,8 @@ class textInput(py.sprite.Sprite):
                                 self.string.append(let)
                         if event.key == py.K_SPACE:
                             self.string.append(" ")
+                        if event.key == py.K_TAB:
+                            v.textNum += 1
                     if event.key == py.K_BACKSPACE:
                         if len(self.string) > 0:
                             self.string.pop(-1)

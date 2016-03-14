@@ -77,6 +77,7 @@ def mainMenu():
                     game()
                 if id == "online":
                     onlineLogin()
+                    return
         fade.draw()
         fade.opacity -= 1
         py.display.flip()
@@ -238,7 +239,6 @@ def joinServer():
     
     v.textNum = 0
     while True:
-        print(v.textNum)
         py.event.pump()
         v.events = []
         v.events = py.event.get()

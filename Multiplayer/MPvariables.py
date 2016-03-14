@@ -12,3 +12,4 @@ clock = None
 screen = None
 url = "http://socket-lightning3105.rhcloud.com/" + "mp/s1"
 #url = "http://127.0.0.1:5000/" + "multiplayer/1"
+stopped = False

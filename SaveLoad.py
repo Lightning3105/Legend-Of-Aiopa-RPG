@@ -236,6 +236,7 @@ def joinServer(name, password):
         server = literal_eval(r.text)
         spw = hashlib.md5(server["password"].encode())
         spw = spw.hexdigest()
+        print(r.text)
         if spw == hash:
             payload = {"connect": True, "username": v.username}
             jpayload = json.dumps(str(payload))
@@ -244,10 +245,13 @@ def joinServer(name, password):
             MPvariables.url = url
             MPvariables.username = v.username
             MPgame.start()
+    else:
+        print(r.status_code)
+        print(r.text)
     
     # Response, status etc
     #print(r.text)
-    print(r.status_code)
+    #print(r.status_code)
 
 def uploadCrash(crash):
     url = v.url + "senddata/"

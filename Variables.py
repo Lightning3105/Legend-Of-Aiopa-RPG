@@ -1,3 +1,11 @@
+import logging
+logging.basicConfig(filename='log.log',level=logging.DEBUG)
+def debug(*args):
+    out = ""
+    for i in args:
+        out = out + " " + i
+    logging.debug(out)
+
 PAUSED = False
 load = None
 newGame = True

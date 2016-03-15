@@ -37,9 +37,6 @@ def mainMenu():
     fade.fadeIn = True
     
     setupScripts.initSound()
-    f = open("log.txt", "w")
-    f.write(str(listdir("Resources/Music")))
-    f.close()
     v.music = py.mixer.Sound("Resources/Music/Title 1.ogg")
     v.music.play(loops=-1)
     while True:

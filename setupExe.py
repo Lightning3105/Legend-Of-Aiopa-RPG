@@ -5,7 +5,8 @@ from cx_Freeze import setup, Executable
 
 # Dependencies are automatically detected, but it might need fine tuning.
 includefiles = ["Resources/", "Saves/", "extraDLLs/libogg.dll", "extraDLLs/libvorbis.dll", "extraDlls/libvorbisfile.dll"]
-build_exe_options = {'include_files':includefiles}
+packages = ["Multiplayer"]
+build_exe_options = {'include_files':includefiles, 'packages':packages}
 
 # GUI applications require a different base on Windows (the default is for a
 # console application).

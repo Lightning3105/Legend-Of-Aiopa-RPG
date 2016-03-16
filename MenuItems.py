@@ -321,7 +321,7 @@ class optionAttribute(py.sprite.Sprite):
 
 class textLabel(py.sprite.Sprite):
     
-    def __init__(self, text, pos, colour, font, size, variable = False, centred = False):
+    def __init__(self, text, pos, colour, font, size, variable = False, centred = False, screen=None):
         super().__init__()
         self.text = text
         self.pos = pos
@@ -330,6 +330,7 @@ class textLabel(py.sprite.Sprite):
         self.size = size
         self.variable = variable
         self.centred = centred
+        self.screen = screen
         
     def update(self):
         pos = self.pos
@@ -343,8 +344,10 @@ class textLabel(py.sprite.Sprite):
             pos[0] -= font.size(self.text)[0] / 2
             pos[1] -= font.size(self.text)[1] / 2
             pos = tuple(pos)
-    
-        v.screen.blit(label, pos)
+        if self.screen == None:
+            v.screen.blit(label, pos)
+        else:
+            self.screen.blit(label, pos)
         
 class shiftingGradient():
     

@@ -255,8 +255,6 @@ def joinServer():
                         if inp.num == 1:
                             password = inp.outText
                     SaveLoad.joinServer(name, password)
-                    onlineMenu()
-                    return
         py.display.flip()
 
 def options():

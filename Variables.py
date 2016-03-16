@@ -4,6 +4,7 @@ def debug(*args):
     out = ""
     for i in args:
         out = out + " " + i
+    print(out)
     logging.debug(out)
 
 PAUSED = False

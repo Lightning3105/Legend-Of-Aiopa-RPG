@@ -244,8 +244,8 @@ def joinServer(name, password):
             print("START", r.text)
             MPvariables.url = url
             MPvariables.username = v.username
-            v.debug("Start MPGame")
             MPgame.start()
+            return
     else:
         print(r.status_code)
         print(r.text)

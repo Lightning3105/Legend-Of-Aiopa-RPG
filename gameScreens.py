@@ -72,6 +72,7 @@ def mainMenu():
                     SaveLoad.Load()
                     v.newGame = False
                     game()
+                    return
                 if id == "online":
                     onlineLogin()
                     return
@@ -115,6 +116,9 @@ def onlineLogin():
         v.events = []
         v.events = py.event.get()
         background.draw()
+        for event in v.events:
+            if event.type == py.QUIT:
+                sys.exit()
         if phase == 1:
             texts.update()
             extraTexts.update()
@@ -201,6 +205,9 @@ def onlineMenu():
         py.event.pump()
         v.events = []
         v.events = py.event.get()
+        for event in v.events:
+            if event.type == py.QUIT:
+                sys.exit()
         background.draw()
         buttons.update()
         for button in buttons:
@@ -239,6 +246,9 @@ def joinServer():
         py.event.pump()
         v.events = []
         v.events = py.event.get()
+        for event in v.events:
+            if event.type == py.QUIT:
+                sys.exit()
         background.draw()
         texts.update()
         tinps.update()
@@ -246,7 +256,7 @@ def joinServer():
         for button in buttons:
             if button.pressed():
                 if button.ID == "back":
-                    onlineMenu()
+                    #onlineMenu()
                     return
                 if button.ID == "continue":
                     for inp in tinps:
@@ -255,6 +265,7 @@ def joinServer():
                         if inp.num == 1:
                             password = inp.outText
                     SaveLoad.joinServer(name, password)
+                    return
         py.display.flip()
 
 def options():

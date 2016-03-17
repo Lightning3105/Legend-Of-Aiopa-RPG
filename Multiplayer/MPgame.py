@@ -28,6 +28,8 @@ def start():
 def serverLoop():
     while True:
         server()
+        if v.stopped:
+            return
         
 def server():        
     t = time.clock()
@@ -48,8 +50,6 @@ def server():
     v.fetchTime = time.clock() - t
     #fetchTime = 8
     #print(fetchTime)
-    if v.stopped:
-        return
 
 def game():
     v.clock = py.time.Clock()

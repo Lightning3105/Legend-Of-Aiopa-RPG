@@ -221,6 +221,7 @@ def onlineMenu():
                     return
                 if button.ID == "multiplayer":
                     joinServer()
+                    return
         
         py.display.flip()
 
@@ -283,7 +284,7 @@ def options():
     fade.fadeIn = True
     while True:
         py.event.pump()
-        MenuItems.fill_gradient(v.screen, colour("cyan"), (0, 255, 0))
+        MenuItems.fill_gradient(v.screen, (0, 255, 255), (0, 255, 0))
 
         buttons.update()
         v.events = []

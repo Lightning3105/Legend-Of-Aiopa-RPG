@@ -220,7 +220,7 @@ def changeNpcImage():
 
 class editChunk(py.sprite.Sprite):
     
-    def __init__(self, c_message=None, c_goto = None, c_id = None, c_charisma = None, c_buttons = None, c_changelike = None, c_end = None):
+    def __init__(self, c_message="", c_goto = "", c_id = "", c_charisma = "", c_buttons = "", c_changelike = "", c_end = ""):
         super().__init__()
         
         self.created = False
@@ -241,25 +241,25 @@ class editChunk(py.sprite.Sprite):
         self.texts = py.sprite.Group()
         
         self.texts.add(mapMenuItems.textLabel("ID:", (self.posx + 20, self.posy + 20), (0, 0, 0), None, 25))
-        self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 40), 25, 2, 1, button=None, default=[], type="int", fontfile=None))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 40), 25, 2, 1, button=None, default=list(self.c_id), type="int", fontfile=None))
         
         self.texts.add(mapMenuItems.textLabel("Message:", (self.posx + 20, self.posy + 80), (0, 0, 0), None, 25))
-        self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 100), 15, 50, 2, button=None, default=[], type="str", fontfile=None))
-        self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 120), 15, 50, 3, button=None, default=[], type="str", fontfile=None))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 100), 15, 50, 2, button=None, default=list(self.c_message[:len(self.c_message)//2]), type="str", fontfile=None))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 120), 15, 50, 3, button=None, default=list(self.c_message[len(self.c_message)//2:]), type="str", fontfile=None))
         
         self.texts.add(mapMenuItems.textLabel("Goto:", (self.posx + 80, self.posy + 20), (0, 0, 0), None, 25))
-        self.tinps.add(mapMenuItems.textInput((self.posx + 80, self.posy + 40), 25, 2, 4, button=None, default=[], type="int", fontfile=None))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 80, self.posy + 40), 25, 2, 4, button=None, default=list(self.c_goto), type="int", fontfile=None))
         
         self.texts.add(mapMenuItems.textLabel("Charisma", (self.posx + 160, self.posy + 5), (0, 0, 0), None, 20))
         self.texts.add(mapMenuItems.textLabel("Needed:", (self.posx + 160, self.posy + 20), (0, 0, 0), None, 20))
-        self.tinps.add(mapMenuItems.textInput((self.posx + 160, self.posy + 40), 25, 2, 5, button=None, default=[], type="int", fontfile=None))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 160, self.posy + 40), 25, 2, 5, button=None, default=list(self.c_charisma), type="int", fontfile=None))
         
         self.texts.add(mapMenuItems.textLabel("Change", (self.posx + 240, self.posy + 5), (0, 0, 0), None, 20))
         self.texts.add(mapMenuItems.textLabel("Friendliness:", (self.posx + 240, self.posy + 20), (0, 0, 0), None, 20))
-        self.tinps.add(mapMenuItems.textInput((self.posx + 240, self.posy + 40), 25, 2, 6, button=None, default=[], type="int", fontfile=None))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 240, self.posy + 40), 25, 2, 6, button=None, default=list(self.c_changelike), type="int", fontfile=None))
     
         self.texts.add(mapMenuItems.textLabel("End:", (self.posx + 330, self.posy + 20), (0, 0, 0), None, 25))
-        self.tinps.add(mapMenuItems.textInput((self.posx + 330, self.posy + 40), 25, 2, 7, button=None, default=[], type="int", fontfile=None))
+        self.tinps.add(mapMenuItems.textInput((self.posx + 330, self.posy + 40), 25, 2, 7, button=None, default=list(self.c_end), type="int", fontfile=None))
     
     
     def update(self):
@@ -298,12 +298,14 @@ class editChunk(py.sprite.Sprite):
             if inp.num == 2:
                 if firstmsgnum == None:
                     self.c_message = inp.outText
-                if firstmsgnum == 3:
+                    firstmsgnum = 2
+                elif firstmsgnum == 3:
                     self.c_message = inp.outText + self.c_message
             if inp.num == 3:
                 if firstmsgnum == None:
                     self.c_message = inp.outText
-                if firstmsgnum == 2:
+                    firstmsgnum = 3
+                elif firstmsgnum == 2:
                     self.c_message = self.c_message + inp.outText
             if inp.num == 4:
                 self.c_goto = inp.outText
@@ -335,8 +337,21 @@ class chatChunk(py.sprite.Sprite):
         
         self.texts = py.sprite.Group()
         
-        #self.texts.add(mapMenuItems.textLabel("ID", (self.posx + 15, self.posy + 2), (10, 10, 10), None, 20))
-        #self.texts.add(mapMenuItems.textLabel(self.c_id, (self.posx + 10, self.posy + 13), (10, 10, 10), None, 60))
+        self.texts.add(mapMenuItems.textLabel("Goto", (self.posx + 15, self.posy + 2), (10, 10, 10), None, 20))
+        self.texts.add(mapMenuItems.textLabel(self.c_goto, (self.posx + 10, self.posy + 13), (10, 10, 10), None, 60))
+        if self.c_goto == "":
+            self.texts.add(mapMenuItems.textLabel("N/A", (self.posx + 10, self.posy + 25), (10, 10, 10), None, 30))
+
+        
+        self.texts.add(mapMenuItems.textLabel("Charisma", (self.posx + 65, self.posy + 2), (10, 10, 10), None, 20))
+        self.texts.add(mapMenuItems.textLabel("Needed", (self.posx + 65, self.posy + 15), (10, 10, 10), None, 15))
+        self.texts.add(mapMenuItems.textLabel("Added", (self.posx + 105, self.posy + 15), (10, 10, 10), None, 15))
+
+        self.texts.add(mapMenuItems.textLabel(">" + str(self.c_charisma), (self.posx + 60, self.posy + 25), (10, 10, 10), None, 40))
+        plusminus = lambda i: ("+" if int(i) > 0 else "") + str(i) if type(i) == int else str(i)
+        self.texts.add(mapMenuItems.textLabel(plusminus(self.c_charisma), (self.posx + 100, self.posy + 25), (10, 10, 10), None, 40))
+        
+        
         
         self.hovered = False
         
@@ -346,6 +361,7 @@ class chatChunk(py.sprite.Sprite):
         self.rect = py.Rect(self.posx, self.posy, 200, 50)
         if self.rect.collidepoint(py.mouse.get_pos()):
             self.hovered = True
+            print(self.c_message)
         else:
             self.hovered = False
         if self.c_goto != "":
@@ -355,6 +371,8 @@ class chatChunk(py.sprite.Sprite):
             if int(self.c_goto) < int(self.c_id):
                 line = 200
                 endmod = 0
+            if int(self.c_goto) == int(self.c_id):
+                line = 0
                 
             end = int(self.c_goto) * 300 + line + endmod + 20
             
@@ -377,8 +395,15 @@ class chatChunk(py.sprite.Sprite):
                 if chunk.c_id == self.c_goto:
                     poy = chunk.posy
                     py.draw.line(v.screen, (0, 0, 255), (self.posx + (200 - line), self.posy + 25), (end, poy + 25), 4)
-                    py.draw.circle(v.screen, (0, 0, 255), (self.posx + (200 - line), poy + 25), 5)
-        py.draw.rect(v.screen, (200, 200, 200), self.rect)
+                    #py.draw.circle(v.screen, (0, 0, 255), (self.posx + (200 - line), poy + 25), 5)
+        if self.hovered:
+            py.draw.rect(v.screen, (175, 175, 175), self.rect)
+            for event in v.events:
+                if event.type == py.MOUSEBUTTONDOWN:
+                    v.chatEdit = editChunk(self.c_message, self.c_goto, self.c_id, self.c_charisma, self.c_buttons, self.c_changelike, self.c_end)
+                    v.chunks.remove(self)
+        else:
+            py.draw.rect(v.screen, (200, 200, 200), self.rect)
         self.texts.update()
 
 def chatEdit():
@@ -387,7 +412,7 @@ def chatEdit():
     v.chunkIDs['1'] = []
     v.chunkIDs['2'] = []
     
-    edit = editChunk()
+    v.chatEdit = editChunk()
     buttons = py.sprite.Group()
     buttons.add(mapMenuItems.button("ADD", (650, 50), 100, (150, 150, 150), (200, 200, 200), None, "add", bsize=(150, 150), centretext=True))
     
@@ -409,7 +434,7 @@ def chatEdit():
         for ch in v.chunks:
             if ch.hovered:
                 ch.update()
-        edit.update()
+        v.chatEdit.update()
         buttons.update()
         texts.update()
         boxes.update()
@@ -423,10 +448,10 @@ def chatEdit():
                 for button in buttons:
                     if button.pressed():
                         if button.ID == "add":
-                            if edit.created == True:
-                                edit.save()
-                                v.chunks.add(chatChunk(edit.c_message, edit.c_id, edit.c_goto, edit.c_charisma, edit.c_buttons, edit.c_changelike, edit.c_end))
-                                edit = editChunk()
+                            if v.chatEdit.created == True:
+                                v.chatEdit.save()
+                                v.chunks.add(chatChunk(v.chatEdit.c_message, v.chatEdit.c_id, v.chatEdit.c_goto, v.chatEdit.c_charisma, v.chatEdit.c_buttons, v.chatEdit.c_changelike, v.chatEdit.c_end))
+                                v.chatEdit = editChunk()
         py.display.flip()
         
 

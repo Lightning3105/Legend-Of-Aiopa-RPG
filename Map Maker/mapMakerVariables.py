@@ -37,3 +37,4 @@ currentBiome = None
 scrollBar = 0
 chunks = None
 chunkIDs = {}
+chatEdit = None

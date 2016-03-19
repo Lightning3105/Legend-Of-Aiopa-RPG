@@ -340,18 +340,29 @@ class chatChunk(py.sprite.Sprite):
         self.texts.add(mapMenuItems.textLabel("Goto", (self.posx + 15, self.posy + 2), (10, 10, 10), None, 20))
         self.texts.add(mapMenuItems.textLabel(self.c_goto, (self.posx + 10, self.posy + 13), (10, 10, 10), None, 60))
         if self.c_goto == "":
-            self.texts.add(mapMenuItems.textLabel("N/A", (self.posx + 10, self.posy + 25), (10, 10, 10), None, 30))
+            self.texts.add(mapMenuItems.textLabel("---", (self.posx + 20, self.posy + 25), (10, 10, 10), None, 30))
 
         
         self.texts.add(mapMenuItems.textLabel("Charisma", (self.posx + 65, self.posy + 2), (10, 10, 10), None, 20))
         self.texts.add(mapMenuItems.textLabel("Needed", (self.posx + 65, self.posy + 15), (10, 10, 10), None, 15))
         self.texts.add(mapMenuItems.textLabel("Added", (self.posx + 105, self.posy + 15), (10, 10, 10), None, 15))
-
-        self.texts.add(mapMenuItems.textLabel(">" + str(self.c_charisma), (self.posx + 60, self.posy + 25), (10, 10, 10), None, 40))
-        plusminus = lambda i: ("+" if int(i) > 0 else "") + str(i) if type(i) == int else str(i)
-        self.texts.add(mapMenuItems.textLabel(plusminus(self.c_charisma), (self.posx + 100, self.posy + 25), (10, 10, 10), None, 40))
         
+        if not self.c_charisma == "":
+            self.texts.add(mapMenuItems.textLabel(">" + str(self.c_charisma), (self.posx + 60, self.posy + 25), (10, 10, 10), None, 40))
+        else:
+            self.texts.add(mapMenuItems.textLabel("---", (self.posx + 70, self.posy + 25), (10, 10, 10), None, 30))
+        if not self.c_changelike == "":
+            plusminus = lambda i: ("+" if int(i) > 0 else "") + str(i) if type(i) == int else str(i)
+            self.texts.add(mapMenuItems.textLabel(plusminus(self.c_charisma), (self.posx + 100, self.posy + 25), (10, 10, 10), None, 40))
+        else:
+            self.texts.add(mapMenuItems.textLabel("---", (self.posx + 110, self.posy + 25), (10, 10, 10), None, 30))
         
+        self.texts.add(mapMenuItems.textLabel("End", (self.posx + 150, self.posy + 2), (10, 10, 10), None, 20))
+        
+        if not self.c_end == "":
+            self.texts.add(mapMenuItems.textLabel(self.c_end, (self.posx + 155, self.posy + 13), (10, 10, 10), None, 60))
+        else:
+            self.texts.add(mapMenuItems.textLabel("---", (self.posx + 155, self.posy + 25), (10, 10, 10), None, 30))
         
         self.hovered = False
         
@@ -361,7 +372,6 @@ class chatChunk(py.sprite.Sprite):
         self.rect = py.Rect(self.posx, self.posy, 200, 50)
         if self.rect.collidepoint(py.mouse.get_pos()):
             self.hovered = True
-            print(self.c_message)
         else:
             self.hovered = False
         if self.c_goto != "":
@@ -396,6 +406,23 @@ class chatChunk(py.sprite.Sprite):
                     poy = chunk.posy
                     py.draw.line(v.screen, (0, 0, 255), (self.posx + (200 - line), self.posy + 25), (end, poy + 25), 4)
                     #py.draw.circle(v.screen, (0, 0, 255), (self.posx + (200 - line), poy + 25), 5)
+        if self.c_end != "":
+            if self.hovered:
+                for chunk in v.chunks:
+                    if chunk.c_id == self.c_end:
+                        if int(self.c_end) > int(self.c_id):
+                            line = 0
+                            endmod = 0
+                        if int(self.c_end) < int(self.c_id):
+                            line = 200
+                            endmod = 0
+                        if int(self.c_end) == int(self.c_id):
+                            line = 0
+                        end = int(self.c_end) * 300 + line + endmod + 20
+                        
+                        poy = chunk.posy
+                        py.draw.line(v.screen, (255, 0, 255), (self.posx + (200 - line), self.posy + 15), (end, poy + 15), 4)
+                        #py.draw.circle(v.screen, (0, 0, 255), (self.posx + (200 - line), poy + 25), 5)
         if self.hovered:
             py.draw.rect(v.screen, (175, 175, 175), self.rect)
             for event in v.events:

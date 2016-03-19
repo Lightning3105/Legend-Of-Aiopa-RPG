@@ -174,15 +174,17 @@ def mapEditor():
                 v.scrollY += speed
             if keysPressed[py.K_s]:
                 v.scrollY -= speed
+        
         for event in v.events:
             if event.type == py.MOUSEBUTTONUP:
-                if event.button == 4:
-                    v.scale += 0.1
-                if event.button == 5:
-                    v.scale -= 0.1
-                v.scale = round(v.scale, 1)
-                if v.scale <= 0.1:
-                    v.scale = 0.1
+                if v.map.get_rect().collidepoint(py.mouse.get_pos()):
+                    if event.button == 4:
+                        v.scale += 0.1
+                    if event.button == 5:
+                        v.scale -= 0.1
+                    v.scale = round(v.scale, 1)
+                    if v.scale <= 0.1:
+                        v.scale = 0.1
             if event.type == py.KEYDOWN:
                 if event.key == py.K_RETURN:
                     outMap = save()
@@ -228,8 +230,8 @@ def startMenu():
                 for b in buttons:
                     if b.pressed():
                         if b.ID == "NM":
-                            #setup()
-                            npcEdit.createNPC()
+                            setup()
+                            #npcEdit.createNPC()
                         if b.ID == "LM":
                             from sys import path
                             path.append('../Saves')

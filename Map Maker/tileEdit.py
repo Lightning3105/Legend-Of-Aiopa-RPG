@@ -141,27 +141,34 @@ class image(py.sprite.Sprite):
     
     def __init__(self, slotNum):
         super().__init__()
-        self.image = py.transform.scale(v.tileImages[slotNum], (10, 10))
-        self.posx = (slotNum % 32) * 10
-        self.posy = int((slotNum / 32)) * 10
+        size = 10
+        self.image = py.transform.scale(v.tileImages[slotNum], (size, size))
+        self.posx = (slotNum % 32) * size
+        self.posy = int((slotNum / 32)) * size
         self.slotNum = slotNum
         self.hovered = False
+        """if slotNum % 32 <= 15:
+            self.panel = 1
+        elif slotNum % 32 <= 31:
+            self.panel = 2"""
+        self.panel = 1
     
     def update(self):
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (self.posx, self.posy)
-        v.pallet.blit(self.image, self.rect)   
-        if v.selected == self.slotNum:
-            py.draw.rect(v.pallet, (255, 0, 0), self.rect, 1)
-        if self.rect.collidepoint((py.mouse.get_pos()[0] - 600, py.mouse.get_pos()[1])):
-            self.hovered = True
-        else:
-            self.hovered = False
-        if self.hovered:
-            for event in v.events:
-                if event.type == py.MOUSEBUTTONDOWN:
-                    if py.mouse.get_pressed()[0]:
-                        v.selected = self.slotNum
+        if v.tilePanel == self.panel:
+            self.rect = self.image.get_rect()
+            self.rect.topleft = (self.posx, self.posy)
+            v.pallet.blit(self.image, self.rect)   
+            if v.selected == self.slotNum:
+                py.draw.rect(v.pallet, (255, 0, 0), self.rect, 1)
+            if self.rect.collidepoint((py.mouse.get_pos()[0] - 600, py.mouse.get_pos()[1])):
+                self.hovered = True
+            else:
+                self.hovered = False
+            if self.hovered:
+                for event in v.events:
+                    if event.type == py.MOUSEBUTTONDOWN:
+                        if py.mouse.get_pressed()[0]:
+                            v.selected = self.slotNum
 
 
 def getGrid(tileset):

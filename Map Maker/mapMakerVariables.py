@@ -38,4 +38,4 @@ scrollBar = 0
 chunks = None
 chunkIDs = {}
 chatEdit = None
-tilePanel = 1
+tileScroll = 0

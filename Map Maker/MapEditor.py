@@ -185,6 +185,14 @@ def mapEditor():
                     v.scale = round(v.scale, 1)
                     if v.scale <= 0.1:
                         v.scale = 0.1
+                if py.mouse.get_pos()[0] > 600:
+                    if event.button == 4:
+                        v.tileScroll += 10
+                    if event.button == 5:
+                        v.tileScroll -= 10
+                    v.scale = round(v.scale, 1)
+                    if v.scale <= 0.1:
+                        v.scale = 0.1
             if event.type == py.KEYDOWN:
                 if event.key == py.K_RETURN:
                     outMap = save()

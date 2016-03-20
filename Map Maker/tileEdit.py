@@ -18,7 +18,7 @@ class tile(py.sprite.Sprite):
         self.hovered = False
         if num == None:
             if self.layer == "base":
-                self.sheetNum = 326
+                self.sheetNum = 0
             else:
                 self.sheetNum = "-"
         else:
@@ -35,14 +35,10 @@ class tile(py.sprite.Sprite):
         self.rect.centerx = v.map.get_rect()[2] / 2 + ((-v.scrollX + (30 * self.posx)) * v.scale)
         self.rect.centery = v.map.get_rect()[3] / 2 + ((v.scrollY + (30 * self.posy)) * v.scale)
         if self.rect.colliderect(v.map.get_rect()):
-            if self.sheetNum == 0:
-                self.image = py.Surface((30, 30))
-                self.image.fill((100, 0, 255))
+            if not self.sheetNum == "-":
+                self.image = v.tileImages[int(self.sheetNum)]
             else:
-                if not self.sheetNum == "-":
-                    self.image = v.tileImages[int(self.sheetNum)]
-                else:
-                    self.image = py.Surface((0, 0))
+                self.image = py.Surface((0, 0))
             if not self.sheetNum == "-":
                 self.image = py.transform.scale(self.image, (int(30 * v.scale), int(30 * v.scale)))
                 if self.layer != v.eLayer:
@@ -141,39 +137,37 @@ class image(py.sprite.Sprite):
     
     def __init__(self, slotNum):
         super().__init__()
-        size = 10
+        size = 40
         self.image = py.transform.scale(v.tileImages[slotNum], (size, size))
-        self.posx = (slotNum % 32) * size
-        self.posy = int((slotNum / 32)) * size
+        self.posx = (slotNum % 8) * size
+        self.posy = int((slotNum / 8)) * size
         self.slotNum = slotNum
         self.hovered = False
         """if slotNum % 32 <= 15:
             self.panel = 1
         elif slotNum % 32 <= 31:
             self.panel = 2"""
-        self.panel = 1
     
     def update(self):
-        if v.tilePanel == self.panel:
-            self.rect = self.image.get_rect()
-            self.rect.topleft = (self.posx, self.posy)
-            v.pallet.blit(self.image, self.rect)   
-            if v.selected == self.slotNum:
-                py.draw.rect(v.pallet, (255, 0, 0), self.rect, 1)
-            if self.rect.collidepoint((py.mouse.get_pos()[0] - 600, py.mouse.get_pos()[1])):
-                self.hovered = True
-            else:
-                self.hovered = False
-            if self.hovered:
-                for event in v.events:
-                    if event.type == py.MOUSEBUTTONDOWN:
-                        if py.mouse.get_pressed()[0]:
-                            v.selected = self.slotNum
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (self.posx, self.posy - v.tileScroll)
+        v.pallet.blit(self.image, self.rect)   
+        if v.selected == self.slotNum:
+            py.draw.rect(v.pallet, (255, 0, 0), self.rect, 1)
+        if self.rect.collidepoint((py.mouse.get_pos()[0] - 600, py.mouse.get_pos()[1])):
+            self.hovered = True
+        else:
+            self.hovered = False
+        if self.hovered:
+            for event in v.events:
+                if event.type == py.MOUSEBUTTONDOWN:
+                    if py.mouse.get_pressed()[0]:
+                        v.selected = self.slotNum
 
 
 def getGrid(tileset):
-    columns = 32
-    rows = 63
+    columns = 8
+    rows = 1662
     width = tileset.get_size()[0] / columns
     height = tileset.get_size()[1] / rows
     all = []

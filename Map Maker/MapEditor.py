@@ -145,6 +145,8 @@ def mapEditor():
     buttons.add(mapMenuItems.toggleButton("enemy", 4))
     buttons.add(mapMenuItems.toggleButton("npc", 5))
     
+    tileScroll = mapMenuItems.scrollBar(900, 0, 630, 232400) #TODO: Fix spritesheet cutoff
+    
     while True:
         py.event.pump()
         v.hoverPos = None
@@ -187,9 +189,9 @@ def mapEditor():
                         v.scale = 0.1
                 if py.mouse.get_pos()[0] > 600:
                     if event.button == 4:
-                        v.tileScroll += 10
+                        v.tileScroll += 50
                     if event.button == 5:
-                        v.tileScroll -= 10
+                        v.tileScroll -= 50
                     v.scale = round(v.scale, 1)
                     if v.scale <= 0.1:
                         v.scale = 0.1
@@ -210,6 +212,9 @@ def mapEditor():
         else:
             v.pauseEdit = False
         mapMenuItems.toolTip()
+        tileScroll.scroll = v.tileScroll
+        tileScroll.update()
+        v.tileScroll = tileScroll.scroll
         py.display.flip()
 
 def startMenu():

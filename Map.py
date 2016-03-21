@@ -10,7 +10,7 @@ except ImportError:
 def generateMap():
     #import Variables as v
     amap = dict(mapFile.map)
-    sheet = entityClasses.SpriteSheet("Resources/Images/Main_Tileset.png", 63, 32)
+    sheet = entityClasses.SpriteSheet("Resources/Images/Main_Tileset.png", 1662, 8)
     
     map = amap[str(v.mapNum)]
     allMap = map

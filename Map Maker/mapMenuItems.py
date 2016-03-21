@@ -455,20 +455,22 @@ class makeTeleport():
 
 class scrollBar():
     
-    def __init__(self, posx, posy, length):
+    def __init__(self, posx, posy, length, max):
         self.posx = posx
         self.posy = posy
         self.length = length
+        self.max = max
         self.bar = py.Surface((10, 40))
         self.bar.fill((255, 150, 0))
         self.moving = False
+        self.scroll = 0
     
     def update(self):
         linerect = (self.posx - 2, self.posy, 4, self.length)
         py.draw.rect(v.screen, (50, 50, 50), linerect)
         
         barrect = self.bar.get_rect()
-        barrect.center = (self.posx, v.scrollBar + self.posy + 20)
+        barrect.center = (self.posx, (self.length / self.max * self.scroll) + self.posy + 20)
         v.screen.blit(self.bar, barrect)
         
         for event in v.events:
@@ -479,13 +481,13 @@ class scrollBar():
             self.moving = False
         
         if self.moving:
-            v.scrollBar = py.mouse.get_pos()[1] - self.posy - 20
+            self.scroll = (self.max / self.length * py.mouse.get_pos()[1]) - self.posy - 20
+            print(self.scroll)
         
-        if v.scrollBar > (self.posy + self.length) - 50:
-            v.scrollBar = ((self.posy + self.length) - 50)
-        if v.scrollBar < 0:
-            v.scrollBar = 0
-
+        if self.scroll > self.max - 50:
+            self.scroll = (self.max - 50)
+        if self.scroll < 0:
+            self.scroll = 0
 class radioButtons(py.sprite.Sprite):
     
     def __init__(self, posx, posy, choices, fontsize=40):

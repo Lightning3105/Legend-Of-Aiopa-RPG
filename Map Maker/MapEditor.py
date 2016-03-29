@@ -145,7 +145,7 @@ def mapEditor():
     buttons.add(mapMenuItems.toggleButton("enemy", 4))
     buttons.add(mapMenuItems.toggleButton("npc", 5))
     
-    tileScroll = mapMenuItems.scrollBar(900, 0, 630, 232400) #TODO: Fix spritesheet cutoff
+    tileScroll = mapMenuItems.scrollBar(900, 0, 630, 66480) #TODO: Fix spritesheet cutoff
     
     while True:
         py.event.pump()

@@ -57,7 +57,7 @@ class tile(py.sprite.Sprite):
                     c = (0, 255, 0)
                 elif self.layer == "top" and self.enemy != None:
                     c = (255, 255, 0)
-                    img = mapMenuItems.SpriteSheet(self.enemy["Image"], 4, 3).images[1]
+                    img = mapMenuItems.SpriteSheet("../" + self.enemy["Image"], 4, 3).images[1]
                     img.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)
                     img = py.transform.scale(img, (int(30 * v.scale), int(30 * v.scale)))
                     v.map.blit(img, self.rect)

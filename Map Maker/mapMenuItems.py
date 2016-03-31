@@ -464,15 +464,17 @@ class scrollBar():
         self.bar.fill((255, 150, 0))
         self.moving = False
         self.scroll = 0
+        #self.max -= 630 - 40
     
     def update(self):
         linerect = (self.posx - 2, self.posy, 4, self.length)
         py.draw.rect(v.screen, (50, 50, 50), linerect)
         
         barrect = self.bar.get_rect()
-        barrect.center = (self.posx, (self.length / self.max * self.scroll) + self.posy + 20)
+        barrect.center = (self.posx, ((self.length - 40) / self.max * self.scroll) + self.posy + 20)
         v.screen.blit(self.bar, barrect)
-        
+        print(self.scroll)
+        print("Max:", self.max)
         for event in v.events:
             if event.type == py.MOUSEBUTTONDOWN:
                 if barrect.collidepoint(py.mouse.get_pos()):
@@ -481,13 +483,13 @@ class scrollBar():
             self.moving = False
         
         if self.moving:
-            self.scroll = (self.max / self.length * py.mouse.get_pos()[1]) - self.posy - 20
-            print(self.scroll)
+            self.scroll = (self.max / (self.length - 40) * py.mouse.get_pos()[1]) - self.posy - 20
         
-        if self.scroll > self.max - 50:
-            self.scroll = (self.max - 50)
+        if self.scroll > self.max:
+            self.scroll = (self.max)
         if self.scroll < 0:
             self.scroll = 0
+            
 class radioButtons(py.sprite.Sprite):
     
     def __init__(self, posx, posy, choices, fontsize=40):

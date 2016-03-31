@@ -39,3 +39,4 @@ chunks = None
 chunkIDs = {}
 chatEdit = None
 tileScroll = 0
+tileset = None

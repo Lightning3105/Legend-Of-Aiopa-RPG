@@ -5,8 +5,6 @@ import mapMenuItems, npcEdit, tileEdit
 import mapMakerVariables as v
 from ast import literal_eval
 
-tileset = py.image.load("../Resources/Images/Main_Tileset.png")
-
 def save():
     outMap1 = []
     for y in range(v.size[1]):
@@ -122,7 +120,7 @@ def mapEditor():
     v.makeEnemy = False
     
     v.palletImages = py.sprite.Group()
-    v.tileImages = tileEdit.getGrid(tileset)
+    v.tileImages = tileEdit.getGrid()
     for i in range(0, len(v.tileImages)):
         v.palletImages.add(tileEdit.image(i))
     
@@ -145,7 +143,7 @@ def mapEditor():
     buttons.add(mapMenuItems.toggleButton("enemy", 4))
     buttons.add(mapMenuItems.toggleButton("npc", 5))
     
-    tileScroll = mapMenuItems.scrollBar(900, 0, 630, 66480) #TODO: Fix spritesheet cutoff
+    tileScroll = mapMenuItems.scrollBar(900, 0, 630, max([i.posy for i in v.palletImages])) #63680 #TODO: Fix spritesheet cutoff
     
     while True:
         py.event.pump()
@@ -198,6 +196,12 @@ def mapEditor():
             if event.type == py.KEYDOWN:
                 if event.key == py.K_RETURN:
                     outMap = save()
+            if event.type == py.KEYDOWN:
+                if event.key == py.K_SPACE:
+                    v.palletImages = py.sprite.Group()
+                    v.tileImages = tileEdit.getGrid()
+                    for i in range(0, len(v.tileImages)):
+                        v.palletImages.add(tileEdit.image(i))
             if event.type == py.QUIT:
                 save()
                 sys.exit()
@@ -215,6 +219,8 @@ def mapEditor():
         tileScroll.scroll = v.tileScroll
         tileScroll.update()
         v.tileScroll = tileScroll.scroll
+        #print(v.tileScroll)
+        #print(max([i.rect.y for i in v.palletImages]))
         py.display.flip()
 
 def startMenu():

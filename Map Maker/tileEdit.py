@@ -1,6 +1,7 @@
 import mapMakerVariables as v
 import pygame as py
 import mapMenuItems
+import os
 
 class tile(py.sprite.Sprite):
     
@@ -36,7 +37,11 @@ class tile(py.sprite.Sprite):
         self.rect.centery = v.map.get_rect()[3] / 2 + ((v.scrollY + (30 * self.posy)) * v.scale)
         if self.rect.colliderect(v.map.get_rect()):
             if not self.sheetNum == "-":
-                self.image = v.tileImages[int(self.sheetNum)]
+                try:
+                    self.image = v.tileImages[int(self.sheetNum)]
+                except IndexError:
+                    self.image = py.Surface(self.rect.size)
+                    self.image.fill((255, 0, 0))
             else:
                 self.image = py.Surface((0, 0))
             if not self.sheetNum == "-":
@@ -147,13 +152,19 @@ class image(py.sprite.Sprite):
             self.panel = 1
         elif slotNum % 32 <= 31:
             self.panel = 2"""
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (self.posx, self.posy - v.tileScroll)
     
     def update(self):
         self.rect = self.image.get_rect()
         self.rect.topleft = (self.posx, self.posy - v.tileScroll)
-        v.pallet.blit(self.image, self.rect)   
+        v.pallet.blit(self.image, self.rect)
+        #py.draw.rect(v.pallet, (0, 255, 0), self.rect)
+        """if self.slotNum > 12744:
+            print(self.slotNum, self.rect)"""
         if v.selected == self.slotNum:
             py.draw.rect(v.pallet, (255, 0, 0), self.rect, 1)
+            print("Selected:", self.posy)
         if self.rect.collidepoint((py.mouse.get_pos()[0] - 600, py.mouse.get_pos()[1])):
             self.hovered = True
         else:
@@ -165,15 +176,23 @@ class image(py.sprite.Sprite):
                         v.selected = self.slotNum
 
 
-def getGrid(tileset):
-    columns = 8
+def getGrid():
+    """columns = 8
     rows = 1662
     width = tileset.get_size()[0] / columns
-    height = tileset.get_size()[1] / rows
+    height = tileset.get_size()[1] / rows"""
+    width = 32
+    height = 32
     all = []
-    for h in range(rows):
-        for w in range(columns):
-            image = py.Surface([width, height], py.SRCALPHA, 32).convert_alpha()
-            image.blit(tileset, (0, 0), (w * width, h * height, width, height))
-            all.append(image)
+    for i in os.listdir("../Resources/Images/Tile Set/"):
+        tileset = py.image.load("../Resources/Images/Tile Set/" + i)
+        columns = int(tileset.get_size()[0] / width)
+        rows = int(tileset.get_size()[1] / height)
+        print("Total Tiles:", columns * rows)
+        for h in range(rows):
+            for w in range(columns):
+                image = py.Surface([width, height], py.SRCALPHA, 32).convert_alpha()
+                image.blit(tileset, (0, 0), (w * width, h * height, width, height))
+                all.append(image)
+    print("TOTAL ALL TILES:", len(all))
     return all

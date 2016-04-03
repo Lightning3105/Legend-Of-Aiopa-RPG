@@ -473,8 +473,6 @@ class scrollBar():
         barrect = self.bar.get_rect()
         barrect.center = (self.posx, ((self.length - 40) / self.max * self.scroll) + self.posy + 20)
         v.screen.blit(self.bar, barrect)
-        print(self.scroll)
-        print("Max:", self.max)
         for event in v.events:
             if event.type == py.MOUSEBUTTONDOWN:
                 if barrect.collidepoint(py.mouse.get_pos()):

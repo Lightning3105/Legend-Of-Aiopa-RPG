@@ -159,12 +159,8 @@ class image(py.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (self.posx, self.posy - v.tileScroll)
         v.pallet.blit(self.image, self.rect)
-        #py.draw.rect(v.pallet, (0, 255, 0), self.rect)
-        """if self.slotNum > 12744:
-            print(self.slotNum, self.rect)"""
         if v.selected == self.slotNum:
             py.draw.rect(v.pallet, (255, 0, 0), self.rect, 1)
-            print("Selected:", self.posy)
         if self.rect.collidepoint((py.mouse.get_pos()[0] - 600, py.mouse.get_pos()[1])):
             self.hovered = True
         else:

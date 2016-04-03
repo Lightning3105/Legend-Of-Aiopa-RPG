@@ -3,14 +3,32 @@ import entityClasses
 import Variables as v
 from ast import literal_eval
 import npcScripts
+import os
 try:
     from Saves import mapFile
 except ImportError:
-    import _saves_mapFile
+    import _saves_mapFile  # @UnusedImport
+
+def generateTilesheet():
+    width = 32
+    height = 32
+    all = []
+    for i in os.listdir("Resources/Images/Tile Set/"):
+        tileset = py.image.load("Resources/Images/Tile Set/" + i)
+        columns = int(tileset.get_size()[0] / width)
+        rows = int(tileset.get_size()[1] / height)
+        for h in range(rows):
+            for w in range(columns):
+                image = py.Surface([width, height], py.SRCALPHA, 32).convert_alpha()
+                image.blit(tileset, (0, 0), (w * width, h * height, width, height))
+                all.append(image)
+    return all
+
+
 def generateMap():
     #import Variables as v
     amap = dict(mapFile.map)
-    sheet = entityClasses.SpriteSheet("Resources/Images/Main_Tileset.png", 1662, 8)
+    sheet = generateTilesheet()
     
     map = amap[str(v.mapNum)]
     allMap = map
@@ -19,7 +37,6 @@ def generateMap():
     map = allMap[1][0]
     mody = int(len(map) / 2)
     modx = int(len(map[0]) / 2)
-    sheet.getGrid()
     outmap = py.sprite.Group()
     size = [0, 0]
     size[0] = len(map[0]) * 30
@@ -29,13 +46,13 @@ def generateMap():
         for tile in range(len(map[row])):
             mrt = map[row][tile]
             if list(mrt)[0] == "#":
-                image = sheet.images[int(mrt.replace('#', ""))]
+                image = sheet[int(mrt.replace('#', ""))]
                 posx = (tile * 30)# - (modx * 30)
                 posy = (row * 30)# - (mody * 30)
                 baseMap.blit(image, (posx, posy))
                 outmap.add(entityClasses.Tile((tile - modx, row - mody), 0, True))
             else:
-                image = sheet.images[int(mrt)]
+                image = sheet[int(mrt)]
                 posx = (tile * 30)# - (modx * 30)
                 posy = (row * 30)# - (mody * 30)
                 baseMap.blit(image, (posx, posy))
@@ -89,7 +106,7 @@ def generateMap():
                     over = False
                     create = False
                 if draw:
-                    image = sheet.images[int(mrt.replace('+', ""))]
+                    image = sheet[int(mrt.replace('+', ""))]
                     posx = (tile * 30)# - (modx * 30)
                     posy = (row * 30)# - (mody * 30)
                     baseMap.blit(image, (posx, posy))

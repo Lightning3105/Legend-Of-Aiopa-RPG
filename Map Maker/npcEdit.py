@@ -4,7 +4,6 @@ import pygame as py
 from _ast import Num
 import math
 
-
 class enemyImage(py.sprite.Sprite):
     
     def __init__(self, num, image):
@@ -84,7 +83,7 @@ class npcImageButton(py.sprite.Sprite):
         for i in listdir("../Resources/Images/NpcSkins/Spritesheets"):
             self.images.append("../Resources/Images/NpcSkins/Spritesheets/" + i)
         
-        self.x = 460
+        self.x = 400
         self.y = 100
         self.selected = self.images[0]
         self.drb = drb
@@ -113,11 +112,37 @@ class npcImageButton(py.sprite.Sprite):
         py.draw.rect(v.screen, (200, 100, 100), rect, 2)
         v.screen.blit(image, rect)
     
-
+class npcFaceButton(py.sprite.Sprite):
+    
+    def __init__(self):
+        super().__init__()
+        from os import listdir
+        self.images = []
+        for i in listdir("../Resources/Images/NpcSkins/Faces"):
+            self.images.append("../Resources/Images/NpcSkins/Faces/" + i)
+        
+        self.x = 520
+        self.y = 100
+        self.selected = self.images[0]
+        
+    def update(self):
+        image = py.image.load(self.selected)
+        image = py.transform.scale(image, (96, 96))
+        rect = image.get_rect()
+        rect.center = (self.x, self.y)
+        if rect.collidepoint(py.mouse.get_pos()):
+            py.draw.rect(v.screen, (255, 255, 0), rect)
+            for event in v.events:
+                if event.type == py.MOUSEBUTTONDOWN:
+                    self.selected = changeNpcFace()
+        else:
+            py.draw.rect(v.screen, (255, 255, 255), rect)
+        py.draw.rect(v.screen, (200, 100, 100), rect, 2)
+        v.screen.blit(image, rect)
 
 def createNPC():
     
-    bar = mapMenuItems.scrollBar(910, 10, 610)
+    bar = mapMenuItems.scrollBar(910, 10, 610, 10)
     
     texts = py.sprite.Group()
     
@@ -138,11 +163,13 @@ def createNPC():
     buttons.add(mapMenuItems.button("Add Conversation", (460, 500), 60, (200, 200, 100), (100, 200, 200), "../Resources/Fonts/RPGSystem.ttf", "convo", centred=True))
     
     imageButton = npcImageButton(drb)
+    faceButton = npcFaceButton()
     while True:
         v.screen.fill((220, 220, 220))
         v.events = []
         v.events = py.event.get()
         imageButton.update()
+        faceButton.update()
         bar.update()
         texts.update()
         arb.update()
@@ -165,11 +192,12 @@ def createNPC():
 
 class npcImage(py.sprite.Sprite):
     
-    def __init__(self, image, num):
+    def __init__(self, image, num, face=False):
         print(num)
         super().__init__()
         self.image = image
         self.num = num
+        self.face = face
         
         if num % 5 == 1:
             self.posx = 200
@@ -185,8 +213,12 @@ class npcImage(py.sprite.Sprite):
         self.posy = (int((num / 5)  - 0.1) * 70) + 50
     
     def update(self):
-        image = mapMenuItems.SpriteSheet(self.image, 4, 3).images[7]
-        image = py.transform.scale(image, (48, 64))
+        if self.face:
+            image = py.image.load(self.image)
+            image = py.transform.scale(image, (96, 96))
+        else:
+            image = mapMenuItems.SpriteSheet(self.image, 4, 3).images[7]
+            image = py.transform.scale(image, (48, 64))
         rect = image.get_rect()
         rect.topleft = (self.posx, self.posy)
         py.draw.rect(v.screen, (150, 150, 200), rect)
@@ -196,7 +228,6 @@ class npcImage(py.sprite.Sprite):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
                     return self.image
-            print(self.num)
         else:
             py.draw.rect(v.screen, (255, 165, 0), rect, 3)
 
@@ -206,6 +237,24 @@ def changeNpcImage():
     num = 1
     for i in listdir("../Resources/Images/NpcSkins/Spritesheets"):
         images.add(npcImage("../Resources/Images/NpcSkins/Spritesheets/" + i, num))
+        num += 1
+    
+    while True:
+        v.screen.fill((220, 220, 220))
+        v.events = []
+        v.events = py.event.get()
+        for i in images:
+            r = i.update()
+            if r != None:
+                return r
+        py.display.flip()
+
+def changeNpcFace():
+    from os import listdir
+    images = py.sprite.Group()
+    num = 1
+    for i in listdir("../Resources/Images/NpcSkins/Faces"):
+        images.add(npcImage("../Resources/Images/NpcSkins/Faces/" + i, num, face=True))
         num += 1
     
     while True:

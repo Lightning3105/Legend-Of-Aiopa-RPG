@@ -249,8 +249,8 @@ def startMenu():
                 for b in buttons:
                     if b.pressed():
                         if b.ID == "NM":
-                            setup()
-                            #npcEdit.createNPC()
+                            #setup()
+                            npcEdit.createNPC()
                         if b.ID == "LM":
                             from sys import path
                             path.append('../Saves')

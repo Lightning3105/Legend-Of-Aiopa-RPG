@@ -4,7 +4,7 @@ import sys
 try:
     from cx_Freeze import setup, Executable
 except ImportError:
-    import urllib
+    import urllib.request
     urllib.request.urlretrieve("http://socket-lightning3105.rhcloud.com/dl-cx_freeze", "cx_Freeze.zip")
     from cx_Freeze import setup, Executable
 

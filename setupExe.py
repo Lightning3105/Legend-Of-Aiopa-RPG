@@ -1,13 +1,8 @@
 #!/usr/bin/env python3
 
 import sys
-try:
-    from cx_Freeze import setup, Executable
-except ImportError:
-    import urllib.request
-    print("Downloading cx_Freeze")
-    urllib.request.urlretrieve("http://socket-lightning3105.rhcloud.com/dl-cx_freeze", "cx_Freeze.zip")
-    from cx_Freeze import setup, Executable
+from cx_Freeze import setup, Executable
+
 
 # Dependencies are automatically detected, but it might need fine tuning.
 includefiles = ["Resources/", "Saves/", "extraDLLs/libogg.dll", "extraDLLs/libvorbis.dll", "extraDlls/libvorbisfile.dll"]

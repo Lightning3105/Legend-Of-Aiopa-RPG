@@ -419,10 +419,13 @@ class chatChunk(py.sprite.Sprite):
         self.posx = 20 + int(self.c_id) * 300
         self.posy = 300 + v.chunkIDs[str(self.c_id)].index(self) * 60
         self.rect = py.Rect(self.posx, self.posy, 200, 50)
+        if self.hovered:
+            self.rect.height += 40
         if self.rect.collidepoint(py.mouse.get_pos()):
             self.hovered = True
         else:
             self.hovered = False
+
         if self.c_goto != "":
             if int(self.c_goto) > int(self.c_id):
                 line = 0

@@ -282,7 +282,7 @@ class editChunk(py.sprite.Sprite):
         self.c_changelike = c_changelike
         self.c_end = c_end
         
-        self.posx = 150
+        self.posx = 210
         self.posy = 50
         self.rect = py.Rect(self.posx, self.posy, 500, 150)
     
@@ -292,7 +292,7 @@ class editChunk(py.sprite.Sprite):
         self.texts.add(mapMenuItems.textLabel("ID:", (self.posx + 20, self.posy + 20), (0, 0, 0), None, 25))
         self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 40), 25, 2, 1, button=None, default=list(self.c_id), type="int", fontfile=None))
         
-        self.texts.add(mapMenuItems.textLabel("Message:", (self.posx + 20, self.posy + 80), (0, 0, 0), None, 25))
+        self.texts.add(mapMenuItems.textLabel("Message: (Lines are conjoined with no space)", (self.posx + 20, self.posy + 80), (0, 0, 0), None, 25))
         self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 100), 15, 50, 2, button=None, default=list(self.c_message[:len(self.c_message)//2]), type="str", fontfile=None))
         self.tinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 120), 15, 50, 3, button=None, default=list(self.c_message[len(self.c_message)//2:]), type="str", fontfile=None))
         
@@ -310,16 +310,23 @@ class editChunk(py.sprite.Sprite):
         self.texts.add(mapMenuItems.textLabel("End:", (self.posx + 330, self.posy + 20), (0, 0, 0), None, 25))
         self.tinps.add(mapMenuItems.textInput((self.posx + 330, self.posy + 40), 25, 2, 7, button=None, default=list(self.c_end), type="int", fontfile=None))
     
+        self.Btexts = py.sprite.Group()
+        self.Btinps = py.sprite.Group()
+        
+        self.Btexts.add(mapMenuItems.textLabel("Goto:", (self.posx + 20, self.posy + 20), (0, 0, 0), None, 25))
+        self.Btinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 40), 25, 2, 1, button=None, default=list(self.c_id), type="int", fontfile=None))
+    
+        self.Btexts.add(mapMenuItems.textLabel("Text:", (self.posx + 20, self.posy + 80), (0, 0, 0), None, 25))
+        self.Btinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 100), 15, 50, 2, button=None, default=list(self.c_message[:len(self.c_message)//2]), type="str", fontfile=None))
     
     def update(self):
-        self.posx = 150
-        self.posy = 50
         self.rect = py.Rect(self.posx, self.posy, 500, 150)
         
         py.draw.rect(v.screen, (200, 200, 200), self.rect)
+        
+        py.draw.rect(v.screen, (200, 200, 200), (self.rect[0] - 160, self.rect[1], 150, 150))
         self.tinps.update()
         self.texts.update()
-        
         
         done = 0
         for inp in self.tinps:
@@ -486,7 +493,6 @@ class chatChunk(py.sprite.Sprite):
                     v.chatEdit = editChunk(self.c_message, self.c_goto, self.c_id, self.c_charisma, self.c_buttons, self.c_changelike, self.c_end)
                     v.chunks.remove(self)
             self.buttons.update()
-            
         else:
             py.draw.rect(v.screen, (200, 200, 200), self.rect)
         self.texts.update()
@@ -513,6 +519,8 @@ class chatChunk(py.sprite.Sprite):
             v.screen.blit(self.idRend, (self.rect.x - size[0]/2, self.rect.y - size[1]/2))
             if self.rect.collidepoint(py.mouse.get_pos()):
                 self.hovered = True
+            if self.hovered:
+                py.draw.rect(v.screen, (100, 100, 100), (self.rect[0], self.rect[1] + 20, 40, 40))
         
         
         
@@ -526,7 +534,7 @@ def chatEdit():
     
     v.chatEdit = editChunk()
     buttons = py.sprite.Group()
-    buttons.add(mapMenuItems.button("ADD", (650, 50), 100, (150, 150, 150), (200, 200, 200), None, "add", bsize=(150, 150), centretext=True))
+    buttons.add(mapMenuItems.button("ADD", (720, 50), 100, (150, 150, 150), (200, 200, 200), None, "add", bsize=(150, 150), centretext=True))
     
     texts = py.sprite.Group()
     texts.add(mapMenuItems.textLabel("ID:", (5, 250), (0, 0, 0), None, 40))

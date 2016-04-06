@@ -79,12 +79,13 @@ class conversation():
             xmod = 0
             ymod = 0
             for key, value in self.master.place.items():
-                if key[0] == "B":
-                    self.buttons.add(MenuItems.Button(value["Text"], (220 / 640 * v.screenX + xmod, 250 / 640 * v.screenX + ymod), 40 / 640 * v.screenX, (255, 255, 100), (153, 76, 0), "Resources/Fonts/RPGSystem.ttf", value["ID"], bsize=(190 / 640 * v.screenX, 0)))
-                    xmod += 210 / 640 * v.screenX
-                    if xmod >= 420 / 640 * v.screenX:
-                        xmod = 0
-                        ymod -= 50 / 640 * v.screenX
+                if key == "Buttons":
+                    for but in value:
+                        self.buttons.add(MenuItems.Button(but["Text"], (220 / 640 * v.screenX + xmod, 250 / 640 * v.screenX + ymod), 40 / 640 * v.screenX, (255, 255, 100), (153, 76, 0), "Resources/Fonts/RPGSystem.ttf", but["ID"], bsize=(190 / 640 * v.screenX, 0)))
+                        xmod += 210 / 640 * v.screenX
+                        if xmod >= 420 / 640 * v.screenX:
+                            xmod = 0
+                            ymod -= 50 / 640 * v.screenX
                 if key == "Quest":
                     quest(value[0], value[1], value[2])
             

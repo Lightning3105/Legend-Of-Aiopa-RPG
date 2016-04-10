@@ -148,10 +148,6 @@ class image(py.sprite.Sprite):
         self.posy = int((slotNum / 8)) * size
         self.slotNum = slotNum
         self.hovered = False
-        """if slotNum % 32 <= 15:
-            self.panel = 1
-        elif slotNum % 32 <= 31:
-            self.panel = 2"""
         self.rect = self.image.get_rect()
         self.rect.topleft = (self.posx, self.posy - v.tileScroll)
     
@@ -173,10 +169,6 @@ class image(py.sprite.Sprite):
 
 
 def getGrid():
-    """columns = 8
-    rows = 1662
-    width = tileset.get_size()[0] / columns
-    height = tileset.get_size()[1] / rows"""
     width = 32
     height = 32
     all = []

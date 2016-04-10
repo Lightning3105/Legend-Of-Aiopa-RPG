@@ -319,6 +319,11 @@ class editChunk(py.sprite.Sprite):
         self.Btexts.add(mapMenuItems.textLabel("Text:", (self.posx + 20, self.posy + 80), (0, 0, 0), None, 25))
         self.Btinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 100), 15, 50, 2, button=None, default=list(self.c_message[:len(self.c_message)//2]), type="str", fontfile=None))
     
+        self.Bselect = py.sprite.Group()
+        for i in range(4):
+            self.Bselect.add(self.Bselect(i))
+    
+    
     def update(self):
         self.rect = py.Rect(self.posx, self.posy, 500, 150)
         
@@ -371,6 +376,11 @@ class editChunk(py.sprite.Sprite):
                 self.c_changelike = inp.outText
             if inp.num == 7:
                 self.c_end = inp.outText
+    
+    class Bselect(py.sprite.Sprite):
+        
+        def __init__(self, num):
+            self.num = num
 
 class chatChunk(py.sprite.Sprite):
     

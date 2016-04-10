@@ -135,7 +135,6 @@ def mapEditor():
     py.time.set_timer(py.USEREVENT, 1000) #1 sec delay
     
     buttons = py.sprite.Group()
-    #buttons.add(toggleButton("Make Enemy", "v.makeEnemy", (170, 50)))
     buttons.add(mapMenuItems.toggleButton("layer", 0))
     buttons.add(mapMenuItems.toggleButton("hitbox", 1))
     buttons.add(mapMenuItems.toggleButton("over", 2))
@@ -219,8 +218,6 @@ def mapEditor():
         tileScroll.scroll = v.tileScroll
         tileScroll.update()
         v.tileScroll = tileScroll.scroll
-        #print(v.tileScroll)
-        #print(max([i.rect.y for i in v.palletImages]))
         py.display.flip()
 
 def startMenu():

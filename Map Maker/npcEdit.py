@@ -269,7 +269,7 @@ def changeNpcFace():
 
 class editChunk(py.sprite.Sprite):
     
-    def __init__(self, c_message="", c_goto = "", c_id = "", c_charisma = "", c_buttons = "", c_changelike = "", c_end = ""):
+    def __init__(self, c_message="", c_goto = "", c_id = "", c_charisma = "", c_buttons = [], c_changelike = "", c_end = ""):
         super().__init__()
         
         self.created = False
@@ -312,16 +312,16 @@ class editChunk(py.sprite.Sprite):
     
         self.Btexts = py.sprite.Group()
         self.Btinps = py.sprite.Group()
-        
-        self.Btexts.add(mapMenuItems.textLabel("Goto:", (self.posx + 20, self.posy + 20), (0, 0, 0), None, 25))
-        self.Btinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 40), 25, 2, 1, button=None, default=list(self.c_id), type="int", fontfile=None))
-    
-        self.Btexts.add(mapMenuItems.textLabel("Text:", (self.posx + 20, self.posy + 80), (0, 0, 0), None, 25))
-        self.Btinps.add(mapMenuItems.textInput((self.posx + 10, self.posy + 100), 15, 50, 2, button=None, default=list(self.c_message[:len(self.c_message)//2]), type="str", fontfile=None))
     
         self.Bselect = py.sprite.Group()
-        for i in range(4):
-            self.Bselect.add(self.Bselect(i))
+        if len(self.c_buttons) == 0:
+            self.c_buttons.append({})
+        for i in range(len(self.c_buttons)):
+            self.Bselect.add(self.button(i, self))
+        
+        self.editButton = None
+        
+        self.buttonGo = mapMenuItems.button("Save", (570, 60), 80, (100, 100, 100), (150, 150, 150), None, "save", centred=False, bsize=(130, 80), centretext=True)
     
     
     def update(self):
@@ -330,8 +330,26 @@ class editChunk(py.sprite.Sprite):
         py.draw.rect(v.screen, (200, 200, 200), self.rect)
         
         py.draw.rect(v.screen, (200, 200, 200), (self.rect[0] - 160, self.rect[1], 150, 150))
-        self.tinps.update()
-        self.texts.update()
+        if self.editButton == None:
+            self.tinps.update()
+            self.texts.update()
+        else:
+            self.Btexts.update()
+            self.Btinps.update()
+            self.buttonGo.update()
+            for event in v.events:
+                if event.type == py.MOUSEBUTTONDOWN:
+                    if self.buttonGo.pressed():
+                        for inp in self.Btinps:
+                            if inp.num == 1:
+                                self.c_buttons[self.editButton]["ID"] = inp.outText
+                            if inp.num == 2:
+                                self.c_buttons[self.editButton]["Text"] = inp.outText
+                        if self.editButton + 1 == len(self.c_buttons) and len(self.c_buttons) < 4:
+                            self.c_buttons.append({})
+                            self.Bselect.add(self.button(len(self.c_buttons) - 1, self))
+                        self.editButton = None
+        self.Bselect.update()
         
         done = 0
         for inp in self.tinps:
@@ -348,7 +366,6 @@ class editChunk(py.sprite.Sprite):
                             done += 1
         if done >= 3:
             self.created = True
-                
     
     def save(self):
         self.created = True
@@ -377,10 +394,53 @@ class editChunk(py.sprite.Sprite):
             if inp.num == 7:
                 self.c_end = inp.outText
     
-    class Bselect(py.sprite.Sprite):
+    class button(py.sprite.Sprite):
         
-        def __init__(self, num):
+        def __init__(self, num, master):
+            super().__init__()
             self.num = num
+            self.master = master
+            self.rect = py.Rect(self.master.rect[0] - 150, self.master.rect[1] + 10 + num * 33.75, 130, 28.75)
+            self.hovered = False
+            font = py.font.Font(None, 30)
+            self.text = font.render("Button " + str(num + 1), 1, (0, 0, 0))
+            
+        
+        def update(self):
+            if not self.hovered:
+                py.draw.rect(v.screen, (150, 150, 150), self.rect)
+            else:
+                py.draw.rect(v.screen, (100, 100, 100), self.rect)
+            
+            if self.rect.collidepoint(py.mouse.get_pos()):
+                self.hovered = True
+            else:
+                self.hovered = False
+            
+            v.screen.blit(self.text, (self.rect[0] + 20, self.rect[1] + 5))
+            
+            if self.hovered:
+                for event in v.events:
+                    if event.type == py.MOUSEBUTTONDOWN:
+                        self.master.editButton = self.num
+                        
+                        if "Text" in self.master.c_buttons[self.num].keys():
+                            print(self.master.c_buttons[self.num])
+                            self.b_message = self.master.c_buttons[self.num]["Text"]
+                            self.b_id = self.master.c_buttons[self.num]["ID"]
+                        else:
+                            self.b_id = ""
+                            self.b_message = ""
+                                                
+                        self.master.Btexts = py.sprite.Group()
+                        self.master.Btinps = py.sprite.Group()
+                        
+                        self.master.Btexts.add(mapMenuItems.textLabel("Goto:", (self.master.posx + 20, self.master.posy + 20), (0, 0, 0), None, 25))
+                        self.master.Btinps.add(mapMenuItems.textInput((self.master.posx + 10, self.master.posy + 40), 25, 2, 1, button=None, default=list(self.b_id), type="int", fontfile=None))
+                    
+                        self.master.Btexts.add(mapMenuItems.textLabel("Text:", (self.master.posx + 20, self.master.posy + 80), (0, 0, 0), None, 25))
+                        self.master.Btinps.add(mapMenuItems.textInput((self.master.posx + 10, self.master.posy + 100), 15, 50, 2, button=None, default=list(self.b_message), type="str", fontfile=None))
+            
 
 class chatChunk(py.sprite.Sprite):
     

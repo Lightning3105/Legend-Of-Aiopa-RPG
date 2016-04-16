@@ -345,11 +345,16 @@ class editChunk(py.sprite.Sprite):
                                 self.c_buttons[self.editButton]["ID"] = inp.outText
                             if inp.num == 2:
                                 self.c_buttons[self.editButton]["Text"] = inp.outText
-                        if self.editButton + 1 == len(self.c_buttons) and len(self.c_buttons) < 4:
+                        """if self.editButton + 1 == len(self.c_buttons) and len(self.c_buttons) < 4:
                             self.c_buttons.append({})
-                            self.Bselect.add(self.button(len(self.c_buttons) - 1, self))
+                            self.Bselect.add(self.button(len(self.c_buttons) - 1, self))"""
                         self.editButton = None
         self.Bselect.update()
+        
+        if len(self.c_buttons) < 4:
+            if not self.c_buttons[-1] == {}:
+                self.c_buttons.append({})
+                self.Bselect.add(self.button(len(self.c_buttons) - 1, self))
         
         done = 0
         for inp in self.tinps:
@@ -393,8 +398,12 @@ class editChunk(py.sprite.Sprite):
                 self.c_changelike = inp.outText
             if inp.num == 7:
                 self.c_end = inp.outText
+        
+        for but in self.c_buttons:
+            if but == {}:
+                self.c_buttons.remove(but)
     
-    class button(py.sprite.Sprite):
+    class button(py.sprite.Sprite): #TODO: Buttons can change friendliness
         
         def __init__(self, num, master):
             super().__init__()
@@ -402,11 +411,16 @@ class editChunk(py.sprite.Sprite):
             self.master = master
             self.rect = py.Rect(self.master.rect[0] - 150, self.master.rect[1] + 10 + num * 33.75, 130, 28.75)
             self.hovered = False
-            font = py.font.Font(None, 30)
-            self.text = font.render("Button " + str(num + 1), 1, (0, 0, 0))
+            self.font = py.font.Font(None, 30)
             
         
         def update(self):
+            if not self.master.c_buttons[self.num] == {}:
+                self.text = self.font.render("Button " + str(self.num + 1), 1, (0, 0, 0))
+            else:
+                self.text = self.font.render("+ Button " + str(self.num + 1) + " +", 1, (0, 0, 0))
+            
+            
             if not self.hovered:
                 py.draw.rect(v.screen, (150, 150, 150), self.rect)
             else:
@@ -417,7 +431,7 @@ class editChunk(py.sprite.Sprite):
             else:
                 self.hovered = False
             
-            v.screen.blit(self.text, (self.rect[0] + 20, self.rect[1] + 5))
+            v.screen.blit(self.text, (self.rect.centerx - self.text.get_rect().width/2, self.rect.centery - self.text.get_rect().height/2))
             
             if self.hovered:
                 for event in v.events:
@@ -490,9 +504,11 @@ class chatChunk(py.sprite.Sprite):
         else:
             self.texts.add(mapMenuItems.textLabel("---", (self.posx + 155, self.posy + 25), (10, 10, 10), None, 30))
         
+        self.rect = py.Rect(self.posx, self.posy, 200, 50)
+        
         self.buttons = py.sprite.Group()
         for i in range(len(self.c_buttons)):
-            self.buttons.add(self.cButton(i, self.c_buttons[i], self.rect.topleft))
+            self.buttons.add(self.cButton(i, self.c_buttons[i], self.rect.topleft, self))
         
         self.hovered = False
         
@@ -562,6 +578,7 @@ class chatChunk(py.sprite.Sprite):
                 if event.type == py.MOUSEBUTTONDOWN:
                     v.chatEdit = editChunk(self.c_message, self.c_goto, self.c_id, self.c_charisma, self.c_buttons, self.c_changelike, self.c_end)
                     v.chunks.remove(self)
+                    v.chunkIDs[str(self.c_id)].remove(self)
             self.buttons.update()
         else:
             py.draw.rect(v.screen, (200, 200, 200), self.rect)
@@ -570,27 +587,55 @@ class chatChunk(py.sprite.Sprite):
 
     class cButton(py.sprite.Sprite):
         
-        def __init__(self, num, data, pos):
+        def __init__(self, num, data, pos, master):
+            super().__init__()
             self.text = data["Text"]
-            self.ID = data["ID"]
-            font = py.font.Font(None, 15)
+            self.ID = int(data["ID"])
+            font = py.font.Font(None, 20)
             self.idRend = font.render(str(self.ID), 1, (0, 0, 0))
+            self.textRend = font.render(str(self.text), 1, (0, 0, 0))
             self.rect = py.Rect(pos[0] + 5, pos[1] + 50, 40, 20)
-            self.rect.x += (num % 2) * 45
-            self.rect.y += int(num / 2) * 25
+            self.rect.x += (num % 4) * 45
+            #self.rect.y += int(num / 2) * 25
             self.hovered = False
+            
+            self.master = master
         
         def update(self):
             if self.hovered:
-                py.draw.rect(v.screen, (150, 150, 150), self.rect)
-            else:
                 py.draw.rect(v.screen, (100, 100, 100), self.rect)
+            else:
+                py.draw.rect(v.screen, (150, 150, 150), self.rect)
             size = self.idRend.get_rect().size
-            v.screen.blit(self.idRend, (self.rect.x - size[0]/2, self.rect.y - size[1]/2))
+            v.screen.blit(self.idRend, (self.rect.centerx - size[0]/2, self.rect.centery - size[1]/2))
             if self.rect.collidepoint(py.mouse.get_pos()):
                 self.hovered = True
+            else:
+                self.hovered = False
             if self.hovered:
-                py.draw.rect(v.screen, (100, 100, 100), (self.rect[0], self.rect[1] + 20, 40, 40))
+                py.draw.rect(v.screen, (100, 100, 100), (self.rect[0], self.rect[1] + 20, self.textRend.get_rect().width + 20, 20))
+                v.screen.blit(self.textRend, (self.rect[0] + 10, self.rect[1] + 25))
+            
+            if int(self.ID) > int(self.master.c_id):
+                line = 0
+                endmod = 0
+            if int(self.ID) < int(self.master.c_id):
+                line = 40
+                endmod = 160
+            if int(self.ID) == int(self.master.c_id):
+                line = 0
+                endmod = 0
+                
+            end = int(self.ID) * 300 + line + endmod + 20
+            
+            if self.hovered:
+                for chunk in v.chunks:
+                    print(chunk.c_id, self.ID)
+                    if int(chunk.c_id) == int(self.ID):
+                        print(line)
+                        poy = chunk.posy
+                        py.draw.line(v.screen, (255, 255, 0), (self.rect.x + (40 - line), self.rect.y + 10), (end, poy + 25), 4)
+                        py.draw.circle(v.screen, (255, 255, 0), (end, poy + 25), 5)
         
         
         

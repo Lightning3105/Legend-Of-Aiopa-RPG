@@ -314,7 +314,7 @@ class editChunk(py.sprite.Sprite):
         self.Btinps = py.sprite.Group()
     
         self.Bselect = py.sprite.Group()
-        if len(self.c_buttons) == 0:
+        while len(self.c_buttons) < 4:
             self.c_buttons.append({})
         for i in range(len(self.c_buttons)):
             self.Bselect.add(self.button(i, self))
@@ -322,7 +322,8 @@ class editChunk(py.sprite.Sprite):
         self.editButton = None
         
         self.buttonGo = mapMenuItems.button("Save", (570, 60), 80, (100, 100, 100), (150, 150, 150), None, "save", centred=False, bsize=(130, 80), centretext=True)
-    
+        self.buttonDel = mapMenuItems.button("Delete", (420, 60), 60, (100, 100, 100), (150, 150, 150), None, "delete", centred=False, bsize=(130, 80), centretext=True)
+        
     
     def update(self):
         self.rect = py.Rect(self.posx, self.posy, 500, 150)
@@ -337,6 +338,7 @@ class editChunk(py.sprite.Sprite):
             self.Btexts.update()
             self.Btinps.update()
             self.buttonGo.update()
+            self.buttonDel.update()
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
                     if self.buttonGo.pressed():
@@ -345,10 +347,12 @@ class editChunk(py.sprite.Sprite):
                                 self.c_buttons[self.editButton]["ID"] = inp.outText
                             if inp.num == 2:
                                 self.c_buttons[self.editButton]["Text"] = inp.outText
-                        """if self.editButton + 1 == len(self.c_buttons) and len(self.c_buttons) < 4:
-                            self.c_buttons.append({})
-                            self.Bselect.add(self.button(len(self.c_buttons) - 1, self))"""
                         self.editButton = None
+                    if self.buttonDel.pressed():
+                        self.c_buttons[self.editButton] = {}
+                        self.editButton = None
+                        self.Btexts = py.sprite.Group()
+                        self.Btinps = py.sprite.Group()
         self.Bselect.update()
         
         if len(self.c_buttons) < 4:

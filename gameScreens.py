@@ -279,6 +279,8 @@ def options():
     buttons.add(MenuItems.Button("Toggle Fullscreen", (v.screenX * 0.03125, v.screenY * 0.04), int(v.screenX * 0.09375), (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "fullscreen"))
     buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY - v.screenY * 0.08), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
     buttons.add(MenuItems.Button("Toggle Resolution", (v.screenX * 0.03125, v.screenY * 0.2), int(v.screenX * 0.09375), (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "resolution"))
+    buttons.add(MenuItems.Button("Map Editor", (v.screenX * 0.03125, v.screenY * 0.4), int(v.screenX * 0.09375), (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "edit"))
+    
     
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
@@ -305,6 +307,12 @@ def options():
                 if id == "back":
                     mainMenu()
                     return
+                if id == "edit":
+                    import MapEditor
+                    import os
+                    os.chdir("Map Maker")
+                    MapEditor.startMenu()
+                    os.chdir("..")
                 if id == "resolution":
                     if v.screenX == 640:
                         v.screenX = 800

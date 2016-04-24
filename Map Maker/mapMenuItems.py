@@ -455,23 +455,36 @@ class makeTeleport():
 
 class scrollBar():
     
-    def __init__(self, posx, posy, length, max):
+    def __init__(self, posx, posy, length, max, verticle=True):
         self.posx = posx
         self.posy = posy
-        self.length = length
+        self.length = length - 40
         self.max = max
-        self.bar = py.Surface((10, 40))
+        if verticle:
+            self.bar = py.Surface((10, 40))
+        else:
+            self.bar = py.Surface((40, 10))
         self.bar.fill((255, 150, 0))
         self.moving = False
         self.scroll = 0
+        self.verticle = verticle
         #self.max -= 630 - 40
+        self.offset = 0
+        self.firstclick = False
     
     def update(self):
-        linerect = (self.posx - 2, self.posy, 4, self.length)
+        if self.verticle:
+            linerect = (self.posx - 2, self.posy, 4, self.length + 40)
+        else:
+            linerect = (self.posx - 2, self.posy, self.length + 40, 4)
         py.draw.rect(v.screen, (50, 50, 50), linerect)
         
         barrect = self.bar.get_rect()
-        barrect.center = (self.posx, ((self.length - 40) / self.max * self.scroll) + self.posy + 20)
+        if self.verticle:
+            barrect.center = (self.posx, (self.length / self.max * self.scroll) + self.posy + 20)
+        else:
+            barrect.center = ((self.length / self.max * self.scroll) + self.posx + 20, self.posy)
+        
         v.screen.blit(self.bar, barrect)
         for event in v.events:
             if event.type == py.MOUSEBUTTONDOWN:
@@ -481,12 +494,22 @@ class scrollBar():
             self.moving = False
         
         if self.moving:
-            self.scroll = (self.max / (self.length - 40) * py.mouse.get_pos()[1]) - self.posy - 20
+            if self.firstclick:
+                self.offset = (py.mouse.get_pos()[0] - barrect[0], py.mouse.get_pos()[1] - barrect[1])
+                self.firstclick = False
+            if self.verticle:
+                self.scroll = (self.max / self.length) * (py.mouse.get_pos()[1] - self.offset[1])
+            else:
+                self.scroll = (self.max / self.length) * (py.mouse.get_pos()[0] - self.offset[0])
+            print(self.scroll)
+        else:
+            self.firstclick = True
         
         if self.scroll > self.max:
             self.scroll = (self.max)
         if self.scroll < 0:
             self.scroll = 0
+        
             
 class radioButtons(py.sprite.Sprite):
     

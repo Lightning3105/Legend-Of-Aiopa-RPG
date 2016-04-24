@@ -40,3 +40,5 @@ chunkIDs = {}
 chatEdit = None
 tileScroll = 0
 tileset = None
+npcScrollX = 0
+npcScrollY = 0

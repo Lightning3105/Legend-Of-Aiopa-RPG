@@ -271,7 +271,7 @@ class editChunk(py.sprite.Sprite):
     
     def __init__(self, c_message="", c_goto = "", c_id = "", c_charisma = "", c_buttons = [], c_changelike = "", c_end = ""):
         super().__init__()
-        
+        print("new", c_buttons)
         self.created = False
         
         self.c_message = c_message
@@ -314,6 +314,7 @@ class editChunk(py.sprite.Sprite):
         self.Btinps = py.sprite.Group()
     
         self.Bselect = py.sprite.Group()
+        print("c buttons:", self.c_buttons) #TODO: Fix blank buttons
         while len(self.c_buttons) < 4:
             self.c_buttons.append({})
         for i in range(len(self.c_buttons)):
@@ -402,10 +403,7 @@ class editChunk(py.sprite.Sprite):
                 self.c_changelike = inp.outText
             if inp.num == 7:
                 self.c_end = inp.outText
-        
-        for but in self.c_buttons:
-            if but == {}:
-                self.c_buttons.remove(but)
+            self.c_buttons = [but for but in self.c_buttons if len(but) > 0]
     
     class button(py.sprite.Sprite): #TODO: Buttons can change friendliness
         
@@ -587,7 +585,9 @@ class chatChunk(py.sprite.Sprite):
         else:
             py.draw.rect(v.screen, (200, 200, 200), self.rect)
         self.texts.update()
-
+    
+    def save(self):
+        return {"Message": self.c_message, "ID": self.c_id, "Buttons": self.c_buttons, "ChangeLike": self.c_changelike, "Charisma": self.c_charisma, "Goto": self.c_goto, "End": self.c_end}
 
     class cButton(py.sprite.Sprite):
         
@@ -654,6 +654,7 @@ def chatEdit():
     v.chatEdit = editChunk()
     buttons = py.sprite.Group()
     buttons.add(mapMenuItems.button("ADD", (720, 50), 100, (150, 150, 150), (200, 200, 200), None, "add", bsize=(150, 150), centretext=True))
+    buttons.add(mapMenuItems.button("Save & Exit", (10, 10), 30, (150, 150, 150), (200, 200, 200), None, "exit"))
     
     texts = py.sprite.Group()
     texts.add(mapMenuItems.textLabel("ID:", (5, 250), (0, 0, 0), None, 40))
@@ -662,6 +663,9 @@ def chatEdit():
     boxes.add(box(0))
     boxes.add(box(1))
     boxes.add(box(2))
+    
+    barX = mapMenuItems.scrollBar(0, 620, 910, 100, verticle=False)
+    barY = mapMenuItems.scrollBar(910, 0, 620, 100, verticle=True)
          
     
     while True:
@@ -682,6 +686,9 @@ def chatEdit():
         py.draw.line(v.screen, (0, 0, 0), (270, 290), (270, 630), 2)
         py.draw.line(v.screen, (0, 0, 0), (570, 290), (570, 630), 2)
         
+        barX.update()
+        barY.update()
+        
         for event in v.events:
             if event.type == py.MOUSEBUTTONDOWN:
                 for button in buttons:
@@ -691,6 +698,13 @@ def chatEdit():
                                 v.chatEdit.save()
                                 v.chunks.add(chatChunk(v.chatEdit.c_message, v.chatEdit.c_id, v.chatEdit.c_goto, v.chatEdit.c_charisma, v.chatEdit.c_buttons, v.chatEdit.c_changelike, v.chatEdit.c_end))
                                 v.chatEdit = editChunk()
+                                
+                        if button.ID == "exit":
+                            out = []
+                            for but in v.chunks:
+                                out.append(but.save())
+                            print(out)
+                            return out
         py.display.flip()
         
 

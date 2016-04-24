@@ -501,7 +501,7 @@ class scrollBar():
                 self.scroll = (self.max / self.length) * (py.mouse.get_pos()[1] - self.offset[1])
             else:
                 self.scroll = (self.max / self.length) * (py.mouse.get_pos()[0] - self.offset[0])
-            print(self.scroll)
+            #print(self.scroll)
         else:
             self.firstclick = True
         

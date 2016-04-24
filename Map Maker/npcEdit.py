@@ -514,9 +514,31 @@ class chatChunk(py.sprite.Sprite):
         
         self.hovered = False
         
+        self.oldScroll = (0, 0)
+        self.oldPos = None
+        
     def update(self):
-        self.posx = 20 + int(self.c_id) * 300
-        self.posy = 300 + v.chunkIDs[str(self.c_id)].index(self) * 60
+        """if self.oldScroll != (v.npcScrollX, v.npcScrollY):
+            diff = (self.oldScroll[0] - v.npcScrollX, self.oldScroll[1] - v.npcScrollY)
+            for t in self.texts:
+                t.pos = (t.pos[0] + diff[0], t.pos[1] + diff[1])
+            for b in self.buttons:
+                b.rect.x += diff[0]
+                b.rect.y += diff[1]"""
+        self.posx = 20 + int(self.c_id) * 300 - v.npcScrollX
+        self.posy = 300 + v.chunkIDs[str(self.c_id)].index(self) * 60 - v.npcScrollY
+        if self.oldPos == None:
+            self.oldPos = (self.posx, self.posy)
+        if self.oldPos != (self.posx, self.posy):
+            diff = (self.oldPos[0] - self.posx, self.oldPos[1] - self.posy)
+            print("diff:", diff)
+            for t in self.texts:
+                t.pos = (t.pos[0] - diff[0], t.pos[1] - diff[1])
+                print(t.pos)
+                self.oldPos = (self.posx, self.posy)
+            for b in self.buttons:
+                b.rect.x -= diff[0]
+                b.rect.y -= diff[1]
         self.rect = py.Rect(self.posx, self.posy, 200, 50)
         if self.hovered:
             self.rect.height += 50
@@ -581,6 +603,7 @@ class chatChunk(py.sprite.Sprite):
                     v.chatEdit = editChunk(self.c_message, self.c_goto, self.c_id, self.c_charisma, self.c_buttons, self.c_changelike, self.c_end)
                     v.chunks.remove(self)
                     v.chunkIDs[str(self.c_id)].remove(self)
+                    v.events.remove(event)
             self.buttons.update()
         else:
             py.draw.rect(v.screen, (200, 200, 200), self.rect)
@@ -660,12 +683,11 @@ def chatEdit():
     texts.add(mapMenuItems.textLabel("ID:", (5, 250), (0, 0, 0), None, 40))
 
     boxes = py.sprite.Group()
-    boxes.add(box(0))
-    boxes.add(box(1))
-    boxes.add(box(2))
+    for i in range(0, 10):
+        boxes.add(box(i))
     
-    barX = mapMenuItems.scrollBar(0, 620, 910, 100, verticle=False)
-    barY = mapMenuItems.scrollBar(910, 0, 620, 100, verticle=True)
+    barX = mapMenuItems.scrollBar(0, 620, 910, 2200, verticle=False)
+    barY = mapMenuItems.scrollBar(910, 0, 620, 200, verticle=True)
          
     
     while True:
@@ -674,20 +696,30 @@ def chatEdit():
         v.events = py.event.get()
         
         v.chunks.update()
+        py.draw.rect(v.screen, (255, 255, 255), (0, 0, 920, 290))
+        
         for ch in v.chunks:
             if ch.hovered:
                 ch.update()
         v.chatEdit.update()
         buttons.update()
-        texts.update()
+        #texts.update()
+        mapMenuItems.textLabel("ID:", (5 - v.npcScrollX, 250), (0, 0, 0), None, 40).update()
         boxes.update()
         
         py.draw.line(v.screen, (0, 0, 0), (0, 290), (920, 290), 2)
-        py.draw.line(v.screen, (0, 0, 0), (270, 290), (270, 630), 2)
-        py.draw.line(v.screen, (0, 0, 0), (570, 290), (570, 630), 2)
+        
+        for i in range(10):
+            py.draw.line(v.screen, (0, 0, 0), ((300 * i) - 30 - v.npcScrollX, 290), ((300 * i) - 30 - v.npcScrollX, 630), 2)
+            #py.draw.line(v.screen, (0, 0, 0), (570 - v.npcScrollX, 290), (570 - v.npcScrollX, 630), 2)
+        
+        py.draw.rect(v.screen, (255, 255, 255), (0, 600, 920, 30))
         
         barX.update()
         barY.update()
+        
+        v.npcScrollX = barX.scroll
+        v.npcScrollY = barY.scroll
         
         for event in v.events:
             if event.type == py.MOUSEBUTTONDOWN:
@@ -720,6 +752,7 @@ class box(py.sprite.Sprite):
             self.rect = py.Rect(50, 245, 220, 45)
         else:
             self.rect = py.Rect((self.num * 300) - 30, 245, 300, 45)
+        self.rect.x -= v.npcScrollX
         if self.rect.collidepoint(py.mouse.get_pos()):
             colour = (100, 0, 0)
         for chunk in v.chunks:
@@ -727,5 +760,5 @@ class box(py.sprite.Sprite):
                 if chunk.c_goto == str(self.num):
                     colour = (255, 0, 0)
         
-        mapMenuItems.textLabel(str(self.num), ((self.num * 300) + 120, 250), colour, None, 40).update()
+        mapMenuItems.textLabel(str(self.num), ((self.num * 300) + 120 - v.npcScrollX, 250), colour, None, 40).update()
         py.draw.rect(v.screen, colour, self.rect, 2)

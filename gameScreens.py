@@ -100,7 +100,8 @@ def onlineLogin():
     buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
     buttons.add(MenuItems.Button("Log In", (v.screenX * 0.77, v.screenY * 0.9), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "continue"))
     buttons.add(MenuItems.Button("Register Account", (v.screenX * 0.5, v.screenY * 0.93), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "register", centred=True))
-
+    
+    saveButton = MenuItems.radioButton("Stay Logged In", (v.screenX * 0.5, v.screenY * 0.8), 20, (255, 255, 255), "Resources/Fonts/RPGSystem.ttf", "save")
     
     logintext = MenuItems.textLabel("Logging In", (v.screenX * 0.5, v.screenY * 0.5), (255, 255, 255), "Resources/Fonts/RPGSystem.ttf", int(30/640 * v.screenX), variable=False, centred=True)
     background = MenuItems.shiftingGradient((0, 0, 'x'))
@@ -110,6 +111,24 @@ def onlineLogin():
     
     phase = 1
     loginTimer = 0
+    
+    try:
+        with open("Saves/logon.save", "rb") as logon:
+            import pickle
+            data = pickle.load(logon)
+            user = data["Username"]
+            passw = data["Password"]
+            saved = True
+            phase = 2
+            background.draw()
+            py.display.flip()
+            loginTimer = 0
+            logintext.update()
+    except Exception as e:
+        print(e)
+        saved = False
+    
+    
     
     while True:
         py.event.pump()
@@ -124,6 +143,7 @@ def onlineLogin():
             extraTexts.update()
             tinps.update()
             buttons.update()
+            saveButton.update()
             for button in buttons:
                 if button.pressed():
                     if button.ID == "back":
@@ -159,7 +179,7 @@ def onlineLogin():
             print(loginTimer)
             if loginTimer <= 10:
                 try:
-                    accOut = SaveLoad.getAccount(user, passw)
+                    accOut = SaveLoad.getAccount(user, passw, saved)
                     if accOut == "USERNAME":
                         phase = 1
                         extraTexts = MenuItems.textLabel("Username does not exist", (v.screenX * 0.4, v.screenX * 0.26), (255, 0, 0), "Resources\Fonts\MorrisRoman.ttf", 20, variable=False, centred=False)
@@ -172,10 +192,12 @@ def onlineLogin():
                         hash_object = hashlib.md5(passw.encode())
                         hash = hash_object.hexdigest()
                         v.password = hash
+                        if saveButton.selected:
+                            SaveLoad.saveLogon()
                         onlineMenu()
                         return
-                except:
-                    pass
+                except Exception as e:
+                    print(e)
             if loginTimer >= 10:
                 background.draw()
                 logintext.text = "Connection Error"

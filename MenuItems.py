@@ -25,18 +25,16 @@ class Button(py.sprite.Sprite):
         self.set_rect()
     
     def update(self):
-        py.draw.rect(v.screen, self.get_color(), self.rect)
+        if self.hovered:
+            colour = self.hcolour
+        else:
+            colour = self.ncolour
+        py.draw.rect(v.screen, colour, self.rect)
         v.screen.blit(self.rend, self.rect)
         if self.rect.collidepoint(py.mouse.get_pos()):
             self.hovered = True
         else:
             self.hovered = False
-
-    def get_color(self):
-        if self.hovered:
-            return self.hcolour
-        else:
-            return self.ncolour
 
     def set_rect(self):
         self.rect = self.rend.get_rect()
@@ -61,8 +59,50 @@ class Button(py.sprite.Sprite):
                         return True
         return False
 
-def centre():
-    return (v.screenX / 2, v.screenY / 2)
+class radioButton(py.sprite.Sprite):
+    
+    def __init__(self, text, position, size, colour, font, ID, right=True, selected=False):
+        font = py.font.Font(font, size)
+        self.rend = font.render(text, 1, colour)
+        self.position = position
+        self.ID = ID
+        self.right = right
+        if self.right:
+            self.buttonRect = py.Rect(self.position, (self.rend.get_rect()[3], self.rend.get_rect()[3]))
+        else:
+            self.buttonRect = py.Rect((self.position[0] + self.rend.get_rect()[0] + 5, self.position[1]), (self.rend.get_rect()[3], self.rend.get_rect()[3]))
+    
+        self.hovered = False
+        self.selected = selected
+    
+    def update(self):
+        if self.right:
+            v.screen.blit(self.rend, (self.buttonRect[0] + self.buttonRect[2] + 5, self.buttonRect[1]))
+        else:
+            v.screen.blit(self.rend, (self.buttonRect[0] - self.rend.get_rect()[2] - 5, self.buttonRect[1]))
+
+        if self.buttonRect.collidepoint(py.mouse.get_pos()):
+            self.hovered = True
+        else:
+            self.hovered = False
+        
+        if self.hovered:
+            for event in v.events:
+                if event.type == py.MOUSEBUTTONDOWN:
+                    self.selected = not self.selected
+        
+        if self.hovered and self.selected:
+            colour = (255, 100, 100)
+        elif self.hovered:
+            colour = (200, 100, 100)
+        elif self.selected:
+            colour = (255, 0, 0)
+        else:
+            colour = (255, 255, 255)
+        
+        py.draw.rect(v.screen, colour, self.buttonRect)
+        py.draw.rect(v.screen, (0, 0, 0), self.buttonRect, 2)
+        
 
 def fill_gradient(surface, color, gradient, rect=None, vertical=True, forward=True):
     """fill a surface with a gradient pattern

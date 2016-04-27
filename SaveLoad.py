@@ -156,15 +156,18 @@ def Load():
     for item in save["qSave"]:
         npcScripts.quest(item["Name"], item["Type"], item["Data"])
 
-def getAccount(username, password):
+def getAccount(username, password, hash=False):
     page = urllib.request.urlopen(v.url + "accounts/")
     accounts = page.read()
     accounts = pickle.loads(accounts)
     
     for un, vals in accounts.items():
         if un == username:
-            hash_object = hashlib.md5(password.encode())
-            hash = hash_object.hexdigest()
+            if not hash:
+                hash_object = hashlib.md5(password.encode())
+                hash = hash_object.hexdigest()
+            else:
+                hash = password
             if hash == vals["password"]:
                 return vals
             else:
@@ -253,6 +256,11 @@ def joinServer(name, password):
     # Response, status etc
     #print(r.text)
     #print(r.status_code)
+
+def saveLogon():
+    with open("Saves/logon.save", "wb") as logon:
+        data = {"Username": v.username, "Password": v.password}
+        pickle.dump(data, logon)
 
 def uploadCrash(crash):
     url = v.url + "senddata/"

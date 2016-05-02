@@ -61,7 +61,7 @@ def game():
         #print(clock.get_fps())
         v.screen.fill((0, 0, 0))
         py.draw.rect(v.screen, (0, 0, 255), (v.posx, v.posy, 50, 50))
-        #posx, posy = py.mouse.get_pos()
+        #posx, posy = v.mouse_pos
         pressed = py.key.get_pressed()
         if pressed[py.K_a]:
             v.posx -= 5

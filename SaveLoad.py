@@ -177,7 +177,7 @@ def getAccount(username, password, hash=False):
 def uploadSave():
     MenuItems.shiftingGradient((0, 0, 'x')).draw()
     MenuItems.textLabel("Uploading Save", (v.screenX * 0.5, v.screenY * 0.5), (255, 255, 255), "Resources/Fonts/RPGSystem.ttf", int(30/640 * v.screenX), variable=False, centred=True).update()  
-    py.display.flip()
+    MenuItems.screenFlip()
     url = v.url + "senddata/"
     save = {}
     with open("Saves/Entities.save", "rb") as s:
@@ -277,7 +277,7 @@ def uploadCrash(crash):
 def downloadSave(): #TODO: test this
     MenuItems.shiftingGradient((0, 0, 'x')).draw()
     MenuItems.textLabel("Downloading Save", (v.screenX * 0.5, v.screenY * 0.5), (255, 255, 255), "Resources/Fonts/RPGSystem.ttf", int(30/640 * v.screenX), variable=False, centred=True).update()  
-    py.display.flip()
+    MenuItems.screenFlip()
     
     page = urllib.request.urlopen(v.url + "accounts/")
     accounts = page.read()

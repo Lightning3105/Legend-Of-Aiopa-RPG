@@ -164,7 +164,7 @@ class conversation():
                     if not len(self.buttons) == 0:
                         id = None
                         for but in self.buttons:
-                            if but.rect.collidepoint(py.mouse.get_pos()):
+                            if but.rect.collidepoint(v.mouse_pos):
                                 id = but.ID
                         
                         if not id == None:

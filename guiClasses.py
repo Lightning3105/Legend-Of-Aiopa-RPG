@@ -248,7 +248,7 @@ class ability(py.sprite.Sprite):
                         self.ability.object.attacking = True
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
-                    if self.rect.collidepoint(py.mouse.get_pos()):
+                    if self.rect.collidepoint(v.mouse_pos):
                         if cooldown == maxCooldown:
                             if v.playerMana >= self.ability.attributes["Mana"]:
                                 self.ability.object.attacking = True
@@ -312,7 +312,7 @@ class miniMap: #TODO make this work with baseMap
         rect = py.Rect(self.pos, self.size)
         py.draw.rect(v.screen, (153, 76, 0), rect, 2)
         
-        if rect.collidepoint(py.mouse.get_pos()):
+        if rect.collidepoint(v.mouse_pos):
             self.hovered = True
         else:
             self.hovered = False
@@ -386,7 +386,7 @@ class loadingScreen():
                 v.screen.blit(self.label, ((v.screenX / 2) - self.mod[0], (v.screenY / 2)  - self.mod[1] + 50/640 * v.screenX))
                 self.fade.draw()
                 self.fade.opacity -= 40
-                py.display.flip()
+                MenuItems.screenFlip()
                 py.time.delay(100)
             self.time = clock()
         if stage == 1:
@@ -407,7 +407,7 @@ class loadingScreen():
                 v.screen.blit(t, (200/640 * v.screenX, 300/640 * v.screenX))
                 self.fade.draw()
                 self.fade.opacity += 40
-                py.display.flip()
+                MenuItems.screenFlip()
 
 class locationTitle():
     

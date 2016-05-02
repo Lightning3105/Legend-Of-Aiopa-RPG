@@ -6,7 +6,7 @@ if __name__ == "__main__":
     import pstats
     import pickle
     import SaveLoad
-    import pygame
+    import pygame as py
     import traceback
     import time
     import os
@@ -24,7 +24,7 @@ if __name__ == "__main__":
             a = traceback.print_exc(file=crash, limit=8)
         with open(name, "r") as crash:
             gameScreens.crashScreen(crash.read())
-    pygame.quit()
+    py.quit()
     with open("Calltime Dump.txt", "w") as fc:
         p = pstats.Stats("Out.txt", stream=fc)
         p.strip_dirs()

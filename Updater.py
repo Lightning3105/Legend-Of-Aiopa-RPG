@@ -53,7 +53,7 @@ class Button(py.sprite.Sprite):
         self.set_rend()
         py.draw.rect(v.screen, self.get_color(), self.rect)
         v.screen.blit(self.rend, self.rect)
-        if self.rect.collidepoint(py.mouse.get_pos()):
+        if self.rect.collidepoint(v.mouse_pos):
             self.hovered = True
         else:
             self.hovered = False
@@ -81,7 +81,7 @@ class Button(py.sprite.Sprite):
             self.rect.height = self.size[1]
 
     def pressed(self):
-        mouse = py.mouse.get_pos()
+        mouse = v.mouse_pos
         if mouse[0] > self.rect.topleft[0]:
             if mouse[1] > self.rect.topleft[1]:
                 if mouse[0] < self.rect.bottomright[0]:

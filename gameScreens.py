@@ -22,16 +22,16 @@ def mainMenu():
     MenuItems.screen = v.screen
     buttons = py.sprite.Group()
     texts = py.sprite.Group()
-    buttons.add(MenuItems.Button("New Game", (v.screenX * 0.5, v.screenY * 0.5), int(v.screenX * 0.09), (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "play", centred=True))
-    buttons.add(MenuItems.Button("Options", (v.screenX * 0.5, v.screenY * 0.63), int(v.screenX * 0.09), (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "options", centred=True))
-    buttons.add(MenuItems.Button("Load", (v.screenX * 0.5, v.screenY * 0.76), int(v.screenX * 0.09), (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "load", centred=True))
-    buttons.add(MenuItems.Button("Aiopa Online", (v.screenX * 0.5, v.screenY * 0.89), int(v.screenX * 0.09), (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "online", centred=True))
+    buttons.add(MenuItems.Button("New Game", (540, 360), 100, (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "play", centred=True))
+    buttons.add(MenuItems.Button("Options", (540, 450), 100, (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "options", centred=True))
+    buttons.add(MenuItems.Button("Load", (540, 550), 100, (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "load", centred=True))
+    buttons.add(MenuItems.Button("Aiopa Online", (540, 640), 100, (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "online", centred=True))
     
     #text, pos, size, colour, font
     #text, pos, colour, font, size
-    texts.add(MenuItems.textLabel("The Legend", (v.screenX * 0.140625, v.screenY * 0.01), (255, 0, 0), "Resources\Fonts\RunicClear.ttf", int(v.screenX * 0.125)))
-    texts.add(MenuItems.textLabel("Of Aiopa", (v.screenX * 0.25, v.screenY * 0.15), (255, 0, 0), "Resources\Fonts\RunicClear.ttf", int(v.screenX * 0.125)))
-    texts.add(MenuItems.textLabel("Created By James", (v.screenX * 0.25, v.screenY * 0.32), (0, 0, 0), "Resources\Fonts\Vecna.otf", int(v.screenX * 0.0625)))
+    texts.add(MenuItems.textLabel("The Legend", (150, 10), (255, 0, 0), "Resources\Fonts\RunicClear.ttf", 135))
+    texts.add(MenuItems.textLabel("Of Aiopa", (270, 100), (255, 0, 0), "Resources\Fonts\RunicClear.ttf", 135))
+    texts.add(MenuItems.textLabel("Created By James", (270, 230), (0, 0, 0), "Resources\Fonts\Vecna.otf", 70))
     
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
@@ -78,7 +78,8 @@ def mainMenu():
                     return
         fade.draw()
         fade.opacity -= 1
-        py.display.flip()
+        
+        MenuItems.screenFlip()
 
 def onlineLogin():
     py.init()
@@ -121,9 +122,9 @@ def onlineLogin():
             saved = True
             phase = 2
             background.draw()
-            py.display.flip()
             loginTimer = 0
             logintext.update()
+            MenuItems.screenFlip()
     except Exception as e:
         print(e)
         saved = False
@@ -155,7 +156,7 @@ def onlineLogin():
                     if button.ID == "continue":
                         phase = 2
                         background.draw()
-                        py.display.flip()
+                        MenuItems.screenFlip()
                         loginTimer = 0
                         logintext.update()
                         for inp in tinps:
@@ -203,13 +204,13 @@ def onlineLogin():
                 logintext.text = "Connection Error"
                 logintext.update()
                 phase = 1
-                py.display.flip()
+                MenuItems.screenFlip()
                 py.time.wait(2000)
         
         
         fade.draw()
         fade.opacity -= 1                    
-        py.display.flip()
+        MenuItems.screenFlip()
         
 def onlineMenu():
     py.init()
@@ -221,8 +222,12 @@ def onlineMenu():
     buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
     buttons.add(MenuItems.Button("Multiplayer", (v.screenX * 0.5, v.screenY * 0.2), 40, (100, 200, 200), (0, 255, 255), "Resources\Fonts\MorrisRoman.ttf", "multiplayer", centred=True))
 
-    
+    texts = py.sprite.Group()
+    texts.add(MenuItems.textLabel(v.username, (120, 50), (0, 0, 0), "Resources\Fonts\MorrisRoman.ttf", 40, variable=False, centred=True))
+
     background = MenuItems.shiftingGradient((0, 0, 'x'))
+    
+    avatar = MenuItems.appearancePreview(pos=(-10, 0))
     while True:
         py.event.pump()
         v.events = []
@@ -230,8 +235,17 @@ def onlineMenu():
         for event in v.events:
             if event.type == py.QUIT:
                 sys.exit()
+        
         background.draw()
+        
+        py.draw.rect(v.screen, (50, 200, 200), (10, 30, 220, 340))
+        py.draw.rect(v.screen, (255, 255, 255), (10, 30, 220, 40), 2)
+        py.draw.rect(v.screen, (255, 255, 255), (10, 70, 220, 300), 2)
+        
         buttons.update()
+        texts.update()
+        avatar.draw()
+        
         for button in buttons:
             if button.pressed():
                 if button.ID == "upload":
@@ -245,7 +259,7 @@ def onlineMenu():
                     joinServer()
                     return
         
-        py.display.flip()
+        MenuItems.screenFlip()
 
 def joinServer():
     py.init()
@@ -289,7 +303,7 @@ def joinServer():
                             password = inp.outText
                     SaveLoad.joinServer(name, password)
                     return
-        py.display.flip()
+        MenuItems.screenFlip()
 
 def options():
     py.init()
@@ -355,27 +369,21 @@ def options():
                 return
         fade.draw()
         fade.opacity -= 1
-        py.display.flip()
+        MenuItems.screenFlip()
 
 
 def windowUpdate():
     if v.fullScreen:
-        v.screen = py.display.set_mode((v.screenX, v.screenY),py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
+        v.screenDisplay = py.display.set_mode((v.screenX, v.screenY), py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
     else:
-        v.screen = py.display.set_mode((v.screenX, v.screenY),py.HWSURFACE|py.DOUBLEBUF)
+        v.screenDisplay = py.display.set_mode((v.screenX, v.screenY), py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
+    
+    v.screen = py.Surface(v.screenStart)
     py.display.set_caption("The Legend Of Aiopa")
     icon = py.image.load("Resources/Images/Icon.ico")
     py.display.set_icon(icon)
-    v.screenScale = round(v.screenX * 0.004, 1)
-    """if v.screenX == 480:
-        v.screenScale = 2
-    if v.screenX == 800:
-        v.screenScale = 2.5
-    if v.screenX == 1024:
-        v.screenScale = 4.3"""
-        
-
-    
+    #v.screenScale = round(v.screenX * 0.004, 1)
+    v.screenScale = 2.5
 
 def game():
     import weaponClasses
@@ -485,7 +493,7 @@ def game():
             #map.update()
             fpsLabel.update()
             
-            py.display.flip()
+            MenuItems.screenFlip()
             for event in v.events:
                 if event.type == py.QUIT:
                     sys.exit()
@@ -528,7 +536,7 @@ def game():
             backgroundImage = py.image.fromstring(background, (v.screenX, v.screen.get_rect()[3]), "RGBA")
             v.screen.blit(backgroundImage, (0, 0))
             pause.update()
-            py.display.flip()
+            MenuItems.screenFlip()
             
             for event in v.events:
                 if event.type == py.KEYDOWN:
@@ -551,7 +559,7 @@ def game():
             
             invScreen.update()
             
-            py.display.flip()
+            MenuItems.screenFlip()
             for event in v.events:
                 if event.type == py.KEYDOWN:
                     if event.key == py.K_e:
@@ -575,7 +583,7 @@ def game():
             grey.fill((20, 20, 20, 200))
             v.screen.blit(grey, (0, 0))
             v.conversationClass.update()
-            py.display.flip()
+            MenuItems.screenFlip()
             
             for event in v.events:
                 if event.type == py.QUIT:
@@ -592,7 +600,7 @@ def game():
             v.events = py.event.get()
             
             deathScreen.update()
-            py.display.flip()
+            MenuItems.screenFlip()
             
             for event in v.events:
                 if event.type == py.KEYDOWN:
@@ -699,6 +707,7 @@ def classSelection():
         if v.custimizationStage == "Attributes":
             labels.update()
         if v.custimizationStage == "Customisation":
+            print("custom")
             aps.update()
             aps.draw(v.screen)
             ap.draw()
@@ -725,21 +734,20 @@ def classSelection():
         for event in v.events:
             if event.type == py.QUIT:
                 sys.exit()
-
-            for button in buttons:
-                if button.pressed():
-                    id = button.ID
-                    if id == "back":
-                        mainMenu()
-                        return
-                    if id == "continue":
-                        if v.custimizationStage == "Attributes":
-                            v.custimizationStage = "Customisation"
-                            v.appearanceTab = "Body"
-                            for ao in attOptions:
-                                ao.save()
-                        elif v.custimizationStage == "Customisation":
-                            v.custimizationStage = "Name"
+        for button in buttons:
+            if button.pressed():
+                id = button.ID
+                if id == "back":
+                    mainMenu()
+                    return
+                if id == "continue":
+                    if v.custimizationStage == "Attributes":
+                        v.custimizationStage = "Customisation"
+                        v.appearanceTab = "Body"
+                        for ao in attOptions:
+                            ao.save()
+                    elif v.custimizationStage == "Customisation":
+                        v.custimizationStage = "Name"
             if v.custimizationStage == "Name" and bigcont.pressed():
                 nti.outText
                 return
@@ -750,7 +758,7 @@ def classSelection():
         fade.draw()
         fade.opacity -= 1
 
-        py.display.flip()
+        MenuItems.screenFlip()
 
 
 def story():
@@ -1348,7 +1356,7 @@ def story():
                     return
             if event.type == py.QUIT:
                 sys.exit()
-        py.display.flip()
+        MenuItems.screenFlip()
 
 def crashScreen(crash):
     py.init()
@@ -1395,5 +1403,5 @@ def crashScreen(crash):
         for event in v.events:
             if event.type == py.QUIT:
                 return
-        py.display.flip()
+        MenuItems.screenFlip()
         

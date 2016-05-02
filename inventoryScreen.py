@@ -91,7 +91,7 @@ class inventoryScreen():
                     font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 15)
                     text = self.hovering.item.name
                     label = font.render(text, 1, (0, 0, 0))
-                    Hrect = py.Rect(py.mouse.get_pos(), font.size(text))
+                    Hrect = py.Rect(v.mouse_pos, font.size(text))
                     py.draw.rect(v.screen, (153, 76, 0), Hrect, 2)
                     py.draw.rect(v.screen, (255, 178, 102), Hrect)
                     v.screen.blit(label, Hrect)
@@ -132,7 +132,7 @@ class inventoryScreen():
                 rect = py.Rect(280, v.screenY * 0.25 + (num * 60) + ymod, 250, 50)
                 if self.open:
                     rect.height += 30
-                if rect.collidepoint(py.mouse.get_pos()):
+                if rect.collidepoint(v.mouse_pos):
                     c = (255, 255, 0)
                     if py.mouse.get_pressed()[0] and not self.wait:
                         self.open = not self.open
@@ -157,7 +157,7 @@ class inventoryScreen():
         rect = py.Rect(550, 90, 30, 30)
         image = py.transform.scale(image, rect.size)
         if self.questScroll > 0:
-            if rect.collidepoint(py.mouse.get_pos()):
+            if rect.collidepoint(v.mouse_pos):
                 image.fill((255, 255, 0), special_flags=py.BLEND_RGB_MULT)
                 image = py.transform.scale(image, (rect.width + 4, rect.height + 4))
                 rect.height += 4
@@ -177,7 +177,7 @@ class inventoryScreen():
         rect = py.Rect(550, 390, 30, 30)
         image = py.transform.scale(image, rect.size)
         if self.questScroll < len(v.quests) - 5:
-            if rect.collidepoint(py.mouse.get_pos()):
+            if rect.collidepoint(v.mouse_pos):
                 image.fill((255, 255, 0), special_flags=py.BLEND_RGB_MULT)
                 image = py.transform.scale(image, (rect.width + 4, rect.height + 4))
                 rect.height += 4
@@ -196,7 +196,7 @@ class inventoryScreen():
                 
     def tabs(self):
         rect = py.Rect(280, 50, 80, 25)
-        if rect.collidepoint(py.mouse.get_pos()):
+        if rect.collidepoint(v.mouse_pos):
             c = (255, 255, 0)
             if py.mouse.get_pressed()[0]:
                 self.tab = "Inventory"
@@ -214,7 +214,7 @@ class inventoryScreen():
         
         
         rect = py.Rect(362, 50, 80, 25)
-        if rect.collidepoint(py.mouse.get_pos()):
+        if rect.collidepoint(v.mouse_pos):
             c = (255, 255, 0)
             if py.mouse.get_pressed()[0]:
                 self.tab = "Attributes"
@@ -231,7 +231,7 @@ class inventoryScreen():
         v.screen.blit(label, (rect[0] + 5, rect[1] + 2))
         
         rect = py.Rect(444, 50, 80, 25)
-        if rect.collidepoint(py.mouse.get_pos()):
+        if rect.collidepoint(v.mouse_pos):
             c = (255, 255, 0)
             if py.mouse.get_pressed()[0]:
                 self.tab = "Quests"
@@ -306,7 +306,7 @@ class inventoryScreen():
             image = py.transform.scale(self.image, self.size)
             rect = py.Rect(self.pos, self.size)
             py.draw.rect(v.screen, (255, 255, 255), rect, 2)
-            if rect.collidepoint(py.mouse.get_pos()):
+            if rect.collidepoint(v.mouse_pos):
                 self.hovered = True
                 self.master.hovering = self
             else:
@@ -359,7 +359,7 @@ class inventoryScreen():
             rect = py.Rect(pos, self.size)
             py.draw.rect(v.screen, (255, 255, 255), rect, 2)
             
-            if rect.collidepoint(py.mouse.get_pos()):
+            if rect.collidepoint(v.mouse_pos):
                 self.hovered = True
                 self.master.hovering = self
             else:
@@ -421,7 +421,7 @@ class inventoryScreen():
             rect = py.Rect(pos, self.size)
             py.draw.rect(v.screen, (255, 255, 255), rect, 2)
             
-            if rect.collidepoint(py.mouse.get_pos()):
+            if rect.collidepoint(v.mouse_pos):
                 self.hovered = True
                 self.master.hovering = self
             else:
@@ -468,7 +468,7 @@ class inventoryScreen():
             rect = py.Rect(pos, self.size)
             py.draw.rect(v.screen, (255, 0, 0), rect, 2)
             
-            if rect.collidepoint(py.mouse.get_pos()):
+            if rect.collidepoint(v.mouse_pos):
                 self.hovered = True
                 self.master.hovering = self
                 image.fill((200, 0, 0), special_flags=py.BLEND_RGBA_MULT)
@@ -489,7 +489,7 @@ class inventoryScreen():
             else:
                 image = self.grabbed.icon
             image = py.transform.scale(image, size)
-            pos = py.mouse.get_pos()
+            pos = v.mouse_pos
             v.screen.blit(image, pos)
             rect = py.Rect(pos, size)
             py.draw.rect(v.screen, (200, 200, 200), rect, 2)

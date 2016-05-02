@@ -31,7 +31,7 @@ class Button(py.sprite.Sprite):
             colour = self.ncolour
         py.draw.rect(v.screen, colour, self.rect)
         v.screen.blit(self.rend, self.rect)
-        if self.rect.collidepoint(py.mouse.get_pos()):
+        if self.rect.collidepoint(v.mouse_pos):
             self.hovered = True
         else:
             self.hovered = False
@@ -81,7 +81,7 @@ class radioButton(py.sprite.Sprite):
         else:
             v.screen.blit(self.rend, (self.buttonRect[0] - self.rend.get_rect()[2] - 5, self.buttonRect[1]))
 
-        if self.buttonRect.collidepoint(py.mouse.get_pos()):
+        if self.buttonRect.collidepoint(v.mouse_pos):
             self.hovered = True
         else:
             self.hovered = False
@@ -149,7 +149,7 @@ class fadeIn:
     def __init__(self):
         self.opacity = 255
         self.speed = 3
-        self.black = py.Surface((v.screenX, v.screenY))
+        self.black = py.Surface((1080, 720))
         self.black.fill((0, 0, 0))
 
     def draw(self):
@@ -188,7 +188,7 @@ class characterSelector(py.sprite.Sprite):
             self.image.fill((cMod, cMod, cMod), special_flags=py.BLEND_RGBA_MULT)
             self.rect = self.image.get_rect()
             self.rect.center = self.pos
-            if self.rect.collidepoint(py.mouse.get_pos()):
+            if self.rect.collidepoint(v.mouse_pos):
                 self.hovered = True
                 v.characterHovered = True
             else:
@@ -350,11 +350,11 @@ class optionAttribute(py.sprite.Sprite):
 
         for event in v.events:
             if event.type == py.MOUSEBUTTONDOWN:
-                if self.minusRect.collidepoint(py.mouse.get_pos()):
+                if self.minusRect.collidepoint(v.mouse_pos):
                     if self.addedValue > 0:
                         self.addedValue -= 1
                         v.skillPoints += 1
-                if self.plusRect.collidepoint(py.mouse.get_pos()):
+                if self.plusRect.collidepoint(v.mouse_pos):
                     if v.skillPoints > 0:
                         self.addedValue += 1
                         v.skillPoints -= 1
@@ -450,7 +450,7 @@ class apearanceSelector(py.sprite.Sprite):
             self.image = py.transform.scale(self.image, (size.width * 3, size.height * 3))
             size = self.image.get_rect()
             self.rect = py.Rect(self.posx, self.posy, size.width, size.height)
-            if self.rect.collidepoint(py.mouse.get_pos()):
+            if self.rect.collidepoint(v.mouse_pos):
                 py.draw.rect(v.screen, (255, 255, 0), self.rect, 4)
                 v.testAppearance[self.part] = self.skin
                 for event in v.events:
@@ -467,8 +467,8 @@ class apearanceSelector(py.sprite.Sprite):
 
 class appearancePreview():
     
-    def __init__(self):
-        self.pos = (0, 0)
+    def __init__(self, pos=(0, 0)):
+        self.pos = pos
         self.sMod = 11
     
     def draw(self):
@@ -562,7 +562,7 @@ class appearanceTab(py.sprite.Sprite):
         label = font.render("Body", 1, (255, 255, 255))
         v.screen.blit(label, (280 / 640 * v.screenX, 50 / 640 * v.screenX))
         rect = py.Rect(241 / 640 * v.screenX, 41 / 640 * v.screenX, 80 / 640 * v.screenX, 38 / 640 * v.screenX)
-        if rect.collidepoint(py.mouse.get_pos()):
+        if rect.collidepoint(v.mouse_pos):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
                     v.appearanceTab = "Body"
@@ -584,7 +584,7 @@ class appearanceTab(py.sprite.Sprite):
         label = font.render("Face", 1, (255, 255, 255))
         v.screen.blit(label, (280 / 640 * v.screenX + 83 / 640 * v.screenX, 50 / 640 * v.screenX))
         rect = py.Rect(241 / 640 * v.screenX + 83 / 640 * v.screenX, 41 / 640 * v.screenX, 80 / 640 * v.screenX, 38 / 640 * v.screenX)
-        if rect.collidepoint(py.mouse.get_pos()):
+        if rect.collidepoint(v.mouse_pos):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
                     v.appearanceTab = "Face"
@@ -607,7 +607,7 @@ class appearanceTab(py.sprite.Sprite):
         label = font.render("Dress", 1, (255, 255, 255))
         v.screen.blit(label, (280 / 640 * v.screenX + 166 / 640 * v.screenX, 50 / 640 * v.screenX))
         rect = py.Rect(241 / 640 * v.screenX + 166 / 640 * v.screenX, 41 / 640 * v.screenX, 85 / 640 * v.screenX, 38 / 640 * v.screenX)
-        if rect.collidepoint(py.mouse.get_pos()):
+        if rect.collidepoint(v.mouse_pos):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
                     v.appearanceTab = "Dress"
@@ -628,7 +628,7 @@ class appearanceTab(py.sprite.Sprite):
         label = font.render("Hair", 1, (255, 255, 255))
         v.screen.blit(label, (280 / 640 * v.screenX + 254 / 640 * v.screenX, 50 / 640 * v.screenX))
         rect = py.Rect(241 / 640 * v.screenX + 254 / 640 * v.screenX, 41 / 640 * v.screenX, 85 / 640 * v.screenX, 38 / 640 * v.screenX)
-        if rect.collidepoint(py.mouse.get_pos()):
+        if rect.collidepoint(v.mouse_pos):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
                     v.appearanceTab = "Hair"
@@ -742,12 +742,12 @@ class textInput(py.sprite.Sprite):
             v.screen.blit(label, (butRect.centerx - self.font.size(self.button)[0] / 2, butRect.centery - self.font.size(self.button)[1] / 2))
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
-                    if butRect.collidepoint(py.mouse.get_pos()):
+                    if butRect.collidepoint(v.mouse_pos):
                         global outText
                         outText = "".join(self.string)
                         self.done = True
                         py.time.wait(100)
-        if self.rect.collidepoint(py.mouse.get_pos()):
+        if self.rect.collidepoint(v.mouse_pos):
             if py.mouse.get_pressed()[0]:
                 v.textNum = self.num
         
@@ -792,3 +792,33 @@ class storySpells(py.sprite.Sprite):
             v.screen.blit(self.shield, pos)
         if self.cycle >= 90:
             self.kill()
+
+def screenFlip():
+    #size = (py.display.Info().current_w, py.display.Info().current_h)
+    #v.screen = py.transform.scale(v.screen, (size[0], size[1]))
+    for event in v.events:
+        if event.type == py.VIDEORESIZE:
+            v.screenDisplay = py.display.set_mode(event.size, py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
+            #v.screen = v.screenDisplay.get_rect()
+            #windowUpdate()
+    
+    screen_rect = v.screenDisplay.get_rect()
+    image = py.Surface(v.screenStart).convert()
+    image_rect = image.get_rect()
+    
+    image.fill((0, 0, 0))
+    image.blit(v.screen, (0, 0))
+    if screen_rect.size != v.screenStart:
+        fit_to_rect = image_rect.fit(screen_rect)
+        fit_to_rect.center = screen_rect.center
+        scaled = py.transform.smoothscale(image, fit_to_rect.size)
+        v.screenDisplay.blit(scaled, fit_to_rect)
+    else:
+        v.screenDisplay.blit(image, (0,0))
+    
+    #print(fit_to_rect)
+    scale = (v.screenStart[0]/screen_rect[2], v.screenStart[1]/screen_rect[3])
+    x,y = py.mouse.get_pos()
+    v.mouse_pos = (int(x*scale[0]), int(y*scale[1]))
+    print(v.mouse_pos)
+    py.display.flip()

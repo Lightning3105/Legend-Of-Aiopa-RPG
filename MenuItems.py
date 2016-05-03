@@ -149,7 +149,7 @@ class fadeIn:
     def __init__(self):
         self.opacity = 255
         self.speed = 3
-        self.black = py.Surface((1080, 720))
+        self.black = py.Surface((1280, 720))
         self.black.fill((0, 0, 0))
 
     def draw(self):
@@ -181,8 +181,8 @@ class characterSelector(py.sprite.Sprite):
             cMod = self.greyedCycle * 4
             cMod = 255 - cMod
             size = self.skin.get_rect()
-            size.width = (size.width / 640) * v.screenX
-            size.height = (size.height / 480) * v.screenY
+            size.width = size.width * 1.8
+            size.height = size.height * 1.8
             self.image = py.transform.scale(self.skin, (int(size.width * sMod), int(size.height * sMod)))
             
             self.image.fill((cMod, cMod, cMod), special_flags=py.BLEND_RGBA_MULT)
@@ -233,8 +233,8 @@ class characterSelector(py.sprite.Sprite):
                     if event.type == py.USEREVENT:
                         sMod = 6 + ((100 - self.movingCycle) / 40)
                         size = self.skin.get_rect()
-                        size.width = (size.width / 640) * v.screenX
-                        size.height = (size.height / 480) * v.screenY
+                        size.width = size.width * 1.8
+                        size.height = size.height * 1.8
                         self.image = py.transform.scale(self.skin, (int(size.width * sMod), int(size.height * sMod)))
                         self.rect = self.image.get_rect()
                         
@@ -249,8 +249,8 @@ class characterSelector(py.sprite.Sprite):
                         
             else:
                 size = self.skin.get_rect()
-                size.width = (size.width / 640) * v.screenX
-                size.height = (size.height / 480) * v.screenY
+                size.width = size.width * 1.8
+                size.height = size.height * 1.8
                 self.image = py.transform.scale(self.skin, (int(size.width * 3), int(size.height * 3)))
                 self.image.fill((135, 135, 135, self.opacity), special_flags=py.BLEND_RGBA_MULT)
                 self.opacity -= 1
@@ -262,10 +262,10 @@ class characterSelector(py.sprite.Sprite):
 class optionSlate():
     
     def __init__(self):
-        self.width = v.screenX * 0.625
-        self.height = v.screenX * 0.625
-        self.posx = v.screenX * 1.5
-        self.posy = v.screenY * 0.5
+        self.width = 800
+        self.height = 800
+        self.posx = 1620
+        self.posy = 360
         
     
     def update(self):
@@ -276,13 +276,13 @@ class optionSlate():
             self.outerRect.center = self.posx, self.posy
             py.draw.rect(v.screen, (153, 76, 0), self.outerRect)
             py.draw.rect(v.screen, (255, 178, 102), self.innerRect)
-            if self.posx >= v.screenX * 0.6875:
-                self.posx -= 3/640 * v.screenX
+            if self.posx >= 880:
+                self.posx -= 6
             else:
                 v.custimizationStage = "Attributes"
         if v.custimizationStage == "Attributes" or v.custimizationStage == "Customisation":
-            self.posx = v.screenX * 0.6875
-            self.posy = v.screenY * 0.5
+            self.posx = 880
+            self.posy = 360
             self.innerRect = py.Rect(0, 0, self.width, self.height)
             self.innerRect.center = self.posx, self.posy
             self.outerRect = py.Rect(0, 0, self.width + 20, self.height + 20)
@@ -297,12 +297,12 @@ class optionSlate():
             self.outerRect.center = self.posx, self.posy
             py.draw.rect(v.screen, (153, 76, 0), self.outerRect)
             py.draw.rect(v.screen, (255, 178, 102), self.innerRect)
-            if self.posx <= v.screenX * 1.5: # TODO
-                self.posx += 5/640 * v.screenX
+            if self.posx <= 1920: # TODO
+                self.posx += 10
 
 class optionAttribute(py.sprite.Sprite):
     
-    def __init__(self, posy, attribute, posx=v.screenX * 0.375):
+    def __init__(self, posy, attribute, posx=480):
         super().__init__()
         self.posx = posx
         self.posy = posy
@@ -643,7 +643,7 @@ class textInput(py.sprite.Sprite):
     def __init__(self, pos, fontSize, characters, num, button="GO", default=[], type="str", fontfile="Resources/Fonts/RPGSystem.ttf", background=(255, 255, 255)):
         super().__init__()
         self.font = py.font.Font(fontfile, fontSize)
-        self.thickness = int(fontSize / 4)
+        self.thickness = 2 #int(fontSize / 4)
         biggest = "W "
         if type =="pass":
             biggest = "* "
@@ -798,9 +798,10 @@ def screenFlip():
     #v.screen = py.transform.scale(v.screen, (size[0], size[1]))
     for event in v.events:
         if event.type == py.VIDEORESIZE:
-            v.screenDisplay = py.display.set_mode(event.size, py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
-            #v.screen = v.screenDisplay.get_rect()
-            #windowUpdate()
+            if not v.fullScreen:
+                v.screenDisplay = py.display.set_mode(event.size, py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
+                #v.screen = v.screenDisplay.get_rect()
+                #windowUpdate()
     
     screen_rect = v.screenDisplay.get_rect()
     image = py.Surface(v.screenStart).convert()
@@ -815,10 +816,9 @@ def screenFlip():
         v.screenDisplay.blit(scaled, fit_to_rect)
     else:
         v.screenDisplay.blit(image, (0,0))
+        fit_to_rect = image_rect
     
-    #print(fit_to_rect)
-    scale = (v.screenStart[0]/screen_rect[2], v.screenStart[1]/screen_rect[3])
+    scale = (v.screenStart[0]/fit_to_rect[2], v.screenStart[1]/fit_to_rect[3])
     x,y = py.mouse.get_pos()
-    v.mouse_pos = (int(x*scale[0]), int(y*scale[1]))
-    print(v.mouse_pos)
+    v.mouse_pos = (int((x - fit_to_rect[0])*scale[0]), int((y - fit_to_rect[1])*scale[1]))
     py.display.flip()

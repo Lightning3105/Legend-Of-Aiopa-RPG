@@ -22,16 +22,16 @@ def mainMenu():
     MenuItems.screen = v.screen
     buttons = py.sprite.Group()
     texts = py.sprite.Group()
-    buttons.add(MenuItems.Button("New Game", (540, 360), 100, (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "play", centred=True))
-    buttons.add(MenuItems.Button("Options", (540, 450), 100, (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "options", centred=True))
-    buttons.add(MenuItems.Button("Load", (540, 550), 100, (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "load", centred=True))
-    buttons.add(MenuItems.Button("Aiopa Online", (540, 640), 100, (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "online", centred=True))
+    buttons.add(MenuItems.Button("New Game", (640, 360), 90, (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "play", centred=True))
+    buttons.add(MenuItems.Button("Options", (640, 450), 90, (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "options", centred=True))
+    buttons.add(MenuItems.Button("Load", (640, 550), 90, (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "load", centred=True))
+    buttons.add(MenuItems.Button("Aiopa Online", (640, 640), 90, (204, 255, 102), (51, 204, 51), "Resources\Fonts\MorrisRoman.ttf", "online", centred=True))
     
     #text, pos, size, colour, font
     #text, pos, colour, font, size
-    texts.add(MenuItems.textLabel("The Legend", (150, 10), (255, 0, 0), "Resources\Fonts\RunicClear.ttf", 135))
-    texts.add(MenuItems.textLabel("Of Aiopa", (270, 100), (255, 0, 0), "Resources\Fonts\RunicClear.ttf", 135))
-    texts.add(MenuItems.textLabel("Created By James", (270, 230), (0, 0, 0), "Resources\Fonts\Vecna.otf", 70))
+    texts.add(MenuItems.textLabel("The Legend", (640, 70), (255, 0, 0), "Resources\Fonts\RunicClear.ttf", 135, centred=True))
+    texts.add(MenuItems.textLabel("Of Aiopa", (640, 160), (255, 0, 0), "Resources\Fonts\RunicClear.ttf", 135, centred=True))
+    texts.add(MenuItems.textLabel("Created By James", (640, 260), (0, 0, 0), "Resources\Fonts\Vecna.otf", 70, centred=True))
     
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
@@ -88,23 +88,23 @@ def onlineLogin():
     extraTexts = py.sprite.Group()
     buttons = py.sprite.Group()
     
-    texts.add(MenuItems.textLabel("Username", (v.screenX * 0.2, v.screenX * 0.31), (220, 220, 220), "Resources\Fonts\MorrisRoman.ttf", 20, variable=False, centred=False))
-    texts.add(MenuItems.textLabel("Password", (v.screenX * 0.2, v.screenX * 0.51), (220, 220, 220), "Resources\Fonts\MorrisRoman.ttf", 20, variable=False, centred=False))
+    texts.add(MenuItems.textLabel("Username", (255, 395), (220, 220, 220), "Resources\Fonts\MorrisRoman.ttf", 40, variable=False, centred=False))
+    texts.add(MenuItems.textLabel("Password", (255, 500), (220, 220, 220), "Resources\Fonts\MorrisRoman.ttf", 40, variable=False, centred=False))
     
-    texts.add(MenuItems.textLabel("Login To", (v.screenX * 0.140625, v.screenY * 0.01), (255, 0, 255), "Resources\Fonts\RunicSolid.ttf", int(v.screenX * 0.1)))
-    texts.add(MenuItems.textLabel("Aiopa Online", (v.screenX * 0.25, v.screenY * 0.15), (255, 0, 255), "Resources\Fonts\RunicSolid.ttf", int(v.screenX * 0.1)))
+    texts.add(MenuItems.textLabel("Login To", (180, 10), (255, 0, 255), "Resources\Fonts\RunicSolid.ttf", 130))
+    texts.add(MenuItems.textLabel("Aiopa Online", (320, 110), (255, 0, 255), "Resources\Fonts\RunicSolid.ttf", 130))
     
     v.textNum = 1
-    tinps.add(MenuItems.textInput((v.screenX * 0.4, v.screenX * 0.3), 20, 16, num=1, button=None, default=[], type="str", fontfile="Resources/Fonts/RPGSystem.ttf", background=(255, 255, 255)))
-    tinps.add(MenuItems.textInput((v.screenX * 0.4, v.screenX * 0.5), 20, 16, num=2, button=None, default=[], type="pass", fontfile="Resources/Fonts/RPGSystem.ttf", background=(255, 255, 255)))
+    tinps.add(MenuItems.textInput((510, 385), 30, 16, num=1, button=None, default=[], type="str", fontfile="Resources/Fonts/RPGSystem.ttf", background=(255, 255, 255)))
+    tinps.add(MenuItems.textInput((510, 490), 30, 16, num=2, button=None, default=[], type="pass", fontfile="Resources/Fonts/RPGSystem.ttf", background=(255, 255, 255)))
     
-    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
-    buttons.add(MenuItems.Button("Log In", (v.screenX * 0.77, v.screenY * 0.9), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "continue"))
-    buttons.add(MenuItems.Button("Register Account", (v.screenX * 0.5, v.screenY * 0.93), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "register", centred=True))
+    buttons.add(MenuItems.Button("Back", (20, 640), 60, (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
+    buttons.add(MenuItems.Button("Log In", (1090, 640), 60, (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "continue"))
+    buttons.add(MenuItems.Button("Register Account", (640, 670), 60, (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "register", centred=True))
     
-    saveButton = MenuItems.radioButton("Stay Logged In", (v.screenX * 0.5, v.screenY * 0.8), 20, (255, 255, 255), "Resources/Fonts/RPGSystem.ttf", "save")
+    saveButton = MenuItems.radioButton("Stay Logged In", (640, 580), 20, (255, 255, 255), "Resources/Fonts/RPGSystem.ttf", "save")
     
-    logintext = MenuItems.textLabel("Logging In", (v.screenX * 0.5, v.screenY * 0.5), (255, 255, 255), "Resources/Fonts/RPGSystem.ttf", int(30/640 * v.screenX), variable=False, centred=True)
+    logintext = MenuItems.textLabel("Logging In", (640, 360), (255, 255, 255), "Resources/Fonts/RPGSystem.ttf", 60, variable=False, centred=True)
     background = MenuItems.shiftingGradient((0, 0, 'x'))
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
@@ -183,10 +183,10 @@ def onlineLogin():
                     accOut = SaveLoad.getAccount(user, passw, saved)
                     if accOut == "USERNAME":
                         phase = 1
-                        extraTexts = MenuItems.textLabel("Username does not exist", (v.screenX * 0.4, v.screenX * 0.26), (255, 0, 0), "Resources\Fonts\MorrisRoman.ttf", 20, variable=False, centred=False)
+                        extraTexts = MenuItems.textLabel("Username does not exist", (510, 330), (255, 0, 0), "Resources\Fonts\MorrisRoman.ttf", 20, variable=False, centred=False)
                     elif accOut == "PASSWORD":
                         phase = 1
-                        extraTexts = MenuItems.textLabel("Incorrect password", (v.screenX * 0.4, v.screenX * 0.46), (255, 0, 0), "Resources\Fonts\MorrisRoman.ttf", 20, variable=False, centred=False)
+                        extraTexts = MenuItems.textLabel("Incorrect password", (510, 590), (255, 0, 0), "Resources\Fonts\MorrisRoman.ttf", 20, variable=False, centred=False)
                     else:
                         v.account = accOut
                         v.username = user
@@ -217,10 +217,10 @@ def onlineMenu():
     
     buttons = py.sprite.Group()
     
-    buttons.add(MenuItems.Button("Upload Save", (v.screenX * 0.2, v.screenY * 0.5), 40, (100, 200, 200), (0, 255, 255), "Resources\Fonts\MorrisRoman.ttf", "upload", centred=True))
-    buttons.add(MenuItems.Button("Download Save", (v.screenX * 0.8, v.screenY * 0.5), 40, (100, 200, 200), (0, 255, 255), "Resources\Fonts\MorrisRoman.ttf", "download", centred=True))
-    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
-    buttons.add(MenuItems.Button("Multiplayer", (v.screenX * 0.5, v.screenY * 0.2), 40, (100, 200, 200), (0, 255, 255), "Resources\Fonts\MorrisRoman.ttf", "multiplayer", centred=True))
+    buttons.add(MenuItems.Button("Upload Save", (255, 360), 40, (100, 200, 200), (0, 255, 255), "Resources\Fonts\MorrisRoman.ttf", "upload", centred=True))
+    buttons.add(MenuItems.Button("Download Save", (1020, 360), 40, (100, 200, 200), (0, 255, 255), "Resources\Fonts\MorrisRoman.ttf", "download", centred=True))
+    buttons.add(MenuItems.Button("Back", (20, 650), 60, (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
+    buttons.add(MenuItems.Button("Multiplayer", (640, 140), 40, (100, 200, 200), (0, 255, 255), "Resources\Fonts\MorrisRoman.ttf", "multiplayer", centred=True))
 
     texts = py.sprite.Group()
     texts.add(MenuItems.textLabel(v.username, (120, 50), (0, 0, 0), "Resources\Fonts\MorrisRoman.ttf", 40, variable=False, centred=True))
@@ -268,14 +268,14 @@ def joinServer():
     tinps = py.sprite.Group()
     buttons = py.sprite.Group()
     
-    texts.add(MenuItems.textLabel("Server Name:", (v.screenX * 0.1, v.screenY * 0.3), (255, 255, 255), "Resources\Fonts\MorrisRoman.ttf", 30))
-    tinps.add(MenuItems.textInput((v.screenX * 0.45, v.screenY * 0.28), 30, 8, 0, button=None, default=[], type="str"))
+    texts.add(MenuItems.textLabel("Server Name:", (130, 215), (255, 255, 255), "Resources\Fonts\MorrisRoman.ttf", 30))
+    tinps.add(MenuItems.textInput((575, 200), 30, 8, 0, button=None, default=[], type="str"))
     
-    texts.add(MenuItems.textLabel("Server Password:", (v.screenX * 0.1, v.screenY * 0.5), (255, 255, 255), "Resources\Fonts\MorrisRoman.ttf", 30))
-    tinps.add(MenuItems.textInput((v.screenX * 0.45, v.screenY * 0.48), 30, 8, 1, button=None, default=[], type="pass"))
+    texts.add(MenuItems.textLabel("Server Password:", (130, 360), (255, 255, 255), "Resources\Fonts\MorrisRoman.ttf", 30))
+    tinps.add(MenuItems.textInput((575, 345), 30, 8, 1, button=None, default=[], type="pass"))
     
-    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
-    buttons.add(MenuItems.Button("Join", (v.screenX * 0.77, v.screenY * 0.9), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "continue"))
+    buttons.add(MenuItems.Button("Back", (20, 650), 60, (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
+    buttons.add(MenuItems.Button("Join", (985, 650), 60, (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "continue"))
     
     
     v.textNum = 0
@@ -312,10 +312,10 @@ def options():
     else:
         v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)"""
     buttons = py.sprite.Group()
-    buttons.add(MenuItems.Button("Toggle Fullscreen", (v.screenX * 0.03125, v.screenY * 0.04), int(v.screenX * 0.09375), (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "fullscreen"))
-    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY - v.screenY * 0.08), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
-    buttons.add(MenuItems.Button("Toggle Resolution", (v.screenX * 0.03125, v.screenY * 0.2), int(v.screenX * 0.09375), (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "resolution"))
-    buttons.add(MenuItems.Button("Map Editor", (v.screenX * 0.03125, v.screenY * 0.4), int(v.screenX * 0.09375), (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "edit"))
+    buttons.add(MenuItems.Button("Toggle Fullscreen", (40, 30), 120, (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "fullscreen"))
+    buttons.add(MenuItems.Button("Back", (20, 640), 60, (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
+    buttons.add(MenuItems.Button("Toggle Resolution", (40, 140), 120, (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "resolution"))
+    buttons.add(MenuItems.Button("Map Editor", (40, 290), 120, (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "edit"))
     
     
     fade = MenuItems.fadeIn()
@@ -350,20 +350,24 @@ def options():
                     MapEditor.startMenu()
                     os.chdir("..")
                 if id == "resolution":
-                    if v.screenX == 640:
-                        v.screenX = 800
-                        v.screenY = 600
-                    elif v.screenX == 800:
-                        #v.screenX = 1024
-                        #v.screenY = 768
-                        v.screenX = 933
-                        v.screenY = 700
-                    elif v.screenX == 933:
-                        v.screenX = 640
+                    if v.screenX <= 640:
+                        v.screenX = 720
+                        v.screenY = 405
+                    elif v.screenX <= 720:
+                        v.screenX = 848
                         v.screenY = 480
-                    elif v.screenX == 1024:
+                    elif v.screenX <= 848:
+                        v.screenX = 960
+                        v.screenY = 540
+                    elif v.screenX <= 960:
+                        v.screenX = 1024
+                        v.screenY = 576
+                    elif v.screenX <= 1024:
+                        v.screenX = 1280
+                        v.screenY = 720
+                    else:
                         v.screenX = 640
-                        v.screenY = 480
+                        v.screenY = 360
                 windowUpdate()
                 options()
                 return
@@ -374,7 +378,7 @@ def options():
 
 def windowUpdate():
     if v.fullScreen:
-        v.screenDisplay = py.display.set_mode((v.screenX, v.screenY), py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
+        v.screenDisplay = py.display.set_mode((1280, 720), py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
     else:
         v.screenDisplay = py.display.set_mode((v.screenX, v.screenY), py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
     
@@ -533,7 +537,7 @@ def game():
             v.clock.tick(30)
             v.events = []
             v.events = py.event.get()
-            backgroundImage = py.image.fromstring(background, (v.screenX, v.screen.get_rect()[3]), "RGBA")
+            backgroundImage = py.image.fromstring(background, (1280, 720), "RGBA")
             v.screen.blit(backgroundImage, (0, 0))
             pause.update()
             MenuItems.screenFlip()
@@ -554,7 +558,7 @@ def game():
             v.events = []
             v.events = py.event.get()
             
-            backgroundImage = py.image.fromstring(background, (v.screenX, v.screen.get_rect()[3]), "RGBA")
+            backgroundImage = py.image.fromstring(background, (1280, 720), "RGBA")
             v.screen.blit(backgroundImage, (0, 0))
             
             invScreen.update()
@@ -577,9 +581,9 @@ def game():
             v.clock.tick(30)
             v.events = []
             v.events = py.event.get()
-            backgroundImage = py.image.fromstring(background, (v.screenX, v.screen.get_rect()[3]), "RGBA")
+            backgroundImage = py.image.fromstring(background, (1280, 720), "RGBA")
             v.screen.blit(backgroundImage, (0, 0))
-            grey = py.Surface((v.screenX, v.screen.get_rect()[3])).convert_alpha()
+            grey = py.Surface((1280, 720)).convert_alpha()
             grey.fill((20, 20, 20, 200))
             v.screen.blit(grey, (0, 0))
             v.conversationClass.update()
@@ -613,13 +617,13 @@ def game():
 def classSelection():
     py.init()
     classes = py.sprite.Group()
-    classes.add(MenuItems.characterSelector("Resources/Images/PaladinClass.png", (v.screenX / 8 * 1, v.screen.get_rect()[3]/1.5), "Paladin"))
-    classes.add(MenuItems.characterSelector("Resources/Images/MageClass.png", (v.screenX / 8 * 2, v.screen.get_rect()[3]/3), "Mage"))
-    classes.add(MenuItems.characterSelector("Resources/Images/RangerClass.png", (v.screenX / 8 * 3, v.screen.get_rect()[3]/1.5), "Ranger"))
-    classes.add(MenuItems.characterSelector("Resources/Images/RogueClass.png", (v.screenX / 8 * 4, v.screen.get_rect()[3]/3), "Rogue"))
-    classes.add(MenuItems.characterSelector("Resources/Images/BarbarianClass.png", (v.screenX / 8 * 5, v.screen.get_rect()[3]/1.5), "Barbarian"))
-    classes.add(MenuItems.characterSelector("Resources/Images/NecromancerClass.png", (v.screenX / 8 * 6, v.screen.get_rect()[3]/3), "Necromancer"))
-    classes.add(MenuItems.characterSelector("Resources/Images/VoyantClass.png", (v.screenX / 8 * 7, v.screen.get_rect()[3]/1.5), "Voyant"))
+    classes.add(MenuItems.characterSelector("Resources/Images/PaladinClass.png", (160, 480), "Paladin"))
+    classes.add(MenuItems.characterSelector("Resources/Images/MageClass.png", (320, 240), "Mage"))
+    classes.add(MenuItems.characterSelector("Resources/Images/RangerClass.png", (480, 480), "Ranger"))
+    classes.add(MenuItems.characterSelector("Resources/Images/RogueClass.png", (640, 240), "Rogue"))
+    classes.add(MenuItems.characterSelector("Resources/Images/BarbarianClass.png", (800, 480), "Barbarian"))
+    classes.add(MenuItems.characterSelector("Resources/Images/NecromancerClass.png", (960, 240), "Necromancer"))
+    classes.add(MenuItems.characterSelector("Resources/Images/VoyantClass.png", (1120, 480), "Voyant"))
     py.time.set_timer(py.USEREVENT, 10) # moving and growing animation speed
     
     v.custimizationStage = "Class Selection"
@@ -627,21 +631,21 @@ def classSelection():
     os = MenuItems.optionSlate()
     
     attOptions = py.sprite.Group()
-    AoX = v.screenY * 0.21
+    AoX = 720 * 0.21
     for attribute in v.Attributes:
         attOptions.add(MenuItems.optionAttribute(AoX, attribute))
-        AoX += v.screenX * 0.046875
+        AoX += 1280 * 0.046875
     #attOptions.add(MenuItems.optionAttribute(100, "Max Health"))
     #attOptions.add(MenuItems.optionAttribute(130, "Speed"))
     
     labels = py.sprite.Group()
-    labels.add(MenuItems.textLabel("Define Character Attributes", (v.screenX * 0.390625, v.screenY * 0.08), (0, 0, 0), "Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.0546875)))
-    labels.add(MenuItems.textLabel("Skill Points Remaining:", (v.screenX * 0.390625, v.screenY * 0.14), (128,128,128), "Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.046875)))
-    labels.add(MenuItems.textLabel("skillPoints", (v.screenX * 0.78125, v.screenY * 0.14), (0, 255, 0), "Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.046875), True))
+    labels.add(MenuItems.textLabel("Define Character Attributes", (500, 60), (0, 0, 0), "Resources/Fonts/RPGSystem.ttf", 70))
+    labels.add(MenuItems.textLabel("Skill Points Remaining:", (500, 100), (128,128,128), "Resources/Fonts/RPGSystem.ttf", 60))
+    labels.add(MenuItems.textLabel("skillPoints", (1000, 100), (0, 255, 0), "Resources/Fonts/RPGSystem.ttf", 60, True))
     
     buttons = py.sprite.Group()
-    buttons.add(MenuItems.Button("Back", (v.screenX * 0.015625, v.screenY * 0.9), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
-    buttons.add(MenuItems.Button("Continue", (v.screenX * 0.859375, v.screenY * 0.86875), int(v.screenX * 0.03125), (165,42,42), (153, 76, 0), "Resources\Fonts\RunicSolid.ttf", "continue"))
+    buttons.add(MenuItems.Button("Back", (20, 650), 60, (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
+    buttons.add(MenuItems.Button("Continue", (1100, 625), int(40), (165,42,42), (153, 76, 0), "Resources\Fonts\RunicSolid.ttf", "continue"))
     
     background = MenuItems.shiftingGradient(('x', 0, 0))
     
@@ -675,12 +679,12 @@ def classSelection():
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
     
-    nti = MenuItems.textInput((260/640 * v.screenX, 260/640 * v.screenX), int(40/640 * v.screenX), 8, 1, background=(255, 178, 102), button=None, default=[], type="str")
+    nti = MenuItems.textInput((520, 520), 80, 8, 1, background=(255, 178, 102), button=None, default=[], type="str")
     nts = py.sprite.Group()
-    nts.add(MenuItems.textLabel("Name Your Character:", (260/640 * v.screenX, 180/640 * v.screenX), (0, 0, 0), "Resources/Fonts/RPGSystem.ttf", int(40/640 * v.screenX), False))
-    nts.add(MenuItems.textLabel("(Max 8 Characters)", (260/640 * v.screenX, 220/640 * v.screenX), (128,128,128), "Resources/Fonts/RPGSystem.ttf", int(20/640 * v.screenX), False))
+    nts.add(MenuItems.textLabel("Name Your Character:", (520, 360), (0, 0, 0), "Resources/Fonts/RPGSystem.ttf", 80, False))
+    nts.add(MenuItems.textLabel("(Max 8 Characters)", (520, 440), (128,128,128), "Resources/Fonts/RPGSystem.ttf", 40, False))
     
-    bigcont = MenuItems.Button("Continue", (v.screenX * 0.77, v.screenY * 0.9), int(v.screenX * 0.046875), (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "continue")
+    bigcont = MenuItems.Button("Continue", (985, 650), 60, (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "continue")
     while True:
         py.event.pump()
         v.events = []
@@ -766,23 +770,23 @@ def story():
     sTime = time.clock()
     py.init()
     windowUpdate()
-    LS1 = py.transform.scale(py.image.load("Resources/Images/Story/LS1.png"), (v.screenX, v.screenY))
-    _LS1 = py.transform.scale(py.image.load("Resources/Images/Story/LS1.png"), (v.screenX, v.screenY))
-    LS2 = py.transform.scale(py.image.load("Resources/Images/Story/LS2.png"), (v.screenX, v.screenY))
-    LS3 = py.transform.scale(py.image.load("Resources/Images/Story/LS3.png"), (v.screenX, v.screenY))
-    LS4 = py.transform.scale(py.image.load("Resources/Images/Story/LS4.png"), (v.screenX, v.screenY))
+    LS1 = py.transform.scale(py.image.load("Resources/Images/Story/LS1.png"), (1280, 720))
+    _LS1 = py.transform.scale(py.image.load("Resources/Images/Story/LS1.png"), (1280, 720))
+    LS2 = py.transform.scale(py.image.load("Resources/Images/Story/LS2.png"), (1280, 720))
+    LS3 = py.transform.scale(py.image.load("Resources/Images/Story/LS3.png"), (1280, 720))
+    LS4 = py.transform.scale(py.image.load("Resources/Images/Story/LS4.png"), (1280, 720))
     LS4Ani = entityClasses.SpriteSheet("Resources/Images/Story/LS4 Ani.png", 10, 1)
     LS3Ani = entityClasses.SpriteSheet("Resources/Images/Story/LS3 Ani.png", 2, 1)
-    P1 = py.transform.scale(py.image.load("Resources/Images/Story/Ground Images/Person 1.png"), (int(22/640 * v.screenX), int(28/640 * v.screenX)))
-    P2 = py.transform.scale(py.image.load("Resources/Images/Story/Ground Images/Person 2.png"), (int(22/640 * v.screenX), int(28/640 * v.screenX)))
+    P1 = py.transform.scale(py.image.load("Resources/Images/Story/Ground Images/Person 1.png"), (int(22/640 * 1280), int(28/640 * 1280)))
+    P2 = py.transform.scale(py.image.load("Resources/Images/Story/Ground Images/Person 2.png"), (int(22/640 * 1280), int(28/640 * 1280)))
     lsY = -480
     zoom = 1
     v.clock = py.time.Clock()
-    ani1 = py.transform.scale(LS4Ani.images[0], (v.screenX, v.screenY))
+    ani1 = py.transform.scale(LS4Ani.images[0], (1280, 720))
     ani2 = py.Surface((0, 0))
     ani3 = py.Surface((0, 0))
     ani4 = py.Surface((0, 0))
-    WB = py.Surface((v.screenX, v.screenY))
+    WB = py.Surface((1280, 720))
     WB.set_alpha(255)
     WB.fill((255, 255, 255))
     WBAlpha = 0
@@ -801,29 +805,29 @@ def story():
     Characters.append(py.image.load("Resources/Images/BarbarianClass.png"))
     Characters.append(py.image.load("Resources/Images/NecromancerClass.png"))
     Characters.append(py.image.load("Resources/Images/VoyantClass.png"))
-    IM1 = py.transform.scale(py.image.load("Resources/Images/Story/IB1.png"), (v.screenX, v.screenY))
-    IM2 = py.transform.scale(py.image.load("Resources/Images/Story/IB2.png"), (v.screenX, v.screenY))
+    IM1 = py.transform.scale(py.image.load("Resources/Images/Story/IB1.png"), (1280, 720))
+    IM2 = py.transform.scale(py.image.load("Resources/Images/Story/IB2.png"), (1280, 720))
     IMEvil = entityClasses.SpriteSheet("Resources/Images/Story/DarkLord.png", 4, 3)
     IMSpells = py.sprite.Group()
-    NexusC = py.transform.scale(py.image.load("Resources/Images/Story/Nexus Beam C.png"), (int(145/640 * v.screenX), int(480/640 * v.screenX))).convert_alpha()
-    NexusP = py.transform.scale(py.image.load("Resources/Images/Story/Nexus Beam P.png"), (int(145/640 * v.screenX), int(480/640 * v.screenX))).convert_alpha()
-    NexusCP = py.transform.scale(py.image.load("Resources/Images/Story/Nexus Beam CP.png"), (int(145/640 * v.screenX), int(480/640 * v.screenX))).convert_alpha()
+    NexusC = py.transform.scale(py.image.load("Resources/Images/Story/Nexus Beam C.png"), (290, 960)).convert_alpha()
+    NexusP = py.transform.scale(py.image.load("Resources/Images/Story/Nexus Beam P.png"), (290, 960)).convert_alpha()
+    NexusCP = py.transform.scale(py.image.load("Resources/Images/Story/Nexus Beam CP.png"), (290, 960)).convert_alpha()
     NexusC.fill((255, 255, 255, 200), special_flags=py.BLEND_RGBA_MULT)
     NexusP.fill((255, 255, 255, 200), special_flags=py.BLEND_RGBA_MULT)
     NexusCP.fill((255, 255, 255, 200), special_flags=py.BLEND_RGBA_MULT)
     
-    rock = py.transform.scale(py.image.load("Resources/Images/Story/Rock.png"), (int(200/640 * v.screenX), int(150/640 * v.screenX)))
+    rock = py.transform.scale(py.image.load("Resources/Images/Story/Rock.png"), (400, 300))
     
-    TM = py.transform.scale(py.image.load("Resources/Images/Story/Tall Mountain.png"), (v.screenX, v.screenY))
+    TM = py.transform.scale(py.image.load("Resources/Images/Story/Tall Mountain.png"), (1280, 720))
     TMZoom = 1
     
-    FI1 = py.transform.scale(py.image.load("Resources/Images/Story/FI1.png"), (int(1280/640 * v.screenX), int(533/640 * v.screenX)))
+    FI1 = py.transform.scale(py.image.load("Resources/Images/Story/FI1.png"), (2560, 1066))
     
     font = py.font.Font("Resources/Fonts/MorrisRoman.ttf", 40)
     font2 = py.font.Font("Resources/Fonts/MorrisRoman.ttf", 15)
     aiopaMain = entityClasses.SpriteSheet("Resources/Images/Story/Aiopa Title.png", 7, 3)
     
-    MP = py.transform.scale(py.image.load("Resources/Images/Story/MP1.png"), (v.screenX, v.screenY))
+    MP = py.transform.scale(py.image.load("Resources/Images/Story/MP1.png"), (1280, 720))
     
     skp = 0
     
@@ -844,36 +848,36 @@ def story():
             v.clock.tick(60)
             v.screen.fill((0, 0, 0))
             if zoom > 1:
-                LS1 = py.transform.scale(_LS1, (int(v.screenX * zoom), int(v.screenY * zoom)))
-                v.screen.blit(LS1, ((v.screenX/2) - int(v.screenX * zoom)/2, ((v.screenY/4) - int(v.screenY * zoom)/4)))
+                LS1 = py.transform.scale(_LS1, (int(1280 * zoom), int(720 * zoom)))
+                v.screen.blit(LS1, ((1280/2) - int(1280 * zoom)/2, ((720/4) - int(720 * zoom)/4)))
             else:
                 if lsY < 1440:
-                    v.screen.blit(LS1, (0, v.screenY * -3 + lsY))
+                    v.screen.blit(LS1, (0, 720 * -3 + lsY))
                 else:
                     v.screen.blit(LS1, (0, 0))
                 
             if lsY < 1440:    
-                v.screen.blit(LS2, (0, v.screenY * -2 + lsY))
-                v.screen.blit(LS3, (0, v.screenY * -1 + lsY))
-                v.screen.blit(LS4, (0, v.screenY * 0 + lsY))
+                v.screen.blit(LS2, (0, 720 * -2 + lsY))
+                v.screen.blit(LS3, (0, 720 * -1 + lsY))
+                v.screen.blit(LS4, (0, 720 * 0 + lsY))
                 if lsY < 200 and lsY > -300:
-                    ani1 = py.transform.scale(LS4Ani.images[int((lsY + 300)/50)], (v.screenX, v.screenY))
-                v.screen.blit(ani1, (0, v.screenY * 0 + lsY))
+                    ani1 = py.transform.scale(LS4Ani.images[int((lsY + 300)/50)], (1280, 720))
+                v.screen.blit(ani1, (0, 720 * 0 + lsY))
                 
-                ani2 = py.transform.scale(LS3Ani.images[lsY % 2], (v.screenX, v.screenY))
-                v.screen.blit(ani2, (-v.screenX * 1.4 + lsY, v.screenY * -0.5 + lsY))
+                ani2 = py.transform.scale(LS3Ani.images[lsY % 2], (1280, 720))
+                v.screen.blit(ani2, (-1280 * 1.4 + lsY, 720 * -0.5 + lsY))
                 
-                ani2 = py.transform.scale(LS3Ani.images[(lsY + 1) % 2], (v.screenX, v.screenY))
+                ani2 = py.transform.scale(LS3Ani.images[(lsY + 1) % 2], (1280, 720))
                 ani2 = py.transform.flip(ani2, True, False)
-                v.screen.blit(ani2, (v.screenX * 1.6 - lsY, v.screenY * -1.1 + lsY))
+                v.screen.blit(ani2, (1280 * 1.6 - lsY, 720 * -1.1 + lsY))
                 
             if lsY % 4 == 0:
                 ani3 = py.transform.rotate(P1, randint(-5, 5))
                 ani4 = py.transform.rotate(P2, randint(-5, 5))
             if zoom == 1:
-                pos = (v.screenX * 2.6 - lsY, v.screenY * -2.55 + lsY * 1.1)
+                pos = (1280 * 2.6 - lsY, 720 * -2.55 + lsY * 1.1)
                 v.screen.blit(ani3, pos)
-                pos = (v.screenX * 2.65 - lsY, v.screenY * -2.55 + lsY * 1.1)
+                pos = (1280 * 2.65 - lsY, 720 * -2.55 + lsY * 1.1)
                 v.screen.blit(ani4, pos)
             
             if lsY < 1700:
@@ -886,59 +890,59 @@ def story():
                 op = 255 - abs(((lsY + 340) * 1.8))
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.5, v.screenY * 0.75))
+                v.screen.blit(label, (640, 720 * 0.75))
             
             if lsY > -280 and lsY < 0:
                 label = font.render("There was a perfect land...", 1, (255, 255, 255))
                 op = 255 - abs(((lsY + 140) * 1.8))
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (0, v.screenY * 0.25))
+                v.screen.blit(label, (0, 720 * 0.25))
             if lsY > -80 and lsY < 200:
                 label = font.render("A land of RICHES...", 1, (255, 255, 255))
                 op = 255 - abs(((-1*lsY) + 60) * 1.8)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.5))
+                v.screen.blit(label, (510, 360))
             if lsY > 220 and lsY < 500:
                 label = font.render("A land of NATURE...", 1, (255, 255, 255))
                 op = 255 - abs((((-1*(lsY - 300)) + 60) * 1.8))
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.25, v.screenY * 0.2))
+                v.screen.blit(label, (320, 140))
             if lsY > 420 and lsY < 700:
                 label = font.render("A land of LIFE...", 1, (255, 255, 255))
                 op = 255 - abs((((-1*(lsY - 500)) + 60) * 1.8))
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.6, v.screenY * 0.7))
+                v.screen.blit(label, (1280 * 0.6, 720 * 0.7))
             if lsY > 720 and lsY < 1000:
                 label = font.render("A land of MAGIC...", 1, (255, 255, 255))
                 op = 255 - abs((((-1*(lsY - 800)) + 60) * 1.8))
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.5))
+                v.screen.blit(label, (130, 360))
             if lsY > 920 and lsY < 1200:
                 label = font.render("A land of PEACE...", 1, (255, 255, 255))
                 op = 255 - abs((((-1*(lsY - 1000)) + 60) * 1.8))
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.3))
+                v.screen.blit(label, (510, 215))
             if lsY > 1120 and lsY < 1400:
                 label = font.render("A land named...", 1, (255, 255, 255))
                 op = 255 - abs((((-1*(lsY - 1200)) + 60) * 1.8))
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.3, v.screenY * 0.1))
+                v.screen.blit(label, (385, 720 * 0.1))
             if lsY > 1300 and lsY < 1700:
                 size = aiopaMain.images[lsY % 18].get_rect().size
-                label = py.transform.scale(aiopaMain.images[lsY % 18], (int((size[0] * ((lsY - 1300)/100))/640 * v.screenX), int((size[1] * ((lsY - 1300)/100))/640 * v.screenX)))
+                label = py.transform.scale(aiopaMain.images[lsY % 18], (int((size[0] * ((lsY - 1300)/100))/640 * 1280), int((size[1] * ((lsY - 1300)/100))/640 * 1280)))
                 if lsY > 1550:
                     alph = 255 - ((lsY - 1550) * 1.7)
                     if alph > 0:
                         label.fill((255, 255, 255, alph), special_flags=py.BLEND_RGBA_MULT)
                 
-                v.screen.blit(label, (v.screenX * 0.5 - (label.get_rect().width/2), v.screenY * 0.5 - (label.get_rect().height/2)))
+                v.screen.blit(label, (640 - (label.get_rect().width/2), 360 - (label.get_rect().height/2)))
             
             
             if zoom >= 3:
@@ -953,8 +957,8 @@ def story():
             v.clock.tick(60)
             v.screen.fill((0, 255, 255))
             
-            tm = py.transform.scale(TM, (int(v.screenX * TMZoom), int(v.screenY * TMZoom)))
-            v.screen.blit(tm, ((v.screenX/2) - int(v.screenX * TMZoom)/2, ((v.screenY/4) - int(v.screenY * TMZoom)/4)))
+            tm = py.transform.scale(TM, (int(1280 * TMZoom), int(720 * TMZoom)))
+            v.screen.blit(tm, ((1280/2) - int(1280 * TMZoom)/2, ((720/4) - int(720 * TMZoom)/4)))
             
             if WBAlpha > 0 and fadeIn:
                 WBAlpha -= 3
@@ -977,25 +981,25 @@ def story():
                 op = 255 - abs((TMZoom - 1.5) * 510)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.4))
+                v.screen.blit(label, (255, 290))
             if TMZoom > 1.3 and TMZoom < 2.3:
                 label = font.render("...By the 7 most powerful", 1, (0, 0, 0))
                 op = 255 - abs(((TMZoom - 0.3) - 1.5) * 510)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.0, v.screenY * 0.6))
+                v.screen.blit(label, (1280 * 0.0, 720 * 0.6))
             if TMZoom > 1.4 and TMZoom < 2.3:
                 label = font.render("mages and fighters", 1, (0, 0, 0))
                 op = 255 - abs(((TMZoom - 0.3) - 1.5) * 510)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.7))
+                v.screen.blit(label, (510, 720 * 0.7))
             if TMZoom > 1.5 and TMZoom < 2.3:
                 label = font.render("in the land...", 1, (0, 0, 0))
                 op = 255 - abs(((TMZoom - 0.3) - 1.5) * 510)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.7, v.screenY * 0.8))
+                v.screen.blit(label, (1280 * 0.7, 580))
             if WBAlpha >= 255:
                 ST2 += 1
                 if ST2 > 0 and ST2 < 200:
@@ -1003,19 +1007,19 @@ def story():
                     op = 255 - abs((ST2 - 100) * 2.55)
                     
                     label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                    v.screen.blit(label, (v.screenX * 0.25, v.screenY * 0.2))
+                    v.screen.blit(label, (320, 140))
                 if ST2 > 150 and ST2 < 350:
                     label = font.render("when it mattered most...", 1, (255, 255, 255))
                     op = 255 - abs((ST2 - 250) * 2.55)
                     
                     label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                    v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.4))
+                    v.screen.blit(label, (510, 290))
                 if ST2 > 300 and ST2 < 600:
                     label = font.render("THEY FAILED", 1, (255, 0, 0))
                     op = 255 - abs((ST2 - 450) * 1.7)
                     
                     label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                    v.screen.blit(label, (v.screenX * 0.3, v.screenY * 0.6))
+                    v.screen.blit(label, (385, 720 * 0.6))
                 if ST2 > 600:
                     STAGE = 3
         
@@ -1030,12 +1034,12 @@ def story():
             ST3 += 1
             
             posx = 50
-            posy = v.screenY * 0.55
+            posy = 720 * 0.55
             iNum = 0
             for i in Characters:
                 size = i.get_rect()
-                size.width = ((size.width * 3) / 640) * v.screenX
-                size.height = ((size.height * 3) / 480) * v.screenY
+                size.width = ((size.width * 3) / 640) * 1280
+                size.height = ((size.height * 3) / 480) * 720
                 ren = py.transform.scale(i, (size.width, size.height))
                 pos = (posx, posy)
                 posx += 80
@@ -1058,60 +1062,60 @@ def story():
                         IMSpells.add(MenuItems.storySpells(pos))
             
             if ST3 < 825:
-                v.screen.blit(NexusC, (v.screenX * 0.4, v.screenY * -0.08))
+                v.screen.blit(NexusC, (510, 720 * -0.08))
             if ST3 > 825:
-                v.screen.blit(NexusP, (v.screenX * 0.4, v.screenY * -0.08))
+                v.screen.blit(NexusP, (510, 720 * -0.08))
                 
             IMSpells.update()
             size = IMEvil.images[1].get_rect().size
-            ev = py.transform.scale(IMEvil.images[1], (int(size[0] * 4/640 * v.screenX), int(size[1] * 4/640 * v.screenX)))
+            ev = py.transform.scale(IMEvil.images[1], (int(size[0] * 4/640 * 1280), int(size[1] * 4/640 * 1280)))
             if ST3 < 650:
-                v.screen.blit(ev, (v.screenX * 0.4 - int(size[0] * 4/640 * v.screenX)/2, v.screenY * 0.7))
+                v.screen.blit(ev, (510 - int(size[0] * 4/640 * 1280)/2, 720 * 0.7))
             else:
                 if ST3 > 650 and ST3 < 750:
-                    v.screen.blit(ev, ((v.screenX * 0.4 - int(size[0] * 4/640 * v.screenX)/2) + (ST3 - 650)/2, (v.screenY * 0.7) - (ST3 - 650)/2))
+                    v.screen.blit(ev, ((510 - int(size[0] * 4/640 * 1280)/2) + (ST3 - 650)/2, (720 * 0.7) - (ST3 - 650)/2))
             
             if ST3 > 0 and ST3 < 200:
                 label = font.render("Thanatos was the physical embodiment", 1, (255, 255, 0))
                 op = 255 - abs((ST3 - 100) * 2.55)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.0, v.screenY * 0.2))
+                v.screen.blit(label, (1280 * 0.0, 140))
             if ST3 > 10 and ST3 < 200:
                 label = font.render("of death and destruction...", 1, (255, 255, 0))
                 op = 255 - abs((ST3 - 100) * 2.55)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.3))
+                v.screen.blit(label, (255, 215))
             if ST3 > 150 and ST3 < 400:
                 label = font.render("He fought his way into the ", 1, (255, 255, 0))
                 op = 255 - abs((ST3 - 275) * 2.04)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.5))
+                v.screen.blit(label, (130, 360))
             if ST3 > 160 and ST3 < 400:
                 label = font.render("mountain of the nexus,", 1, (255, 255, 0))
                 op = 255 - abs((ST3 - 275) * 2.04)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.3, v.screenY * 0.6))
+                v.screen.blit(label, (385, 720 * 0.6))
             if ST3 > 170 and ST3 < 400:
                 label = font.render("the core that holds the world together", 1, (255, 255, 0))
                 op = 255 - abs((ST3 - 275) * 2.04)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.7))
+                v.screen.blit(label, (130, 720 * 0.7))
             if ST3 > 550 and ST3 < 750:
                 label = font.render("AND DESTORYED IT", 1, (255, 0, 0))
                 op = 255 - abs((ST3 - 650) * 2.04)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.4))
+                v.screen.blit(label, (255, 290))
             
             if ST3 > 850:
                 for i in range(15):
                     r = py.transform.rotate(rock, rot[i] * 4)
-                    v.screen.blit(r, (v.screenX * (i * 0.06), ((v.screenY/400) * ((ST3 - 850) - ran[i] * 3))))
+                    v.screen.blit(r, (1280 * (i * 0.06), ((720/400) * ((ST3 - 850) - ran[i] * 3))))
             
             if ST3 > 1000:
                 WBAlpha += 2
@@ -1140,10 +1144,10 @@ def story():
             
             if ST4 < 310:
                 _fi1 = py.transform.scale(FI1, (int(FI1.get_rect().width * (4 - (ST4/100))), int(FI1.get_rect().height * (4 - (ST4/100)))))
-                pos = (v.screenX/2 - (FI1.get_rect().width * (4 - (ST4/100))/2), v.screenY/2 - (FI1.get_rect().height * (4 - (ST4/100))/2))
+                pos = (1280/2 - (FI1.get_rect().width * (4 - (ST4/100))/2), 720/2 - (FI1.get_rect().height * (4 - (ST4/100))/2))
             if ST4 > 360:
                 _fi1 = py.transform.scale(FI1, (int(FI1.get_rect().width * ((ST4/100) - 2.6)), int(FI1.get_rect().height * ((ST4/100) - 2.6))))
-                pos = (v.screenX/2 - (FI1.get_rect().width * ((ST4/100) - 2.7)/(2 * ((ST4/100) - 2.7))), v.screenY/2 - (FI1.get_rect().height * ((ST4/100) - 2.7)/(2 * ((ST4/100) - 2.7))))
+                pos = (1280/2 - (FI1.get_rect().width * ((ST4/100) - 2.7)/(2 * ((ST4/100) - 2.7))), 720/2 - (FI1.get_rect().height * ((ST4/100) - 2.7)/(2 * ((ST4/100) - 2.7))))
             v.screen.blit(_fi1, pos)
             
             if WBAlpha > 0 and ST4 < 200:
@@ -1163,19 +1167,19 @@ def story():
                 op = 255 - abs((ST4 - 100) * 2.55)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.4))
+                v.screen.blit(label, (255, 290))
             if ST4 > 150 and ST4 < 350:
                 label = font.render("Entire continents collapsing", 1, (0, 0, 0))
                 op = 255 - abs((ST4 - 250) * 2.55)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.3, v.screenY * 0.2))
+                v.screen.blit(label, (385, 140))
             if ST4 > 150 and ST4 < 350:
                 label = font.render("into the void...", 1, (0, 0, 0))
                 op = 255 - abs((ST4 - 250) * 2.55)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.3))
+                v.screen.blit(label, (510, 215))
             
         if STAGE == 5:
             v.clock.tick(60)
@@ -1183,12 +1187,12 @@ def story():
             v.screen.blit(IM2, (0, 0))
             
             posx = 50
-            posy = v.screenY * 0.55
+            posy = 720 * 0.55
             iNum = 0
             for i in Characters:
                 size = i.get_rect()
-                size.width = ((size.width * 3) / 640) * v.screenX
-                size.height = ((size.height * 3) / 480) * v.screenY
+                size.width = ((size.width * 3) / 640) * 1280
+                size.height = ((size.height * 3) / 480) * 720
                 ren = py.transform.scale(i, (size.width, size.height))
                 pos = (posx, posy)
                 posx += 80
@@ -1198,8 +1202,8 @@ def story():
                     posy += 15
                 
                 if ST5 > 200 + (560 - posx - 80):
-                    xDiff = v.screenX/2 - pos[0]
-                    yDiff = v.screenY/2 - pos[1]
+                    xDiff = 1280/2 - pos[0]
+                    yDiff = 720/2 - pos[1]
                     pos = list(pos)
                     pos[0] += xDiff/100 * (ST5 - (200 + (560 - posx - 80)))
                     pos[1] -= yDiff/100 * (ST5 - (200 + (560 - posx - 80)))
@@ -1209,9 +1213,9 @@ def story():
                     v.screen.blit(ren, pos)
             
             if ST5 < 750:
-                v.screen.blit(NexusP, (v.screenX * 0.4, v.screenY * -0.08))
+                v.screen.blit(NexusP, (510, 720 * -0.08))
             else:
-                v.screen.blit(NexusCP, (v.screenX * 0.4, v.screenY * -0.08))
+                v.screen.blit(NexusCP, (510, 720 * -0.08))
             
             
             if ST5 > 0 and ST5 < 200:
@@ -1219,43 +1223,43 @@ def story():
                 op = 255 - abs((ST5 - 100) * 2.55)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.3))
+                v.screen.blit(label, (130, 215))
             if ST5 > 0 and ST5 < 200:
                 label = font.render("guardians could do...", 1, (255, 255, 0))
                 op = 255 - abs((ST5 - 100) * 2.55)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.4))
+                v.screen.blit(label, (255, 290))
             if ST5 > 150 and ST5 < 350:
                 label = font.render("One by one...", 1, (255, 255, 0))
                 op = 255 - abs((ST5 - 250) * 2.55)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.4, v.screenY * 0.5))
+                v.screen.blit(label, (510, 360))
             if ST5 > 300 and ST5 < 500:
                 label = font.render("They cast themselves into the nexus...", 1, (255, 255, 0))
                 op = 255 - abs((ST5 - 400) * 2.55)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.6))
+                v.screen.blit(label, (130, 720 * 0.6))
             if ST5 > 450 and ST5 < 750:
                 label = font.render("It killed them, but the energy", 1, (255, 255, 0))
                 op = 255 - abs((ST5 - 600) * 1.7)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.3))
+                v.screen.blit(label, (130, 215))
             if ST5 > 450 and ST5 < 750:
                 label = font.render("they released offset that of Thanatos...", 1, (255, 255, 0))
                 op = 255 - abs((ST5 - 600) * 1.7)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.0, v.screenY * 0.4))
+                v.screen.blit(label, (1280 * 0.0, 290))
             if ST5 > 700 and ST5 < 900:
                 label = font.render("and halted the chaos.", 1, (255, 255, 0))
                 op = 255 - abs((ST5 - 800) * 2.55)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.3, v.screenY * 0.5))
+                v.screen.blit(label, (385, 360))
             
             if WBAlpha > 0 and ST5 < 200:
                 WBAlpha -= 2
@@ -1278,40 +1282,40 @@ def story():
                 op = 255 - abs((ST6 - 100) * 2.55)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.2))
+                v.screen.blit(label, (130, 140))
             
             if ST6 > 150 and ST6 < 350:
                 label = font.render("But the effects of it remained...", 1, (255, 0, 0))
                 op = 255 - abs((ST6 - 250) * 2.55)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.3))
+                v.screen.blit(label, (255, 215))
             
             if ST6 > 300 and ST6 < 500:
                 label = font.render("7 major islands,", 1, (255, 0, 0))
                 op = 255 - abs((ST6 - 400) * 2.55)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.3, v.screenY * 0.4))
+                v.screen.blit(label, (385, 290))
             if ST6 > 300 and ST6 < 500:
                 label = font.render("floating above the endless void...", 1, (255, 0, 0))
                 op = 255 - abs((ST6 - 400) * 2.55)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.5))
+                v.screen.blit(label, (130, 360))
             
             if ST6 > 450 and ST6 < 650:
                 label = font.render("The only way between them were", 1, (255, 0, 0))
                 op = 255 - abs((ST6 - 550) * 2.55)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.2, v.screenY * 0.6))
+                v.screen.blit(label, (255, 720 * 0.6))
             if ST6 > 450 and ST6 < 650:
                 label = font.render("teleport pads scattered across the world...", 1, (255, 0, 0))
                 op = 255 - abs((ST6 - 550) * 2.55)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.0, v.screenY * 0.7))
+                v.screen.blit(label, (1280 * 0.0, 720 * 0.7))
    
             
             if WBAlpha > 0 and ST6 < 200:
@@ -1330,14 +1334,14 @@ def story():
                 op = 255 - abs((ST6 - 850) * 2.55)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.4))
+                v.screen.blit(label, (130, 290))
             
             if ST6 > 900 and ST6 < 1100:
                 label = font.render("And now, a new story has begun...", 1, (255, 255, 255))
                 op = 255 - abs((ST6 - 1000) * 2.55)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (v.screenX * 0.1, v.screenY * 0.5))
+                v.screen.blit(label, (130, 360))
             if ST6 > 1100:
                 print("STORY TIME")
                 print(time.clock() - sTime)
@@ -1346,7 +1350,7 @@ def story():
         label = font2.render("(space to skip)", 1, (255, 255, 255))
         op = 255 - abs((((skp % 400) - 200) * 1.275))
         label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
-        v.screen.blit(label, (v.screenX * 0.45, v.screenY * 0.95))
+        v.screen.blit(label, (575, 720 * 0.95))
         skp += 1
         v.events = []
         v.events = py.event.get()

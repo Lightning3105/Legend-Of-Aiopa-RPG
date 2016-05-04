@@ -77,7 +77,7 @@ def mainMenu():
                     onlineLogin()
                     return
         fade.draw()
-        fade.opacity -= 1
+        fade.opacity -= 2
         
         MenuItems.screenFlip()
 
@@ -616,7 +616,7 @@ def game():
 
 def classSelection():
     py.init()
-    classes = py.sprite.Group()
+    classes = py.sprite.LayeredUpdates()
     classes.add(MenuItems.characterSelector("Resources/Images/PaladinClass.png", (160, 480), "Paladin"))
     classes.add(MenuItems.characterSelector("Resources/Images/MageClass.png", (320, 240), "Mage"))
     classes.add(MenuItems.characterSelector("Resources/Images/RangerClass.png", (480, 480), "Ranger"))
@@ -631,17 +631,17 @@ def classSelection():
     os = MenuItems.optionSlate()
     
     attOptions = py.sprite.Group()
-    AoX = 720 * 0.21
+    AoX = 160
     for attribute in v.Attributes:
         attOptions.add(MenuItems.optionAttribute(AoX, attribute))
-        AoX += 1280 * 0.046875
+        AoX += 60
     #attOptions.add(MenuItems.optionAttribute(100, "Max Health"))
     #attOptions.add(MenuItems.optionAttribute(130, "Speed"))
     
     labels = py.sprite.Group()
-    labels.add(MenuItems.textLabel("Define Character Attributes", (500, 60), (0, 0, 0), "Resources/Fonts/RPGSystem.ttf", 70))
-    labels.add(MenuItems.textLabel("Skill Points Remaining:", (500, 100), (128,128,128), "Resources/Fonts/RPGSystem.ttf", 60))
-    labels.add(MenuItems.textLabel("skillPoints", (1000, 100), (0, 255, 0), "Resources/Fonts/RPGSystem.ttf", 60, True))
+    labels.add(MenuItems.textLabel("Define Character Attributes", (500, 55), (0, 0, 0), "Resources/Fonts/RPGSystem.ttf", 65))
+    labels.add(MenuItems.textLabel("Skill Points Remaining:", (500, 105), (128,128,128), "Resources/Fonts/RPGSystem.ttf", 55))
+    labels.add(MenuItems.textLabel("skillPoints", (960, 110), (0, 255, 0), "Resources/Fonts/RPGSystem.ttf", 60, True))
     
     buttons = py.sprite.Group()
     buttons.add(MenuItems.Button("Back", (20, 650), 60, (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
@@ -691,7 +691,9 @@ def classSelection():
         v.events = py.event.get()
         
         background.draw()
-        
+        for cl in classes:
+            if cl.name == v.playerClass:
+                classes.change_layer(cl, classes.get_top_layer())
         classes.update()
         classes.draw(v.screen)
         
@@ -760,7 +762,7 @@ def classSelection():
         
         #v.characterHovered = False
         fade.draw()
-        fade.opacity -= 1
+        fade.opacity -= 2
 
         MenuItems.screenFlip()
 

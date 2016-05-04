@@ -171,7 +171,8 @@ class characterSelector(py.sprite.Sprite):
         self.hoveredCycle = 0
         self.greyedCycle = 0
         self.movingCycle = 100
-        self.movDistance = abs(self.pos[0] - 130)
+        self.movDistanceX = abs(self.pos[0] - 200)
+        self.movDistanceY = 300 - self.pos[1]
         self.opacity = 255
         
 
@@ -240,8 +241,8 @@ class characterSelector(py.sprite.Sprite):
                         
                         
                         newpos = list(self.pos)
-                        newpos[0] = self.pos[0] - (self.movDistance - (self.movDistance/100)*self.movingCycle)  # TODO: Make this work
-                        newpos[1] = self.pos[1] - (40 - (self.movingCycle * (40 / 100)))
+                        newpos[0] = self.pos[0] - (self.movDistanceX - (self.movDistanceX/100)*self.movingCycle)  # TODO: Make this work
+                        newpos[1] = self.pos[1] + (self.movDistanceY - (self.movDistanceY/100)*self.movingCycle)  # TODO: Make this work
                         
                         if self.movingCycle > 0:
                             self.movingCycle -= 1
@@ -263,7 +264,7 @@ class optionSlate():
     
     def __init__(self):
         self.width = 800
-        self.height = 800
+        self.height = 600
         self.posx = 1620
         self.posy = 360
         
@@ -277,8 +278,8 @@ class optionSlate():
             py.draw.rect(v.screen, (153, 76, 0), self.outerRect)
             py.draw.rect(v.screen, (255, 178, 102), self.innerRect)
             if self.posx >= 880:
-                self.posx -= 6
-            else:
+                self.posx -= 20
+            if self.posx < 880:
                 v.custimizationStage = "Attributes"
         if v.custimizationStage == "Attributes" or v.custimizationStage == "Customisation":
             self.posx = 880
@@ -317,31 +318,31 @@ class optionAttribute(py.sprite.Sprite):
     def update(self):
         self.baseValue = v.Attributes[self.attribute]
         arrow = py.image.load("Resources/Images/AttributeArrow.png")
-        arrow = py.transform.scale(arrow, (int(arrow.get_rect().width * v.screenX * 0.00234375), int(arrow.get_rect().height * v.screenX * 0.00234375)))
+        arrow = py.transform.scale(arrow, (int(arrow.get_rect().width * 1280 * 0.00234375), int(arrow.get_rect().height * 1280 * 0.00234375)))
         
         arrowL = py.transform.rotate(arrow, 180)
         v.screen.blit(arrowL, (self.posx, self.posy))
         self.minusRect = py.Rect(self.posx, self.posy, arrow.get_rect().width, arrow.get_rect().height)
         
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.046875))
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(1280 * 0.046875))
         
         label = font.render(str(self.attribute) + ":", 1, (255,255,255))
-        lx = self.posx + (20/640 * v.screenX)
+        lx = self.posx + (20/640 * 1280)
         v.screen.blit(label, (lx, self.posy - 6))
         
         textLength = font.size(str(self.attribute) + ":")[0] + 5
         
         label = font.render(str(self.baseValue), 1, (255,255,255))
-        lx = ((self.posx + (20/640 * v.screenX))) + textLength
+        lx = ((self.posx + (20/640 * 1280))) + textLength
         v.screen.blit(label, (lx, self.posy - 6))
         
         textLength += font.size(str(self.baseValue))[0] + 5
         
         label = font.render("+" + str(self.addedValue), 1, (0,255,0))
-        lx = ((self.posx + (20/640 * v.screenX))) + textLength
+        lx = ((self.posx + (20/640 * 1280))) + textLength
         v.screen.blit(label, (lx, self.posy - 6))
         
-        textLength += font.size("+" + str(self.addedValue))[0] + 25
+        textLength += font.size("+" + str(self.addedValue))[0] + 40
         
         
         v.screen.blit(arrow, (self.posx + textLength, self.posy))
@@ -433,20 +434,20 @@ class apearanceSelector(py.sprite.Sprite):
         self.part = part
         self.num = number
         if number % 3 == 1:
-            self.posx = v.screenX * 0.46875
+            self.posx = 1280 * 0.46875
         if number % 3 == 2:
-            self.posx = v.screenX * 0.625
+            self.posx = 1280 * 0.625
         if number % 3 == 0:
-            self.posx = v.screenX * 0.78125
+            self.posx = 1280 * 0.78125
         
-        self.posy = (int((number / 3)  - 0.1) * v.screenY * 0.21) + v.screenY * 0.21
+        self.posy = (int((number / 3)  - 0.1) * 720 * 0.21) + 720 * 0.21
     
     def update(self):
         if v.appearanceTab == self.part:
             self.image = self.sheet.images[7]
             size = self.image.get_rect()
-            size.width = (size.width / 640) * v.screenX
-            size.height = (size.height / 480) * v.screenY
+            size.width = (size.width / 640) * 1280
+            size.height = (size.height / 480) * 720
             self.image = py.transform.scale(self.image, (size.width * 3, size.height * 3))
             size = self.image.get_rect()
             self.rect = py.Rect(self.posx, self.posy, size.width, size.height)
@@ -476,15 +477,15 @@ class appearancePreview():
             self.sheet = entityClasses.SpriteSheet(v.appearance["Body"], 4, 3)
             self.image = self.sheet.images[v.appearancePrevNum]
             size = self.image.get_rect()
-            size.width = (size.width / 640) * v.screenX
-            size.height = (size.height / 480) * v.screenY
+            size.width = (size.width / 640) * 1280
+            size.height = (size.height / 480) * 720
             self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
         else:
             self.sheet = entityClasses.SpriteSheet(v.testAppearance["Body"], 4, 3)
             self.image = self.sheet.images[v.appearancePrevNum]
             size = self.image.get_rect()
-            size.width = (size.width / 640) * v.screenX
-            size.height = (size.height / 480) * v.screenY
+            size.width = (size.width / 640) * 1280
+            size.height = (size.height / 480) * 720
             self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
         
         v.screen.blit(self.image, self.pos)
@@ -493,15 +494,15 @@ class appearancePreview():
             self.sheet = entityClasses.SpriteSheet(v.appearance["Face"], 4, 3)
             self.image = self.sheet.images[v.appearancePrevNum]
             size = self.image.get_rect()
-            size.width = (size.width / 640) * v.screenX
-            size.height = (size.height / 480) * v.screenY
+            size.width = (size.width / 640) * 1280
+            size.height = (size.height / 480) * 720
             self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
         elif v.testAppearance["Face"] != None:
             self.sheet = entityClasses.SpriteSheet(v.testAppearance["Face"], 4, 3)
             self.image = self.sheet.images[v.appearancePrevNum]
             size = self.image.get_rect()
-            size.width = (size.width / 640) * v.screenX
-            size.height = (size.height / 480) * v.screenY
+            size.width = (size.width / 640) * 1280
+            size.height = (size.height / 480) * 720
             self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
         else:
             self.image = py.Surface((0, 0))
@@ -511,15 +512,15 @@ class appearancePreview():
             self.sheet = entityClasses.SpriteSheet(v.appearance["Dress"], 4, 3)
             self.image = self.sheet.images[v.appearancePrevNum]
             size = self.image.get_rect()
-            size.width = (size.width / 640) * v.screenX
-            size.height = (size.height / 480) * v.screenY
+            size.width = (size.width / 640) * 1280
+            size.height = (size.height / 480) * 720
             self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
         elif v.testAppearance["Dress"] != None:
             self.sheet = entityClasses.SpriteSheet(v.testAppearance["Dress"], 4, 3)
             self.image = self.sheet.images[v.appearancePrevNum]
             size = self.image.get_rect()
-            size.width = (size.width / 640) * v.screenX
-            size.height = (size.height / 480) * v.screenY
+            size.width = (size.width / 640) * 1280
+            size.height = (size.height / 480) * 720
             self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
         else:
             self.image = py.Surface((0, 0))
@@ -529,15 +530,15 @@ class appearancePreview():
             self.sheet = entityClasses.SpriteSheet(v.appearance["Hair"], 4, 3)
             self.image = self.sheet.images[v.appearancePrevNum]
             size = self.image.get_rect()
-            size.width = (size.width / 640) * v.screenX
-            size.height = (size.height / 480) * v.screenY
+            size.width = (size.width / 640) * 1280
+            size.height = (size.height / 480) * 720
             self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
         elif v.testAppearance["Hair"] != None:
             self.sheet = entityClasses.SpriteSheet(v.testAppearance["Hair"], 4, 3)
             self.image = self.sheet.images[v.appearancePrevNum]
             size = self.image.get_rect()
-            size.width = (size.width / 640) * v.screenX
-            size.height = (size.height / 480) * v.screenY
+            size.width = (size.width / 640) * 1280
+            size.height = (size.height / 480) * 720
             self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
         else:
             self.image = py.Surface((0, 0))
@@ -547,21 +548,21 @@ class appearanceTab(py.sprite.Sprite):
     
     def __init__(self):
         super().__init__()
-        self.startx = v.screenX * 0.390625
-        self.posy = v.screenY * 0.08
+        self.startx = 1280 * 0.390625
+        self.posy = 720 * 0.08
     
     def draw(self): #TODO: Fix with screen size
         image = py.image.load("Resources/Images/Character Customisation/Tabs/Body.png")
         size = image.get_rect()
-        size.width = (size.width / 640) * v.screenX
-        size.height = (size.height / 480) * v.screenY
+        size.width = (size.width / 640) * 1280
+        size.height = (size.height / 480) * 720
         image = py.transform.scale(image, (int(size.width * 1.5), int(size.height * 1.5)))
-        rect = py.Rect(self.startx, self.posy + 2 / 640 * v.screenX, v.screenX * 0.03125, v.screenX * 0.03125)
+        rect = py.Rect(self.startx, self.posy + 2 / 640 * 1280, 1280 * 0.03125, 1280 * 0.03125)
         v.screen.blit(image, rect)
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.03125))
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(1280 * 0.03125))
         label = font.render("Body", 1, (255, 255, 255))
-        v.screen.blit(label, (280 / 640 * v.screenX, 50 / 640 * v.screenX))
-        rect = py.Rect(241 / 640 * v.screenX, 41 / 640 * v.screenX, 80 / 640 * v.screenX, 38 / 640 * v.screenX)
+        v.screen.blit(label, (280 / 640 * 1280, 50 / 640 * 1280))
+        rect = py.Rect(241 / 640 * 1280, 41 / 640 * 1280, 80 / 640 * 1280, 38 / 640 * 1280)
         if rect.collidepoint(v.mouse_pos):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
@@ -575,15 +576,15 @@ class appearanceTab(py.sprite.Sprite):
         
         image = py.image.load("Resources/Images/Character Customisation/Tabs/Face.png")
         size = image.get_rect()
-        size.width = (size.width / 640) * v.screenX
-        size.height = (size.height / 480) * v.screenY
+        size.width = (size.width / 640) * 1280
+        size.height = (size.height / 480) * 720
         image = py.transform.scale(image, (int(size.width * 2), int(size.height * 2)))
-        rect = py.Rect(self.startx + 80 / 640 * v.screenX, self.posy + 7 / 640 * v.screenX, v.screenX * 0.03125, v.screenX * 0.03125)
+        rect = py.Rect(self.startx + 80 / 640 * 1280, self.posy + 7 / 640 * 1280, 1280 * 0.03125, 1280 * 0.03125)
         v.screen.blit(image, rect)
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.03125))
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(1280 * 0.03125))
         label = font.render("Face", 1, (255, 255, 255))
-        v.screen.blit(label, (280 / 640 * v.screenX + 83 / 640 * v.screenX, 50 / 640 * v.screenX))
-        rect = py.Rect(241 / 640 * v.screenX + 83 / 640 * v.screenX, 41 / 640 * v.screenX, 80 / 640 * v.screenX, 38 / 640 * v.screenX)
+        v.screen.blit(label, (280 / 640 * 1280 + 83 / 640 * 1280, 50 / 640 * 1280))
+        rect = py.Rect(241 / 640 * 1280 + 83 / 640 * 1280, 41 / 640 * 1280, 80 / 640 * 1280, 38 / 640 * 1280)
         if rect.collidepoint(v.mouse_pos):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
@@ -598,15 +599,15 @@ class appearanceTab(py.sprite.Sprite):
         
         image = py.image.load("Resources/Images/Character Customisation/Tabs/Dress.png")
         size = image.get_rect()
-        size.width = (size.width / 640) * v.screenX
-        size.height = (size.height / 480) * v.screenY
+        size.width = (size.width / 640) * 1280
+        size.height = (size.height / 480) * 720
         image = py.transform.scale(image, (int(size.width * 2), int(size.height * 2)))
-        rect = py.Rect(self.startx + 160 / 640 * v.screenX, self.posy + 7 / 640 * v.screenX, v.screenX * 0.03125, v.screenX * 0.03125)
+        rect = py.Rect(self.startx + 160 / 640 * 1280, self.posy + 7 / 640 * 1280, 1280 * 0.03125, 1280 * 0.03125)
         v.screen.blit(image, rect)
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.03125))
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(1280 * 0.03125))
         label = font.render("Dress", 1, (255, 255, 255))
-        v.screen.blit(label, (280 / 640 * v.screenX + 166 / 640 * v.screenX, 50 / 640 * v.screenX))
-        rect = py.Rect(241 / 640 * v.screenX + 166 / 640 * v.screenX, 41 / 640 * v.screenX, 85 / 640 * v.screenX, 38 / 640 * v.screenX)
+        v.screen.blit(label, (280 / 640 * 1280 + 166 / 640 * 1280, 50 / 640 * 1280))
+        rect = py.Rect(241 / 640 * 1280 + 166 / 640 * 1280, 41 / 640 * 1280, 85 / 640 * 1280, 38 / 640 * 1280)
         if rect.collidepoint(v.mouse_pos):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
@@ -619,15 +620,15 @@ class appearanceTab(py.sprite.Sprite):
         
         image = py.image.load("Resources/Images/Character Customisation/Tabs/Hair.png")
         size = image.get_rect()
-        size.width = (size.width / 640) * v.screenX
-        size.height = (size.height / 480) * v.screenY
+        size.width = (size.width / 640) * 1280
+        size.height = (size.height / 480) * 720
         image = py.transform.scale(image, (int(size.width * 2), int(size.height * 2)))
-        rect = py.Rect(self.startx + 250 / 640 * v.screenX, self.posy + 10 / 640 * v.screenX, v.screenX * 0.03125, v.screenX * 0.03125)
+        rect = py.Rect(self.startx + 250 / 640 * 1280, self.posy + 10 / 640 * 1280, 1280 * 0.03125, 1280 * 0.03125)
         v.screen.blit(image, rect)
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.03125))
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(1280 * 0.03125))
         label = font.render("Hair", 1, (255, 255, 255))
-        v.screen.blit(label, (280 / 640 * v.screenX + 254 / 640 * v.screenX, 50 / 640 * v.screenX))
-        rect = py.Rect(241 / 640 * v.screenX + 254 / 640 * v.screenX, 41 / 640 * v.screenX, 85 / 640 * v.screenX, 38 / 640 * v.screenX)
+        v.screen.blit(label, (280 / 640 * 1280 + 254 / 640 * 1280, 50 / 640 * 1280))
+        rect = py.Rect(241 / 640 * 1280 + 254 / 640 * 1280, 41 / 640 * 1280, 85 / 640 * 1280, 38 / 640 * 1280)
         if rect.collidepoint(v.mouse_pos):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
@@ -757,7 +758,7 @@ def notImplimented():
     for k, colour in py.color.THECOLORS.items():
         label = font.render("NOT YET IMPLEMENTED!", 1, colour, (255, 255, 255))
         size = font.size("NOT YET IMPLEMENTED!")
-        v.screen.blit(label, (v.screenX/2 - size[0]/2, v.screenY/2 - size[1]/2))
+        v.screen.blit(label, (1280/2 - size[0]/2, 720/2 - size[1]/2))
         py.time.delay(1)
         py.display.flip()
 
@@ -768,9 +769,9 @@ class storySpells(py.sprite.Sprite):
         self.active = True
         self.image = entityClasses.SpriteSheet("Resources/Images/castOrbPurple.png", 1, 10).images[9]
         self.image.fill((0, 255, 255), special_flags=py.BLEND_MULT)
-        self.shield = py.transform.scale(py.image.load("Resources/Images/Story/Shield.png"), (int((30 * 4.5)/640 * v.screenX), int((40 * 4.5)/640 * v.screenX)))
-        self.end = (v.screenX * 0.4, v.screenY * 0.9)
-        self.start = (start[0] + ((24 * 3)/640 * v.screenX)/2, start[1] + ((32 * 3)/640 * v.screenX)/2)
+        self.shield = py.transform.scale(py.image.load("Resources/Images/Story/Shield.png"), (int((30 * 4.5)/640 * 1280), int((40 * 4.5)/640 * 1280)))
+        self.end = (1280 * 0.4, 720 * 0.9)
+        self.start = (start[0] + ((24 * 3)/640 * 1280)/2, start[1] + ((32 * 3)/640 * 1280)/2)
         self.posx = self.start[0]
         self.posy = self.start[1]
         xDiff = self.end[0] - self.start[0]
@@ -782,13 +783,13 @@ class storySpells(py.sprite.Sprite):
         self.cycleStep = sqrt((xDiff ** 2) + (yDiff ** 2)) / 100
     
     def update(self):
-        img = py.transform.scale(self.image, (int(30/640 * v.screenX), int(30/640 * v.screenX)))
+        img = py.transform.scale(self.image, (int(30/640 * 1280), int(30/640 * 1280)))
         v.screen.blit(img, (self.posx, self.posy))
         self.posx += self.xStep
         self.posy += self.yStep
         self.cycle += self.cycleStep
         if self.cycle >= 80:
-            pos = (v.screenX * 0.3, v.screenY * 0.7)
+            pos = (1280 * 0.3, 720 * 0.7)
             v.screen.blit(self.shield, pos)
         if self.cycle >= 90:
             self.kill()

@@ -17,6 +17,7 @@ import hashlib
 
 #TODO: Change projectiles so they work with lag
 def mainMenu():
+    logo()
     py.init()
     windowUpdate()
     MenuItems.screen = v.screen
@@ -757,8 +758,6 @@ def classSelection():
             if v.custimizationStage == "Name" and bigcont.pressed():
                 nti.outText
                 return
-                        
-            
         
         #v.characterHovered = False
         fade.draw()
@@ -1411,3 +1410,84 @@ def crashScreen(crash):
                 return
         MenuItems.screenFlip()
         
+
+def logo():
+    py.init()
+    windowUpdate()
+    
+    font = py.font.Font("Resources/Fonts/slant.ttf", 100)
+    l1 = font.render("Lightopa", 1, (0, 255, 255))
+    font = py.font.Font("Resources/Fonts/slant.ttf", 120)
+    l2 = font.render("Games", 1, (0, 255, 255))
+    logo = py.image.load("Resources/Images/logo.png")
+    logo = py.transform.scale(logo, (310, 310))
+    
+    l1pos = [-200, 200]
+    l2pos = [1280, 380]
+    flash = py.Surface((1280, 720))
+    flash.fill((255, 255, 255))
+    flash.set_alpha(0)
+    flashAlpha = 0
+    
+    cycle = 0
+    
+    while True:
+        py.event.pump()
+        v.screen.fill((0, 0, 0))
+        """v.screen.blit(l1, (150, 200))
+        v.screen.blit(l2, (730, 380))
+        v.screen.blit(logo, (485, 205))"""
+        if cycle < 25:
+            l1pos[0] += 14
+        if cycle > 20 and cycle < 45:
+            l2pos[0] -= 22
+        
+        if cycle > 25 and cycle < 225:
+            l1pos[0] += 0.1
+        if cycle > 45 and cycle < 250:
+            l2pos[0] -= 0.1
+        
+        if cycle > 225:
+            l1pos[0] += 40
+        if cycle > 240:
+            l2pos[0] -= 40
+        
+        #print(cycle)
+        
+        if cycle >= 200 and cycle < 250:
+            v.screen.blit(logo, (485, 205))
+        
+        if cycle > 250 and cycle < 300:
+            size = int(1.5 * (cycle - 250)**2 + 310)
+            l = py.transform.scale(logo, (size, size))
+            v.screen.blit(l, (640 - size/2, 360 - size/2))
+        if cycle > 250 and cycle < 300:
+            flashAlpha += 6
+            flash.set_alpha(flashAlpha)
+            v.screen.blit(flash, (0, 0))
+        if cycle >= 300:
+            flashAlpha -= 8
+            flash.set_alpha(flashAlpha)
+            v.screen.blit(flash, (0, 0))
+        if cycle > 340:
+            return
+        
+        v.screen.blit(l1, l1pos)
+        v.screen.blit(l2, l2pos)
+        
+        
+        if cycle > 50 and cycle < 60:
+            flashAlpha += 25.5
+            flash.set_alpha(flashAlpha)
+            v.screen.blit(flash, (0, 0))
+        if cycle > 55 and cycle < 200:
+            flashAlpha -= 1.7
+            flash.set_alpha(flashAlpha)
+            v.screen.blit(flash, (0, 0))
+        
+        if cycle > 60 and cycle < 200:
+            v.screen.blit(logo, (485, 205))
+            
+        cycle += 1
+        MenuItems.screenFlip()
+    

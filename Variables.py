@@ -1,4 +1,5 @@
 import logging
+curFunc = None
 logging.basicConfig(filename='log.log',level=logging.DEBUG)
 def debug(*args):
     out = ""
@@ -16,7 +17,6 @@ screenY = 477
 screenStart = (1280, 720)
 mouse_pos = (0, 0)
 aspectRatio = (16, 9)
-screenScale = 2
 fpsLock = 30
 fpsAdjuster = 1
 pauseType = "Pause"
@@ -46,7 +46,7 @@ url = "http://socket-lightning3105.rhcloud.com/"
 conversationClass = None
 damagesNPCs = None
 droppedItems = None
-scale = 2
+scale = 3
 screen = None
 screenDisplay = None
 music = None

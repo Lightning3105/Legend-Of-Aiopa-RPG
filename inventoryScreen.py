@@ -44,13 +44,13 @@ class inventoryScreen():
         for i in range(1, 7):
             self.spellSlots.add(self.spellSlot(i, self))
         self.attOptions = py.sprite.Group()
-        AoX = v.screenY * 0.25
+        AoX = 720 * 0.25
         for attribute in v.Attributes:
             self.attOptions.add(MenuItems.optionAttribute(AoX, attribute, 280))
-            AoX += v.screenX * 0.05
+            AoX += 1280 * 0.05
         
-        self.attOptions.add(MenuItems.textLabel("Skill Points Remaining:", (v.screenX * 0.45, v.screenY * 0.18), (100, 100, 100), "Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.05)))
-        self.attOptions.add(MenuItems.textLabel("skillPoints", (v.screenX * 0.85, v.screenY * 0.18), (0, 255, 0), "Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.05), True))
+        self.attOptions.add(MenuItems.textLabel("Skill Points Remaining:", (1280 * 0.45, 720 * 0.18), (100, 100, 100), "Resources/Fonts/RPGSystem.ttf", int(1280 * 0.05)))
+        self.attOptions.add(MenuItems.textLabel("skillPoints", (1280 * 0.85, 720 * 0.18), (0, 255, 0), "Resources/Fonts/RPGSystem.ttf", int(1280 * 0.05), True))
         
         self.quests = py.sprite.Group()
         n = 0
@@ -129,7 +129,7 @@ class inventoryScreen():
                 for i in self.master.openQuests:
                     if i < num:
                         ymod += 30
-                rect = py.Rect(280, v.screenY * 0.25 + (num * 60) + ymod, 250, 50)
+                rect = py.Rect(280, 720 * 0.25 + (num * 60) + ymod, 250, 50)
                 if self.open:
                     rect.height += 30
                 if rect.collidepoint(v.mouse_pos):

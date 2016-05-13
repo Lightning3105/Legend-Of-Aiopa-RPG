@@ -1,20 +1,26 @@
 #!/usr/bin/env python3
-if __name__ == "__main__":
-    import gameScreens
-    import setupScripts
-    import cProfile
-    import pstats
-    import pickle
-    import SaveLoad
-    import pygame as py
-    import traceback
-    import time
-    import os
-    
+import gameScreens
+#import setupScripts
+import cProfile
+import pstats
+#import pickle
+import SaveLoad
+import pygame as py
+import traceback
+import time
+import os
+from importlib import reload
+
+def main(func="mainMenu"):
     print("START GAME")
     try:
-        cProfile.run("gameScreens.mainMenu()", "Out.txt")
+        cProfile.run("gameScreens." + func + "()", "Out.txt")
     except Exception as e:
+        if "Reload:" in str(e):
+            curFunc = str(e).strip("Reload:")
+            print("Reload:", curFunc)
+            reload(gameScreens)
+            main(curFunc)
         print("EXCEPTION:")
         print(traceback.print_exc())
         if not os.path.exists("Crash Reports"):
@@ -38,6 +44,6 @@ if __name__ == "__main__":
 
     with open("Calltime Dump.txt", "rb") as fc:
         pass
-    #gameScreens.story()
-    
-    #gameScreens.game()
+
+if __name__ == "__main__":
+    main()

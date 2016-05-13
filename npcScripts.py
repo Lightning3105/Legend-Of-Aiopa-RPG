@@ -10,7 +10,7 @@ class conversation():
         self.material = material
         self.npc = npc
         self.npcName = npc.name
-        self.npcIcon = py.transform.scale(npc.icon, (int(150 / 640 * v.screenX), int(150 / 640 * v.screenX)))
+        self.npcIcon = py.transform.scale(npc.icon, (int(150 / 640 * 1280), int(150 / 640 * 1280)))
         if place == None:
             self.place = material[0]
         else:
@@ -58,12 +58,12 @@ class conversation():
             #self.speechOutput = None
             self.message = master.place["Message"]
             self.master = master
-            self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(25 / 640 * v.screenX))
+            self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(25 / 640 * 1280))
             line = []
             self.lines = []
             for word in self.message.split(" "):
                 line.append(word)
-                if self.font.size(" ".join(line))[0] > 350 / 640 * v.screenX:
+                if self.font.size(" ".join(line))[0] > 350 / 640 * 1280:
                     line.remove(word)
                     self.lines.append(" ".join(line))
                     line = [word]
@@ -81,11 +81,11 @@ class conversation():
             for key, value in self.master.place.items():
                 if key == "Buttons":
                     for but in value:
-                        self.buttons.add(MenuItems.Button(but["Text"], (220 / 640 * v.screenX + xmod, 250 / 640 * v.screenX + ymod), 40 / 640 * v.screenX, (255, 255, 100), (153, 76, 0), "Resources/Fonts/RPGSystem.ttf", but["ID"], bsize=(190 / 640 * v.screenX, 0)))
-                        xmod += 210 / 640 * v.screenX
-                        if xmod >= 420 / 640 * v.screenX:
+                        self.buttons.add(MenuItems.Button(but["Text"], (220 / 640 * 1280 + xmod, 250 / 640 * 1280 + ymod), 40 / 640 * 1280, (255, 255, 100), (153, 76, 0), "Resources/Fonts/RPGSystem.ttf", but["ID"], bsize=(190 / 640 * 1280, 0)))
+                        xmod += 210 / 640 * 1280
+                        if xmod >= 420 / 640 * 1280:
                             xmod = 0
-                            ymod -= 50 / 640 * v.screenX
+                            ymod -= 50 / 640 * 1280
                 if key == "Quest":
                     quest(value[0], value[1], value[2])
             
@@ -96,19 +96,19 @@ class conversation():
             
         
         def update(self):
-            innerRect = py.Rect(220 / 640 * v.screenX, 300 / 640 * v.screenX, 400 / 640 * v.screenX, 150 / 640 * v.screenX)
-            outerRect = py.Rect(218 / 640 * v.screenX, 298 / 640 * v.screenX, 404 / 640 * v.screenX, 154 / 640 * v.screenX)
+            innerRect = py.Rect(220 / 640 * 1280, 300 / 640 * 1280, 400 / 640 * 1280, 150 / 640 * 1280)
+            outerRect = py.Rect(218 / 640 * 1280, 298 / 640 * 1280, 404 / 640 * 1280, 154 / 640 * 1280)
             py.draw.rect(v.screen, (153, 76, 0), outerRect)
             py.draw.rect(v.screen, (255, 178, 102), innerRect)
-            py.draw.rect(v.screen, (255, 178, 102), (50 / 640 * v.screenX, 298 / 640 * v.screenX, 150 / 640 * v.screenX, 150 / 640 * v.screenX))
-            v.screen.blit(self.master.npcIcon, (50 / 640 * v.screenX, 298 / 640 * v.screenX))
-            py.draw.rect(v.screen, (153, 76, 0), (50 / 640 * v.screenX, 298 / 640 * v.screenX, 150 / 640 * v.screenX, 150 / 640 * v.screenX), 2)
-            py.draw.rect(v.screen, (0, 0, 0), (50 / 640 * v.screenX, 248 / 640 * v.screenX, 150 / 640 * v.screenX, 50 / 640 * v.screenX))
-            py.draw.rect(v.screen, (153, 76, 0), (50 / 640 * v.screenX, 248 / 640 * v.screenX, 150 / 640 * v.screenX, 50 / 640 * v.screenX), 2)
+            py.draw.rect(v.screen, (255, 178, 102), (50 / 640 * 1280, 298 / 640 * 1280, 150 / 640 * 1280, 150 / 640 * 1280))
+            v.screen.blit(self.master.npcIcon, (50 / 640 * 1280, 298 / 640 * 1280))
+            py.draw.rect(v.screen, (153, 76, 0), (50 / 640 * 1280, 298 / 640 * 1280, 150 / 640 * 1280, 150 / 640 * 1280), 2)
+            py.draw.rect(v.screen, (0, 0, 0), (50 / 640 * 1280, 248 / 640 * 1280, 150 / 640 * 1280, 50 / 640 * 1280))
+            py.draw.rect(v.screen, (153, 76, 0), (50 / 640 * 1280, 248 / 640 * 1280, 150 / 640 * 1280, 50 / 640 * 1280), 2)
             
-            nameFont = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(35 / 640 * v.screenX))
+            nameFont = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(35 / 640 * 1280))
             label = nameFont.render(self.master.npcName, 1, (255, 255, 255))
-            v.screen.blit(label, (125 / 640 * v.screenX - nameFont.size(self.master.npcName)[0]/2, 273 / 640 * v.screenX - nameFont.size(self.master.npcName)[1]/2))
+            v.screen.blit(label, (125 / 640 * 1280 - nameFont.size(self.master.npcName)[0]/2, 273 / 640 * 1280 - nameFont.size(self.master.npcName)[1]/2))
             
             self.buttons.update()
             yadd = 0
@@ -118,7 +118,7 @@ class conversation():
                     for letter in range(len(self.lines[line])):
                         if letter <= self.letterno or self.lineno > line:
                             label = self.font.render(self.lines[line][letter], 1, (255, 255, 255))
-                            v.screen.blit(label, (230 / 640 * v.screenX + xadd, 310 / 640 * v.screenX + yadd))
+                            v.screen.blit(label, (230 / 640 * 1280 + xadd, 310 / 640 * 1280 + yadd))
                             xadd += self.font.size(self.lines[line][letter])[0]
                             
                     yadd += self.font.size(self.lines[line][letter])[1]
@@ -132,7 +132,7 @@ class conversation():
             if self.buts == False:
                 label = self.font.render("Continue - F", 1, (255, 100, 255))
                 label.fill((255, 255, 255, self.alphaCycle), special_flags=py.BLEND_RGBA_MULT)
-                v.screen.blit(label, (480 / 640 * v.screenX, 425 / 640 * v.screenX))
+                v.screen.blit(label, (480 / 640 * 1280, 425 / 640 * 1280))
             if self.alphaDirection:
                 self.alphaCycle += 5
             else:

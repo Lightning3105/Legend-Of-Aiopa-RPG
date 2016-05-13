@@ -17,7 +17,6 @@ import hashlib
 
 #TODO: Change projectiles so they work with lag
 def mainMenu():
-    logo()
     py.init()
     windowUpdate()
     MenuItems.screen = v.screen
@@ -184,10 +183,10 @@ def onlineLogin():
                     accOut = SaveLoad.getAccount(user, passw, saved)
                     if accOut == "USERNAME":
                         phase = 1
-                        extraTexts = MenuItems.textLabel("Username does not exist", (510, 330), (255, 0, 0), "Resources\Fonts\MorrisRoman.ttf", 20, variable=False, centred=False)
+                        extraTexts = MenuItems.textLabel("Username does not exist", (510, 345), (255, 0, 0), "Resources\Fonts\MorrisRoman.ttf", 30, variable=False, centred=False)
                     elif accOut == "PASSWORD":
                         phase = 1
-                        extraTexts = MenuItems.textLabel("Incorrect password", (510, 590), (255, 0, 0), "Resources\Fonts\MorrisRoman.ttf", 20, variable=False, centred=False)
+                        extraTexts = MenuItems.textLabel("Incorrect password", (510, 455), (255, 0, 0), "Resources\Fonts\MorrisRoman.ttf", 30, variable=False, centred=False)
                     else:
                         v.account = accOut
                         v.username = user
@@ -224,11 +223,11 @@ def onlineMenu():
     buttons.add(MenuItems.Button("Multiplayer", (640, 140), 40, (100, 200, 200), (0, 255, 255), "Resources\Fonts\MorrisRoman.ttf", "multiplayer", centred=True))
 
     texts = py.sprite.Group()
-    texts.add(MenuItems.textLabel(v.username, (120, 50), (0, 0, 0), "Resources\Fonts\MorrisRoman.ttf", 40, variable=False, centred=True))
+    texts.add(MenuItems.textLabel(v.username, (155, 55), (0, 0, 0), "Resources\Fonts\MorrisRoman.ttf", 40, variable=False, centred=True))
 
     background = MenuItems.shiftingGradient((0, 0, 'x'))
     
-    avatar = MenuItems.appearancePreview(pos=(-10, 0))
+    avatar = MenuItems.appearancePreview(pos=(-20, 20), sizem=8)
     while True:
         py.event.pump()
         v.events = []
@@ -239,9 +238,9 @@ def onlineMenu():
         
         background.draw()
         
-        py.draw.rect(v.screen, (50, 200, 200), (10, 30, 220, 340))
-        py.draw.rect(v.screen, (255, 255, 255), (10, 30, 220, 40), 2)
-        py.draw.rect(v.screen, (255, 255, 255), (10, 70, 220, 300), 2)
+        py.draw.rect(v.screen, (50, 200, 200), (10, 30, 320, 540))
+        py.draw.rect(v.screen, (255, 255, 255), (10, 30, 320, 40), 2)
+        py.draw.rect(v.screen, (255, 255, 255), (10, 70, 320, 500), 2)
         
         buttons.update()
         texts.update()
@@ -680,10 +679,11 @@ def classSelection():
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
     
-    nti = MenuItems.textInput((520, 520), 80, 8, 1, background=(255, 178, 102), button=None, default=[], type="str")
+    v.textNum = 1
+    nti = MenuItems.textInput((520, 400), 80, 8, 1, background=(255, 178, 102), button=None, default=[], type="str")
     nts = py.sprite.Group()
-    nts.add(MenuItems.textLabel("Name Your Character:", (520, 360), (0, 0, 0), "Resources/Fonts/RPGSystem.ttf", 80, False))
-    nts.add(MenuItems.textLabel("(Max 8 Characters)", (520, 440), (128,128,128), "Resources/Fonts/RPGSystem.ttf", 40, False))
+    nts.add(MenuItems.textLabel("Name Your Character:", (520, 260), (0, 0, 0), "Resources/Fonts/RPGSystem.ttf", 80, False))
+    nts.add(MenuItems.textLabel("(Max 8 Characters)", (520, 340), (128,128,128), "Resources/Fonts/RPGSystem.ttf", 40, False))
     
     bigcont = MenuItems.Button("Continue", (985, 650), 60, (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "continue")
     while True:
@@ -824,8 +824,8 @@ def story():
     
     FI1 = py.transform.scale(py.image.load("Resources/Images/Story/FI1.png"), (2560, 1066))
     
-    font = py.font.Font("Resources/Fonts/MorrisRoman.ttf", 40)
-    font2 = py.font.Font("Resources/Fonts/MorrisRoman.ttf", 15)
+    font = py.font.Font("Resources/Fonts/MorrisRoman.ttf", 80)
+    font2 = py.font.Font("Resources/Fonts/MorrisRoman.ttf", 30)
     aiopaMain = entityClasses.SpriteSheet("Resources/Images/Story/Aiopa Title.png", 7, 3)
     
     MP = py.transform.scale(py.image.load("Resources/Images/Story/MP1.png"), (1280, 720))
@@ -852,33 +852,33 @@ def story():
                 LS1 = py.transform.scale(_LS1, (int(1280 * zoom), int(720 * zoom)))
                 v.screen.blit(LS1, ((1280/2) - int(1280 * zoom)/2, ((720/4) - int(720 * zoom)/4)))
             else:
-                if lsY < 1440:
-                    v.screen.blit(LS1, (0, 720 * -3 + lsY))
+                if lsY < 1080:
+                    v.screen.blit(LS1, (0, 720 * -3 + lsY * 2))
                 else:
                     v.screen.blit(LS1, (0, 0))
                 
-            if lsY < 1440:    
-                v.screen.blit(LS2, (0, 720 * -2 + lsY))
-                v.screen.blit(LS3, (0, 720 * -1 + lsY))
-                v.screen.blit(LS4, (0, 720 * 0 + lsY))
+            if lsY < 1080:    
+                v.screen.blit(LS2, (0, 720 * -2 + lsY * 2))
+                v.screen.blit(LS3, (0, 720 * -1 + lsY * 2))
+                v.screen.blit(LS4, (0, 720 * 0 + lsY * 2))
                 if lsY < 200 and lsY > -300:
                     ani1 = py.transform.scale(LS4Ani.images[int((lsY + 300)/50)], (1280, 720))
                 v.screen.blit(ani1, (0, 720 * 0 + lsY))
                 
                 ani2 = py.transform.scale(LS3Ani.images[lsY % 2], (1280, 720))
-                v.screen.blit(ani2, (-1280 * 1.4 + lsY, 720 * -0.5 + lsY))
+                v.screen.blit(ani2, (-1280 * 1.4 + lsY * 2, 720 * -0.5 + lsY * 2))
                 
                 ani2 = py.transform.scale(LS3Ani.images[(lsY + 1) % 2], (1280, 720))
                 ani2 = py.transform.flip(ani2, True, False)
-                v.screen.blit(ani2, (1280 * 1.6 - lsY, 720 * -1.1 + lsY))
+                v.screen.blit(ani2, (1280 * 1.6 - lsY * 2, 720 * -1.1 + lsY * 2))
                 
             if lsY % 4 == 0:
                 ani3 = py.transform.rotate(P1, randint(-5, 5))
                 ani4 = py.transform.rotate(P2, randint(-5, 5))
             if zoom == 1:
-                pos = (1280 * 2.6 - lsY, 720 * -2.55 + lsY * 1.1)
+                pos = (1280 * 1.3 - lsY * 1, 720 * -2.3 + lsY * 2)
                 v.screen.blit(ani3, pos)
-                pos = (1280 * 2.65 - lsY, 720 * -2.55 + lsY * 1.1)
+                pos = (1280 * 1.35 - lsY * 1, 720 * -2.3 + lsY * 2)
                 v.screen.blit(ani4, pos)
             
             if lsY < 1700:
@@ -1043,11 +1043,11 @@ def story():
                 size.height = ((size.height * 3) / 480) * 720
                 ren = py.transform.scale(i, (size.width, size.height))
                 pos = (posx, posy)
-                posx += 80
-                if posx < 320:
-                    posy -= 15
+                posx += 160
+                if posx < 640:
+                    posy -= 30
                 else:
-                    posy += 15
+                    posy += 30
                 
                 if ST3 < 1000 + rot[iNum] * 2:
                     if ST3 > 475:
@@ -1063,9 +1063,9 @@ def story():
                         IMSpells.add(MenuItems.storySpells(pos))
             
             if ST3 < 825:
-                v.screen.blit(NexusC, (510, 720 * -0.08))
+                v.screen.blit(NexusC, (510, -250))
             if ST3 > 825:
-                v.screen.blit(NexusP, (510, 720 * -0.08))
+                v.screen.blit(NexusP, (510, -250))
                 
             IMSpells.update()
             size = IMEvil.images[1].get_rect().size
@@ -1145,10 +1145,10 @@ def story():
             
             if ST4 < 310:
                 _fi1 = py.transform.scale(FI1, (int(FI1.get_rect().width * (4 - (ST4/100))), int(FI1.get_rect().height * (4 - (ST4/100)))))
-                pos = (1280/2 - (FI1.get_rect().width * (4 - (ST4/100))/2), 720/2 - (FI1.get_rect().height * (4 - (ST4/100))/2))
+                pos = (640 - (FI1.get_rect().width * (4 - (ST4/100))/2), 360 - (FI1.get_rect().height * (4 - (ST4/100))/2))
             if ST4 > 360:
                 _fi1 = py.transform.scale(FI1, (int(FI1.get_rect().width * ((ST4/100) - 2.6)), int(FI1.get_rect().height * ((ST4/100) - 2.6))))
-                pos = (1280/2 - (FI1.get_rect().width * ((ST4/100) - 2.7)/(2 * ((ST4/100) - 2.7))), 720/2 - (FI1.get_rect().height * ((ST4/100) - 2.7)/(2 * ((ST4/100) - 2.7))))
+                pos = (640 - (FI1.get_rect().width * ((ST4/100) - 2.7)/(2 * ((ST4/100) - 2.7))), 3 - (FI1.get_rect().height * ((ST4/100) - 2.7)/(2 * ((ST4/100) - 2.7))))
             v.screen.blit(_fi1, pos)
             
             if WBAlpha > 0 and ST4 < 200:
@@ -1196,11 +1196,11 @@ def story():
                 size.height = ((size.height * 3) / 480) * 720
                 ren = py.transform.scale(i, (size.width, size.height))
                 pos = (posx, posy)
-                posx += 80
-                if posx < 320:
-                    posy -= 15
+                posx += 160
+                if posx < 640:
+                    posy -= 30
                 else:
-                    posy += 15
+                    posy += 30
                 
                 if ST5 > 200 + (560 - posx - 80):
                     xDiff = 1280/2 - pos[0]
@@ -1412,6 +1412,7 @@ def crashScreen(crash):
         
 
 def logo():
+    #t = time.time()
     py.init()
     windowUpdate()
     
@@ -1470,6 +1471,8 @@ def logo():
             flash.set_alpha(flashAlpha)
             v.screen.blit(flash, (0, 0))
         if cycle > 340:
+            #print(time.time() - t)
+            mainMenu()
             return
         
         v.screen.blit(l1, l1pos)

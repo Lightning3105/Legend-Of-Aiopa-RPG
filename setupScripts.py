@@ -69,7 +69,7 @@ def defaultVariables():
     v.experience = {"XP": 0, "XPL": 1, "XPtoL": 10, "Total": 0}
     v.xpMod = 1.5
     v.npcID = 1
-    v.scale = v.screenScale
+    v.scale = 4
     v.skillPoints = 5
     v.equipped = {"Weapon": None, "Helmet": None, "Armour": None, "Greaves": None, "Boots": None}
     v.appearance = {"Body": "Resources/Images/Character Customisation/Body/white.png",

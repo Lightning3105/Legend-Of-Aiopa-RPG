@@ -133,8 +133,8 @@ class BaseMap():
             self.oldScale = v.scale
             self.image = self.image.convert()
         self.rect = self.image.get_rect()
-        self.rect.centerx = v.screenX / 2 + ((-v.playerPosX + (1 * self.posx) - 15) * v.scale)
-        self.rect.centery = v.screenY / 2 + ((v.playerPosY + (1 * self.posy) - 15) * v.scale)
+        self.rect.centerx = 640 + ((-v.playerPosX + (1 * self.posx) - 15) * v.scale)
+        self.rect.centery = 360 + ((v.playerPosY + (1 * self.posy) - 15) * v.scale)
         self.draw()
         
     def draw(self):

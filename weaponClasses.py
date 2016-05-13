@@ -12,8 +12,8 @@ class Sword(py.sprite.Sprite):
         self.attacking = False
         self.attCyclePos = 0
         self.attSpeed = 16
-        self.posX = v.screenX / 2
-        self.posY = v.screenY / 2
+        self.posX = 1280 / 2
+        self.posY = 720 / 2
         v.damagesNPCs.add(self)
         self.rect = py.Rect(0, 0, 0, 0)
         self.master = weapon
@@ -158,8 +158,8 @@ class manaOrb(py.sprite.Sprite):
                 self.shooter.projectiles.remove(self)
                         
             self.rect = self.image.get_rect()
-            self.rect.centerx = v.screenX / 2 + int(((-v.playerPosX + (1 * self.posx)) * v.scale))
-            self.rect.centery = v.screenY / 2 - int(((-v.playerPosY + (1 * self.posy)) * v.scale))
+            self.rect.centerx = 1280 / 2 + int(((-v.playerPosX + (1 * self.posx)) * v.scale))
+            self.rect.centery = 720 / 2 - int(((-v.playerPosY + (1 * self.posy)) * v.scale))
             self.rend = self.image
             if self.aniCyclePos == 9:
                 for thing in v.hitList:
@@ -248,8 +248,8 @@ class shooter(py.sprite.Sprite):
                 self.shooter.projectiles.remove(self)
                         
             self.rect = self.image.get_rect()
-            self.rect.centerx = v.screenX / 2 + int(((-v.playerPosX + (1 * self.posx)) * v.scale))
-            self.rect.centery = v.screenY / 2 - int(((-v.playerPosY + (1 * self.posy)) * v.scale))
+            self.rect.centerx = 1280 / 2 + int(((-v.playerPosX + (1 * self.posx)) * v.scale))
+            self.rect.centery = 720 / 2 - int(((-v.playerPosY + (1 * self.posy)) * v.scale))
             self.rend = self.image
             for thing in v.hitList:
                 if self.rect.colliderect(thing.rect):

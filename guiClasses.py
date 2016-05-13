@@ -35,14 +35,14 @@ class health:
     def draw(self):
         self.getPercent()
         rect = self.image.get_rect()
-        image = py.transform.scale(self.image, (int(30 / 640 * v.screenX), int(30 / 640 * v.screenX)))
-        pos = ((65 + (31 * self.number)) / 640 * v.screenX, 410 / 640 * v.screenX)
+        image = py.transform.scale(self.image, (60, 60))
+        pos = ((65 + (31 * self.number)) / 640 * 1280, 580)
         rect.center = pos
         background = self.Q4
         brect = background.get_rect()
         brect.center = pos
         background.fill((50, 50, 50, 200), special_flags=py.BLEND_RGB_MULT)
-        background = py.transform.scale(background, (int(30 / 640 * v.screenX), int(30 / 640 * v.screenX)))
+        background = py.transform.scale(background, (int(30 / 640 * 1280), int(30 / 640 * 1280)))
         v.screen.blit(background, brect)
         v.screen.blit(image, rect)
 
@@ -51,9 +51,9 @@ def update_health(): #TODO: Split label into separate class
         health(n).draw()
     
     #Mana text TODO: make text appear on hover
-    font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 15)
+    font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
     size = font.size(str(int(v.playerHealth)) + "/" + str(v.Attributes["Max Health"]))
-    r = py.Rect((166 - size[0]/2, 405), size)
+    r = py.Rect((340 - size[0]/2, 585), size)
     label = font.render(str(int(v.playerHealth)) + "/" + str(v.Attributes["Max Health"]), 1, (200, 200, 200))
     s = py.Surface(r.size)
     s.fill((255, 0, 0, 200))
@@ -97,14 +97,14 @@ class mana:
     def draw(self):
         self.getPercent()
         rect = self.image.get_rect()
-        image = py.transform.scale(self.image, (int(30 / 640 * v.screenX), int(30 / 640 * v.screenX)))
-        pos = ((65 + (31 * self.number)) / 640 * v.screenX, 450 / 640 * v.screenX)
+        image = py.transform.scale(self.image, (int(60), int(60)))
+        pos = ((65 + (31 * self.number)) / 640 * 1280, 650)
         rect.center = pos
         background = self.Q4
         brect = background.get_rect()
         brect.center = pos
         background.fill((50, 50, 50, 200), special_flags=py.BLEND_RGB_MULT)
-        background = py.transform.scale(background, (int(30 / 640 * v.screenX), int(30 / 640 * v.screenX)))
+        background = py.transform.scale(background, (int(60), int(60)))
         v.screen.blit(background, brect)
         v.screen.blit(image, rect)
 
@@ -120,9 +120,9 @@ def update_mana(): #TODO: Split label into separate class
     v.playerMana = round(v.playerMana, 3)
     
     #Mana text TODO: make text appear on hover
-    font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 15)
+    font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
     size = font.size(str(int(v.playerMana)) + "/" + str(v.Attributes["Max Mana"]))
-    r = py.Rect((166 - size[0]/2, 450), size)
+    r = py.Rect((340 - size[0]/2, 660), size)
     label = font.render(str(int(v.playerMana)) + "/" + str(v.Attributes["Max Mana"]), 1, (0, 0, 0))
     s = py.Surface(r.size)
     s.fill((0, 255, 255, 200))
@@ -137,28 +137,28 @@ class weaponSlot:
     def __init__(self):
         self.image = "Resources/Images/Empty_Weapon_Slot.png"
         self.image = py.image.load(self.image).convert_alpha()
-        self.image = py.transform.scale(self.image, (int(80 / 640 * v.screenX), int(80 / 640 * v.screenX)))
+        self.image = py.transform.scale(self.image, (160, 160))
         self.rect = self.image.get_rect()
-        self.rect.center = (44, v.screen.get_rect().bottom - 45)
+        self.rect.center = (80, 640)
 
     def draw(self):
         posy = self.rect.height - (self.rect.height * v.weaponCooldown)
-        self.image.fill((255, 0, 0, 200), rect=((0, posy), self.rect.size), special_flags=py.BLEND_RGBA_MULT)
+        image = self.image.copy()
+        image.fill((255, 0, 0, 200), rect=((0, posy), self.rect.size), special_flags=py.BLEND_RGB_MULT)
         
-        v.screen.blit(self.image, self.rect)
+        v.screen.blit(image, self.rect)
         
         image = v.equipped["Weapon"].icon
-        image = py.transform.scale(image, (int(image.get_rect().width * v.scale * 0.8), int(image.get_rect().height * v.scale * 0.8)))
-        self.rect.width *= 0.8
-        self.rect.height *= 0.8
-        self.rect.center = (44, v.screen.get_rect().bottom - 45)
+        image = py.transform.scale(image, (int(image.get_rect().width * 4.8), int(image.get_rect().height * 4.8)))
+        
+        self.rect.center = (80, 640)
         v.screen.blit(image, self.rect)
 
 class XP:
     
     def __init__(self):
-        self.posx = 320 / 640 * v.screenX
-        self.posy = 440 / 640 * v.screenX
+        self.posx = 640
+        self.posy = 640
         self.oldXP = 0
         
     def update(self):
@@ -174,7 +174,7 @@ class XP:
     def draw(self):
         if not v.experience["XP"] == 0:
             xpSegment = 360 / v.experience["XPtoL"]
-            seg = py.Surface((2, 5))
+            seg = py.Surface((4, 10))
             seg.fill((0, 255, 255))
             segRect = seg.get_rect()
             deg = 0
@@ -184,9 +184,9 @@ class XP:
                 if deg <= xpSegment * v.experience["XP"]:
                     #rend = entityClasses.rot_center(seg, deg)
                     rend = py.transform.rotate(seg, deg)
-                    segRect.center = entityClasses.arc((self.posx, self.posy), 30, -deg - 180) #30
+                    segRect.center = entityClasses.arc((self.posx, self.posy), 60, -deg - 180) #30
                     v.screen.blit(rend, segRect)
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(30 / 640 * v.screenX))
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 80)
         label = font.render(str(v.experience["XPL"]), 1, (0, 255, 255))
         pos = (self.posx - font.size(str(v.experience["XPL"]))[0]/2, self.posy - font.size(str(v.experience["XPL"]))[1]/2)
         v.screen.blit(label, pos)
@@ -195,8 +195,8 @@ class ability(py.sprite.Sprite):
     
     def __init__(self, num):
         super().__init__()
-        self.posx = (20 + (40 * (num - 1))) / 640 * v.screenX
-        self.posy = 20 / 640 * v.screenX
+        self.posx = (20 + (40 * (num - 1))) / 640 * 1280
+        self.posy = 20 / 640 * 1280
         self.num = num
     
     def update(self):
@@ -208,7 +208,7 @@ class ability(py.sprite.Sprite):
             self.icon = py.image.load(self.ability.icon).convert_alpha()
             maxCooldown = self.ability.attributes["Cooldown"]
             cooldown = self.ability.object.coolDown
-            self.image = py.transform.scale(self.icon, (int(32 / 640 * v.screenX), int(32 / 640 * v.screenX)))
+            self.image = py.transform.scale(self.icon, (int(32 / 640 * 1280), int(32 / 640 * 1280)))
             try:
                 self.image.fill((255, 255, 255, int((cooldown / maxCooldown) * 255)), special_flags=py.BLEND_RGBA_MULT)
             except TypeError as detail:
@@ -257,16 +257,16 @@ class ability(py.sprite.Sprite):
 class pauseScreen:
     
     def __init__(self):
-        self.pos = (v.screenX / 2, v.screenY / 2)
-        self.bigRect = py.Rect(0, 0, v.screenX, v.screenY)
+        self.pos = (1280 / 2, 720 / 2)
+        self.bigRect = py.Rect(0, 0, 1280, 720)
         self.text = py.sprite.Group()
-        self.text.add(MenuItems.textLabel("Paused", (v.screenX / 2, 100), (255, 255, 255), "Resources\Fonts\RunicClear.ttf", 80, centred=True))
+        self.text.add(MenuItems.textLabel("Paused", (1280 / 2, 100), (255, 255, 255), "Resources\Fonts\RunicClear.ttf", 80, centred=True))
         self.buttons = py.sprite.Group()
-        self.buttons.add(MenuItems.Button("Main Menu", (v.screenX / 2, 200), 40, (165,42,42), (255, 255, 255), "Resources\Fonts\RunicSolid.ttf", "mainMenu", True))
-        self.buttons.add(MenuItems.Button("Exit Game", (v.screenX / 2, 300), 40, (165,42,42), (255, 255, 255), "Resources\Fonts\RunicSolid.ttf", "quit", True))
+        self.buttons.add(MenuItems.Button("Main Menu", (1280 / 2, 200), 40, (165,42,42), (255, 255, 255), "Resources\Fonts\RunicSolid.ttf", "mainMenu", True))
+        self.buttons.add(MenuItems.Button("Exit Game", (1280 / 2, 300), 40, (165,42,42), (255, 255, 255), "Resources\Fonts\RunicSolid.ttf", "quit", True))
         
     def update(self):
-        grey = py.Surface((v.screenX, v.screenY)).convert_alpha()
+        grey = py.Surface((1280, 720)).convert_alpha()
         grey.fill((20, 20, 20, 200))
         v.screen.blit(grey, self.bigRect)
         self.text.update()
@@ -343,23 +343,23 @@ class miniMap: #TODO make this work with baseMap
 class actionText(py.sprite.Sprite):
     
     def __init__(self):
-        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(20 / 640 * v.screenX))
+        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(20 / 640 * 1280))
     
     def update(self):
         if not v.actionQueue == []:
             label = self.font.render(v.actionQueue[0], 1, (255, 255, 255))
-            posy = 380 / 640 * v.screenX
-            posx = ((v.screenX/2) - (self.font.size(v.actionQueue[0])[0] / 2)) / 640 * v.screenX
+            posy = 380 / 640 * 1280
+            posx = ((1280/2) - (self.font.size(v.actionQueue[0])[0] / 2)) / 640 * 1280
             v.screen.blit(label, (posx, posy))
 
 class fps(py.sprite.Sprite):
     
     def __init__(self):
         super().__init__()
-        self.pos = (v.screenX * 0.5, v.screenY * 0.021)
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(v.screenX * 0.03125))
-        self.label = font.render(str(int(v.clock.get_fps())), 1, (255, 0, 0))
+        self.pos = (1280 * 0.5, 720 * 0.021)
+        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(1280 * 0.03125))
     def update(self):
+        self.label = self.font.render(str(int(v.clock.get_fps())), 1, (255, 0, 0))
         v.screen.blit(self.label, self.pos)
 
 
@@ -370,7 +370,7 @@ class loadingScreen():
         self.aniPos = 7
         self.fade = MenuItems.fadeIn()
         self.fade.fadeIn = True
-        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(20/640 * v.screenX))
+        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(40))
         self.label = self.font.render("Loading...", 1, (255, 255, 255))
         self.mod = self.font.size("Loading...")
         self.mod = (self.mod[0] / 2, self.mod[1] / 2)
@@ -380,10 +380,10 @@ class loadingScreen():
         if stage == 0:
             for i in range(7, 14, 2):
                 self.image = self.wizSheet.images[i]
-                self.rect = (0, 0, v.screenX, v.screenY)
+                self.rect = (0, 0, 1280, 720)
                 py.draw.rect(v.screen, (0, 0, 0), self.rect)
-                v.screen.blit(self.image, ((v.screenX / 2) - self.image.get_rect().width / 2, (v.screenY / 2)  - self.image.get_rect().height / 2))
-                v.screen.blit(self.label, ((v.screenX / 2) - self.mod[0], (v.screenY / 2)  - self.mod[1] + 50/640 * v.screenX))
+                v.screen.blit(self.image, ((1280 / 2) - self.image.get_rect().width / 2, (720 / 2)  - self.image.get_rect().height / 2))
+                v.screen.blit(self.label, ((1280 / 2) - self.mod[0], (720 / 2)  - self.mod[1] + 50/640 * 1280))
                 self.fade.draw()
                 self.fade.opacity -= 40
                 MenuItems.screenFlip()
@@ -391,20 +391,20 @@ class loadingScreen():
             self.time = clock()
         if stage == 1:
             self.image = self.wizSheet.images[14]
-            self.rect = (0, 0, v.screenX, v.screenY)
+            self.rect = (0, 0, 1280, 720)
             py.draw.rect(v.screen, (0, 0, 0), self.rect)
-            v.screen.blit(self.image, ((v.screenX / 2) - self.image.get_rect().width / 2, (v.screenY / 2)  - self.image.get_rect().height / 2))
-            v.screen.blit(self.label, ((v.screenX / 2) - self.mod[0], (v.screenY / 2)  - self.mod[1] + 50/640 * v.screenX))
+            v.screen.blit(self.image, ((1280 / 2) - self.image.get_rect().width / 2, (720 / 2)  - self.image.get_rect().height / 2))
+            v.screen.blit(self.label, ((1280 / 2) - self.mod[0], (720 / 2)  - self.mod[1] + 50/640 * 1280))
         if stage == 2:
             t = self.font.render("Load Time: " + str(clock() - self.time), 1, (255, 255, 255))
             for i in range(28, 38, 2):
                 py.time.delay(100)
                 self.image = self.wizSheet.images[i]
-                self.rect = (0, 0, v.screenX, v.screenY)
+                self.rect = (0, 0, 1280, 720)
                 py.draw.rect(v.screen, (0, 0, 0), self.rect)
-                v.screen.blit(self.image, ((v.screenX / 2) - self.image.get_rect().width / 2, (v.screenY / 2)  - self.image.get_rect().height / 2))
-                v.screen.blit(self.label, ((v.screenX / 2) - self.mod[0], (v.screenY / 2)  - self.mod[1] + 50/640 * v.screenX))
-                v.screen.blit(t, (200/640 * v.screenX, 300/640 * v.screenX))
+                v.screen.blit(self.image, ((1280 / 2) - self.image.get_rect().width / 2, (720 / 2)  - self.image.get_rect().height / 2))
+                v.screen.blit(self.label, ((1280 / 2) - self.mod[0], (720 / 2)  - self.mod[1] + 50/640 * 1280))
+                v.screen.blit(t, (200/640 * 1280, 300/640 * 1280))
                 self.fade.draw()
                 self.fade.opacity += 40
                 MenuItems.screenFlip()
@@ -413,7 +413,7 @@ class locationTitle():
     
     def __init__(self):
         self.text = str(v.mapMeta["Name"])
-        self.font = py.font.Font("Resources/Fonts/Vecna.otf", int(60/640 * v.screenX))
+        self.font = py.font.Font("Resources/Fonts/Vecna.otf", int(60/640 * 1280))
         self.label = self.font.render(self.text, 1, (100, 100, 100))
         #self.label = py.Surface(self.font.size(self.text))
         #self.label.blit(ren, (0, 0))
@@ -434,7 +434,7 @@ class locationTitle():
         l = self.label.copy()
         l.fill((255, 255, 255, self.cycle), special_flags=py.BLEND_RGBA_MULT)
         #l.set_alpha(self.cycle)
-        pos = ((v.screenX/2) - self.font.size(self.text)[0]/2, 50/640 * v.screenX)
+        pos = ((1280/2) - self.font.size(self.text)[0]/2, 50/640 * 1280)
         
         v.screen.blit(l, pos)
             
@@ -446,26 +446,26 @@ class deathScreen():
         v.pauseType = "Death"
         v.playerDead = True
         self.back = py.image.tostring(v.screen, "RGBA")
-        self.back = py.image.fromstring(self.back, (v.screenX, v.screenY), "RGBA")
+        self.back = py.image.fromstring(self.back, (1280, 720), "RGBA")
         self.cycle = 100
-        self.red = py.Surface((v.screenX, v.screenY)).convert_alpha()
+        self.red = py.Surface((1280, 720)).convert_alpha()
         self.ghost = entityClasses.playerGhost()
         v.p_class.direction = "Down"
         v.p_class.draw()
         self.pimg = v.p_class.image
         self.buttons = py.sprite.Group()
-        self.buttons.add(MenuItems.Button("Respawn", (200, 250), 60, (200, 200, 200), (200, 0, 0),  "Resources/Fonts/Vecna.otf", "rs", True))
-        self.buttons.add(MenuItems.Button("Load Save", (440, 250), 60, (200, 200, 200), (200, 0, 0), "Resources/Fonts/Vecna.otf", "ls", True))
-        self.buttons.add(MenuItems.Button("Quit", (320, 320), 60, (200, 200, 200), (200, 0, 0), "Resources/Fonts/Vecna.otf", "qt", True))
+        self.buttons.add(MenuItems.Button("Respawn", (400, 375), 120, (200, 200, 200), (200, 0, 0),  "Resources/Fonts/Vecna.otf", "rs", True))
+        self.buttons.add(MenuItems.Button("Load Save", (880, 375), 120, (200, 200, 200), (200, 0, 0), "Resources/Fonts/Vecna.otf", "ls", True))
+        self.buttons.add(MenuItems.Button("Quit", (640, 480), 120, (200, 200, 200), (200, 0, 0), "Resources/Fonts/Vecna.otf", "qt", True))
         self.text = py.sprite.Group()
-        self.text.add(MenuItems.textLabel("You Died!", (320, 170), (240, 240, 240), "Resources/Fonts/Vecna.otf", 80, centred=True))
+        self.text.add(MenuItems.textLabel("You Died!", (640, 255), (240, 240, 240), "Resources/Fonts/Vecna.otf", 180, centred=True))
         
         
     
     def update(self):
         if v.playerDead:
-            ren = py.transform.scale(self.back, (int(v.screenX * (self.cycle / 100)), int(v.screenY * (self.cycle / 100))))
-            rect = py.Rect(v.screenX/2 - (v.screenX * (self.cycle / 100))/2, v.screenY/2 - (v.screenY * (self.cycle / 100))/2, v.screenX * (self.cycle / 100), v.screenY * (self.cycle / 100))
+            ren = py.transform.scale(self.back, (int(1280 * (self.cycle / 100)), int(720 * (self.cycle / 100))))
+            rect = py.Rect(1280/2 - (1280 * (self.cycle / 100))/2, 720/2 - (720 * (self.cycle / 100))/2, 1280 * (self.cycle / 100), 720 * (self.cycle / 100))
             v.screen.blit(ren, rect)
             self.red.fill((self.cycle - 100, 0, 0, self.cycle - 100))
             self.ghost.cycle = self.cycle

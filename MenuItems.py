@@ -6,6 +6,8 @@ from msilib.schema import Font
 from os import listdir
 import itemClasses
 import setupScripts
+import sys
+import time
 
 class Button(py.sprite.Sprite):
 
@@ -468,24 +470,24 @@ class apearanceSelector(py.sprite.Sprite):
 
 class appearancePreview():
     
-    def __init__(self, pos=(0, 0)):
+    def __init__(self, pos=(-40, -70), sizem=11):
         self.pos = pos
-        self.sMod = 11
+        self.sMod = sizem
     
     def draw(self):
         if v.testAppearance["Body"] == None:
             self.sheet = entityClasses.SpriteSheet(v.appearance["Body"], 4, 3)
             self.image = self.sheet.images[v.appearancePrevNum]
             size = self.image.get_rect()
-            size.width = (size.width / 640) * 1280
-            size.height = (size.height / 480) * 720
+            size.width = size.width * 2
+            size.height = size.height * 2
             self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
         else:
             self.sheet = entityClasses.SpriteSheet(v.testAppearance["Body"], 4, 3)
             self.image = self.sheet.images[v.appearancePrevNum]
             size = self.image.get_rect()
-            size.width = (size.width / 640) * 1280
-            size.height = (size.height / 480) * 720
+            size.width = size.width * 2
+            size.height = size.height * 2
             self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
         
         v.screen.blit(self.image, self.pos)
@@ -494,15 +496,15 @@ class appearancePreview():
             self.sheet = entityClasses.SpriteSheet(v.appearance["Face"], 4, 3)
             self.image = self.sheet.images[v.appearancePrevNum]
             size = self.image.get_rect()
-            size.width = (size.width / 640) * 1280
-            size.height = (size.height / 480) * 720
+            size.width = size.width * 2
+            size.height = size.height * 2
             self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
         elif v.testAppearance["Face"] != None:
             self.sheet = entityClasses.SpriteSheet(v.testAppearance["Face"], 4, 3)
             self.image = self.sheet.images[v.appearancePrevNum]
             size = self.image.get_rect()
-            size.width = (size.width / 640) * 1280
-            size.height = (size.height / 480) * 720
+            size.width = size.width * 2
+            size.height = size.height * 2
             self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
         else:
             self.image = py.Surface((0, 0))
@@ -512,15 +514,15 @@ class appearancePreview():
             self.sheet = entityClasses.SpriteSheet(v.appearance["Dress"], 4, 3)
             self.image = self.sheet.images[v.appearancePrevNum]
             size = self.image.get_rect()
-            size.width = (size.width / 640) * 1280
-            size.height = (size.height / 480) * 720
+            size.width = size.width * 2
+            size.height = size.height * 2
             self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
         elif v.testAppearance["Dress"] != None:
             self.sheet = entityClasses.SpriteSheet(v.testAppearance["Dress"], 4, 3)
             self.image = self.sheet.images[v.appearancePrevNum]
             size = self.image.get_rect()
-            size.width = (size.width / 640) * 1280
-            size.height = (size.height / 480) * 720
+            size.width = size.width * 2
+            size.height = size.height * 2
             self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
         else:
             self.image = py.Surface((0, 0))
@@ -530,15 +532,15 @@ class appearancePreview():
             self.sheet = entityClasses.SpriteSheet(v.appearance["Hair"], 4, 3)
             self.image = self.sheet.images[v.appearancePrevNum]
             size = self.image.get_rect()
-            size.width = (size.width / 640) * 1280
-            size.height = (size.height / 480) * 720
+            size.width = size.width * 2
+            size.height = size.height * 2
             self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
         elif v.testAppearance["Hair"] != None:
             self.sheet = entityClasses.SpriteSheet(v.testAppearance["Hair"], 4, 3)
             self.image = self.sheet.images[v.appearancePrevNum]
             size = self.image.get_rect()
-            size.width = (size.width / 640) * 1280
-            size.height = (size.height / 480) * 720
+            size.width = size.width * 2
+            size.height = size.height * 2
             self.image = py.transform.scale(self.image, (size.width * self.sMod, size.height * self.sMod))
         else:
             self.image = py.Surface((0, 0))
@@ -548,21 +550,21 @@ class appearanceTab(py.sprite.Sprite):
     
     def __init__(self):
         super().__init__()
-        self.startx = 1280 * 0.390625
-        self.posy = 720 * 0.08
+        self.startx = 490
+        self.posy = 60
     
     def draw(self): #TODO: Fix with screen size
         image = py.image.load("Resources/Images/Character Customisation/Tabs/Body.png")
         size = image.get_rect()
-        size.width = (size.width / 640) * 1280
-        size.height = (size.height / 480) * 720
+        size.width = size.width * 2
+        size.height = size.height * 2
         image = py.transform.scale(image, (int(size.width * 1.5), int(size.height * 1.5)))
-        rect = py.Rect(self.startx, self.posy + 2 / 640 * 1280, 1280 * 0.03125, 1280 * 0.03125)
+        rect = py.Rect(self.startx, self.posy + 4, 40, 40)
         v.screen.blit(image, rect)
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(1280 * 0.03125))
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 40)
         label = font.render("Body", 1, (255, 255, 255))
-        v.screen.blit(label, (280 / 640 * 1280, 50 / 640 * 1280))
-        rect = py.Rect(241 / 640 * 1280, 41 / 640 * 1280, 80 / 640 * 1280, 38 / 640 * 1280)
+        v.screen.blit(label, (560, 80))
+        rect = py.Rect(481, 61, 190, 76)
         if rect.collidepoint(v.mouse_pos):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
@@ -576,15 +578,15 @@ class appearanceTab(py.sprite.Sprite):
         
         image = py.image.load("Resources/Images/Character Customisation/Tabs/Face.png")
         size = image.get_rect()
-        size.width = (size.width / 640) * 1280
-        size.height = (size.height / 480) * 720
+        size.width = size.width * 2
+        size.height = size.height * 2
         image = py.transform.scale(image, (int(size.width * 2), int(size.height * 2)))
-        rect = py.Rect(self.startx + 80 / 640 * 1280, self.posy + 7 / 640 * 1280, 1280 * 0.03125, 1280 * 0.03125)
+        rect = py.Rect(self.startx + 190, self.posy + 14, 40, 40)
         v.screen.blit(image, rect)
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(1280 * 0.03125))
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 40)
         label = font.render("Face", 1, (255, 255, 255))
-        v.screen.blit(label, (280 / 640 * 1280 + 83 / 640 * 1280, 50 / 640 * 1280))
-        rect = py.Rect(241 / 640 * 1280 + 83 / 640 * 1280, 41 / 640 * 1280, 80 / 640 * 1280, 38 / 640 * 1280)
+        v.screen.blit(label, (750, 80))
+        rect = py.Rect(673, 61, 190, 76)
         if rect.collidepoint(v.mouse_pos):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
@@ -599,15 +601,15 @@ class appearanceTab(py.sprite.Sprite):
         
         image = py.image.load("Resources/Images/Character Customisation/Tabs/Dress.png")
         size = image.get_rect()
-        size.width = (size.width / 640) * 1280
-        size.height = (size.height / 480) * 720
+        size.width = size.width * 2
+        size.height = size.height * 2
         image = py.transform.scale(image, (int(size.width * 2), int(size.height * 2)))
-        rect = py.Rect(self.startx + 160 / 640 * 1280, self.posy + 7 / 640 * 1280, 1280 * 0.03125, 1280 * 0.03125)
+        rect = py.Rect(self.startx + 380, self.posy + 14, 40, 40)
         v.screen.blit(image, rect)
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(1280 * 0.03125))
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 40)
         label = font.render("Dress", 1, (255, 255, 255))
-        v.screen.blit(label, (280 / 640 * 1280 + 166 / 640 * 1280, 50 / 640 * 1280))
-        rect = py.Rect(241 / 640 * 1280 + 166 / 640 * 1280, 41 / 640 * 1280, 85 / 640 * 1280, 38 / 640 * 1280)
+        v.screen.blit(label, (960, 80))
+        rect = py.Rect(865, 61, 190, 76)
         if rect.collidepoint(v.mouse_pos):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
@@ -620,15 +622,15 @@ class appearanceTab(py.sprite.Sprite):
         
         image = py.image.load("Resources/Images/Character Customisation/Tabs/Hair.png")
         size = image.get_rect()
-        size.width = (size.width / 640) * 1280
-        size.height = (size.height / 480) * 720
+        size.width = size.width * 2
+        size.height = size.height * 2
         image = py.transform.scale(image, (int(size.width * 2), int(size.height * 2)))
-        rect = py.Rect(self.startx + 250 / 640 * 1280, self.posy + 10 / 640 * 1280, 1280 * 0.03125, 1280 * 0.03125)
+        rect = py.Rect(self.startx + 580, self.posy + 20, 40, 40)
         v.screen.blit(image, rect)
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(1280 * 0.03125))
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 40)
         label = font.render("Hair", 1, (255, 255, 255))
-        v.screen.blit(label, (280 / 640 * 1280 + 254 / 640 * 1280, 50 / 640 * 1280))
-        rect = py.Rect(241 / 640 * 1280 + 254 / 640 * 1280, 41 / 640 * 1280, 85 / 640 * 1280, 38 / 640 * 1280)
+        v.screen.blit(label, (1150, 80))
+        rect = py.Rect(1057, 61, 190, 76)
         if rect.collidepoint(v.mouse_pos):
             for event in v.events:
                 if event.type == py.MOUSEBUTTONDOWN:
@@ -795,22 +797,26 @@ class storySpells(py.sprite.Sprite):
             self.kill()
 
 def screenFlip():
-    #size = (py.display.Info().current_w, py.display.Info().current_h)
-    #v.screen = py.transform.scale(v.screen, (size[0], size[1]))
     for event in v.events:
         if event.type == py.VIDEORESIZE:
             if not v.fullScreen:
                 v.screenDisplay = py.display.set_mode(event.size, py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
-                #v.screen = v.screenDisplay.get_rect()
-                #windowUpdate()
+                v.screenX, v.screenY = event.size
+        if event.type == py.KEYDOWN:
+            if event.key == py.K_r:
+                curFunc = sys._getframe(1).f_code.co_name
+                print(curFunc)
+                v.events.remove(event)
+                raise Exception("Reload:" + curFunc)
     
     screen_rect = v.screenDisplay.get_rect()
     image = py.Surface(v.screenStart).convert()
     image_rect = image.get_rect()
-    
     image.fill((0, 0, 0))
     image.blit(v.screen, (0, 0))
-    if screen_rect.size != v.screenStart:
+    if (v.screenX, v.screenY) == (1280, 720):
+        v.screenDisplay.blit(image, (0, 0))
+    elif screen_rect.size != v.screenStart:
         fit_to_rect = image_rect.fit(screen_rect)
         fit_to_rect.center = screen_rect.center
         scaled = py.transform.smoothscale(image, fit_to_rect.size)
@@ -819,7 +825,11 @@ def screenFlip():
         v.screenDisplay.blit(image, (0,0))
         fit_to_rect = image_rect
     
-    scale = (v.screenStart[0]/fit_to_rect[2], v.screenStart[1]/fit_to_rect[3])
-    x,y = py.mouse.get_pos()
-    v.mouse_pos = (int((x - fit_to_rect[0])*scale[0]), int((y - fit_to_rect[1])*scale[1]))
+    if (v.screenX, v.screenY) != (1280, 720):
+        scale = (v.screenStart[0]/fit_to_rect[2], v.screenStart[1]/fit_to_rect[3])
+        x,y = py.mouse.get_pos()
+        v.mouse_pos = (int((x - fit_to_rect[0])*scale[0]), int((y - fit_to_rect[1])*scale[1]))
+    else:
+        v.mouse_pos = py.mouse.get_pos()
+    
     py.display.flip()

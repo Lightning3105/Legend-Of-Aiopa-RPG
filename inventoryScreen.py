@@ -112,7 +112,7 @@ class inventoryScreen():
             self.quest = quest
             self.master = master
             if self.quest.type == "Kill":
-                self.image = py.image.load("Resources/Images/Inventory Icons/KillQuest.png")
+                self.image = py.image.load("Resources/Images/Inventory Icons/KillQuest.png").convert_alpha()
             
             self.image = py.transform.scale(self.image, (30, 30))
             font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
@@ -152,7 +152,7 @@ class inventoryScreen():
                     self.master.openQuests.append(self.num)
             
     def scrollBar(self): #TODO: Add bar
-        image = py.image.load("Resources/Images/Inventory Icons/Arrow.png")
+        image = py.image.load("Resources/Images/Inventory Icons/Arrow.png").convert_alpha()
         image = py.transform.rotate(image, 180)
         rect = py.Rect(550, 90, 30, 30)
         image = py.transform.scale(image, rect.size)
@@ -262,7 +262,7 @@ class inventoryScreen():
     
     def player(self):
         pos = (100, 100)
-        sheetImage = py.image.load(v.appearance["Body"])
+        sheetImage = py.image.load(v.appearance["Body"]).convert_alpha()
         sheetImage.blit(py.image.load(v.appearance["Face"]), (0, 0))
         sheetImage.blit(py.image.load(v.appearance["Dress"]), (0, 0))
         sheetImage.blit(py.image.load(v.appearance["Hair"]), (0, 0))
@@ -368,7 +368,7 @@ class inventoryScreen():
             v.screen.blit(image, pos)
             
             try:
-                icon = py.transform.scale(py.image.load(self.item.icon), (self.size[0] - 4, self.size[1] - 4))
+                icon = py.transform.scale(py.image.load(self.item.icon).convert_alpha(), (self.size[0] - 4, self.size[1] - 4))
                 icon.convert_alpha()
                 if self.master.grabbed == self.item:
                     icon.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)
@@ -485,7 +485,7 @@ class inventoryScreen():
         if not self.grabbed == None:
             size = (50, 50)
             if type(self.grabbed.icon) == str:
-                image = py.image.load(self.grabbed.icon)
+                image = py.image.load(self.grabbed.icon).convert_alpha()
             else:
                 image = self.grabbed.icon
             image = py.transform.scale(image, size)

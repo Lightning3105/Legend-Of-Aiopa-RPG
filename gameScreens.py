@@ -1420,7 +1420,7 @@ def logo():
     l1 = font.render("Lightopa", 1, (0, 255, 255))
     font = py.font.Font("Resources/Fonts/slant.ttf", 120)
     l2 = font.render("Games", 1, (0, 255, 255))
-    logo = py.image.load("Resources/Images/logo.png")
+    logo = py.image.load("Resources/Images/logo.png").convert_alpha()
     logo = py.transform.scale(logo, (310, 310))
     
     l1pos = [-200, 200]

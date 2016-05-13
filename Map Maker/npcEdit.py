@@ -126,7 +126,7 @@ class npcFaceButton(py.sprite.Sprite):
         self.selected = self.images[0]
         
     def update(self):
-        image = py.image.load(self.selected)
+        image = py.image.load(self.selected).convert_alpha()
         image = py.transform.scale(image, (96, 96))
         rect = image.get_rect()
         rect.center = (self.x, self.y)
@@ -214,7 +214,7 @@ class npcImage(py.sprite.Sprite):
     
     def update(self):
         if self.face:
-            image = py.image.load(self.image)
+            image = py.image.load(self.image).convert_alpha()
             image = py.transform.scale(image, (96, 96))
         else:
             image = mapMenuItems.SpriteSheet(self.image, 4, 3).images[7]

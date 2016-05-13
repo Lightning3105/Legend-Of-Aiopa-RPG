@@ -20,7 +20,7 @@ class Sword(py.sprite.Sprite):
         self.coolDown = 0
 
     def get_rend(self):
-        self.rend = py.image.load(self.image)
+        self.rend = py.image.load(self.image).convert_alpha()
         self.rend = py.transform.scale(self.rend, (int(20 * v.scale), int(20 * v.scale)))
 
     def update(self):
@@ -212,7 +212,7 @@ class shooter(py.sprite.Sprite):
             self.attCyclePos = 0
             self.posx = v.playerPosX
             self.posy = v.playerPosY - int(5 * v.scale)
-            self.skin = py.image.load(image)
+            self.skin = py.image.load(image).convert_alpha()
             self.direction = "Down"
             self.rect = py.Rect(0, 0, 0, 0)
             v.damagesNPCs.add(self)

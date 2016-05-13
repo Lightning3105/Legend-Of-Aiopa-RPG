@@ -13,11 +13,11 @@ def newGame():
     #entityClasses.Enemy(0, -60, 1, "Resources/Images/EnemySkins/Generic Goblin.png", {"Name": "Groblin Lvl. 1", "Health":5, "Attack":5, "Speed":1.5})
     #entityClasses.NPC((0, 30, "Down", 1), "Resources/Images/NpcSkins/Spritesheets/Male_Basic.png", {"Name":"Fred", "Conversation":cn})
     
-    v.inventory.add(itemClasses.item("Thing", py.image.load("Resources/Images/XPOrb.png")))
+    v.inventory.add(itemClasses.item("Thing", py.image.load("Resources/Images/XPOrb.png").convert_alpha()))
     v.inventory.add(itemClasses.weapon("Magic Orb", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[56], "manaOrb", "Resources/Images/castOrbPurple.png", {"Damage":2, "Knockback": 10}))
     v.inventory.add(itemClasses.weapon("Broken Sword", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[0], "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10}))
     v.inventory.add(itemClasses.weapon("Short Bow", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[72], "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10})) 
-    entityClasses.droppedItem(itemClasses.item("Thing", py.image.load("Resources/Images/XPOrb.png")), (0, 0))
+    entityClasses.droppedItem(itemClasses.item("Thing", py.image.load("Resources/Images/XPOrb.png").convert_alpha()), (0, 0))
     
     fb = itemClasses.spell("Fire Beam", "beam", "Resources/Images/fireBeam.png", "Resources/Images/redCastCircle.png", "Resources/Images/Spell Icons/fireBeam.png", {"Damage": 0.2, "Knockback": "S", "Cooldown": 5, "Mana": 10, "InvulnMod": 0})
     ls = itemClasses.spell("Lightning Storm", "lightning", "Resources/Images/lightningStorm.png", "Resources/Images/blueCastCircle.png", "Resources/Images/Spell Icons/chainLightning.png", {"Damage": 0.4, "Knockback": 1, "Cooldown": 5, "Mana": 10, "InvulnMod": 0})

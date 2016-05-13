@@ -96,7 +96,7 @@ class Player(py.sprite.Sprite):
                       "LeftC": self.sheet.images[10],
                       "LeftR": self.sheet.images[11]}
     def combineImages(self):
-        self.sheetImage = py.image.load(v.appearance["Body"])
+        self.sheetImage = py.image.load(v.appearance["Body"]).convert_alpha()
         self.sheetImage.blit(py.image.load(v.appearance["Face"]), (0, 0))
         self.sheetImage.blit(py.image.load(v.appearance["Dress"]), (0, 0))
         self.sheetImage.blit(py.image.load(v.appearance["Hair"]), (0, 0))
@@ -238,7 +238,7 @@ class Player(py.sprite.Sprite):
             v.playerPosY += self.velY
             v.playerDirection = self.direction
 
-class mask:
+class mask: #TODO: Remoe and replace with something more efficient
     
     def __init__(self):
         super().__init__()
@@ -276,7 +276,7 @@ class mask:
                       "LeftC": self.sheet.images[10],
                       "LeftR": self.sheet.images[11]}
     def combineImages(self):
-        self.sheetImage = py.image.load(v.appearance["Body"])
+        self.sheetImage = py.image.load(v.appearance["Body"]).convert_alpha()
         self.sheetImage.blit(py.image.load(v.appearance["Face"]), (0, 0))
         self.sheetImage.blit(py.image.load(v.appearance["Dress"]), (0, 0))
         self.sheetImage.blit(py.image.load(v.appearance["Hair"]), (0, 0))
@@ -407,7 +407,7 @@ class playerGhost():
                       "LeftR": self.sheet.images[11]}
     def combineImages(self):
         #self.sheetImage = py.image.load(v.appearance["Body"])
-        self.sheetImage = py.image.load("Resources/Images/ghostSheet.png")
+        self.sheetImage = py.image.load("Resources/Images/ghostSheet.png").convert_alpha()
         self.sheetImage.blit(py.image.load(v.appearance["Face"]), (0, 0))
         #self.sheetImage.blit(py.image.load(v.appearance["Dress"]), (0, 0))
         self.sheetImage.blit(py.image.load(v.appearance["Hair"]), (0, 0))
@@ -947,7 +947,7 @@ class xp(py.sprite.Sprite):
         self.posx = posx
         self.posy = posy
         self.amount = amount
-        self.skin = py.image.load("Resources/Images/XPOrb.png")
+        self.skin = py.image.load("Resources/Images/XPOrb.png").convert_alpha()
         v.xpGroup.add(self)
         self.wait = randint(25, 35)
         self.velocity = 1
@@ -1065,7 +1065,7 @@ class NPC(py.sprite.Sprite):
         v.NPCs.add(self)
         self.initSheet()
         self.justNear = False
-        self.icon = py.image.load("Resources/Images/NpcSkins/Faces/Basic_Man.png")
+        self.icon = py.image.load("Resources/Images/NpcSkins/Faces/Basic_Man.png").convert_alpha()
         self.conversation = npcScripts.conversation(self, attributes["Conversation"])
         self.summonedGuard = False
         self.baseLike = attributes["Base Like"]
@@ -1090,7 +1090,7 @@ class NPC(py.sprite.Sprite):
         v.NPCs.add(self)
         self.initSheet()
         self.justNear = False
-        self.icon = py.image.load("Resources/Images/NpcSkins/Faces/Basic_Man.png")
+        self.icon = py.image.load("Resources/Images/NpcSkins/Faces/Basic_Man.png").convert_alpha()
         self.summonedGuard = False
         
         self.conversation = npcScripts.conversation(self, dic["conversation"], dic["convoPlace"])

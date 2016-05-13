@@ -173,7 +173,7 @@ def getGrid():
     height = 32
     all = []
     for i in os.listdir("../Resources/Images/Tile Set/"):
-        tileset = py.image.load("../Resources/Images/Tile Set/" + i)
+        tileset = py.image.load("../Resources/Images/Tile Set/" + i).convert_alpha()
         columns = int(tileset.get_size()[0] / width)
         rows = int(tileset.get_size()[1] / height)
         print("Total Tiles:", columns * rows)

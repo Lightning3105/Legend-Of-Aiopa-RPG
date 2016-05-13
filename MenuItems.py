@@ -168,7 +168,7 @@ class characterSelector(py.sprite.Sprite):
         super().__init__()
         self.pos = pos
         self.name = name
-        self.skin = py.image.load(image)
+        self.skin = py.image.load(image).convert_alpha()
         self.hovered = False
         self.hoveredCycle = 0
         self.greyedCycle = 0
@@ -319,7 +319,7 @@ class optionAttribute(py.sprite.Sprite):
     
     def update(self):
         self.baseValue = v.Attributes[self.attribute]
-        arrow = py.image.load("Resources/Images/AttributeArrow.png")
+        arrow = py.image.load("Resources/Images/AttributeArrow.png").convert_alpha()
         arrow = py.transform.scale(arrow, (int(arrow.get_rect().width * 1280 * 0.00234375), int(arrow.get_rect().height * 1280 * 0.00234375)))
         
         arrowL = py.transform.rotate(arrow, 180)
@@ -554,7 +554,7 @@ class appearanceTab(py.sprite.Sprite):
         self.posy = 60
     
     def draw(self): #TODO: Fix with screen size
-        image = py.image.load("Resources/Images/Character Customisation/Tabs/Body.png")
+        image = py.image.load("Resources/Images/Character Customisation/Tabs/Body.png").convert_alpha()
         size = image.get_rect()
         size.width = size.width * 2
         size.height = size.height * 2
@@ -576,7 +576,7 @@ class appearanceTab(py.sprite.Sprite):
             py.draw.rect(v.screen, (153, 76, 0), rect, 4)
             
         
-        image = py.image.load("Resources/Images/Character Customisation/Tabs/Face.png")
+        image = py.image.load("Resources/Images/Character Customisation/Tabs/Face.png").convert_alpha()
         size = image.get_rect()
         size.width = size.width * 2
         size.height = size.height * 2
@@ -599,7 +599,7 @@ class appearanceTab(py.sprite.Sprite):
         
         
         
-        image = py.image.load("Resources/Images/Character Customisation/Tabs/Dress.png")
+        image = py.image.load("Resources/Images/Character Customisation/Tabs/Dress.png").convert_alpha()
         size = image.get_rect()
         size.width = size.width * 2
         size.height = size.height * 2
@@ -620,7 +620,7 @@ class appearanceTab(py.sprite.Sprite):
         else:
             py.draw.rect(v.screen, (153, 76, 0), rect, 4)
         
-        image = py.image.load("Resources/Images/Character Customisation/Tabs/Hair.png")
+        image = py.image.load("Resources/Images/Character Customisation/Tabs/Hair.png").convert_alpha()
         size = image.get_rect()
         size.width = size.width * 2
         size.height = size.height * 2
@@ -771,7 +771,7 @@ class storySpells(py.sprite.Sprite):
         self.active = True
         self.image = entityClasses.SpriteSheet("Resources/Images/castOrbPurple.png", 1, 10).images[9]
         self.image.fill((0, 255, 255), special_flags=py.BLEND_MULT)
-        self.shield = py.transform.scale(py.image.load("Resources/Images/Story/Shield.png"), (int((30 * 4.5)/640 * 1280), int((40 * 4.5)/640 * 1280)))
+        self.shield = py.transform.scale(py.image.load("Resources/Images/Story/Shield.png").convert_alpha(), (int((30 * 4.5)/640 * 1280), int((40 * 4.5)/640 * 1280)))
         self.end = (1280 * 0.4, 720 * 0.9)
         self.start = (start[0] + ((24 * 3)/640 * 1280)/2, start[1] + ((32 * 3)/640 * 1280)/2)
         self.posx = self.start[0]

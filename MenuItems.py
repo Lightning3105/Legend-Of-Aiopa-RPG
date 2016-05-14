@@ -305,13 +305,14 @@ class optionSlate():
 
 class optionAttribute(py.sprite.Sprite):
     
-    def __init__(self, posy, attribute, posx=480):
+    def __init__(self, posy, attribute, posx=480, scale=1):
         super().__init__()
         self.posx = posx
         self.posy = posy
         self.attribute = attribute
         self.baseValue = v.Attributes[attribute]
         self.addedValue = 0
+        self.scale = scale
     
     def save(self):
         v.Attributes[self.attribute] += self.addedValue
@@ -320,31 +321,31 @@ class optionAttribute(py.sprite.Sprite):
     def update(self):
         self.baseValue = v.Attributes[self.attribute]
         arrow = py.image.load("Resources/Images/AttributeArrow.png").convert_alpha()
-        arrow = py.transform.scale(arrow, (int(arrow.get_rect().width * 1280 * 0.00234375), int(arrow.get_rect().height * 1280 * 0.00234375)))
+        arrow = py.transform.scale(arrow, (int(arrow.get_rect().width * 3 * self.scale), int(arrow.get_rect().height * 3 * self.scale)))
         
         arrowL = py.transform.rotate(arrow, 180)
         v.screen.blit(arrowL, (self.posx, self.posy))
         self.minusRect = py.Rect(self.posx, self.posy, arrow.get_rect().width, arrow.get_rect().height)
         
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(1280 * 0.046875))
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(60 * self.scale))
         
         label = font.render(str(self.attribute) + ":", 1, (255,255,255))
-        lx = self.posx + (20/640 * 1280)
-        v.screen.blit(label, (lx, self.posy - 6))
+        lx = self.posx + 40 * self.scale
+        v.screen.blit(label, (lx, self.posy - 6 * self.scale))
         
-        textLength = font.size(str(self.attribute) + ":")[0] + 5
+        textLength = font.size(str(self.attribute) + ":")[0] + 5 * self.scale
         
         label = font.render(str(self.baseValue), 1, (255,255,255))
-        lx = ((self.posx + (20/640 * 1280))) + textLength
-        v.screen.blit(label, (lx, self.posy - 6))
+        lx = ((self.posx + 40 * self.scale)) + textLength
+        v.screen.blit(label, (lx, self.posy - 6 * self.scale))
         
-        textLength += font.size(str(self.baseValue))[0] + 5
+        textLength += font.size(str(self.baseValue))[0] + 5 * self.scale
         
         label = font.render("+" + str(self.addedValue), 1, (0,255,0))
-        lx = ((self.posx + (20/640 * 1280))) + textLength
-        v.screen.blit(label, (lx, self.posy - 6))
+        lx = ((self.posx + 40 * self.scale)) + textLength
+        v.screen.blit(label, (lx, self.posy - 6 * self.scale))
         
-        textLength += font.size("+" + str(self.addedValue))[0] + 40
+        textLength += font.size("+" + str(self.addedValue))[0] + 40 * self.scale
         
         
         v.screen.blit(arrow, (self.posx + textLength, self.posy))
@@ -809,6 +810,12 @@ def screenFlip():
                 v.events.remove(event)
                 raise Exception("Reload:" + curFunc)
     
+    py.mouse.set_visible(False)
+    if v.mouseImage == None:
+        v.mouseImage = py.image.load("Resources/Images/cursor.png")
+    v.screen.blit(v.mouseImage, (v.mouse_pos[0] - 24, v.mouse_pos[1] - 24))
+    
+    
     screen_rect = v.screenDisplay.get_rect()
     image = py.Surface(v.screenStart).convert()
     image_rect = image.get_rect()
@@ -831,5 +838,6 @@ def screenFlip():
         v.mouse_pos = (int((x - fit_to_rect[0])*scale[0]), int((y - fit_to_rect[1])*scale[1]))
     else:
         v.mouse_pos = py.mouse.get_pos()
+    
     
     py.display.flip()

@@ -44,13 +44,13 @@ class inventoryScreen():
         for i in range(1, 7):
             self.spellSlots.add(self.spellSlot(i, self))
         self.attOptions = py.sprite.Group()
-        AoX = 720 * 0.25
+        AoX = 170
         for attribute in v.Attributes:
-            self.attOptions.add(MenuItems.optionAttribute(AoX, attribute, 280))
-            AoX += 1280 * 0.05
+            self.attOptions.add(MenuItems.optionAttribute(AoX, attribute, 580, 0.8))
+            AoX += 60
         
-        self.attOptions.add(MenuItems.textLabel("Skill Points Remaining:", (1280 * 0.45, 720 * 0.18), (100, 100, 100), "Resources/Fonts/RPGSystem.ttf", int(1280 * 0.05)))
-        self.attOptions.add(MenuItems.textLabel("skillPoints", (1280 * 0.85, 720 * 0.18), (0, 255, 0), "Resources/Fonts/RPGSystem.ttf", int(1280 * 0.05), True))
+        self.attOptions.add(MenuItems.textLabel("Skill Points Remaining:", (576, 120), (100, 100, 100), "Resources/Fonts/RPGSystem.ttf", int(50)))
+        self.attOptions.add(MenuItems.textLabel("skillPoints", (990, 120), (0, 255, 0), "Resources/Fonts/RPGSystem.ttf", int(50), True))
         
         self.quests = py.sprite.Group()
         n = 0
@@ -65,6 +65,7 @@ class inventoryScreen():
         self.questScroll = 0
     
     def update(self):
+        print(v.mouse_pos)
         self.hovering = None
         self.grey()
         self.background()
@@ -88,11 +89,11 @@ class inventoryScreen():
         if not self.hovering == None:
             if not self.hovering.item == None:
                 if not self.grabbed == self.hovering.item:
-                    font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 15)
+                    font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
                     text = self.hovering.item.name
                     label = font.render(text, 1, (0, 0, 0))
                     Hrect = py.Rect(v.mouse_pos, font.size(text))
-                    py.draw.rect(v.screen, (153, 76, 0), Hrect, 2)
+                    py.draw.rect(v.screen, (153, 76, 0), Hrect, 3)
                     py.draw.rect(v.screen, (255, 178, 102), Hrect)
                     v.screen.blit(label, Hrect)
     
@@ -195,7 +196,7 @@ class inventoryScreen():
         
                 
     def tabs(self):
-        rect = py.Rect(280, 50, 80, 25)
+        rect = py.Rect(560, 50, 160, 40)
         if rect.collidepoint(v.mouse_pos):
             c = (255, 255, 0)
             if py.mouse.get_pressed()[0]:
@@ -207,13 +208,13 @@ class inventoryScreen():
         else:
             o = (153, 76, 0)
         py.draw.rect(v.screen, c, rect)
-        py.draw.rect(v.screen, o, rect, 2)
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
+        py.draw.rect(v.screen, o, rect, 3)
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
         label = font.render("Inventory", 1, (0, 0, 0))
-        v.screen.blit(label, (rect[0] + 5, rect[1] + 2))
+        v.screen.blit(label, (rect[0] + 6, rect[1] + 3))
         
         
-        rect = py.Rect(362, 50, 80, 25)
+        rect = py.Rect(724, 50, 160, 40)
         if rect.collidepoint(v.mouse_pos):
             c = (255, 255, 0)
             if py.mouse.get_pressed()[0]:
@@ -225,12 +226,12 @@ class inventoryScreen():
         else:
             o = (153, 76, 0)
         py.draw.rect(v.screen, c, rect)
-        py.draw.rect(v.screen, o, rect, 2)
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
+        py.draw.rect(v.screen, o, rect, 3)
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
         label = font.render("Attributes", 1, (0, 0, 0))
-        v.screen.blit(label, (rect[0] + 5, rect[1] + 2))
+        v.screen.blit(label, (rect[0] + 6, rect[1] + 3))
         
-        rect = py.Rect(444, 50, 80, 25)
+        rect = py.Rect(888, 50, 160, 40)
         if rect.collidepoint(v.mouse_pos):
             c = (255, 255, 0)
             if py.mouse.get_pressed()[0]:
@@ -242,10 +243,10 @@ class inventoryScreen():
         else:
             o = (153, 76, 0)
         py.draw.rect(v.screen, c, rect)
-        py.draw.rect(v.screen, o, rect, 2)
-        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 20)
+        py.draw.rect(v.screen, o, rect, 3)
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
         label = font.render("Quests", 1, (0, 0, 0))
-        v.screen.blit(label, (rect[0] + 5, rect[1] + 2))
+        v.screen.blit(label, (rect[0] + 6, rect[1] + 3))
     
     def grey(self):
         grey = py.Surface((v.screen.get_rect()[2], v.screen.get_rect()[3])).convert_alpha()
@@ -253,22 +254,20 @@ class inventoryScreen():
         v.screen.blit(grey, (0, 0))
     
     def background(self):
-        size = v.screen.get_rect().size
-        size = (size[0] - 100, size[1] - 100)
-        innerRect = py.Rect(50, 50, size[0], size[1])
-        outerRect = py.Rect(40, 40, size[0] + 20, size[1] + 20)
+        innerRect = py.Rect(200, 50, 880, 620)
+        outerRect = py.Rect(190, 40, 900, 640)
         py.draw.rect(v.screen, (153, 76, 0), outerRect)
         py.draw.rect(v.screen, (255, 178, 102), innerRect)
     
     def player(self):
-        pos = (100, 100)
+        pos = (300, 180)
         sheetImage = py.image.load(v.appearance["Body"]).convert_alpha()
         sheetImage.blit(py.image.load(v.appearance["Face"]), (0, 0))
         sheetImage.blit(py.image.load(v.appearance["Dress"]), (0, 0))
         sheetImage.blit(py.image.load(v.appearance["Hair"]), (0, 0))
         sheet = entityClasses.SpriteSheet(sheetImage, 4, 3)
         image = sheet.images[7]
-        image = py.transform.scale(image, (image.get_rect().width * 5, image.get_rect().height * 5))
+        image = py.transform.scale(image, (image.get_rect().width * 7, image.get_rect().height * 7))
         v.screen.blit(image, pos)
     
     class equippedSlot(py.sprite.Sprite):
@@ -277,7 +276,7 @@ class inventoryScreen():
             super().__init__()
             self.hovered = False
             self.item = v.equipped[slot]
-            self.size = (50, 50)
+            self.size = (80, 80)
             self.master = master
             self.slot = slot
             self.equipType = slot
@@ -289,23 +288,23 @@ class inventoryScreen():
         
         def update(self):
             if self.slot == "Weapon":
-                self.pos = (65, 100)
+                self.pos = (220, 130)
                 self.image = py.image.load("Resources/Images/Inventory Icons/Weapon.png").convert_alpha()
             if self.slot == "Helmet":
-                self.pos = (215, 100)
+                self.pos = (460, 130)
                 self.image = py.image.load("Resources/Images/Inventory Icons/Helmet.png").convert_alpha()
             if self.slot == "Armour":
-                self.pos = (215, 155)
+                self.pos = (460, 220)
                 self.image = py.image.load("Resources/Images/Inventory Icons/Breastplate.png").convert_alpha()
             if self.slot == "Greaves":
-                self.pos = (215, 210)
+                self.pos = (460, 310)
                 self.image = py.image.load("Resources/Images/Inventory Icons/Trousers.png").convert_alpha()
             if self.slot == "Boots":
-                self.pos = (215, 265)
+                self.pos = (460, 400)
                 self.image = py.image.load("Resources/Images/Inventory Icons/Boots.png").convert_alpha()
             image = py.transform.scale(self.image, self.size)
             rect = py.Rect(self.pos, self.size)
-            py.draw.rect(v.screen, (255, 255, 255), rect, 2)
+            py.draw.rect(v.screen, (255, 255, 255), rect, 3)
             if rect.collidepoint(v.mouse_pos):
                 self.hovered = True
                 self.master.hovering = self
@@ -315,7 +314,7 @@ class inventoryScreen():
             v.screen.blit(image, self.pos)
             
             if not self.item == None:
-                icon = py.transform.scale(self.item.icon, (self.size[0] - 2, self.size[1] - 2))
+                icon = py.transform.scale(self.item.icon, (self.size[0] - 3, self.size[1] - 3))
                 if self.master.grabbed == self.item:
                     icon.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(icon, self.pos)
@@ -329,7 +328,7 @@ class inventoryScreen():
         
         def __init__(self, num, master):
             super().__init__()
-            self.size = (50, 50)
+            self.size = (80, 80)
             self.hovered = False
             self.master = master
             try:
@@ -348,8 +347,8 @@ class inventoryScreen():
             else:
                 image = py.Surface(self.size).convert_alpha()
                 image.fill((255, 255, 255))
-            posx = 65 + (self.slotNum % 3) * 50
-            posy = (int(self.slotNum / 3) * 50) + 320
+            posx = 220 + (self.slotNum % 3) * 80
+            posy = (int(self.slotNum / 3) * 80) + 490
             
             pos = (posx, posy)
             
@@ -357,7 +356,7 @@ class inventoryScreen():
             
             
             rect = py.Rect(pos, self.size)
-            py.draw.rect(v.screen, (255, 255, 255), rect, 2)
+            py.draw.rect(v.screen, (255, 255, 255), rect, 3)
             
             if rect.collidepoint(v.mouse_pos):
                 self.hovered = True
@@ -372,7 +371,7 @@ class inventoryScreen():
                 icon.convert_alpha()
                 if self.master.grabbed == self.item:
                     icon.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)
-                pos = (pos[0] + 2, pos[1] + 2)
+                pos = (pos[0] + 3, pos[1] + 3)
                 v.screen.blit(icon, pos)
                 if self.hovered:
                     for event in v.events:
@@ -382,16 +381,16 @@ class inventoryScreen():
             except:
                 pass
             
-            font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
+            font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 60)
             label = font.render(str(self.slotNum + 1), 1, (0, 0, 0))
-            v.screen.blit(label, (pos[0] + 20, pos[1] + 10))
+            v.screen.blit(label, (pos[0] + 30, pos[1] + 15))
     
     
     class inventorySlot(py.sprite.Sprite):
         
         def __init__(self, slotNum, master):
             super().__init__()
-            self.size = (50, 50)
+            self.size = (80, 80)
             self.hovered = False
             self.slotNum = slotNum
             self.master = master
@@ -410,8 +409,8 @@ class inventoryScreen():
             else:
                 image = py.Surface(self.size).convert_alpha()
                 image.fill((255, 255, 255))
-            posx = 280 + (self.slotNum % 6) * 50
-            posy = (int(self.slotNum / 6) * 50) + 220
+            posx = 570 + (self.slotNum % 6) * 80
+            posy = (int(self.slotNum / 6) * 80) + 330
             
             pos = (posx, posy)
             
@@ -419,7 +418,7 @@ class inventoryScreen():
             
             
             rect = py.Rect(pos, self.size)
-            py.draw.rect(v.screen, (255, 255, 255), rect, 2)
+            py.draw.rect(v.screen, (255, 255, 255), rect, 3)
             
             if rect.collidepoint(v.mouse_pos):
                 self.hovered = True
@@ -430,7 +429,7 @@ class inventoryScreen():
             v.screen.blit(image, pos)
             
             try:
-                icon = py.transform.scale(self.item.icon, (self.size[0] - 4, self.size[1] - 4))
+                icon = py.transform.scale(self.item.icon, (self.size[0] - 6, self.size[1] - 6))
                 icon.convert_alpha()
                 if self.master.grabbed == self.item:
                     icon.fill((255, 255, 255, 100), special_flags=py.BLEND_RGBA_MULT)
@@ -447,7 +446,7 @@ class inventoryScreen():
         
         def __init__(self, master):
             super().__init__()
-            self.size = (50, 50)
+            self.size = (80, 80)
             self.hovered = False
             self.master = master
             self.equipType = "Item"
@@ -459,14 +458,14 @@ class inventoryScreen():
         def update(self):
             image = py.image.load("Resources/Images/Inventory Icons/Discard.png").convert_alpha()
             
-            posx = 229
-            posy = 370
+            posx = 490
+            posy = 570
             
             pos = (posx, posy)
             image = py.transform.scale(image, self.size)
             
             rect = py.Rect(pos, self.size)
-            py.draw.rect(v.screen, (255, 0, 0), rect, 2)
+            py.draw.rect(v.screen, (255, 0, 0), rect, 3)
             
             if rect.collidepoint(v.mouse_pos):
                 self.hovered = True
@@ -483,7 +482,7 @@ class inventoryScreen():
         
     def drag(self):
         if not self.grabbed == None:
-            size = (50, 50)
+            size = (80, 80)
             if type(self.grabbed.icon) == str:
                 image = py.image.load(self.grabbed.icon).convert_alpha()
             else:
@@ -492,7 +491,7 @@ class inventoryScreen():
             pos = v.mouse_pos
             v.screen.blit(image, pos)
             rect = py.Rect(pos, size)
-            py.draw.rect(v.screen, (200, 200, 200), rect, 2)
+            py.draw.rect(v.screen, (200, 200, 200), rect, 3)
             for event in v.events:
                 if event.type == py.MOUSEBUTTONUP:
                     if not self.hovering == None:

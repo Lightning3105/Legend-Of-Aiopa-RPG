@@ -17,6 +17,7 @@ screenY = 477
 screenStart = (1280, 720)
 mouse_pos = (0, 0)
 aspectRatio = (16, 9)
+mouseImage = None
 fpsLock = 30
 fpsAdjuster = 1
 pauseType = "Pause"

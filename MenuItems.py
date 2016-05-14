@@ -809,6 +809,14 @@ def screenFlip():
                 print(curFunc)
                 v.events.remove(event)
                 raise Exception("Reload:" + curFunc)
+            if event.key == py.K_F11:
+                v.fullScreen = not v.fullScreen
+                v.events.remove(event)
+                if v.fullScreen:
+                    v.screenDisplay = py.display.set_mode((1280, 720), py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
+                    v.screenX, v.screenY = 1280, 720
+                else:
+                    py.event.post(py.event.Event(py.VIDEORESIZE, {"size":(848, 477)}))
     
     py.mouse.set_visible(False)
     if v.mouseImage == None:

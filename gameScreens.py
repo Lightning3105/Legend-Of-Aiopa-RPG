@@ -501,8 +501,6 @@ def game():
             for event in v.events:
                 if event.type == py.QUIT:
                     sys.exit()
-                elif event.type==py.VIDEORESIZE:
-                    v.screen = py.display.set_mode(event.dict['size'],py.HWSURFACE|py.DOUBLEBUF)
     
             keys_pressed = py.key.get_pressed()
             if keys_pressed[py.K_SPACE] and not v.playerActing:

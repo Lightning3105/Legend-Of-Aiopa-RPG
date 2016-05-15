@@ -1,6 +1,6 @@
 import logging
 curFunc = None
-logging.basicConfig(filename='log.log',level=logging.DEBUG)
+logging.basicConfig(filename='logs/log.log',level=logging.DEBUG)
 def debug(*args):
     out = ""
     for i in args:

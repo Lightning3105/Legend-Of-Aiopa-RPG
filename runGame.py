@@ -18,7 +18,7 @@ def main(func="logo"):
     if hashlib.md5(os.getlogin().encode()).hexdigest() == 'f945be3c345040fbe66cea5910001877':
         func = "mainMenu"
     try:
-        cProfile.run("gameScreens." + func + "()", "Out.txt")
+        cProfile.run("gameScreens." + func + "()", "logs/Out.txt")
     except Exception as e:
         if "Reload:" in str(e):
             curFunc = str(e).strip("Reload:")
@@ -35,8 +35,8 @@ def main(func="logo"):
         with open(name, "r") as crash:
             gameScreens.crashScreen(crash.read())
     py.quit()
-    with open("Calltime Dump.txt", "w") as fc:
-        p = pstats.Stats("Out.txt", stream=fc)
+    with open("Logs/Calltime Dump.txt", "w") as fc:
+        p = pstats.Stats("logs/Out.txt", stream=fc)
         p.strip_dirs()
         d = p.__dict__["stats"]
         funcstats = {}
@@ -45,9 +45,7 @@ def main(func="logo"):
             funcstats[k] = v[2]
         p.sort_stats("time").print_stats()
         SaveLoad.uploadStats(funcstats)
-
-    with open("Calltime Dump.txt", "rb") as fc:
-        pass
+        os.remove("Out.txt")
 
 if __name__ == "__main__":
     main()

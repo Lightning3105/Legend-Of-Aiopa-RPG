@@ -10,9 +10,13 @@ import traceback
 import time
 import os
 from importlib import reload
+import hashlib
 
-def main(func="mainMenu"):
+
+def main(func="logo"):
     print("START GAME")
+    if hashlib.md5(os.getlogin().encode()).hexdigest() == 'f945be3c345040fbe66cea5910001877':
+        func = "mainMenu"
     try:
         cProfile.run("gameScreens." + func + "()", "Out.txt")
     except Exception as e:

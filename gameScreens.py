@@ -386,8 +386,6 @@ def windowUpdate():
     py.display.set_caption("The Legend Of Aiopa")
     icon = py.image.load("Resources/Images/Icon.ico")
     py.display.set_icon(icon)
-    #v.screenScale = round(v.screenX * 0.004, 1)
-    v.screenScale = 2.5
 
 def game():
     import weaponClasses

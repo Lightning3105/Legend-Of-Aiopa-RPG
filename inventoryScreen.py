@@ -65,7 +65,6 @@ class inventoryScreen():
         self.questScroll = 0
     
     def update(self):
-        print(v.mouse_pos)
         self.hovering = None
         self.grey()
         self.background()

@@ -5,6 +5,7 @@ import MenuItems
 from time import sleep
 from time import clock
 import gameScreens
+import math
 
 class health:
 
@@ -174,10 +175,15 @@ class XP:
     def draw(self):
         if not v.experience["XP"] == 0:
             xpSegment = 360 / v.experience["XPtoL"]
-            seg = py.Surface((4, 10))
+            seg = py.Surface((5, 10))
             seg.fill((0, 255, 255))
-            segRect = seg.get_rect()
             deg = 0
+            segRect = seg.get_rect()
+            """seg = py.Surface((10, 10), py.SRCALPHA, 32)
+            seg = seg.convert_alpha()
+            py.draw.circle(seg, (0, 255, 255), (5, 5), 5)
+            segRect = seg.get_rect()
+            deg = 0"""
             
             for i in range(90): 
                 deg += 8
@@ -186,6 +192,8 @@ class XP:
                     rend = py.transform.rotate(seg, deg)
                     segRect.center = entityClasses.arc((self.posx, self.posy), 60, -deg - 180) #30
                     v.screen.blit(rend, segRect)
+                    
+        
         font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 80)
         label = font.render(str(v.experience["XPL"]), 1, (0, 255, 255))
         pos = (self.posx - font.size(str(v.experience["XPL"]))[0]/2, self.posy - font.size(str(v.experience["XPL"]))[1]/2)
@@ -343,21 +351,21 @@ class miniMap: #TODO make this work with baseMap
 class actionText(py.sprite.Sprite):
     
     def __init__(self):
-        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(20 / 640 * 1280))
+        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 30)
     
     def update(self):
         if not v.actionQueue == []:
             label = self.font.render(v.actionQueue[0], 1, (255, 255, 255))
-            posy = 380 / 640 * 1280
-            posx = ((1280/2) - (self.font.size(v.actionQueue[0])[0] / 2)) / 640 * 1280
+            posy = 520
+            posx = (640 - (self.font.size(v.actionQueue[0])[0] / 2))
             v.screen.blit(label, (posx, posy))
 
 class fps(py.sprite.Sprite):
     
     def __init__(self):
         super().__init__()
-        self.pos = (1280 * 0.5, 720 * 0.021)
-        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(1280 * 0.03125))
+        self.pos = (640, 20)
+        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(30))
     def update(self):
         self.label = self.font.render(str(int(v.clock.get_fps())), 1, (255, 0, 0))
         v.screen.blit(self.label, self.pos)
@@ -380,6 +388,7 @@ class loadingScreen():
         if stage == 0:
             for i in range(7, 14, 2):
                 self.image = self.wizSheet.images[i]
+                self.image = py.transform.scale(self.image, (self.image.get_rect().width * 2, self.image.get_rect().height * 2))
                 self.rect = (0, 0, 1280, 720)
                 py.draw.rect(v.screen, (0, 0, 0), self.rect)
                 v.screen.blit(self.image, ((1280 / 2) - self.image.get_rect().width / 2, (720 / 2)  - self.image.get_rect().height / 2))

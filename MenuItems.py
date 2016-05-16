@@ -817,10 +817,14 @@ def screenFlip():
                     v.screenX, v.screenY = 1280, 720
                 else:
                     py.event.post(py.event.Event(py.VIDEORESIZE, {"size":(848, 477)}))
-    py.mouse.set_visible(False)
-    if v.mouseImage == None:
-        v.mouseImage = py.image.load("Resources/Images/cursor.png")
-    v.screen.blit(v.mouseImage, (v.mouse_pos[0] - 24, v.mouse_pos[1] - 24))
+    
+    if py.Rect(0, 0, 1280, 720).collidepoint(v.mouse_pos[0], v.mouse_pos[1]):
+        py.mouse.set_visible(False)
+        if v.mouseImage == None:
+            v.mouseImage = py.image.load("Resources/Images/cursor.png")
+        v.screen.blit(v.mouseImage, (v.mouse_pos[0] - 24, v.mouse_pos[1] - 24))
+    else:
+        py.mouse.set_visible(True)
     
     screen_rect = v.screenDisplay.get_rect()
     image = v.screen

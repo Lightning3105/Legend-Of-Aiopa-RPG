@@ -128,9 +128,7 @@ def onlineLogin():
     except Exception as e:
         print(e)
         saved = False
-    
-    
-    
+
     while True:
         py.event.pump()
         v.events = []
@@ -206,7 +204,6 @@ def onlineLogin():
                 phase = 1
                 MenuItems.screenFlip()
                 py.time.wait(2000)
-        
         
         fade.draw()
         fade.opacity -= 1                    
@@ -710,7 +707,6 @@ def classSelection():
         if v.custimizationStage == "Attributes":
             labels.update()
         if v.custimizationStage == "Customisation":
-            print("custom")
             aps.update()
             aps.draw(v.screen)
             ap.draw()
@@ -1449,8 +1445,6 @@ def logo():
         if cycle > 240:
             l2pos[0] -= 40
         
-        #print(cycle)
-        
         if cycle >= 200 and cycle < 250:
             v.screen.blit(logo, (485, 205))
         
@@ -1467,13 +1461,11 @@ def logo():
             flash.set_alpha(flashAlpha)
             v.screen.blit(flash, (0, 0))
         if cycle > 340:
-            #print(time.time() - t)
             mainMenu()
             return
         
         v.screen.blit(l1, l1pos)
         v.screen.blit(l2, l2pos)
-        
         
         if cycle > 50 and cycle < 60:
             flashAlpha += 25.5

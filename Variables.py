@@ -1,6 +1,10 @@
 import logging
 curFunc = None
-logging.basicConfig(filename='logs/log.log',level=logging.DEBUG)
+try:
+    logging.basicConfig(filename='logs/log.log',level=logging.DEBUG)
+except FileNotFoundError:
+    from os import mkdir
+    mkdir("logs")
 def debug(*args):
     out = ""
     for i in args:

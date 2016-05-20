@@ -8,7 +8,7 @@ class enemyImage(py.sprite.Sprite):
     
     def __init__(self, num, image):
         super().__init__()
-        self.image = py.transform.scale(mapMenuItems.SpriteSheet(image, 4, 3).images[1], (30, 30))
+        self.image = py.transform.scale(mapMenuItems.SpriteSheet("../" + image, 4, 3).images[1], (30, 30))
         self.posx = (num % 3) * 30
         self.posy = int((num / 3)) * 30
         self.num = num

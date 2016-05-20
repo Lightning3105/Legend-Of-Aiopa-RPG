@@ -127,7 +127,7 @@ def mapEditor():
     v.enemyImages = py.sprite.Group()
     num = 0
     for i in listdir("..\Resources\Images\EnemySkins"):
-        v.enemyImages.add(npcEdit.enemyImage(num, "../Resources/Images/EnemySkins/" + i))
+        v.enemyImages.add(npcEdit.enemyImage(num, "Resources/Images/EnemySkins/" + i))
         num += 1
         
     v.clock = py.time.Clock()

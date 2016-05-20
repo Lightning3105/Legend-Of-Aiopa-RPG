@@ -530,7 +530,10 @@ class Tile(py.sprite.Sprite):
         self.top = top
         if top:
             v.topTiles.add(self)
-            self.skin = image
+            temp = py.PixelArray(image)
+            temp.replace((97, 90, 114), (0, 0, 0, 0), 0.02)
+            self.skin = temp.make_surface()
+            #self.skin = image
         self.teleport = teleport
 
     def update(self): #TODO: Make more efficient

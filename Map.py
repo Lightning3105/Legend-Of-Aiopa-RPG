@@ -100,7 +100,7 @@ def generateMap():
                             npc[k] = int(va)
                         except:
                             pass
-                    entityClasses.Enemy((tile - modx) * 30, (row - mody) * 30, v.mapNum, npc["Image"], npc)
+                    entityClasses.Enemy((tile - modx) * 30, (row - mody * 2) * 30, v.mapNum, npc["Image"], npc)
                     draw = False
                 else:
                     over = False

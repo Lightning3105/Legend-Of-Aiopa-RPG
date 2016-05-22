@@ -134,6 +134,42 @@ classAttributes = {"Paladin":{"Speed": 4,
                           "Magical Strength": 3,
                           "Luck": 8,
                           "Charisma": 3
-                          } # 57
+                          }, # 57
+                   "Rogue":{"Speed": 10,
+                          "Max Health": 15,
+                          "Defence": 1,
+                          "Strength": 3,
+                          "Max Mana": 13,
+                          "Magical Strength": 3,
+                          "Luck": 10,
+                          "Charisma": 2
+                          }, # 57
+                   "Necromancer":{"Speed": 3,
+                          "Max Health": 10,
+                          "Defence": 4,
+                          "Strength": 4,
+                          "Max Mana": 18,
+                          "Magical Strength": 5,
+                          "Luck": 10,
+                          "Charisma": 2
+                          }, #57
+                   "Barbarian":{"Speed": 3,
+                              "Max Health": 25,
+                              "Defence": 6,
+                              "Strength": 6,
+                              "Max Mana": 9,
+                              "Magical Strength": 1,
+                              "Luck": 5,
+                              "Charisma": 2
+                              }, # 57
+                   "Voyant":{"Speed": 5,
+                          "Max Health": 8,
+                          "Defence": 2,
+                          "Strength": 2,
+                          "Max Mana": 18,
+                          "Magical Strength": 3,
+                          "Luck": 15,
+                          "Charisma": 5
+                          }, # 57
                    
                    }

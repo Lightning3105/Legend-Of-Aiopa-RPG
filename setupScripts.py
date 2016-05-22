@@ -14,9 +14,9 @@ def newGame():
     #entityClasses.NPC((0, 30, "Down", 1), "Resources/Images/NpcSkins/Spritesheets/Male_Basic.png", {"Name":"Fred", "Conversation":cn})
     
     v.inventory.add(itemClasses.item("Thing", py.image.load("Resources/Images/XPOrb.png").convert_alpha()))
-    v.inventory.add(itemClasses.weapon("Magic Orb", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[56], "manaOrb", "Resources/Images/castOrbPurple.png", {"Damage":2, "Knockback": 10}))
-    v.inventory.add(itemClasses.weapon("Broken Sword", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[0], "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10}))
-    v.inventory.add(itemClasses.weapon("Short Bow", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[72], "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10})) 
+    v.inventory.add(itemClasses.weapon("Magic Orb", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[56], "manaOrb", "Resources/Images/castOrbPurple.png", {"Damage":2, "Knockback": 10, "Cooldown": 60}))
+    v.inventory.add(itemClasses.weapon("Broken Sword", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[0], "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10, "Cooldown": 30, "AttSpeed": 16}))
+    v.inventory.add(itemClasses.weapon("Short Bow", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[72], "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10, "Cooldown": 20, "Range": 20})) 
     entityClasses.droppedItem(itemClasses.item("Thing", py.image.load("Resources/Images/XPOrb.png").convert_alpha()), (0, 0))
     
     fb = itemClasses.spell("Fire Beam", "beam", "Resources/Images/fireBeam.png", "Resources/Images/redCastCircle.png", "Resources/Images/Spell Icons/fireBeam.png", {"Damage": 0.2, "Knockback": "S", "Cooldown": 5, "Mana": 10, "InvulnMod": 0})
@@ -35,11 +35,19 @@ def setAttributes():
         gameScreens.mainMenu()
     v.Attributes = v.classAttributes[v.playerClass]
     if v.playerClass == "Mage":
-        v.equipped["Weapon"] = itemClasses.weapon("Magic Orb", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[56], "manaOrb", "Resources/Images/castOrbPurple.png", {"Damage":2, "Knockback": 10})
+        v.equipped["Weapon"] = itemClasses.weapon("Magic Orb", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[56], "manaOrb", "Resources/Images/castOrbPurple.png", {"Damage":2, "Knockback": 10, "Cooldown": 60})
     if v.playerClass == "Paladin":
-        v.equipped["Weapon"] = itemClasses.weapon("Broken Sword", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[0], "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10})
+        v.equipped["Weapon"] = itemClasses.weapon("Broken Sword", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[0], "swing", "Resources/Images/Sword_1.png", {"Damage":2, "Knockback": 10, "Cooldown": 30, "AttSpeed": 16})
     if v.playerClass == "Ranger":
-        v.equipped["Weapon"] = itemClasses.weapon("Short Bow", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[72], "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10})
+        v.equipped["Weapon"] = itemClasses.weapon("Short Bow", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[72], "shoot", "Resources/Images/Arrow.png", {"Damage":2, "Knockback": 10, "Cooldown": 20, "Range": 20})
+    if v.playerClass == "Rogue":
+        v.equipped["Weapon"] = itemClasses.weapon("Blunt Shruikans", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[35], "shoot", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[35], {"Damage":1, "Knockback": 5, "Cooldown": 10, "Range": 10, "Rotate": True})
+    if v.playerClass == "Barbarian":
+        v.equipped["Weapon"] = itemClasses.weapon("Small Club", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[48], "swing", "Resources/Images/Club_1.png", {"Damage":3, "Knockback": 15, "Cooldown": 60, "AttSpeed": 10})
+    if v.playerClass == "Necromancer":
+        v.equipped["Weapon"] = itemClasses.weapon("Necrotic Staff", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[57], "manaOrb", "Resources/Images/castOrbRed.png", {"Damage": 3, "Knockback": 8, "Cooldown": 60})
+    if v.playerClass == "Voyant":
+        v.equipped["Weapon"] = itemClasses.weapon("Light Caster", entityClasses.SpriteSheet("Resources/Images/WeaponIcons.png", 8, 12).images[41], "manaOrb", "Resources/Images/castOrbCyan.png", {"Damage": 1, "Knockback": 10, "Cooldown": 30, "Orbs": 3})
 
 def createGroups():
     v.damagesNPCs = py.sprite.Group()

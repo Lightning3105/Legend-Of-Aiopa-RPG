@@ -8,8 +8,9 @@ class weapon():
         import weaponClasses
         self.name = name
         self.attType = attType
-        self.attributes = {"Damage": 0, "Knockback": 1, "InvulnMod": 1}
+        self.attributes = {"Damage": 0, "Knockback": 1, "InvulnMod": 1, "Rotate": False}
         self.attributes.update(attributes)
+        print(attributes)
         self.image = image
         if type(icon) == list:
             self.icon = py.image.fromstring(icon[0], icon[1], 'RGBA')

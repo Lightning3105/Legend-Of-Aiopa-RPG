@@ -797,12 +797,20 @@ class storySpells(py.sprite.Sprite):
         if self.cycle >= 90:
             self.kill()
 
+class options(py.sprite.Sprite):
+    
+    def __init__(self, pos, text, choices, type="radio", selected=None):
+        self.pos = pos
+
+
 def screenFlip():
+    updated = False
     for event in v.events:
         if event.type == py.VIDEORESIZE:
             if not v.fullScreen:
                 v.screenDisplay = py.display.set_mode(event.size, py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
                 v.screenX, v.screenY = event.size
+                updated = True
         if event.type == py.KEYDOWN:
             if event.key == py.K_r:
                 curFunc = sys._getframe(1).f_code.co_name
@@ -826,16 +834,20 @@ def screenFlip():
     else:
         py.mouse.set_visible(True)
     
-    screen_rect = v.screenDisplay.get_rect()
+    screen_rect = py.Rect(0, 0, v.screenX, v.screenY)
     image = v.screen
-    image_rect = image.get_rect()
+    image_rect = py.Rect(0, 0, 1280, 720)
     
     if (v.screenX, v.screenY) == (1280, 720):
         v.screenDisplay.blit(image, (0, 0))
+        fit_to_rect = image_rect
     elif screen_rect.size != v.screenStart:
         fit_to_rect = image_rect.fit(screen_rect)
         fit_to_rect.center = screen_rect.center
-        scaled = py.transform.smoothscale(image, fit_to_rect.size)
+        if v.smoothScale:
+            scaled = py.transform.smoothscale(image, fit_to_rect.size)
+        else:
+            scaled = py.transform.scale(image, fit_to_rect.size)
         v.screenDisplay.blit(scaled, fit_to_rect)
     else:
         v.screenDisplay.blit(image, (0,0))
@@ -848,4 +860,8 @@ def screenFlip():
     else:
         v.mouse_pos = py.mouse.get_pos()
     
-    py.display.flip()
+    if updated:
+        py.display.flip()
+        print("flip")
+    else:
+        py.display.update(fit_to_rect)

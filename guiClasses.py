@@ -378,7 +378,7 @@ class loadingScreen():
         self.aniPos = 7
         self.fade = MenuItems.fadeIn()
         self.fade.fadeIn = True
-        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(40))
+        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", 40)
         self.label = self.font.render("Loading...", 1, (255, 255, 255))
         self.mod = self.font.size("Loading...")
         self.mod = (self.mod[0] / 2, self.mod[1] / 2)
@@ -391,8 +391,8 @@ class loadingScreen():
                 self.image = py.transform.scale(self.image, (self.image.get_rect().width * 2, self.image.get_rect().height * 2))
                 self.rect = (0, 0, 1280, 720)
                 py.draw.rect(v.screen, (0, 0, 0), self.rect)
-                v.screen.blit(self.image, ((1280 / 2) - self.image.get_rect().width / 2, (720 / 2)  - self.image.get_rect().height / 2))
-                v.screen.blit(self.label, ((1280 / 2) - self.mod[0], (720 / 2)  - self.mod[1] + 50/640 * 1280))
+                v.screen.blit(self.image, (640 - self.image.get_rect().width / 2, 360  - self.image.get_rect().height / 2))
+                v.screen.blit(self.label, (640 - self.mod[0], 360  - self.mod[1] + 100))
                 self.fade.draw()
                 self.fade.opacity -= 40
                 MenuItems.screenFlip()
@@ -400,6 +400,7 @@ class loadingScreen():
             self.time = clock()
         if stage == 1:
             self.image = self.wizSheet.images[14]
+            self.image = py.transform.scale(self.image, (self.image.get_rect().width * 2, self.image.get_rect().height * 2))
             self.rect = (0, 0, 1280, 720)
             py.draw.rect(v.screen, (0, 0, 0), self.rect)
             v.screen.blit(self.image, ((1280 / 2) - self.image.get_rect().width / 2, (720 / 2)  - self.image.get_rect().height / 2))
@@ -409,6 +410,7 @@ class loadingScreen():
             for i in range(28, 38, 2):
                 py.time.delay(100)
                 self.image = self.wizSheet.images[i]
+                self.image = py.transform.scale(self.image, (self.image.get_rect().width * 2, self.image.get_rect().height * 2))
                 self.rect = (0, 0, 1280, 720)
                 py.draw.rect(v.screen, (0, 0, 0), self.rect)
                 v.screen.blit(self.image, ((1280 / 2) - self.image.get_rect().width / 2, (720 / 2)  - self.image.get_rect().height / 2))

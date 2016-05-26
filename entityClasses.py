@@ -467,13 +467,13 @@ class HitBox(py.sprite.Sprite):
 
     def update(self): #TODO: use new positition
         if self.side == "Top":
-            self.rect = py.Rect(centre()[0] - (3 * v.scale), centre()[1] - (8 * v.scale), (8 * v.scale), (2 * v.scale))
+            self.rect = py.Rect(640 - (3 * v.scale), 360 + (6 * v.scale), (8 * v.scale), (2 * v.scale))
         if self.side == "Bottom":
-            self.rect = py.Rect(centre()[0] - (3 * v.scale), centre()[1] + (16 * v.scale), (8 * v.scale), (2 * v.scale))
+            self.rect = py.Rect(640 - (3 * v.scale), 360 + (16 * v.scale), (8 * v.scale), (2 * v.scale))
         if self.side == "Left":
-            self.rect = py.Rect(centre()[0] - (5 * v.scale), centre()[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale))
+            self.rect = py.Rect(640 - (5 * v.scale), 360 + (7 * v.scale), (2 * v.scale), (9 * v.scale))
         if self.side == "Right":
-            self.rect = py.Rect(centre()[0] + (5 * v.scale), centre()[1] - (5 * v.scale), (2 * v.scale), (20 * v.scale))
+            self.rect = py.Rect(640 + (5 * v.scale), 360 + (7 * v.scale), (2 * v.scale), (9 * v.scale))
         self.image = py.Surface((self.rect.width, self.rect.height))
         self.image.fill((255, 0, 0))
         newrect = self.rect

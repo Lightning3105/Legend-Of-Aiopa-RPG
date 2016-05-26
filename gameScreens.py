@@ -309,10 +309,12 @@ def options():
     else:
         v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)"""
     buttons = py.sprite.Group()
-    buttons.add(MenuItems.Button("Toggle Fullscreen", (40, 30), 120, (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "fullscreen"))
     buttons.add(MenuItems.Button("Back", (20, 640), 60, (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
-    buttons.add(MenuItems.Button("Toggle Resolution", (40, 140), 120, (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "resolution"))
     buttons.add(MenuItems.Button("Map Editor", (40, 290), 120, (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "edit"))
+    
+    buttons.add(MenuItems.Button("Toggle Fullscreen", (40, 30), 120, (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "fullscreen"))
+    buttons.add(MenuItems.Button("Toggle Resolution", (40, 140), 120, (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "resolution"))
+
     
     
     fade = MenuItems.fadeIn()
@@ -784,7 +786,7 @@ def story():
     WB.set_alpha(255)
     WB.fill((255, 255, 255))
     WBAlpha = 0
-    STAGE = 2
+    STAGE = 1
     ST3 = 0
     ST2 = 0
     ST4 = 0
@@ -1364,11 +1366,11 @@ def crashScreen(crash):
     texts = py.sprite.Group()
     buttons = py.sprite.Group()
     
-    buttons.add(MenuItems.Button("Copy to Clipboard", (20, 440), 30, (50, 255, 50), (0, 200, 0), None, "copy"))
-    buttons.add(MenuItems.Button("Upload Report", (220, 440), 30, (50, 255, 50), (0, 200, 0), None, "upload"))
-    buttons.add(MenuItems.Button("Exit", (420, 440), 30, (50, 255, 50), (0, 200, 0), None, "quit"))
+    buttons.add(MenuItems.Button("Copy to Clipboard", (40, 660), 45, (50, 255, 50), (0, 200, 0), None, "copy"))
+    buttons.add(MenuItems.Button("Upload Report", (440, 660), 45, (50, 255, 50), (0, 200, 0), None, "upload"))
+    buttons.add(MenuItems.Button("Exit", (840, 660), 45, (50, 255, 50), (0, 200, 0), None, "quit"))
 
-    posy = 50
+    posy = 75
     import os.path
     parent = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
     parent = parent.replace("\\", "/")
@@ -1378,8 +1380,8 @@ def crashScreen(crash):
         out = out.split(parent)
         out = "".join(out)
         out = out.replace("  ", "    ")
-        texts.add(MenuItems.textLabel(out, (30, posy), (0, 0, 0), None, 20))
-        posy += 20
+        texts.add(MenuItems.textLabel(out, (60, posy), (0, 0, 0), None, 20))
+        posy += 30
     
     
     while True:

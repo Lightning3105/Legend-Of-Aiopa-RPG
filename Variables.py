@@ -19,6 +19,7 @@ fullScreen = False
 screenX = 848
 screenY = 477
 screenStart = (1280, 720)
+smoothScale = False
 mouse_pos = (0, 0)
 aspectRatio = (16, 9)
 mouseImage = None

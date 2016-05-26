@@ -45,7 +45,6 @@ def main(func="logo"):
             funcstats[k] = v[2]
         p.sort_stats("time").print_stats()
         SaveLoad.uploadStats(funcstats)
-        os.remove("Out.txt")
 
 if __name__ == "__main__":
     main()

@@ -760,6 +760,7 @@ def classSelection():
 
 def story():
     #2.05 minutes
+    v.music.fadeout(2000)
     sTime = time.clock()
     py.init()
     windowUpdate()
@@ -783,7 +784,7 @@ def story():
     WB.set_alpha(255)
     WB.fill((255, 255, 255))
     WBAlpha = 0
-    STAGE = 1
+    STAGE = 2
     ST3 = 0
     ST2 = 0
     ST4 = 0
@@ -835,6 +836,9 @@ def story():
     
     fadeIn = False
     
+    v.music = py.mixer.Sound("Resources/Music/Story.ogg")
+    v.music.play(fade_ms=2000)
+    
     while True:
         py.event.pump()
         if STAGE == 1:
@@ -851,18 +855,18 @@ def story():
                 
             if lsY < 1080:    
                 v.screen.blit(LS2, (0, 720 * -2 + lsY * 2))
-                v.screen.blit(LS3, (0, 720 * -1 + lsY * 2))
+                v.screen.blit(LS3, (0, -720 + lsY * 2))
                 v.screen.blit(LS4, (0, 720 * 0 + lsY * 2))
                 if lsY < 200 and lsY > -300:
                     ani1 = py.transform.scale(LS4Ani.images[int((lsY + 300)/50)], (1280, 720))
                 v.screen.blit(ani1, (0, 720 * 0 + lsY))
                 
                 ani2 = py.transform.scale(LS3Ani.images[lsY % 2], (1280, 720))
-                v.screen.blit(ani2, (-1280 * 1.4 + lsY * 2, 720 * -0.5 + lsY * 2))
+                v.screen.blit(ani2, (-1792 + lsY * 2, -360 + lsY * 2))
                 
                 ani2 = py.transform.scale(LS3Ani.images[(lsY + 1) % 2], (1280, 720))
                 ani2 = py.transform.flip(ani2, True, False)
-                v.screen.blit(ani2, (1280 * 1.6 - lsY * 2, 720 * -1.1 + lsY * 2))
+                v.screen.blit(ani2, (1280 * 1.6 - lsY * 2, -792 + lsY * 2))
                 
             if lsY % 4 == 0:
                 ani3 = py.transform.rotate(P1, randint(-5, 5))
@@ -977,19 +981,18 @@ def story():
                 v.screen.blit(label, (255, 290))
             if TMZoom > 1.3 and TMZoom < 2.3:
                 label = font.render("...By the 7 most powerful", 1, (0, 0, 0))
-                op = 255 - abs(((TMZoom - 0.3) - 1.5) * 510)
-                
+                op = 255 - abs(((TMZoom) - 1.8) * 510)
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (1280 * 0.0, 720 * 0.6))
             if TMZoom > 1.4 and TMZoom < 2.3:
                 label = font.render("mages and fighters", 1, (0, 0, 0))
-                op = 255 - abs(((TMZoom - 0.3) - 1.5) * 510)
+                op = 255 - abs(((TMZoom) - 1.9) * 510)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (510, 720 * 0.7))
             if TMZoom > 1.5 and TMZoom < 2.3:
                 label = font.render("in the land...", 1, (0, 0, 0))
-                op = 255 - abs(((TMZoom - 0.3) - 1.5) * 510)
+                op = 255 - abs(((TMZoom) - 2) * 510)
                 
                 label.fill((255, 255, 255, op), special_flags=py.BLEND_RGBA_MULT)
                 v.screen.blit(label, (1280 * 0.7, 580))
@@ -1424,7 +1427,14 @@ def logo():
     
     cycle = 0
     
+    v.clock = py.time.Clock()
+    
+    py.mixer.init()
+    thunder = py.mixer.Sound("Resources/Sounds/Thunder.ogg")
+    thunder.set_volume(0.2)
+    
     while True:
+        v.clock.tick(60)
         py.event.pump()
         v.screen.fill((0, 0, 0))
         """v.screen.blit(l1, (150, 200))
@@ -1445,8 +1455,12 @@ def logo():
         if cycle > 240:
             l2pos[0] -= 40
         
+        if cycle == 45:
+            thunder.play()
+        
         if cycle >= 200 and cycle < 250:
             v.screen.blit(logo, (485, 205))
+            
         
         if cycle > 250 and cycle < 300:
             size = int(1.5 * (cycle - 250)**2 + 310)

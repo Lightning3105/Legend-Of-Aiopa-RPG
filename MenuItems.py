@@ -799,8 +799,153 @@ class storySpells(py.sprite.Sprite):
 
 class options(py.sprite.Sprite):
     
-    def __init__(self, pos, text, choices, type="radio", selected=None):
+    def __init__(self, pos, text, choices, fontsize, ID, type="radio", selected=None):
+        super().__init__()
         self.pos = pos
+        self.fontSize = fontsize
+        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", self.fontSize)
+        self.rend = self.font.render(text, 1, (50, 50, 50))
+        self.choices = choices
+        self.type = type
+        self.selected = selected
+        self.ID = ID
+        
+        if self.type == "radio":
+            lengths = self.rend.get_rect().width
+            font = py.font.Font("Resources/Fonts/RPGSystem.ttf", self.fontSize)
+            self.choiceButtons = py.sprite.Group()
+            for item in choices:
+                self.choiceButtons.add(self.button(self.pos[0] + lengths, item, self))
+                lengths += font.size(str(item))[0] + 20
+        if self.type == "switch":
+            self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", self.fontSize - 10)
+            self.rend1 = self.font.render(self.choices[0], 1, (0, 0, 0))
+            self.rend2 = self.font.render(self.choices[1], 1, (0, 0, 0))
+            self.srect = py.Rect(self.pos[0] + self.rend.get_rect().width + 10, self.pos[1], self.rend1.get_rect().width + 10 + self.rend1.get_rect().width, self.rend1.get_rect().height + 10)
+            self.srect1 = py.Rect(self.pos[0] + self.rend.get_rect().width + 10, self.pos[1], self.rend1.get_rect().width + 3, self.rend1.get_rect().height + 10)
+            self.srect2 = py.Rect(self.pos[0] + self.rend.get_rect().width + 10 + self.srect1.width + 2, self.pos[1], self.rend2.get_rect().width + 3, self.rend1.get_rect().height + 10)
+        if self.type == "dropdown":
+            self.dropped = False
+            self.dfont = py.font.Font("Resources/Fonts/RPGSystem.ttf", self.fontSize - 20)
+            self.drect = py.Rect(self.pos[0] + self.rend.get_rect().width + 10, self.pos[1] + 12,  self.dfont.size(max(self.choices, key=len))[0], self.dfont.size("W")[1])
+            self.choiceDrops = py.sprite.Group()
+            heights = self.drect.height
+            for item in self.choices:
+                self.choiceDrops.add(self.drop(self.drect.x, self.drect.y + heights, self.drect.width, item, self))
+                heights += self.drect.height
+    
+    def update(self):
+        v.screen.blit(self.rend, self.pos)
+        if self.type == "radio":
+            self.choiceButtons.update()
+        if self.type == "switch":
+            py.draw.rect(v.screen, (153, 76, 0), self.srect, 2)
+            py.draw.rect(v.screen, (255, 178, 102), self.srect)
+            
+            if self.selected == self.choices[0]:
+                py.draw.rect(v.screen, (100, 255, 0), self.srect1)
+            else:
+                py.draw.rect(v.screen, (255, 80, 50), self.srect1)
+            if self.srect1.collidepoint(v.mouse_pos):
+                py.draw.rect(v.screen, (255, 255, 0), self.srect1, 2)
+                if py.mouse.get_pressed()[0]:
+                    self.selected = self.choices[0]
+            else:
+                py.draw.rect(v.screen, (153, 76, 0), self.srect1, 2)
+            v.screen.blit(self.rend1, (self.srect1[0] + 3, self.srect1[1] + 3))
+            
+            if self.selected == self.choices[1]:
+                py.draw.rect(v.screen, (100, 255, 0), self.srect2)
+            else:
+                py.draw.rect(v.screen, (255, 80, 50), self.srect2)
+            if self.srect2.collidepoint(v.mouse_pos):
+                py.draw.rect(v.screen, (255, 255, 0), self.srect2, 2)
+                if py.mouse.get_pressed()[0]:
+                    self.selected = self.choices[1]
+            else:
+                py.draw.rect(v.screen, (153, 76, 0), self.srect2, 2)
+            v.screen.blit(self.rend2, (self.srect2[0] + 3, self.srect2[1] + 3))
+        
+        if self.type == "dropdown":
+            self.choiceDrops.update()
+            
+            if self.drect.collidepoint(v.mouse_pos):
+                py.draw.rect(v.screen, (255, 255, 0), self.drect)
+                for event in v.events:
+                    if event.type == py.MOUSEBUTTONDOWN and py.mouse.get_pressed()[0]:
+                        self.dropped = not self.dropped
+            else:
+                py.draw.rect(v.screen, (255, 178, 102), self.drect)
+            
+            py.draw.rect(v.screen, (153, 76, 0), self.drect, 2)
+            rend = self.dfont.render(self.selected, 1, (0, 0, 0))
+            v.screen.blit(rend, (self.drect.centerx - rend.get_rect().width/2, self.drect.centery - rend.get_rect().height/2))
+            
+    
+    class drop(py.sprite.Sprite):
+        
+        def __init__(self, posx, posy, width, text, master):
+            super().__init__()
+            self.posx = posx
+            self.posy = posy
+            self.master = master
+            self.text = text
+            font = py.font.Font("Resources/Fonts/RPGSystem.ttf", self.master.fontSize - 20)
+            self.rend = font.render(self.text, 1, (0, 0, 0))
+            self.rect = py.Rect(posx, posy, width, self.rend.get_rect().height)
+        
+        def update(self):
+            if self.master.dropped:
+                if self.master.selected == self.text:
+                    py.draw.rect(v.screen, (255, 255, 0), self.rect)
+                else:
+                    py.draw.rect(v.screen, (255, 178, 102), self.rect)
+                
+                if self.rect.collidepoint(v.mouse_pos):
+                    py.draw.rect(v.screen, (255, 0, 0), self.rect, 2)
+                    if py.mouse.get_pressed()[0]:
+                        self.master.selected = self.text
+                        self.master.dropped = False
+                else:
+                    py.draw.rect(v.screen, (153, 76, 0), self.rect, 2)
+                v.screen.blit(self.rend, (self.rect.centerx - self.rend.get_rect().width/2, self.rect.centery - self.rend.get_rect().height/2))
+                
+    
+    
+    class button(py.sprite.Sprite):
+        
+        def __init__(self, posx, text, master):
+            super().__init__()
+            self.posx = posx
+            self.text = text
+            self.master = master
+            self.posy = self.master.pos[1]
+    
+        def update(self):
+            font = py.font.Font("Resources/Fonts/RPGSystem.ttf", self.master.fontSize)
+            rend = font.render(str(self.text), 1, (255, 255, 255))
+            rect = rend.get_rect()
+            rect.topleft = (self.posx, self.posy)
+            rect.height += 2
+            rect.width += 2
+            
+            if rect.collidepoint(v.mouse_pos):
+                py.draw.rect(v.screen, (255, 200, 0), rect)
+                for event in v.events:
+                    if event.type == py.MOUSEBUTTONDOWN:
+                        self.master.selected = self
+                        self.master.outText = self.text
+            else:
+                py.draw.rect(v.screen, (255, 178, 102), rect)
+            
+            if self.master.selected == self:
+                py.draw.rect(v.screen, (0, 100, 200), rect, 2)
+            else:
+                py.draw.rect(v.screen, (153, 76, 0), rect, 2)
+            
+            rect.x += 2
+            rect.y += 2
+            v.screen.blit(rend, rect)
 
 
 def screenFlip():
@@ -824,7 +969,7 @@ def screenFlip():
                     v.screenDisplay = py.display.set_mode((1280, 720), py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
                     v.screenX, v.screenY = 1280, 720
                 else:
-                    py.event.post(py.event.Event(py.VIDEORESIZE, {"size":(848, 477)}))
+                    py.event.post(py.event.Event(py.VIDEORESIZE, {"size":v.oldResolution}))
     
     if py.Rect(0, 0, 1280, 720).collidepoint(v.mouse_pos[0], v.mouse_pos[1]):
         py.mouse.set_visible(False)

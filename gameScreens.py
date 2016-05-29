@@ -310,12 +310,17 @@ def options():
         v.screen = py.display.set_mode((640, 480),py.HWSURFACE|py.DOUBLEBUF)"""
     buttons = py.sprite.Group()
     buttons.add(MenuItems.Button("Back", (20, 640), 60, (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "back"))
-    buttons.add(MenuItems.Button("Map Editor", (40, 290), 120, (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "edit"))
+    buttons.add(MenuItems.Button("Apply", (1100, 640), 60, (255, 0, 0), (165,42,42), "Resources\Fonts\RunicSolid.ttf", "apply"))
+    #buttons.add(MenuItems.Button("Map Editor", (40, 290), 120, (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "edit"))
     
-    buttons.add(MenuItems.Button("Toggle Fullscreen", (40, 30), 120, (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "fullscreen"))
-    buttons.add(MenuItems.Button("Toggle Resolution", (40, 140), 120, (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "resolution"))
-
+    #buttons.add(MenuItems.Button("Toggle Fullscreen", (40, 30), 120, (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "fullscreen"))
+    #buttons.add(MenuItems.Button("Toggle Resolution", (40, 140), 120, (245,245,220), (128,128,128), "Resources\Fonts\MorrisRoman.ttf", "resolution"))
     
+    optionsE = py.sprite.Group()
+    optionsE.add(MenuItems.options((40, 30), "Fullscreen:", ["True", "False"], 80, "full",type="switch", selected = str(v.fullScreen)))
+    res = str(v.screenX) + "x" + str(v.screenY)
+    optionsE.add(MenuItems.options((40, 140), "Resolutions:", ["640x360", "720x405", "848x480", "960x540", "1024x576", "1280x720"], 80, "resolution", type="dropdown", selected=res))
+    optionsE.add(MenuItems.options((40, 250), "Smooth Scaling:", ["True", "False"], 80, "scale", type="switch", selected = str(v.smoothScale)))
     
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
@@ -324,6 +329,7 @@ def options():
         MenuItems.fill_gradient(v.screen, (0, 255, 255), (0, 255, 0))
 
         buttons.update()
+        optionsE.update()
         v.events = []
         v.events = py.event.get()
         for event in v.events:
@@ -333,11 +339,6 @@ def options():
         for button in buttons:
             if button.pressed():
                 id = button.ID
-                if id == "fullscreen":
-                    if v.fullScreen == False:
-                        v.fullScreen = True
-                    else:
-                        v.fullScreen = False
                     
                 if id == "back":
                     mainMenu()
@@ -348,26 +349,43 @@ def options():
                     os.chdir("Map Maker")
                     MapEditor.startMenu()
                     os.chdir("..")
-                if id == "resolution":
-                    if v.screenX <= 640:
-                        v.screenX = 720
-                        v.screenY = 405
-                    elif v.screenX <= 720:
-                        v.screenX = 848
-                        v.screenY = 480
-                    elif v.screenX <= 848:
-                        v.screenX = 960
-                        v.screenY = 540
-                    elif v.screenX <= 960:
-                        v.screenX = 1024
-                        v.screenY = 576
-                    elif v.screenX <= 1024:
-                        v.screenX = 1280
-                        v.screenY = 720
-                    else:
-                        v.screenX = 640
-                        v.screenY = 360
-                windowUpdate()
+                if id == "apply":
+                    for op in optionsE:
+                        oid = op.ID
+                        if oid == "resolution":
+                            v.oldResolution = v.screenX, v.screenY
+                            if op.selected == "720x405":
+                                v.screenX = 720
+                                v.screenY = 405
+                            elif op.selected == "848x480":
+                                v.screenX = 848
+                                v.screenY = 480
+                            elif op.selected == "960x540":
+                                v.screenX = 960
+                                v.screenY = 540
+                            elif op.selected == "1024x576":
+                                v.screenX = 1024
+                                v.screenY = 576
+                            elif op.selected == "1280x720":
+                                v.screenX = 1280
+                                v.screenY = 720
+                            elif op.selected == "640x720":
+                                v.screenX = 640
+                                v.screenY = 360
+                            else:
+                                v.screenX, v.screenY = v.oldResolution
+                        if oid == "full":
+                            if op.selected == "True":
+                                v.fullScreen = True
+                            else:
+                                v.fullScreen = False
+                                v.screenX, v.screenY = v.oldResolution
+                        if oid == "scale":
+                            if op.selected == "True":
+                                v.smoothScale = True
+                            else:
+                                v.smoothScale = False
+                        windowUpdate()
                 options()
                 return
         fade.draw()
@@ -378,8 +396,11 @@ def options():
 def windowUpdate():
     if v.fullScreen:
         v.screenDisplay = py.display.set_mode((1280, 720), py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
+        v.oldResolution = v.screenX, v.screenY
+        v.screenX, v.screenY = 1280, 720
     else:
         v.screenDisplay = py.display.set_mode((v.screenX, v.screenY), py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
+    
     
     v.screen = py.Surface(v.screenStart)
     py.display.set_caption("The Legend Of Aiopa")

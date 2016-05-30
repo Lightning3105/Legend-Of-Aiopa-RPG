@@ -799,7 +799,7 @@ class storySpells(py.sprite.Sprite):
 
 class options(py.sprite.Sprite):
     
-    def __init__(self, pos, text, choices, fontsize, ID, type="radio", selected=None):
+    def __init__(self, pos, text, choices, fontsize, ID, type="radio", selected=None, disabled=False):
         super().__init__()
         self.pos = pos
         self.fontSize = fontsize
@@ -809,6 +809,7 @@ class options(py.sprite.Sprite):
         self.type = type
         self.selected = selected
         self.ID = ID
+        self.disabled = disabled
         
         if self.type == "radio":
             lengths = self.rend.get_rect().width
@@ -869,7 +870,7 @@ class options(py.sprite.Sprite):
         if self.type == "dropdown":
             self.choiceDrops.update()
             
-            if self.drect.collidepoint(v.mouse_pos):
+            if self.drect.collidepoint(v.mouse_pos) and not self.disabled:
                 py.draw.rect(v.screen, (255, 255, 0), self.drect)
                 for event in v.events:
                     if event.type == py.MOUSEBUTTONDOWN and py.mouse.get_pressed()[0]:
@@ -881,6 +882,10 @@ class options(py.sprite.Sprite):
             rend = self.dfont.render(self.selected, 1, (0, 0, 0))
             v.screen.blit(rend, (self.drect.centerx - rend.get_rect().width/2, self.drect.centery - rend.get_rect().height/2))
             
+            if self.disabled:
+                s = py.Surface(self.drect.size, py.SRCALPHA)
+                s.fill((50, 50, 50, 200))
+                v.screen.blit(s, self.drect)
     
     class drop(py.sprite.Sprite):
         
@@ -948,11 +953,72 @@ class options(py.sprite.Sprite):
             v.screen.blit(rend, rect)
 
 
+
+class infoBubble(py.sprite.Sprite):
+    
+    def __init__(self, pos, text, direction, fontsize, colour, limit, target="i"):
+        super().__init__()
+        self.target = target
+        self.pos = list(pos)
+        self.direction = direction
+        if target == "i":
+            self.image = py.image.load("Resources/Images/info.png").convert_alpha()
+            self.image = py.transform.smoothscale(self.image, (60, 60))
+            
+            self.rect = py.Rect(self.pos[0] - 30, self.pos[1] - 30, 60, 60)
+            if self.direction == "down":
+                self.pos[1] += 36
+            if self.direction == "up":
+                self.pos[1] -= 36
+            if self.direction == "left":
+                self.pos[0] -= 36
+            if self.direction == "right":
+                self.pos[0] += 36
+        
+        self.font = py.font.Font("Resources/Fonts/RPGSystem.ttf", fontsize)
+        self.renders = []
+        
+        
+        line = ""
+        for word in text.split(" "):
+            if len(line + " " + str(word)) <= limit:
+                line = line + " " + word
+            else:
+                self.renders.append(self.font.render(line, 1, colour))
+                line = ""
+                line = line + " " + word
+        if not line == "":
+            self.renders.append(self.font.render(line, 1, colour))
+    
+    def update(self):
+        hovered = False
+        if self.target == "i":
+            v.screen.blit(self.image, self.rect)
+            if self.rect.collidepoint(v.mouse_pos):
+                hovered = True
+        else:
+            if self.target.hovered:
+                hovered = True
+        if hovered:
+            if self.direction == "down":
+                ymod = 0
+                for line in self.renders:
+                    linerect = line.get_rect()
+                    v.screen.blit(line, (self.pos[0] - linerect.width/2, self.pos[1] + ymod))
+                    ymod += linerect.height + 5
+            if self.direction == "right":
+                ymod = 0 - ((self.renders[0].get_rect().height + 5) * len(self.renders)) / 2
+                for line in self.renders:
+                    linerect = line.get_rect()
+                    v.screen.blit(line, (self.pos[0], self.pos[1] + ymod))
+                    ymod += linerect.height + 5
+
 def screenFlip():
     updated = False
     for event in v.events:
         if event.type == py.VIDEORESIZE:
             if not v.fullScreen:
+                print("event", event.size)
                 v.screenDisplay = py.display.set_mode(event.size, py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
                 v.screenX, v.screenY = event.size
                 updated = True
@@ -1007,6 +1073,5 @@ def screenFlip():
     
     if updated:
         py.display.flip()
-        print("flip")
     else:
         py.display.update(fit_to_rect)

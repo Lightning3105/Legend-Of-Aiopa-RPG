@@ -319,8 +319,18 @@ def options():
     optionsE = py.sprite.Group()
     optionsE.add(MenuItems.options((40, 30), "Fullscreen:", ["True", "False"], 80, "full",type="switch", selected = str(v.fullScreen)))
     res = str(v.screenX) + "x" + str(v.screenY)
-    optionsE.add(MenuItems.options((40, 140), "Resolutions:", ["640x360", "720x405", "848x480", "960x540", "1024x576", "1280x720"], 80, "resolution", type="dropdown", selected=res))
-    optionsE.add(MenuItems.options((40, 250), "Smooth Scaling:", ["True", "False"], 80, "scale", type="switch", selected = str(v.smoothScale)))
+    optionsE.add(MenuItems.options((40, 250), "Resolution:", ["640x360", "720x405", "848x480", "960x540", "1024x576", "1280x720"], 80, "resolution", type="dropdown", selected=res, disabled=v.fullScreen))
+    optionsE.add(MenuItems.options((40, 140), "Smooth Scaling:", ["True", "False"], 80, "scale", type="switch", selected = str(v.smoothScale)))
+    
+    helpers = py.sprite.Group()
+    helpers.add(MenuItems.infoBubble((800, 180), "Smooth scaling will make the game run a lot slower, but will also greatly improve the graphics quality. This option has no effect at the resolution of 1280x720.", "right", 30, (0, 0, 0), 30))
+    helpers.add(MenuItems.infoBubble((800, 290), "Change the screen size. The optimum resolution for speed is 1280x720.", "right", 30, (0, 0, 0), 30))
+    helpers.add(MenuItems.infoBubble((800, 70), "Toggle whether the game is fullscreen. At fullscreen, the resolution is always 1280x720.", "right", 30, (0, 0, 0), 30))
+
+    if v.fullScreen:
+        resDisabled = True
+    else:
+        resDisabled = False
     
     fade = MenuItems.fadeIn()
     fade.fadeIn = True
@@ -330,6 +340,7 @@ def options():
 
         buttons.update()
         optionsE.update()
+        helpers.update()
         v.events = []
         v.events = py.event.get()
         for event in v.events:
@@ -352,14 +363,14 @@ def options():
                 if id == "apply":
                     for op in optionsE:
                         oid = op.ID
-                        if oid == "resolution":
+                        if oid == "resolution" and not resDisabled:
                             v.oldResolution = v.screenX, v.screenY
                             if op.selected == "720x405":
                                 v.screenX = 720
                                 v.screenY = 405
                             elif op.selected == "848x480":
                                 v.screenX = 848
-                                v.screenY = 480
+                                v.screenY = 477
                             elif op.selected == "960x540":
                                 v.screenX = 960
                                 v.screenY = 540
@@ -369,17 +380,22 @@ def options():
                             elif op.selected == "1280x720":
                                 v.screenX = 1280
                                 v.screenY = 720
-                            elif op.selected == "640x720":
+                            elif op.selected == "640x360":
                                 v.screenX = 640
                                 v.screenY = 360
                             else:
                                 v.screenX, v.screenY = v.oldResolution
+                                print("OLD")
+                            print(op.selected)
+                            print(v.screenX, v.screenY)
                         if oid == "full":
                             if op.selected == "True":
                                 v.fullScreen = True
                             else:
                                 v.fullScreen = False
-                                v.screenX, v.screenY = v.oldResolution
+                                windowUpdate()
+                                if resDisabled:
+                                    v.screenX, v.screenY = v.oldResolution
                         if oid == "scale":
                             if op.selected == "True":
                                 v.smoothScale = True
@@ -396,12 +412,10 @@ def options():
 def windowUpdate():
     if v.fullScreen:
         v.screenDisplay = py.display.set_mode((1280, 720), py.HWSURFACE|py.DOUBLEBUF|py.FULLSCREEN)
-        v.oldResolution = v.screenX, v.screenY
         v.screenX, v.screenY = 1280, 720
     else:
         v.screenDisplay = py.display.set_mode((v.screenX, v.screenY), py.HWSURFACE|py.DOUBLEBUF|py.RESIZABLE)
-    
-    
+        print("windowUpdate", v.screenX, v.screenY)
     v.screen = py.Surface(v.screenStart)
     py.display.set_caption("The Legend Of Aiopa")
     icon = py.image.load("Resources/Images/Icon.ico")

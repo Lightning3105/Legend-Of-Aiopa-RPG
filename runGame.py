@@ -18,6 +18,7 @@ def main(func="logo"):
     if hashlib.md5(os.getlogin().encode()).hexdigest() == 'f945be3c345040fbe66cea5910001877':
         func = "mainMenu"
     try:
+        os.environ['SDL_VIDEO_CENTERED'] = '1'
         cProfile.run("gameScreens." + func + "()", "logs/Out.txt")
     except Exception as e:
         if "Reload:" in str(e):

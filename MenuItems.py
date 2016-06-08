@@ -20,6 +20,8 @@ class Button(py.sprite.Sprite):
         self.hcolour = hovercolour
         self.ncolour = normalcolour
         self.font = font
+        if font == None:
+            font = "Resources/Fonts/FSB.ttf"
         self.font = py.font.Font(font, int(size))
         self.centred = centred
         self.size = bsize
@@ -378,6 +380,8 @@ class textLabel(py.sprite.Sprite):
         
     def update(self):
         pos = self.pos
+        if self.font == None:
+            self.font = "Resources/Fonts/FSB.ttf"
         font = py.font.Font(self.font, self.size)
         if not self.variable:
             label = font.render(self.text, 1, self.colour)
@@ -1028,6 +1032,8 @@ def screenFlip():
                 print(curFunc)
                 v.events.remove(event)
                 raise Exception("Reload:" + curFunc)
+            if event.key == py.K_BACKQUOTE:
+                raise Exception("Game Intentionally Crashed!")
             if event.key == py.K_F11:
                 v.fullScreen = not v.fullScreen
                 v.events.remove(event)

@@ -1400,12 +1400,11 @@ def crashScreen(crash):
     windowUpdate()
     texts = py.sprite.Group()
     buttons = py.sprite.Group()
+    buttons.add(MenuItems.Button("Copy to Clipboard", (40, 650), 40, (50, 255, 50), (0, 200, 0), None, "copy"))
+    buttons.add(MenuItems.Button("Upload Report", (440, 650), 40, (50, 255, 50), (0, 200, 0), None, "upload"))
+    buttons.add(MenuItems.Button("Exit", (840, 650), 40, (50, 255, 50), (0, 200, 0), None, "quit"))
     
-    buttons.add(MenuItems.Button("Copy to Clipboard", (40, 660), 45, (50, 255, 50), (0, 200, 0), None, "copy"))
-    buttons.add(MenuItems.Button("Upload Report", (440, 660), 45, (50, 255, 50), (0, 200, 0), None, "upload"))
-    buttons.add(MenuItems.Button("Exit", (840, 660), 45, (50, 255, 50), (0, 200, 0), None, "quit"))
-
-    posy = 75
+    posy = 70
     import os.path
     parent = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
     parent = parent.replace("\\", "/")
@@ -1415,17 +1414,17 @@ def crashScreen(crash):
         out = out.split(parent)
         out = "".join(out)
         out = out.replace("  ", "    ")
-        texts.add(MenuItems.textLabel(out, (60, posy), (0, 0, 0), None, 20))
-        posy += 30
-    
+        texts.add(MenuItems.textLabel(out, (60, posy), (0, 0, 0), None, 30))
+        posy += 32
+    v.smoothScale = True
     
     while True:
         py.event.pump()
         v.events = []
         v.events = py.event.get()
         v.screen.fill((50, 0, 255))
-        py.draw.rect(v.screen, (255, 255, 255), (20, 40, 600, 380))
-        py.draw.rect(v.screen, (0, 0, 0), (20, 40, 600, 380), 2)
+        py.draw.rect(v.screen, (255, 255, 255), (40, 40, 1200, 600))
+        py.draw.rect(v.screen, (0, 0, 0), (40, 40, 1200, 600), 2)
         texts.update()
         buttons.update()
         for button in buttons:

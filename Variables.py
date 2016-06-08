@@ -5,10 +5,11 @@ try:
 except FileNotFoundError:
     from os import mkdir
     mkdir("logs")
+    logging.basicConfig(filename='logs/log.log',level=logging.DEBUG)
 def debug(*args):
     out = ""
     for i in args:
-        out = out + " " + i
+        out = out + " " + str(i)
     print(out)
     logging.debug(out)
 

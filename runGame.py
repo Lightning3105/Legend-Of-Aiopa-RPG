@@ -11,6 +11,8 @@ import time
 import os
 from importlib import reload
 import hashlib
+from Variables import debug
+from binascii import unhexlify
 
 
 def main(func="logo"):
@@ -31,8 +33,13 @@ def main(func="logo"):
         if not os.path.exists("Crash Reports"):
             os.makedirs("Crash Reports")
         name = "Crash Reports/Crash Report " + time.strftime("%Y-%m-%d_%H.%M.%S") + ".txt"
+        remPath = str(unhexlify("433a2f55736572732f4a616d6573205761746572732f446f63756d656e74732f574f524b53504143452f"))
         with open(name, "w") as crash:
-            a = traceback.print_exc(file=crash, limit=8)
+            t = traceback.format_exc(limit=8)
+            t = t.replace("\\", "/")
+            t = t.replace(remPath, "")
+            t = t.split("\n")[0] + "\n" + "\n".join(t.split("\n")[12:])
+            crash.write(t)
         with open(name, "r") as crash:
             gameScreens.crashScreen(crash.read())
     py.quit()

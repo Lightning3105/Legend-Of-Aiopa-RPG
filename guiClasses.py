@@ -6,6 +6,7 @@ from time import sleep
 from time import clock
 import gameScreens
 import math
+import pygame.gfxdraw
 
 class health:
 
@@ -136,9 +137,16 @@ def update_mana(): #TODO: Split label into separate class
 class weaponSlot:
     
     def __init__(self):
-        self.image = "Resources/Images/Empty_Weapon_Slot.png"
-        self.image = py.image.load(self.image).convert_alpha()
-        self.image = py.transform.scale(self.image, (160, 160))
+        #self.image = "Resources/Images/Empty_Weapon_Slot.png"
+        #self.image = py.image.load(self.image).convert_alpha()
+        #self.image = py.transform.scale(self.image, (160, 160))
+        self.image = py.Surface((160, 160), py.SRCALPHA, 32)
+        #py.draw.circle(self.image, (255, 178, 102), (80, 80), 80)
+        #py.draw.circle(self.image, (153, 76, 0), (80, 80), 80, 5)
+        
+        py.gfxdraw.filled_circle(self.image, 80, 80, 80, (153, 76, 0))
+        py.gfxdraw.filled_circle(self.image, 80, 80, 75, (255, 178, 102))
+        
         self.rect = self.image.get_rect()
         self.rect.center = (80, 640)
 
@@ -265,14 +273,16 @@ class ability(py.sprite.Sprite):
 class pauseScreen:
     
     def __init__(self):
-        self.pos = (1280 / 2, 720 / 2)
+        self.pos = (640, 360)
         self.bigRect = py.Rect(0, 0, 1280, 720)
         self.text = py.sprite.Group()
-        self.text.add(MenuItems.textLabel("Paused", (1280 / 2, 100), (255, 255, 255), "Resources\Fonts\RunicClear.ttf", 80, centred=True))
+        self.text.add(MenuItems.textLabel("Paused", (640, 100), (255, 255, 255), "Resources\Fonts\RunicClear.ttf", 120, centred=True))
         self.buttons = py.sprite.Group()
-        self.buttons.add(MenuItems.Button("Main Menu", (1280 / 2, 200), 40, (165,42,42), (255, 255, 255), "Resources\Fonts\RunicSolid.ttf", "mainMenu", True))
-        self.buttons.add(MenuItems.Button("Exit Game", (1280 / 2, 300), 40, (165,42,42), (255, 255, 255), "Resources\Fonts\RunicSolid.ttf", "quit", True))
-        
+        self.buttons.add(MenuItems.Button("Resume", (640, 200), 60, (165,42,42), (255, 255, 255), "Resources\Fonts\RunicSolid.ttf", "resume", True))
+        self.buttons.add(MenuItems.Button("Main Menu", (640, 300), 60, (165,42,42), (255, 255, 255), "Resources\Fonts\RunicSolid.ttf", "mainMenu", True))
+        self.buttons.add(MenuItems.Button("Options", (640, 400), 60, (165,42,42), (255, 255, 255), "Resources\Fonts\RunicSolid.ttf", "options", True))
+        self.buttons.add(MenuItems.Button("Exit Game", (640, 500), 60, (165,42,42), (255, 255, 255), "Resources\Fonts\RunicSolid.ttf", "quit", True))
+
     def update(self):
         grey = py.Surface((1280, 720)).convert_alpha()
         grey.fill((20, 20, 20, 200))
@@ -291,6 +301,10 @@ class pauseScreen:
                     SaveLoad.Save()
                     from sys import exit
                     exit()
+                if id == "options":
+                    gameScreens.options()
+                if id == "resume":
+                    v.PAUSED = False
 
 class miniMap: #TODO make this work with baseMap
     

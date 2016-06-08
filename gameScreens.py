@@ -65,7 +65,7 @@ def mainMenu():
                     return
                 if id == "options":
                     options()
-                    return
+                    fade.opacity = 255
                 if id == "load":
                     setupScripts.createGroups()
                     setupScripts.defaultVariables()
@@ -352,7 +352,7 @@ def options():
                 id = button.ID
                     
                 if id == "back":
-                    mainMenu()
+                    #mainMenu()
                     return
                 if id == "edit":
                     import MapEditor

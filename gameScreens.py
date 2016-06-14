@@ -448,6 +448,7 @@ def game():
     v.topTiles = py.sprite.Group()
     v.allNpc = py.sprite.Group()
     v.NPCs = py.sprite.Group()
+    v.enemies = py.sprite.Group()
     v.droppedItems = py.sprite.Group()
     v.hitList = py.sprite.Group()
     SaveLoad.loadMap(v.mapNum)

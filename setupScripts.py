@@ -20,7 +20,7 @@ def newGame():
     entityClasses.droppedItem(itemClasses.item("Thing", py.image.load("Resources/Images/XPOrb.png").convert_alpha()), (0, 0))
     
     fb = itemClasses.spell("Fire Beam", "beam", "Resources/Images/fireBeam.png", "Resources/Images/redCastCircle.png", "Resources/Images/Spell Icons/fireBeam.png", {"Damage": 0.2, "Knockback": "S", "Cooldown": 5, "Mana": 10, "InvulnMod": 0})
-    ls = itemClasses.spell("Lightning Storm", "lightning", "Resources/Images/lightningStorm.png", "Resources/Images/blueCastCircle.png", "Resources/Images/Spell Icons/chainLightning.png", {"Damage": 0.4, "Knockback": 1, "Cooldown": 5, "Mana": 10, "InvulnMod": 0})
+    ls = itemClasses.spell("Lightning Storm", "lightning", "Resources/Images/lightningStorm.png", "Resources/Images/blueCastCircle.png", "Resources/Images/Spell Icons/chainLightning.png", {"Damage": 0.4, "Knockback": 1, "Cooldown": 5, "Mana": 10, "InvulnMod": 0.5})
     v.abilities["1"] = fb
     v.abilities["2"] = ls
     

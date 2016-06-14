@@ -42,6 +42,7 @@ hitList = None
 allTiles = None
 allNpc = None
 NPCs = None
+enemies = None
 dyingEnemies = None
 quests = None
 npcID = 1

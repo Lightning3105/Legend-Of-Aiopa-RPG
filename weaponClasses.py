@@ -47,11 +47,11 @@ class Sword(py.sprite.Sprite):
                     self.rect = self.rend.get_rect()
                     self.rect.center = (self.posX, self.posY)
                     self.rend = rot_center(self.rend, angleMod + 180)
-                    self.rect.center = arc((centre()[0], centre()[1]), 20 * v.scale, angleMod)
+                    self.rect.center = arc((640, 360), 20 * v.scale, angleMod)
                     self.attCyclePos += self.attSpeed
                 else:
                     self.rend = rot_center(self.rend, angleMod + 180 - self.attCyclePos)
-                    self.rect.center = arc((centre()[0], centre()[1]), 20 * v.scale, angleMod - self.attCyclePos)
+                    self.rect.center = arc((640, 360), 20 * v.scale, angleMod - self.attCyclePos)
                     self.attCyclePos += self.attSpeed
                     if self.attCyclePos > 180:
                         self.attacking = False

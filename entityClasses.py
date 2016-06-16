@@ -5,6 +5,7 @@ import time
 from random import randint
 import gameScreens
 import SaveLoad
+from profilehooks import profile
 
 try:
     import npcScripts
@@ -612,24 +613,7 @@ class Enemy(py.sprite.Sprite):
         self.ID = dic["ID"]
         self.npcID = dic["npcID"]
         
-        self.moving = False
-        self.movFlip = True
-        self.xp = 5
-        self.invulnCooldown = 0
-        self.knockback = 0
-        self.damaged = False
-        self.damage_alpha = 0
-        self.damage_fade = True
-        self.dead = False
-        self.firstDeath = True
-        self.attCount = -float("inf")
-        self.damagedPlayer = False
-        v.allNpc.add(self)
-        v.enemies.add(self)
-        self.initSheet()
-        self.rect = py.Rect(0, 0, 0, 0)
-        self.image = py.Surface((0, 0))
-        self.stopped = False
+        self.setConstants()
     
     def newStats(self, posx=None, posy=None, posm=None, sImage=None, attributes={}):
         self.attributes = attributes
@@ -638,16 +622,23 @@ class Enemy(py.sprite.Sprite):
         self.posy = posy
         self.direction = "Down"
         self.view = "DownC"
-        self.moving = False
-        self.movFlip = True
         self.sheetImage = sImage
         self.maxHealth = attributes["Health"]
         self.health = attributes["Health"]
         self.speed = attributes["Speed"]
         self.att = attributes["Attack"]
+        self.invulnLength = 30
+        self.ID = "enemy"
+        self.npcID = v.npcID
+        v.npcID += 1
+        
+        self.setConstants()
+        
+    def setConstants(self):
+        self.moving = False
+        self.movFlip = True
         self.xp = 5
         self.invulnCooldown = 0
-        self.invulnLength = 30
         self.knockback = 0
         self.damaged = False
         self.damage_alpha = 0
@@ -660,12 +651,12 @@ class Enemy(py.sprite.Sprite):
         v.enemies.add(self)
         self.initSheet()
         #v.hitList.add(self)
-        self.ID = "enemy"
-        self.npcID = v.npcID
-        v.npcID += 1
         self.rect = py.Rect(0, 0, 0, 0)
         self.image = py.Surface((0, 0))
         self.stopped = False
+        self.attImage = py.image.load("Resources/Images/ClawSlash.png").convert_alpha()
+        font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(10 * v.scale))
+        self.label = font.render(self.name, 1, (255,255,255))
 
     def initSheet(self):
         self.sheet = SpriteSheet(self.sheetImage, 4, 3)
@@ -701,7 +692,7 @@ class Enemy(py.sprite.Sprite):
         if self.moving == False:
             self.view = self.direction + "C"
 
-
+    @profile
     def update(self):
         py.event.pump()
         if not self.dead:
@@ -782,14 +773,12 @@ class Enemy(py.sprite.Sprite):
             py.draw.rect(v.screen, (255,0,0), (self.rect.left, self.rect.top - (5 * v.scale), (self.health/self.maxHealth * self.rect.width), 2 * v.scale))
     def title(self):
         if v.scale > 0.7:
-            font = py.font.Font("Resources/Fonts/RPGSystem.ttf", int(10 * v.scale)) #TODO: Scale
-            label = font.render(self.name, 1, (255,255,255))
-            v.screen.blit(label, (self.rect.centerx - (font.size(self.name)[0] / 2), self.rect.top - (15 * v.scale)))
-
+            size = self.label.get_rect().size
+            v.screen.blit(self.label, (self.rect.centerx - size[0] / 2, self.rect.top - (15 * v.scale)))
+    
     def attack(self):
-        attImage = py.image.load("Resources/Images/ClawSlash.png").convert_alpha()
-        attImage = py.transform.scale(attImage, (int(20 * v.scale), int(20 * v.scale)))
-        attImage.fill((255, 255, 255, 255), special_flags=py.BLEND_RGBA_MULT)
+        self.attImage = py.transform.scale(self.attImage, (int(20 * v.scale), int(20 * v.scale)))
+        self.attImage.fill((255, 255, 255, 255), special_flags=py.BLEND_RGBA_MULT)
 
         if abs(self.posx - v.playerPosX) < 30:
             if abs(self.posy - v.playerPosY) < 30:
@@ -797,6 +786,7 @@ class Enemy(py.sprite.Sprite):
                     self.attCount = int(25 * v.scale)
                     self.attPos = (v.playerPosX, v.playerPosY)
                     self.damagedPlayer = False
+                    
         if self.attCount > int(-20 * v.scale):
             self.attCount -= int(1.5 * v.scale)
             self.posx = self.prevX
@@ -805,7 +795,7 @@ class Enemy(py.sprite.Sprite):
             v.attackerDirection = self.direction
         if self.attCount <= int(15 * v.scale) and self.attCount > int(-10 * v.scale):
             pos = (640 + int((-v.playerPosX + (self.attPos[0])) * v.scale) - self.attCount - int(10 * v.scale), 360 - int((-v.playerPosY + (self.attPos[1])) * v.scale) + self.attCount)
-            v.screen.blit(attImage, pos)
+            v.screen.blit(self.attImage, pos)
         if abs(self.posx - v.playerPosX) < 32:
             if abs(self.posy - v.playerPosY) < 32:
                 if self.attCount <= int(7.5 * v.scale) and self.damagedPlayer == False and self.attCount > int(-10 * v.scale):
